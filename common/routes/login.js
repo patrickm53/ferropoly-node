@@ -5,7 +5,6 @@
  */
 'use strict';
 
-
 var express = require('express');
 var passport = require('passport');
 var url = require('url');
@@ -13,6 +12,9 @@ var router = express.Router();
 var settings;
 var _ = require('lodash');
 
+/**
+ * Get the login page
+ */
 router.get('/', function (req, res) {
   res.render('login', {
     title: settings.appName + ' Login',
@@ -22,6 +24,17 @@ router.get('/', function (req, res) {
   });
 });
 
+/**
+ * The login post route
+ */
+router.post('/', function (req, res) {
+  var redirectUri = req.session.targetUrl || '/';
+  passport.authenticate('local', {
+    successRedirect: redirectUri,
+    failureRedirect: '/login',
+    failureFlash: true
+  })(req, res);
+});
 
 /**
  * The exports: an init function only
@@ -35,6 +48,7 @@ module.exports = {
 
     // Logging out
     app.get('/logout', function (req, res) {
+      req.session.targetUrl = '';
       req.logout();
       res.redirect('/login');
     });
@@ -55,24 +69,18 @@ module.exports = {
       if (_.endsWith(uri, 'ico')) {
         return next();
       }
+      if (_.endsWith(uri, 'png')) {
+        return next();
+      }
       if (!req.session.passport.user) {
         // valid user in session
-        console.log(uri + " redirected to login");
+        console.log(uri + " redirected in login.js to login");
+        req.session.targetUrl = req.url;
         res.redirect('/login');
       } else {
         return next();
       }
     });
-
-    // Login post
-    app.post('/login',
-      passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login',
-        failureFlash: true
-      })
-    );
-
     settings = _settings;
   }
 };

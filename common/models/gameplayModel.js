@@ -181,7 +181,7 @@ var getGameplay = function (gameId, ownerEmail, callback) {
       return callback(err);
     }
     if (docs.length === 0) {
-      return callback();
+      return callback(new Error('This gameplay does not exist for this user'));
     }
     callback(null, docs[0]);
   });

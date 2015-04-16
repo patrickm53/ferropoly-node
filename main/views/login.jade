@@ -1,0 +1,24 @@
+extends layout
+block content
+
+  .container-fluid
+    .row
+      .col-xs-1.col-sm-2.col-md-3
+      .col-xs-10.col-sm-8.col-md-6
+        form(action='login' method='post')
+          h3 Ferropoly Login
+          label(for='inputUserName' class='sr-only') Benutzername
+          input(type='text' name='username' id='inputUserName' class='form-control' placeholder='Benutzername' required autofocus)
+          p
+          label(for='inputPassword' class='sr-only') Passwort
+          input(type='password' name='password' id='inputPassword' class='form-control' placeholder='Passwort' required)
+          p
+          button(class='btn btn-lg btn-primary btn-block' type='submit') Login
+          br
+          .row
+            .col-xs-2.col-md-3
+              a(href='www.google.com/chrome/')
+                img(src='images/google-chrome-icon.png')
+            .col-xs-10.col-md-9
+              | Diese Anwendung ist für den Chrome-Browser optimiert. Mit anderen Browsern können Probleme auftreten.
+      .col-xs-1.col-sm-8.col-md-3
