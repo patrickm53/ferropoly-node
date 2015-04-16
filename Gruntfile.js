@@ -33,6 +33,16 @@ module.exports = function (grunt) {
             flatten: true,
             filter: 'isFile',
             timestamp: true
+          },
+
+          {
+            expand: true,
+            cwd: '../ferropoly-editor/common/routes',
+            src: '**',
+            dest: 'common/routes/',
+            flatten: true,
+            filter: 'isFile',
+            timestamp: true
           }
 
         ]
