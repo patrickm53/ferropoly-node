@@ -1,0 +1,21 @@
+
+
+#gameplay-list {
+    overflow: scroll;
+    height: 200px;
+}
+
+.separator {
+    margin-right: 10px;
+}
+
+.btn-gameplay {
+    margin-top: 8px;
+    margin-right: 8px;
+}
+
+.gameplay-id {
+    color:rgba(115, 115, 115, 0.73);
+    font-size: x-small;
+}
+

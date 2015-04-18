@@ -1,4 +1,29 @@
 extends layout
 
+block head
+  script(src='/js/indexctrl.js')
+  link(rel='stylesheet', href='/css/index.css',  type='text/css')
+
 block content
-  h1 Hi there!
+  div(ng-app='indexApp' ng-controller='indexCtrl')
+    h1 Willkommen beim Ferropoly!
+
+    h2 Meine Spiele
+    div(ng-show='gameplays.length === 0')
+      | Du hast noch keine Spiele.&nbsp;
+      a(href='http://editor-ferropoly.rhcloud.com') Im Ferropoly Editor ein neues Spiel anlegen.
+    div(ng-show='gameplays.length > 0')
+      .row
+        div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in gameplays')
+          .panel.panel-default
+            .panel-heading
+              h3.panel-title {{gameplay.gamename}}
+            .panel-body
+              p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}
+              p Karte: {{gameplay.internal.map.toUpperCase()}}
+              p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
+              p Letzte Bearbeitung: {{gameplay.log.lastEdited | date:'d.M.yyyy H:mm'}}
+              p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
+                div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
+              p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
+

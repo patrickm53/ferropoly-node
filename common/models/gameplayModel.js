@@ -188,6 +188,19 @@ var getGameplay = function (gameId, ownerEmail, callback) {
 };
 
 /**
+ * Returns all gameplays of all users. Of course only needed in the admin app
+ * @param callback
+ */
+var getAllGameplays = function (callback) {
+  Gameplay.find({}).lean().exec(function(err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, docs);
+  })
+};
+
+/**
  * Remove a gameplay for ever (delete from DB)
  * @param gp gameplay object to remove
  * @param callback
@@ -374,5 +387,6 @@ module.exports = {
   countGameplaysForUser: countGameplaysForUser,
   countGameplays: countGameplays,
   checkIfGameIdExists: checkIfGameIdExists,
-  finalize: finalize
+  finalize: finalize,
+  getAllGameplays:getAllGameplays
 };

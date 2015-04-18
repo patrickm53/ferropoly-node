@@ -25,6 +25,7 @@ var ferropolyDb = require('../common/lib/ferropolyDb');
 // Routes includes
 var indexRoute = require('./routes/index');
 var login = require('./routes/login');
+var authtoken = require('./routes/authtoken');
 
 var app = express();
 
@@ -73,6 +74,7 @@ ferropolyDb.init(settings, function (err) {
   // Routes initialisation
   login.init(app, settings);
   app.use('/', indexRoute);
+  authtoken.init(app);
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

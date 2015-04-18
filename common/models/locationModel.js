@@ -47,6 +47,7 @@ var getAllLocations = function (callback) {
   });
 };
 
+
 /**
  * Returns all locations in ferropoly style (no mongoose overhead, by using lean)
  * @param map : map ('zvv' or 'sbb')
@@ -91,6 +92,56 @@ var getLocationByUuid = function (uuid, callback) {
 };
 
 /**
+ * Count Locations
+ * @param callback
+ */
+var countLocations = function (callback) {
+  var retVal = {};
+
+  Location.count({}, function (err, nb) {
+    if (err) {
+      retVal.all = nb;
+    }
+    else {
+      retVal.all = nb;
+    }
+    Location.count({'maps.zvv': true}, function (err, nb) {
+      if (err) {
+        retVal.zvv = -1;
+      }
+      else {
+        retVal.zvv = nb;
+      }
+      Location.count({'maps.sbb': true}, function (err, nb) {
+        if (err) {
+          retVal.sbb = -1;
+        }
+        else {
+          retVal.sbb = nb;
+        }
+        callback(null, retVal);
+      });
+    });
+  });
+};
+
+/**
+ * Convert Model Data to Object as used in Ferropoly (admin app)
+ * @param data is a Location Model
+ * @returns {{}} Ferropoly alike object
+ */
+var convertModelDataToObject = function (data) {
+  var retVal = {};
+  retVal.name = data.name;
+  retVal.uuid = data.uuid;
+  retVal.position = data.position;
+  retVal.accessibility = data.accessibility;
+  retVal.maps = data.maps;
+  return retVal;
+};
+
+
+/**
  * Save location
  * @param location
  * @param callback
@@ -124,6 +175,10 @@ module.exports = {
   /**
    * Save the location
    */
-  saveLocation: saveLocation
+  saveLocation: saveLocation,
 
+  /**
+   * Count locations
+   */
+  countLocations:countLocations
 };
