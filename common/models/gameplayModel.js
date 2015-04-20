@@ -28,7 +28,9 @@ var gameplaySchema = mongoose.Schema({
   scheduling: {
     gameDate: Date,
     gameStart: String, // hh:mm
-    gameEnd: String // hh:mm
+    gameEnd: String, // hh:mm
+    gameStartTs: Date, // Is set during finalization
+    gameEndTs: Date // Is set during finalization
   },
   gameParams: {
     interestInterval: {type: Number, default: 60}, // Interval in minutes of the interests
@@ -217,6 +219,26 @@ var removeGameplay = function (gp, callback) {
 };
 
 /**
+ * Finalize the time: add date and time together
+ * @param date
+ * @param time
+ * @returns {Date}
+ */
+function finalizeTime(date, time) {
+  try {
+    var newDate = new Date(date);
+    var e = time.split(':');
+    newDate.setHours(e[0]);
+    newDate.setMinutes(e[1]);
+    newDate.setSeconds(0);
+    return newDate;
+  }
+  catch (e) {
+    console.log('ERROR in finalizeTime: ' + e);
+    return new Date();
+  }
+}
+/**
  * Finalizes the gameplay, it can't be edited afterwards
  * @param gameId
  * @param ownerEmail
@@ -229,7 +251,7 @@ var finalize = function (gameId, ownerEmail, callback) {
     }
     if (gp.internal.finalized) {
       // nothing to do, is already finalized
-      return callback();
+      return callback(null, gp);
     }
     if (gp.owner.organisatorEmail !== ownerEmail) {
       return callback(new Error('Wrong user, not allowed to finalize'));
@@ -238,12 +260,15 @@ var finalize = function (gameId, ownerEmail, callback) {
       return  callback(new Error('Can only finalize gameplays with pricelist'));
     }
     gp.internal.finalized = true;
+    gp.scheduling.gameStartTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameStart);
+    gp.scheduling.gameEndTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameEnd);
+
     gp.save(function (err, gpSaved) {
       if (err) {
         return callback(err);
       }
       console.log('Gameplay finalized: ' + gpSaved.internal.gameId);
-      callback(null);
+      callback(null, gpSaved);
     });
   })
 };
