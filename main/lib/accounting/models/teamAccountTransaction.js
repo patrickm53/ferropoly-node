@@ -41,6 +41,18 @@ var teamAccountTransactionSchema = mongoose.Schema({
  */
 var TeamAccountTransaction = mongoose.model('TeamAccountTransactions', teamAccountTransactionSchema);
 
+/**
+ * Book the transaction
+ * @param transaction
+ * @param callback
+ */
+function book(transaction, callback) {
+  transaction.save(function(err) {
+    callback(err);
+  });
+}
+
+
 module.exports = {
   Model: TeamAccountTransaction
 };

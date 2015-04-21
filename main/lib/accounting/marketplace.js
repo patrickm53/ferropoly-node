@@ -4,6 +4,9 @@
  * Created by kc on 20.04.15.
  */
 'use strict';
+var gpCache = require('../gameplayCache');
+var teamModel = require('../../../common/models/teamModel');
+var teamAccount = require('./teamAccount');
 
 /**
  * Buy a property or at least try to
@@ -43,10 +46,22 @@ function buildHouses(team, callback) {
 /**
  * Pay Interest for a specific team
  * Money: bank->team
- * @param team
+ * @param gameId
+ * @param teamId
  * @param callback
  */
-function payInterest(team, callback) {
+function payInterest(gameId, teamId, callback) {
+  gpCache.getGameplay(gameId, function (err, gp) {
+    if (err) {
+      callback(err);
+    }
+    teamAccount.payInterest(teamId, gameId, gp.gameParams.interest, function (err) {
+      if (err) {
+        console.log('Marketplace.payInterest error: ' + err);
+      }
+      callback(err);
+    });
+  })
 }
 
 /**
@@ -54,7 +69,23 @@ function payInterest(team, callback) {
  * Money: bank->team
  * @param callback
  */
-function payInterests(callback) {
+function payInterests(gameId, callback) {
+  teamModel.getTeams(gameId, function (err, teams) {
+    if (err) {
+      console.log('Marketplace.payInterests error:' + err);
+      callback(err);
+      return;
+    }
+    var paid = 0;
+    for (var i = 0; i < teams.length; i++) {
+      payInterest(gameId, teamId, function (err) {
+        paid++;
+        if (paid === teams.length) {
+          callback();
+        }
+      })
+    }
+  });
 }
 
 /**
@@ -79,7 +110,7 @@ function payRents(callback) {
  * no false alarms: only call the function when really editing the team).
  *
  * You can loose or win a random amount
- * 
+ *
  * Money: team->chancellery   (negative amount)
  *        bank->team          (positive amount)
  *
@@ -125,5 +156,7 @@ function getChancelleryJackpot(team, callback) {
 function manipulateTeamAccount(team, amount, reason, callback) {
 }
 
-
-module.exports = {};
+module.exports = {
+  payInterest: payInterest,
+  payInterests: payInterests
+};

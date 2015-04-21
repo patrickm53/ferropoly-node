@@ -178,7 +178,14 @@ var countGameplays = function (callback) {
  * @param callback
  */
 var getGameplay = function (gameId, ownerEmail, callback) {
-  Gameplay.find({'internal.owner': ownerEmail, 'internal.gameId': gameId}, function (err, docs) {
+  var params = {'internal.owner': ownerEmail, 'internal.gameId': gameId};
+  if (ownerEmail === null) {
+    params = {'internal.gameId': gameId};
+  }
+  else if (ownerEmail === undefined) {
+    return callback(new Error('undefined is not a valid value for ownerEmail'));
+  }
+  Gameplay.find(params, function (err, docs) {
     if (err) {
       return callback(err);
     }
