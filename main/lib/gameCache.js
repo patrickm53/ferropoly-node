@@ -8,12 +8,13 @@
  */
 'use strict';
 
-
 var teamModel = require('../../common/models/teamModel');
 var gpModel = require('../../common/models/gameplayModel');
+var moment = require('moment');
+var _ = require('lodash');
+var gpCache = {};
+var teamCache = {};
 
-var gpCache = [];
-var teamCache = [];
 /**
  * Get the gameplays
  * @param gameId
@@ -33,32 +34,23 @@ function getGameplay(gameId, callback) {
       return null;
     }
 
-    if (moment().isBetween(gp.scheduling.gameStartTs, gp.scheduling.gameEndTs)) {
-      console.log('GP added to cache');
-      gpCache[gameId] = gp;
+    if (gp) {
+      if (moment().isBetween(gp.scheduling.gameStartTs, gp.scheduling.gameEndTs)) {
+        console.log('GP added to cache');
+        gpCache[gameId] = gp;
+      }
     }
     callback(null, gp);
     return gp;
   })
 }
 /**
- * Get the data of a team
+ * Get the data of a team, always reading from DB
  * @param gameId
  * @param teamId
  * @param callback
  */
-function getTeam (gameId, teamId, callback) {
-  if (teamCache[gameId][teamId]) {
-    callback(null, teamCache[gameId][teamId]);
-    return;
-  }
-
-  var gp = gpCache.getGameplaySync();
-  if (!gp) {
-    callback(new Error('GP load error'));
-    return;
-  }
-
+function getTeam(gameId, teamId, callback) {
   teamModel.getTeams(gameId, function (err, teams) {
     if (err) {
       callback(err);
@@ -78,7 +70,6 @@ function getTeam (gameId, teamId, callback) {
 }
 
 module.exports = {
-
   /**
    * Synch call for getting a gameplay. Is only slow for the first time OR when a game is not today
    * @param gameId
@@ -88,9 +79,20 @@ module.exports = {
     if (gpCache[gameId]) {
       return gpCache[gameId];
     }
-    return getGameplay(gameId, function (err, gp) {
-      return gp;
-    })
+    var result = null;
+    getGameplay(gameId, function (err, gp) {
+      result = {
+        err: err,
+        gp: gp
+      }
+    });
+
+    // Make it synchronous without blocking it all
+    while (result === null) {
+      process.tick();
+    }
+    return result.gp;
+
   },
 
   /**
@@ -100,15 +102,24 @@ module.exports = {
    * @returns {*}
    */
   getTeamSync: function (gameId, teamId) {
-    if (teamCache[gameId][teamId]) {
-      return teamCache[gameId][teamId];
-    }
-    return getTeam(gameId, teamId, function (err, team) {
-      if (err) {
-        return null;
+    if (teamCache[gameId]) {
+      if (teamCache[gameId][teamId]) {
+        return teamCache[gameId][teamId];
       }
-      return team;
-    })
+    }
+    var result = null;
+    getTeam(gameId, teamId, function (err, team) {
+      result = {
+        err: err,
+        team: team
+      }
+    });
+
+    // Make it synchronous without blocking it all
+    while (result === null) {
+      process.tick();
+    }
+    return result.team;
   },
 
   /**
@@ -120,34 +131,57 @@ module.exports = {
    * @param callback
    */
   refreshCache: function (callback) {
+    console.log('Refreshing gameCache');
     gpModel.getAllGameplays(function (err, gameplays) {
-      teamCache = [];
-      gpCache = [];
+
+      teamCache = {};
+      gpCache = {};
 
       if (err) {
         callback(err);
         return;
       }
+      if (!gameplays || gameplays.length === 0) {
+        callback(null);
+        return;
+      }
+      var gameplaysInCache = 0;
       for (var i = 0; i < gameplays.length; i++) {
-        if (gameplays[i].scheduling.gameDate) { // Todo: game is today!!
+        if (moment().isSame(gameplays[i].scheduling.gameDate, 'day')) { // Todo: game is today!!
           gpCache[gameplays[i].internal.gameId] = gameplays[i];
+          gameplaysInCache++;
         }
       }
       var gpHandled = 0;
-      for (i = 0; i < gpCache.length; i++) {
-        teamModel.getTeams(gpCache[i].internal.gameId, function (err, teams) {
-          if (teams) {
+      var teamError = null;
+      _.forOwn(gpCache, function (gp, key) {
+        teamCache[gp.internal.gameId] = {};
+        teamModel.getTeams(gp.internal.gameId, function (err, teams) {
+          if (err) {
+            teamError = err;
+          }
+          if (teams && teams.length > 0) {
             for (var t = 0; t < teams.length; t++) {
-              teamCache[gpCache[i].internal.gameId][teams[t].uuid] = teams[t];
+              teamCache[gp.internal.gameId][teams[t].uuid] = teams[t];
             }
           }
           gpHandled++;
-          if (gpHandled === gpCache.length) {
-            callback();
+          if (gpHandled === gameplaysInCache) {
+            return callback(teamError);
           }
         })
-      }
+      });
     })
+  },
+  /**
+   * Get the cache: this is for statistics and testing purposes
+   * @returns {{gameCache: {}, teamCache: {}}}
+   */
+  getCache: function () {
+    return {
+      gameCache: gpCache,
+      teamCache: teamCache
+    }
   }
 
 };

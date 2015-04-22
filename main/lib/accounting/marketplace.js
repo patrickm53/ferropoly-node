@@ -4,7 +4,7 @@
  * Created by kc on 20.04.15.
  */
 'use strict';
-var gpCache = require('../gameplayCache');
+var gpCache = require('../gameCache');
 var teamModel = require('../../../common/models/teamModel');
 var teamAccount = require('./teamAccount');
 
