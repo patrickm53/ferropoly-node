@@ -122,6 +122,25 @@ module.exports = {
     return result.team;
   },
 
+  getTeamsSync: function (gameId) {
+    if (teamCache[gameId]) {
+      return _.values(teamCache[gameId]);
+    }
+    var result = null;
+    teamModel.getTeams(gameId, function (err, teams) {
+      result = {
+        err: err,
+        teams: teams
+      };
+    });
+
+    // Make it synchronous without blocking it all
+    while (result === null) {
+      process.tick();
+    }
+    return result.teams;
+  },
+
   /**
    * Refresh the cache: clear it and rebuild it. After calling this function, we can use
    * the synch versions: all current teams are in the cache while the other ones should

@@ -4,8 +4,7 @@
  * Created by kc on 20.04.15.
  */
 'use strict';
-var gpCache = require('../gameCache');
-var teamModel = require('../../../common/models/teamModel');
+var gameCache = require('../gameCache');
 var teamAccount = require('./teamAccount');
 
 /**
@@ -51,17 +50,15 @@ function buildHouses(team, callback) {
  * @param callback
  */
 function payInterest(gameId, teamId, callback) {
-  gpCache.getGameplay(gameId, function (err, gp) {
+  var gp = gameCache.getGameplaySync(gameId);
+
+  teamAccount.payInterest(teamId, gameId, gp.gameParams.interest, function (err) {
     if (err) {
-      callback(err);
+      console.log('Marketplace.payInterest error: ' + err);
     }
-    teamAccount.payInterest(teamId, gameId, gp.gameParams.interest, function (err) {
-      if (err) {
-        console.log('Marketplace.payInterest error: ' + err);
-      }
-      callback(err);
-    });
-  })
+    callback(err);
+  });
+
 }
 
 /**
@@ -70,22 +67,21 @@ function payInterest(gameId, teamId, callback) {
  * @param callback
  */
 function payInterests(gameId, callback) {
-  teamModel.getTeams(gameId, function (err, teams) {
-    if (err) {
-      console.log('Marketplace.payInterests error:' + err);
-      callback(err);
-      return;
-    }
-    var paid = 0;
-    for (var i = 0; i < teams.length; i++) {
-      payInterest(gameId, teamId, function (err) {
-        paid++;
-        if (paid === teams.length) {
-          callback();
-        }
-      })
-    }
-  });
+  var gp = gameCache.getGameplaySync(gameId);
+  var teams = gameCache.getTeamsSync(gameId);
+  var paid = 0;
+  var error = null;
+  for (var i = 0; i < teams.length; i++) {
+    teamAccount.payInterest(teams[i].uuid, gameId, gp.gameParams.interest, function (err) {
+      if (err) {
+        error = err;
+      }
+      paid++;
+      if (paid === teams.length) {
+        callback(error);
+      }
+    })
+  }
 }
 
 /**

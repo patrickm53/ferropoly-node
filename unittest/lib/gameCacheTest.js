@@ -190,6 +190,18 @@ describe('gameCache tests', function () {
       });
     });
 
-  })
+    it('should return all teams of a gameplay', function(done) {
+      gpModelState = 'full';
+      teamModelState = 'full';
+      gameCache.refreshCache(function (err) {
+        expect(gameCache.getTeamsSync('gp1').length).to.be(4);
+        expect(gameCache.getTeamsSync('gp2').length).to.be(8);
+        expect(gameCache.getTeamsSync('gp3').length).to.be(12);
+        expect(gameCache.getTeamsSync('gp4').length).to.be(15);
+        done(err);
+      });
+    });
+
+  });
 })
 ;
