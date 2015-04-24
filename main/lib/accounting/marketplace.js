@@ -5,20 +5,66 @@
  */
 'use strict';
 var gameCache = require('../gameCache');
+var propWrap = require('../propertyWrapper');
 var teamAccount = require('./teamAccount');
+var propertyAccount = require('./propertyAccount');
 
 /**
  * Buy a property or at least try to
  * 1) Success: property goes to the team, Money flow:
- *    team->property-bank
+ *    team->property->bank
  * 2) Already sold: pay taxes, Money:
  *    team->property->owner
  *
- * @param team
- * @param property
+ * @param gameId
+ * @param teamId
+ * @param locationId
  * @param callback
  */
-function buyProperty(team, property, callback) {
+function buyProperty(gameId, teamId, locationId, callback) {
+  propWrap.getProperty(gameId, locationId, function (err, property) {
+    if (err) {
+      return callback(err);
+    }
+    if (!property) {
+      return callback(new Error('No property for this location'));
+    }
+    var gp = gameCache.getGameplaySync(gameId);
+    var team = gameCache.getTeamSync(gameId, teamId);
+
+    if (!gp || !team) {
+      return callback(new Error('Gameplay error or team invalid'));
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Now check if the property is still available or sold. There are 3 cases to handle
+    if (!property.gamedata || !property.gamedata.owner || property.gamedata.owner.length === 0) {
+      // CASE 1: property is available, the team is going to buy it
+      propertyAccount.buyProperty(gp, property, team, function (err, info) {
+        if (err) {
+          console.error(err);
+          return callback(err);
+        }
+        teamAccount.chargeToBank(teamId, gameId, info.amount, 'Kauf ' + property.location.name, function (err) {
+          if (err) {
+            return callback(new Error('Fehler beim Grundstückkauf: ' + err.message));
+          }
+          // that's it!
+          return callback(null, {property: property, amount: info.amount});
+        });
+      });
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    else if (property.gamedata.owner === teamId) {
+      // CASE 2: property belongs to the team which wants to buy it, do nothing
+      return callback(err, new Error('Grundstück gehört bereits dieser Gruppe'));
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    else {
+      // CASE 3: property belongs to another team, pay the rent
+
+    }
+  });
 }
 
 /**
@@ -154,5 +200,6 @@ function manipulateTeamAccount(team, amount, reason, callback) {
 
 module.exports = {
   payInterest: payInterest,
-  payInterests: payInterests
+  payInterests: payInterests,
+  buyProperty:buyProperty
 };

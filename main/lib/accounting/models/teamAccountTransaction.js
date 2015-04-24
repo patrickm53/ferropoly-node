@@ -52,6 +52,10 @@ function book(transaction, callback) {
   });
 }
 
+function bookTransfer(sending, receiving, callback) {
+  // TODO: can we save two items at the same time?????????????
+  
+}
 
 module.exports = {
   Model: TeamAccountTransaction
