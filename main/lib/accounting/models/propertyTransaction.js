@@ -29,7 +29,7 @@ var propertyAccountTransactionSchema = mongoose.Schema({
 /**
  * The Gameplay model
  */
-var PropertyAccountTransaction = mongoose.model('TeamAccountTransactions', propertyAccountTransactionSchema);
+var PropertyAccountTransaction = mongoose.model('PropertyAccountTransaction', propertyAccountTransactionSchema);
 
 /**
  * Book the transaction

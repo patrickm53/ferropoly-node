@@ -56,7 +56,7 @@ var propertyAccount = {
     callback('r');
   }
 };
-var marketplace = sandboxedModule.require('../../../main/lib/accounting/marketplace', {
+var marketplace = sandboxedModule.require('../../../../main/lib/accounting/marketplace', {
     requires: {
       '../gameCache': gameCache,
       './teamAccount': teamAccount,

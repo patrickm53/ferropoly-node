@@ -88,7 +88,7 @@ var gpModel = {
   }
 };
 
-var gameCache = sandboxedModule.require('../../main/lib/gameCache', {
+var gameCache = sandboxedModule.require('../../../main/lib/gameCache', {
     requires: {
       '../../common/models/teamModel': teamModel,
       '../../common/models/gameplayModel': gpModel,
