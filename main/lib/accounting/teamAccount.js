@@ -35,7 +35,7 @@ function payInterest(teamId, gameId, amount, callback) {
  * @param teamId
  * @param gameId
  * @param amount   amount to pay (will be always turned to a negative value)
- * @param info     optional text to be supplied with the transaction
+ * @param info     optional text to be supplied with the transaction or object
  * @param callback
  */
 function chargeToBank(teamId, gameId, amount, info, callback) {
@@ -43,6 +43,7 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
     callback(new Error('Parameter error in chargeToBank'));
     return;
   }
+
   // Amount has to be negative, not concerning of the parameter value!
   var chargedAmount = (-1) * Math.abs(amount);
 
@@ -51,14 +52,29 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
   entry.teamId = teamId;
   entry.transaction.amount = chargedAmount;
   entry.transaction.origin = {type: 'bank'};
-  entry.transaction.info = info;
+  if (_.isString(info)) {
+    entry.transaction.info = info;
+  }
+  else if(_.isObject(info)) {
+    entry.transaction.info = info.info;
+    entry.transaction.parts = info.parts;
+  }
+
   teamAccountTransaction.book(entry, function (err) {
     callback(err);
   });
 }
-
-function chargeToAnotherTeam(gameId, payingTeamId, receivingTeamId, amount, info, callback) {
-  if (!payingTeamId || !receivingTeamId || !info || !gameId || !_.isNumber(amount)) {
+/**
+ * One team pays another one
+ * @param gameId
+ * @param debitorTeamId
+ * @param creditorTeamId
+ * @param amount  amount to pay, always positive!
+ * @param info
+ * @param callback
+ */
+function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info, callback) {
+  if (!debitorTeamId || !receivingTeamId || !info || !gameId || !_.isNumber(amount)) {
     callback(new Error('Parameter error in chargeToAnotherTeam'));
     return;
   }
@@ -68,32 +84,36 @@ function chargeToAnotherTeam(gameId, payingTeamId, receivingTeamId, amount, info
 
   var chargingEntry = new teamAccountTransaction.Model();
   chargingEntry.gameId = gameId;
-  chargingEntry.teamId = payingTeamId;
+  chargingEntry.teamId = debitorTeamId;
   chargingEntry.transaction.amount = chargedAmount * (-1);
   chargingEntry.transaction.origin = {
-    uuid: receivingTeamId,
+    uuid: creditorTeamId,
     type: 'team'
   };
   chargingEntry.transaction.info = info;
 
   var receivingEntry = new teamAccountTransaction.Model();
   receivingEntry.gameId = gameId;
-  receivingEntry.teamId = receivingTeamId;
+  receivingEntry.teamId = creditorTeamId;
   receivingEntry.transaction.amount = chargedAmount;
   receivingEntry.transaction.origin = {
-    uuid: payingTeamId,
+    uuid: debitorTeamId,
     type: 'team'
   };
   receivingEntry.transaction.info = info;
 
   teamAccountTransaction.bookTransfer(chargingEntry, receivingEntry, function (err) {
-    callback(err);
+    if (err) {
+      return callback(err);
+    }
+    callback(null, {amount: amount});
   });
 
 }
 
 module.exports = {
   payInterest: payInterest,
-  chargeToBank: chargeToBank
+  chargeToBank: chargeToBank,
+  chargeToAnotherTeam: chargeToAnotherTeam
 
 };

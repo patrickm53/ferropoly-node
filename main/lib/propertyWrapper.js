@@ -13,18 +13,34 @@ module.exports = {
    * @param gameId
    * @param locationId
    */
-  getProperty: function (gameId, locationId) {
-    pm.getPropertyByLocationId(gameId,  locationId, function(err, prop) {
+  getProperty: function (gameId, locationId, callback) {
+    pm.getPropertyByLocationId(gameId, locationId, function (err, prop) {
       callback(err, prop);
     });
+  },
+  /**
+   * Get the properties of a team
+   * @param gameId
+   * @param teamId
+   * @param callback
+   */
+  getTeamProperties: function (gameId, teamId, callback) {
+    pm.getPropertiesForGameplay(gameId, {'gamedata.owner': teamId}, function (err, properties) {
+      if (err) {
+        console.error(err);
+        return callback(err);
+      }
+      callback(null, properties);
+    })
   },
   /**
    * Update the property
    * @param property
    */
-  updateProperty: function(property) {
-    pm.updateProperty(property.gameId, property, function(err) {
+  updateProperty: function (property) {
+    pm.updateProperty(property.gameId, property, function (err) {
       callback(err);
     })
   }
+
 };

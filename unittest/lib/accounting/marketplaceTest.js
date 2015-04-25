@@ -1,5 +1,9 @@
 /**
  * Sandbox test for the marketplace
+ *
+ * This seems to be a quite silly action: each test requires a lot of mocking. We'll test this module with
+ * an integration test, this module will disappear
+ *
  * Created by kc on 23.04.15.
  */
 'use strict';
@@ -39,12 +43,25 @@ var teamAccount = {
       amount: amount
     });
     callback();
+  },
+  chargeToBank: function(callback) {
+    callback();
+  }
+};
+var propertyWrapper = {
+
+};
+var propertyAccount = {
+  getProperty: function(propertyId, gameId, callback) {
+    callback('r');
   }
 };
 var marketplace = sandboxedModule.require('../../../main/lib/accounting/marketplace', {
     requires: {
       '../gameCache': gameCache,
-      './teamAccount': teamAccount
+      './teamAccount': teamAccount,
+      '../propertyWrapper': propertyWrapper,
+      './propertyAccount': propertyAccount
     }
   }
 );
