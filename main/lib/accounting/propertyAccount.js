@@ -12,7 +12,7 @@
  */
 'use strict';
 var propWrap = require('../propertyWrapper');
-var propertyTransaction = require('./models/propertyTransaction');
+var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
 
 /**
  * Buy a property. The property must be free, otherwise this function rises an error.

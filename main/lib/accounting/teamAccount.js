@@ -5,7 +5,7 @@
  */
 'use strict';
 var _ = require('lodash');
-var teamAccountTransaction = require('./models/teamAccountTransaction');
+var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
 var moment = require('moment');
 
 /**
