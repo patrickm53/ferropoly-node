@@ -95,14 +95,30 @@ function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
     .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
     .sort('timestamp')
     .lean()
-    .exec(function(err, data) {
+    .exec(function (err, data) {
       callback(err, data);
     })
+}
+
+/**
+ * Dumps all data for a gameplay (when deleting the game data)
+ * @param gameId
+ * @param callback
+ */
+function dumpAccounts(gameId, callback) {
+  if (!gameId) {
+    return callback(new Error('No gameId supplied'));
+  }
+  console.log('Removing all account information for ' + gameId);
+  TeamAccountTransaction.remove({gameId: gameId}, function (err) {
+    callback(err);
+  })
 }
 
 module.exports = {
   Model: TeamAccountTransaction,
   book: book,
   bookTransfer: bookTransfer,
-  getEntries:getEntries
+  getEntries: getEntries,
+  dumpAccounts: dumpAccounts
 };

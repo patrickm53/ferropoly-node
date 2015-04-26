@@ -199,6 +199,28 @@ var getPropertyByLocationId = function (gameId, locationId, callback) {
   });
 };
 
+
+/**
+ * Get a property by its ID
+ * @param gameId
+ * @param propertyId ID of the property, NOT of the mongoDb entry (_id) !
+ * @param callback
+ * @returns {*}
+ */
+var getPropertyById = function (gameId, propertyId, callback) {
+  if (!gameId) {
+    return callback(new Error('No gameId supplied'));
+  }
+  Property.find({gameId: gameId, 'uuid': propertyId}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback();
+    }
+    callback(null, docs[0]);
+  });
+};
 /**
  * Get all properties for a gameplay as REDUCED dataset (lean).
  * @param gameId
@@ -283,6 +305,7 @@ module.exports = {
   removePropertyFromGameplay: removePropertyFromGameplay,
   getPropertiesForGameplay: getPropertiesForGameplay,
   getPropertyByLocationId: getPropertyByLocationId,
+  getPropertyById: getPropertyById,
   updateProperty: updateProperty,
   createPropertyFromLocation: createPropertyFromLocation,
   updatePositionInPriceList: updatePositionInPriceList,

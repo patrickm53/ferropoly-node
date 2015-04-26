@@ -37,6 +37,16 @@ module.exports = function (grunt) {
 
           {
             expand: true,
+            cwd: '../ferropoly-editor/common/models/accounting',
+            src: '**',
+            dest: 'common/models/accounting',
+            flatten: true,
+            filter: 'isFile',
+            timestamp: true
+          },
+
+          {
+            expand: true,
             cwd: '../ferropoly-editor/common/routes',
             src: '**',
             dest: 'common/routes/',

@@ -10,6 +10,7 @@ var expect = require('expect.js');
 var _ = require('lodash');
 
 var db = require('./../../common/lib/ferropolyDb');
+var pricelistLib = require('./../../common/lib/pricelist');
 var gameCache = require('../../main/lib/gameCache');
 var marketplace = require('../../main/lib/accounting/marketplace');
 var teamAccount = require('../../main/lib/accounting/teamAccount');
@@ -17,6 +18,7 @@ var settings = require('./../../main/settings');
 
 var gameId;
 var gameData;
+var pricelist;
 
 describe('Marketplace integration tests', function () {
   this.timeout(5000);
@@ -29,7 +31,10 @@ describe('Marketplace integration tests', function () {
               gameplay: gd.gameplay,
               teams: _.values(gd.teams)
             };
-            done(err);
+            pricelistLib.getPricelist(gameId, function(err, list) {
+              pricelist = list;
+              done(err);
+            });
           });
         });
       }
@@ -87,5 +92,24 @@ describe('Marketplace integration tests', function () {
     });
   });
 
+  describe('Building houses #1', function() {
+    it('should do nothing as there are no houses', function(done) {
+      marketplace.buildHouses(gameId, gameData.teams[0].uuid, function(err, info) {
+        expect(info.amount).to.be(0);
+        expect(info.log.length).to.be(0);
+        done(err);
+      })
+    });
+  });
+
+  describe('Buying some properties', function() {
+    it('should buy the cheapest place for team 0', function(done) {
+      marketplace.buyProperty(gameId, gameData.teams[0].uuid, pricelist[0].uuid, function(err, info) {
+        console.log(err);
+        console.log(info);
+        done(err);
+      })
+    })
+  });
 
 });

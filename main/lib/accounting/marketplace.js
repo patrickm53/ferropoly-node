@@ -18,11 +18,11 @@ var _ = require('lodash');
  *
  * @param gameId
  * @param teamId
- * @param locationId
+ * @param propertyId
  * @param callback
  */
-function buyProperty(gameId, teamId, locationId, callback) {
-  propWrap.getProperty(gameId, locationId, function (err, property) {
+function buyProperty(gameId, teamId, propertyId, callback) {
+  propWrap.getProperty(gameId, propertyId, function (err, property) {
     if (err) {
       return callback(err);
     }
@@ -34,9 +34,8 @@ function buyProperty(gameId, teamId, locationId, callback) {
         console.error(err);
         return callback(err);
       }
-      var gp = res.gp;
-      var teams = res.teams;
-
+      var gp = res.gameplay;
+      var team = res.teams[teamId];
 
       if (!gp || !team) {
         return callback(new Error('Gameplay error or team invalid'));
@@ -81,52 +80,6 @@ function buyProperty(gameId, teamId, locationId, callback) {
 }
 
 /**
- * Build a house for a specific property
- * Money: team->property->bank
- *
- * @param gameId
- * @param teamId
- * @param locationId
- * @param callback
- */
-function buildHouse(gameId, teamId, locationId, callback) {
-  propWrap.getProperty(gameId, locationId, function (err, property) {
-    if (err) {
-      return callback(err);
-    }
-    if (property.gamedata.owner !== teamId) {
-      return callback(new Error('not the owner'));
-    }
-
-    gameCache.getGameData(gameId, function (err, res) {
-      if (err) {
-        console.error(err);
-        return callback(err);
-      }
-      var gp = res.gp;
-      var teams = res.teams;
-
-      if (!gp || !team) {
-        return callback(new Error('Gameplay error or team invalid'));
-      }
-
-      propertyAccount.buyBuilding(gp, property, team, function (err, info) {
-        if (err) {
-          return callback(err);
-        }
-        teamAccount.chargeToBank(teamId, gp.internal.gameId, info.amount, 'Hausbau Nr. ' + info.buildingNb, function (err) {
-          if (err) {
-            console.error(err);
-            return callback(err);
-          }
-          return callback(null, {amount: info.amount, buildingNb: info.buildingNb});
-        });
-      });
-    });
-  });
-}
-
-/**
  * Build houses for all porperties of a team
  * Same money flow as buildHouse
  * @param gameId
@@ -141,7 +94,7 @@ function buildHouses(gameId, teamId, callback) {
 
     if (properties.length === 0) {
       console.log('nothing to build');
-      return callback(null);
+      return callback(null, {amount: 0, log:[]});
     }
 
     gameCache.getGameData(gameId, function (err, res) {
@@ -187,34 +140,8 @@ function buildHouses(gameId, teamId, callback) {
   });
 }
 
-
 /**
- * Pay Interest for a specific team
- * Money: bank->team
- * @param gameId
- * @param teamId
- * @param callback
- */
-function payInterest(gameId, teamId, callback) {
-  gameCache.getGameData(gameId, function (err, res) {
-    if (err) {
-      console.error(err);
-      return callback(err);
-    }
-    var gp = res.gp;
-    var teams = res.teams;
-
-    teamAccount.payInterest(teamId, gameId, gp.gameParams.interest, function (err) {
-      if (err) {
-        console.log('Marketplace.payInterest error: ' + err);
-      }
-      callback(err);
-    });
-  });
-}
-
-/**
- * Pay Interest, this is the fix value
+ * Pay Interest (this is the fix value) for all teams
  * Money: bank->team
  * @param callback
  */
@@ -313,8 +240,7 @@ function manipulateTeamAccount(team, amount, reason, callback) {
 }
 
 module.exports = {
-  payInterest: payInterest,
   payInterests: payInterests,
   buyProperty: buyProperty,
-  buildHouse: buildHouse
+  buildHouses: buildHouses
 };

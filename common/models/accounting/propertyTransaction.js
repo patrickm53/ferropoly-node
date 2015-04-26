@@ -19,7 +19,7 @@ var propertyAccountTransactionSchema = mongoose.Schema({
   transaction: {
     origin :{
       uuid: String, // uuid of the origin
-      type: String  // either "team" or "bank"
+      category: String  // either "team" or "bank"
     },
     amount: {type: Number, default: 0}, // value to be transferred, positive or negative
     info: String  // Info about the transaction

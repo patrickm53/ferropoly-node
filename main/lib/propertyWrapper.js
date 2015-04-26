@@ -11,10 +11,10 @@ module.exports = {
   /**
    * Get the property for a given location and game
    * @param gameId
-   * @param locationId
+   * @param propertyId
    */
-  getProperty: function (gameId, locationId, callback) {
-    pm.getPropertyByLocationId(gameId, locationId, function (err, prop) {
+  getProperty: function (gameId, propertyId, callback) {
+    pm.getPropertyById(gameId, propertyId, function (err, prop) {
       callback(err, prop);
     });
   },
@@ -37,7 +37,7 @@ module.exports = {
    * Update the property
    * @param property
    */
-  updateProperty: function (property) {
+  updateProperty: function (property, callback) {
     pm.updateProperty(property.gameId, property, function (err) {
       callback(err);
     })

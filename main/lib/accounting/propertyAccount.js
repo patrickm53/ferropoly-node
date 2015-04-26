@@ -49,8 +49,8 @@ function buyProperty(gameplay, property, team, callback) {
     pt.propertyId = property.uuid;
     pt.transaction = {
       origin: {
-        uuid: team,
-        type: 'team'
+        uuid: team.uuid,
+        category: 'team'
       },
       amount: (-1) * retVal.amount, // buy is negative earning on the property
       info: 'Kauf'
