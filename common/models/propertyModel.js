@@ -222,7 +222,11 @@ var getPropertyById = function (gameId, propertyId, callback) {
   });
 };
 /**
- * Get all properties for a gameplay as REDUCED dataset (lean).
+ * Get all properties for a gameplay
+ * Use the options to get:
+ *   - a lean dataset (can't save a property then!
+ *   - all properties of one propertyGroup (to check possession)
+ *
  * @param gameId
  * @param options
  * @param callback
@@ -237,6 +241,14 @@ var getPropertiesForGameplay = function (gameId, options, callback) {
     return Property.find()
       .where('gameId').equals(gameId)
       .lean()
+      .exec(function (err, docs) {
+        return callback(err, docs);
+      });
+  }
+  else if(options && options.propertyGroup) {
+    return Property.find()
+      .where('gameId').equals(gameId)
+      .where('pricelist.propertyGroup').equals(options.propertyGroup)
       .exec(function (err, docs) {
         return callback(err, docs);
       });

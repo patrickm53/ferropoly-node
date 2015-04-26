@@ -94,7 +94,7 @@ function buildHouses(gameId, teamId, callback) {
 
     if (properties.length === 0) {
       console.log('nothing to build');
-      return callback(null, {amount: 0, log:[]});
+      return callback(null, {amount: 0, log: []});
     }
 
     gameCache.getGameData(gameId, function (err, res) {
@@ -111,6 +111,7 @@ function buildHouses(gameId, teamId, callback) {
 
       var log = [];
       var handled = 0;
+
       for (var i = 0; i < properties.length; i++) {
         propertyAccount.buyBuilding(gp, properties[i], team, function (err, info) {
           if (err) {
@@ -126,13 +127,19 @@ function buildHouses(gameId, teamId, callback) {
             for (var t = 0; t < log.length; t++) {
               totalAmount += log[t].amount;
             }
-            teamAccount.chargeToBank(teamId, gameId, totalAmount, {info: 'Hausbau', parts: log}, function (err) {
-              if (err) {
-                console.error(err);
-                return callback(err);
-              }
-              return callback(null, {amount: totalAmount, log: log});
-            })
+            if (totalAmount === 0) {
+              // fine, we tried to build but there was nothing to build
+              return callback(null, {amount: 0});
+            }
+            else {
+              teamAccount.chargeToBank(teamId, gameId, totalAmount, {info: 'Hausbau', parts: log}, function (err) {
+                if (err) {
+                  console.error(err);
+                  return callback(err);
+                }
+                return callback(null, {amount: totalAmount, log: log});
+              });
+            }
           }
         });
       }
@@ -171,7 +178,7 @@ function payInterests(gameId, callback) {
 }
 
 /**
- * Pays the rent for one specific team
+ * Pays the rent for one specific team CHECK IF ALL PROPERTIES ARE IN ONE GROUP
  * Money: bank->propertIES->team
  * @param gameId
  * @param teamId

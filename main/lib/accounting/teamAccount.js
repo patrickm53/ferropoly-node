@@ -45,6 +45,10 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
     return;
   }
 
+  if (amount === 0) {
+    return callback(new Error('Value must not be 0'));
+  }
+
   // Amount has to be negative, not concerning of the parameter value!
   var chargedAmount = (-1) * Math.abs(amount);
 
@@ -78,6 +82,10 @@ function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info
   if (!debitorTeamId || !receivingTeamId || !info || !gameId || !_.isNumber(amount)) {
     callback(new Error('Parameter error in chargeToAnotherTeam'));
     return;
+  }
+
+  if (amount === 0) {
+    return callback(new Error('Value must not be 0'));
   }
 
   // Amount has to be positive for us, not concerning of the parameter value!

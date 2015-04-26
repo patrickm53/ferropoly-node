@@ -17,7 +17,7 @@ var propertyAccountTransactionSchema = mongoose.Schema({
   propertyId: String, // This is the uuid of the property the account belongs to
 
   transaction: {
-    origin :{
+    origin: {
       uuid: String, // uuid of the origin
       category: String  // either "team" or "bank"
     },
@@ -37,12 +37,29 @@ var PropertyAccountTransaction = mongoose.model('PropertyAccountTransaction', pr
  * @param callback
  */
 function book(transaction, callback) {
-  transaction.save(function(err) {
+  transaction.save(function (err) {
     callback(err);
   });
 }
 
+
+/**
+ * Dumps all data for a gameplay (when deleting the game data)
+ * @param gameId
+ * @param callback
+ */
+function dumpAccounts(gameId, callback) {
+  if (!gameId) {
+    return callback(new Error('No gameId supplied'));
+  }
+  console.log('Removing all account information for ' + gameId);
+  PropertyAccountTransaction.remove({gameId: gameId}, function (err) {
+    callback(err);
+  })
+}
+
 module.exports = {
   Model: PropertyAccountTransaction,
-  book:book
+  dumpAccounts: dumpAccounts,
+  book: book
 };
