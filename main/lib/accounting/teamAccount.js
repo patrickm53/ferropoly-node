@@ -52,11 +52,11 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
   entry.gameId = gameId;
   entry.teamId = teamId;
   entry.transaction.amount = chargedAmount;
-  entry.transaction.origin = { category: 'bank'};
+  entry.transaction.origin = {category: 'bank'};
   if (_.isString(info)) {
     entry.transaction.info = info;
   }
-  else if(_.isObject(info)) {
+  else if (_.isObject(info)) {
     entry.transaction.info = info.info;
     entry.transaction.parts = info.parts;
   }
@@ -97,7 +97,7 @@ function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info
   receivingEntry.gameId = gameId;
   receivingEntry.teamId = creditorTeamId;
   receivingEntry.transaction.amount = chargedAmount;
-  receivingEntry.transaction.origin = {uuid : debitorTeamId, category:'team'};
+  receivingEntry.transaction.origin = {uuid: debitorTeamId, category: 'team'};
   receivingEntry.transaction.info = info;
 
   teamAccountTransaction.bookTransfer(chargingEntry, receivingEntry, function (err) {
@@ -123,14 +123,56 @@ function getBalance(gameId, teamId, p1, p2) {
     ts = moment();
   }
 
-  teamAccountTransaction.getEntries(gameId, teamId, undefined, ts, function(err, data) {
+  teamAccountTransaction.getEntries(gameId, teamId, undefined, ts, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    var saldo = 0;
+    for (var i = 0; i < data.length; i++) {
+      saldo += data[i].transaction.amount;
+    }
+    callback(err, {balance: saldo, entries: i});
+  })
+}
+
+/**
+ * Gets the account statement, all bookings up to a given time
+ *
+ * Param order p-params: [start] [end] callback
+ * If only one param (start|end) is supplied, it is handled as start
+ *
+ * @param gameId
+ * @param teamId
+ * @param p1
+ * @param p2
+ * @param p3
+ */
+function getAccountStatement(gameId, teamId, p1, p2, p3) {
+  var tsStart = p1;
+  var tsEnd = p2;
+  var callback = p3;
+  if (_.isFunction(p1)) {
+    callback = p1;
+    tsStart = undefined;
+    tsEnd = moment();
+  }
+  else if (_.isFunction(p2)) {
+    callback = p2;
+    tsStart = p2;
+    tsEnd = moment();
+  }
+
+  teamAccountTransaction.getEntries(gameId, teamId, tsStart, tsEnd, function (err, data) {
     callback(err, data);
   })
 }
 
+
 module.exports = {
   payInterest: payInterest,
   chargeToBank: chargeToBank,
-  chargeToAnotherTeam: chargeToAnotherTeam
+  chargeToAnotherTeam: chargeToAnotherTeam,
+  getBalance: getBalance,
+  getAccountStatement: getAccountStatement
 
 };

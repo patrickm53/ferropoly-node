@@ -224,7 +224,7 @@ function payInterests(gameId, callback) {
       console.error(err);
       return callback(err);
     }
-    var gp = res.gp;
+    var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
     var paid = 0;
     var error = null;

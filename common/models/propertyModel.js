@@ -13,7 +13,7 @@ var uuid = require('node-uuid');
  */
 var propertySchema = mongoose.Schema({
   gameId: String, // Gameplay this property belongs to
-  uuid: {type: String, index: true},     // UUID of this property (index)
+  uuid: {type: String, index: { unique: true }},     // UUID of this property (index)
   location: {
     name: String, // Name of the property
     uuid: String, // UUID of the location (referencing key)

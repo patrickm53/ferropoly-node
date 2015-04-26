@@ -70,6 +70,15 @@ function bookTransfer(debitor, creditor, callback) {
   });
 }
 
+/***
+ * Get the entries of the account
+ * @param gameId
+ * @param teamId
+ * @param tsStart moment() to start, if undefined all
+ * @param tsEnd   moment() to end, if undefined now()
+ * @param callback
+ * @returns {*}
+ */
 function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
   if (!gameId || !teamId) {
     return callback(new Error('parameter error'));

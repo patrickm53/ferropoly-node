@@ -27,7 +27,7 @@ module.exports = {
         return callback(err);
       }
 
-      var result = {gp: gp};
+      var result = {gameplay: gp};
 
       teamModel.getTeams(gameId, function (err, teams) {
         if (err) {

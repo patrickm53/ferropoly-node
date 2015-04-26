@@ -11,8 +11,9 @@ var uuid = require('node-uuid');
  * The mongoose schema for a property
  */
 var teamSchema = mongoose.Schema({
+  _id: String,
   gameId: String, // Gameplay this team plays with
-  uuid: {type: String, index: true},     // UUID of this team (index)
+  uuid: {type: String, index: { unique: true }},     // UUID of this team (index)
   data: {
     name: String, // Name of the team
     organization: String, // Organization the team belongs to
@@ -23,7 +24,7 @@ var teamSchema = mongoose.Schema({
     },
     remarks: String
   }
-}, {autoIndex: false});
+}, { _id: false });
 
 /**
  * The Property model
@@ -41,6 +42,7 @@ var createTeam = function (newTeam, gameId, callback) {
   team.uuid = uuid.v4();
   team.gameId = gameId;
   team.data = newTeam.data;
+  team._id = team.uuid;
   team.save(function (err, savedTeam) {
     callback(err, savedTeam);
   })
