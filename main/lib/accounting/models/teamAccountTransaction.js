@@ -6,6 +6,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var moment = require('moment');
 
 /**
  * The mongoose schema for a team account
@@ -21,8 +22,8 @@ var teamAccountTransactionSchema = mongoose.Schema({
      by the amount, which is either positive or negative.
      */
     origin: {
-      uuid: String, // uuid of the origin, can be a property or a team
-      type: String  // either "team", "property", "bank", "chancellery"
+      uuid: {type: String, default: 'fff'}, // uuid of the origin, can be a property or a team
+      category: String  // either "team", "property", "bank", "chancellery"
     },
     amount: {type: Number, default: 0}, // value to be transferred, positive or negative
     info: String, // Info about the transaction
@@ -69,8 +70,30 @@ function bookTransfer(debitor, creditor, callback) {
   });
 }
 
+function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
+  if (!gameId || !teamId) {
+    return callback(new Error('parameter error'));
+  }
+
+  if (!tsStart) {
+    tsStart = moment('2015-01-01');
+  }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
+  TeamAccountTransaction.find({gameId: gameId})
+    .where('teamId').equals(teamId)
+    .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+    .sort('timestamp')
+    .lean()
+    .exec(function(err, data) {
+      callback(err, data);
+    })
+}
+
 module.exports = {
   Model: TeamAccountTransaction,
   book: book,
-  bookTransfer: bookTransfer
+  bookTransfer: bookTransfer,
+  getEntries:getEntries
 };

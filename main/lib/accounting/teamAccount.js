@@ -6,6 +6,7 @@
 'use strict';
 var _ = require('lodash');
 var teamAccountTransaction = require('./models/teamAccountTransaction');
+var moment = require('moment');
 
 /**
  * Pays the interest for one team
@@ -23,7 +24,7 @@ function payInterest(teamId, gameId, amount, callback) {
   entry.gameId = gameId;
   entry.teamId = teamId;
   entry.transaction.amount = amount;
-  entry.transaction.origin = {type: 'bank'};
+  entry.transaction.origin = {category: 'bank'};
   entry.transaction.info = 'Startgeld';
   teamAccountTransaction.book(entry, function (err) {
     callback(err);
@@ -51,7 +52,7 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
   entry.gameId = gameId;
   entry.teamId = teamId;
   entry.transaction.amount = chargedAmount;
-  entry.transaction.origin = {type: 'bank'};
+  entry.transaction.origin = { category: 'bank'};
   if (_.isString(info)) {
     entry.transaction.info = info;
   }
@@ -88,7 +89,7 @@ function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info
   chargingEntry.transaction.amount = chargedAmount * (-1);
   chargingEntry.transaction.origin = {
     uuid: creditorTeamId,
-    type: 'team'
+    category: 'team'
   };
   chargingEntry.transaction.info = info;
 
@@ -96,10 +97,7 @@ function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info
   receivingEntry.gameId = gameId;
   receivingEntry.teamId = creditorTeamId;
   receivingEntry.transaction.amount = chargedAmount;
-  receivingEntry.transaction.origin = {
-    uuid: debitorTeamId,
-    type: 'team'
-  };
+  receivingEntry.transaction.origin = {uuid : debitorTeamId, category:'team'};
   receivingEntry.transaction.info = info;
 
   teamAccountTransaction.bookTransfer(chargingEntry, receivingEntry, function (err) {
@@ -108,7 +106,26 @@ function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info
     }
     callback(null, {amount: amount});
   });
+}
 
+/**
+ * Gets the balance, at a given time or now
+ * @param gameId
+ * @param teamId
+ * @param p1 timestamp until when the balance shall be gotten (optional, default: now)
+ * @param p2 callback
+ */
+function getBalance(gameId, teamId, p1, p2) {
+  var callback = p2;
+  var ts = p1;
+  if (_.isFunction(p1)) {
+    callback = p1;
+    ts = moment();
+  }
+
+  teamAccountTransaction.getEntries(gameId, teamId, undefined, ts, function(err, data) {
+    callback(err, data);
+  })
 }
 
 module.exports = {
