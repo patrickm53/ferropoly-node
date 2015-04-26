@@ -13,6 +13,14 @@ module.exports = {
     var spawn = require('child_process').spawn,
       demo = spawn(createDemoGamePath);
 
+    demo.stdout.on('data', function (data) {
+      console.log('stdout: ' + data);
+    });
+
+    demo.stderr.on('data', function (data) {
+      console.log('stderr: ' + data);
+    });
+
     demo.on('close', function (code) {
       console.log('child process exited with code ' + code);
       var gameParams = {

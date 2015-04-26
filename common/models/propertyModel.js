@@ -13,7 +13,7 @@ var uuid = require('node-uuid');
  */
 var propertySchema = mongoose.Schema({
   gameId: String, // Gameplay this property belongs to
-  uuid: {type: String, index: { unique: true }},     // UUID of this property (index)
+  uuid: {type: String, index: {unique: true}},     // UUID of this property (index)
   location: {
     name: String, // Name of the property
     uuid: String, // UUID of the location (referencing key)
@@ -224,31 +224,50 @@ var getPropertyById = function (gameId, propertyId, callback) {
 /**
  * Get all properties for a gameplay as REDUCED dataset (lean).
  * @param gameId
- * @param query , null if none
+ * @param options
  * @param callback
  * @returns {Query}
  */
-var getPropertiesForGameplay = function (gameId, query, callback) {
+var getPropertiesForGameplay = function (gameId, options, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  if (query === null) {
-    return Property.find({gameId: gameId}).lean().exec(function (err, docs) {
-      if (err) {
-        return callback(err);
-      }
-      return callback(null, docs);
-    });
+
+  if (options && options.lean) {
+    return Property.find()
+      .where('gameId').equals(gameId)
+      .lean()
+      .exec(function (err, docs) {
+        return callback(err, docs);
+      });
   }
-  query.gameId = gameId;
-  return Property.find(query, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    return callback(null, docs);
-  });
+  else {
+    return Property.find()
+      .where('gameId').equals(gameId)
+      .exec(function (err, docs) {
+        return callback(err, docs);
+      });
+  }
 };
 
+/**
+ * Get the poperties for a team
+ * @param gameId
+ * @param teamId
+ * @param callback
+ * @returns {*}
+ */
+var getPropertiesForTeam = function (gameId, teamId, callback) {
+  if (!gameId || !teamId) {
+    return callback(new Error('Parameter error'));
+  }
+  Property.find()
+    .where('gamedata.owner').equals(teamId)
+    .where('gameId').equals(gameId)
+    .exec(function (err, data) {
+      callback(err, data);
+    });
+};
 /**
  * Removes one property from the gameplay (deletes them in the DB)
  * @param gameId
@@ -304,6 +323,7 @@ module.exports = {
   removeAllPropertiesFromGameplay: removeAllPropertiesFromGameplay,
   removePropertyFromGameplay: removePropertyFromGameplay,
   getPropertiesForGameplay: getPropertiesForGameplay,
+  getPropertiesForTeam: getPropertiesForTeam,
   getPropertyByLocationId: getPropertyByLocationId,
   getPropertyById: getPropertyById,
   updateProperty: updateProperty,

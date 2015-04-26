@@ -102,8 +102,8 @@ function buildHouses(gameId, teamId, callback) {
         console.error(err);
         return callback(err);
       }
-      var gp = res.gp;
-      var teams = res.teams;
+      var gp = res.gameplay;
+      var team = res.teams[teamId];
 
       if (!gp || !team) {
         return callback(new Error('Gameplay error or team invalid'));
@@ -112,7 +112,7 @@ function buildHouses(gameId, teamId, callback) {
       var log = [];
       var handled = 0;
       for (var i = 0; i < properties.length; i++) {
-        propertyAccount.buyBuilding(gp, property, team, function (err, info) {
+        propertyAccount.buyBuilding(gp, properties[i], team, function (err, info) {
           if (err) {
             console.log(err);
           }

@@ -80,7 +80,7 @@ function buyBuilding(gameplay, property, team, callback) {
       return callback(err);
     }
     var retVal = {
-      amount: getBuildingPrice(property),
+      amount: Math.abs(getBuildingPrice(property)) * (-1),
       buildingNb: property.gamedata.buildings,
       property: property.uuid,
       propertyName: property.location.name
@@ -95,7 +95,7 @@ function buyBuilding(gameplay, property, team, callback) {
         uuid: team,
         type: 'team'
       },
-      amount: (-1) * retVal.amount, // building buildings is negative earning on the property
+      amount: retVal.amount, // building buildings is negative earning on the property
       info: 'Hausbau'
     };
 

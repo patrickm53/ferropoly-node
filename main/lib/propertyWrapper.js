@@ -25,7 +25,7 @@ module.exports = {
    * @param callback
    */
   getTeamProperties: function (gameId, teamId, callback) {
-    pm.getPropertiesForGameplay(gameId, {'gamedata.owner': teamId}, function (err, properties) {
+    pm.getPropertiesForTeam(gameId, teamId, function (err, properties) {
       if (err) {
         console.error(err);
         return callback(err);
