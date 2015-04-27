@@ -82,7 +82,7 @@ function buyBuilding(gameplay, property, team, callback) {
     // there is nothing to do, already a hotel
     return callback(new Error('can not build, already a hotel there'));
   }
-  if(!property.gamedata.buildingEnabled) {
+  if (!property.gamedata.buildingEnabled) {
     return callback(new Error('can not build now, wait for next round'));
   }
   property.gamedata.buildings++;
@@ -120,33 +120,151 @@ function buyBuilding(gameplay, property, team, callback) {
     });
   });
 }
+
+/**
+ * This is the rent function when a team comes to a already sold property
+ * @param gameplay
+ * @param property
+ * @param debitor
+ * @param callback
+ */
+function payRent(gameplay, property, debitor, callback) {
+  getPropertyValue(gameplay, property, function (err, info) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null);
+  });
+}
+
+/**
+ * Pays the interest (normally every hour) for properties: their value. This function
+ * just books it in the property account. The register is the one retrieved using
+ * getRentRegister
+ * @param gameplay
+ * @param register
+ * @param callback
+ */
+function payInterest(gameplay, register, callback) {
+  var t = 0;
+  var error = null;
+  for (var i = 0; i < register.length; i++) {
+    // Save a property transaction
+    var pt = new propertyTransaction.Model();
+    pt.gameId = gameplay.internal.gameId;
+    pt.propertyId = register[i].uuid;
+    pt.transaction = {
+      origin: {
+        type: 'bank'
+      },
+      amount: Math.abs(register[i].amount), // interest is positive earning on the property
+      info: 'Zinsen ' + register[i].name
+    };
+
+    propertyTransaction.book(pt, function (err) {
+      if (err) {
+        console.error(err);
+        error = err;
+      }
+      t++;
+      if (t === register.length) {
+        callback(error);
+      }
+    });
+  }
+}
+
+/**
+ * Get the rent register: nothing is booked, but the rent of all properties of a team
+ * is evaluated
+ * @param gameplay
+ * @param team
+ * @param callback
+ */
+function getRentRegister(gameplay, team, callback) {
+  propWrap.getTeamProperties(gameplay.internal.gameId, team.uuid, function (err, properties) {
+    if (err) {
+      return callback(err);
+    }
+
+    var info = {
+      register: [],
+      totalAmount: 0
+    };
+    for (var i = 0; i < properties.length; i++) {
+      getPropertyValue(gameplay, properties[i], function (err, propVal) {
+        if (err) {
+          info.register.push({err: err.message});
+        }
+        else {
+          info.register.push(propVal);
+          info.totalAmount += propVal.rent;
+        }
+        if (info.register.length === properties.length) {
+          return callback(null, info);
+        }
+      });
+    }
+  });
+}
 /**
  * Returns the value of the property for rent and interest
  * @param property
  * @returns {*}
  */
-function getPropertyValue(property) {
-  var buildingNb = 0;
-  if (property.gamedata.buildings) {
-    buildingNb = property.gamedata.buildings;
-  }
-  switch (buildingNb) {
-    case 0:
-      return property.pricelist.rents.noHouse;
-    case 1:
-      return property.pricelist.rents.oneHouse;
-    case 2:
-      return property.pricelist.rents.twoHouses;
-    case 3:
-      return property.pricelist.rents.threeHouses;
-    case 4:
-      return property.pricelist.rents.fourHouses;
-    case 5:
-      return property.pricelist.rents.hotel;
-    default:
-      console.log('Invalid number of houses: ' + buildingNb);
-      return 0;
-  }
+function getPropertyValue(gameplay, property, callback) {
+  propWrap.getPropertiesOfGroup(property.gameId, property.pricelist.propertyGroup, function (err, properties) {
+    if (err) {
+      return callback(err);
+    }
+    var sameGroup = 0;
+    for (var i = 0; i < properties.length; i++) {
+      if (properties[i].gamedata.owner === property.gamedata.owner) {
+        sameGroup++;
+      }
+    }
+
+    var retVal = {
+      name: property.location.name,
+      uuid: property.uuid
+    };
+
+    var factor = 1;
+    if ((properties.length > 1) && (sameGroup === properties.length)) {
+      // all properties in a group belong the same team, pay more!
+      factor = gameplay.gameParams.rentFactors.allPropertiesOfGroup || 2;
+      retVal.allPropertiesOfGroup = true;
+    }
+
+    var rent = 0;
+    var buildingNb = property.gamedata.buildings || 0;
+
+    switch (buildingNb) {
+      case 0:
+        rent = property.pricelist.rents.noHouse;
+        break;
+      case 1:
+        rent = property.pricelist.rents.oneHouse;
+        break;
+      case 2:
+        rent = property.pricelist.rents.twoHouses;
+        break;
+      case 3:
+        rent = property.pricelist.rents.threeHouses;
+        break;
+      case 4:
+        rent = property.pricelist.rents.fourHouses;
+        break;
+      case 5:
+        rent = property.pricelist.rents.hotel;
+        break;
+      default:
+        return callback(new Error('invalid building nb'));
+    }
+
+    retVal.amount = rent * factor;
+    callback(null, retVal);
+  });
 }
 
 /**
@@ -158,18 +276,12 @@ function getBuildingPrice(property) {
   return property.pricelist.pricePerHouse;
 }
 
-/**
- * Get the rent price of a property. If all in the group are the same team, you get mor for it
- * @param property
- * @param callback
- */
-function getRent(property, callback) {
 
-}
 module.exports = {
   getBuildingPrice: getBuildingPrice,
   getPropertyValue: getPropertyValue,
-
+  getRentRegister: getRentRegister,
+  payInterest:payInterest,
   buyProperty: buyProperty,
   buyBuilding: buyBuilding
 };

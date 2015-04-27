@@ -262,7 +262,6 @@ var getPropertiesForGameplay = function (gameId, options, callback) {
       });
   }
 };
-
 /**
  * Get the poperties for a team
  * @param gameId

@@ -51,7 +51,8 @@ var gameplaySchema = mongoose.Schema({
       twoHouses: {type: Number, default: 2},
       threeHouses: {type: Number, default: 3},
       fourHouses: {type: Number, default: 4},
-      hotel: {type: Number, default: 5}
+      hotel: {type: Number, default: 5},
+      allPropertiesOfGroup: {type: Number, default: 2}
     }
   },
   internal: {

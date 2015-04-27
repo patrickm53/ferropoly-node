@@ -177,16 +177,47 @@ function payInterests(gameId, callback) {
   });
 }
 
-
 /**
  * Pays the rents for all teams, also releasing the buildingEnabled lock for the next round
  * Money: bank->propertIES->team
+ * @param gameId
  * @param callback
  */
 function payRents(gameId, callback) {
   propWrap.allowBuilding(gameId, function (err, nbAffected) {
     console.log('Building allowed again for ' + nbAffected.toString() + ' buildings');
-    callback(err);
+
+    gameCache.getGameData(gameId, function (err, res) {
+      if (err) {
+        console.error(err);
+        return callback(err);
+      }
+      var gp = res.gameplay;
+      var teams = _.valuesIn(res.teams);
+      var paid = 0;
+      var error = null;
+
+      for (var i = 0; i < teams.length; i++) {
+        propertyAccount.getRentRegister(gp, teams[i], function (err, info) {
+          propertyAccount.payInterest(gp, info.register, function (err) {
+            teamAccount.receiveFromBank(teams[i].uuid, gp.internal.gameId, info.totalAmount, {
+              info: 'Grundstückzins',
+              parts: info.register
+            }, function (err) {
+              if (err) {
+                console.log(err);
+                error = err;
+              }
+              paid++;
+              if (paid === teams.length) {
+                callback(error);
+              }
+            });
+          });
+        });
+      }
+    });
+
   });
 }
 

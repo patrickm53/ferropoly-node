@@ -31,7 +31,19 @@ module.exports = {
         return callback(err);
       }
       callback(null, properties);
-    })
+    });
+  },
+
+  /**
+   * Get all properties of a (pricelist-) group
+   * @param gameId
+   * @param groupId
+   * @param callback
+   */
+  getPropertiesOfGroup: function (gameId, groupId, callback) {
+    pm.getPropertiesForGameplay(gameId, {'options.propertyGroup': groupId}, function (err, properties) {
+      return callback(err, properties);
+    });
   },
   /**
    * Update the property
@@ -40,7 +52,7 @@ module.exports = {
   updateProperty: function (property, callback) {
     pm.updateProperty(property.gameId, property, function (err) {
       callback(err);
-    })
+    });
   },
 
   /**
@@ -48,10 +60,10 @@ module.exports = {
    * @param gameId
    * @param callback
    */
-  allowBuilding: function(gameId, callback) {
-    pm.allowBuilding(gameId, function(err, nbAffected) {
+  allowBuilding: function (gameId, callback) {
+    pm.allowBuilding(gameId, function (err, nbAffected) {
       callback(err, nbAffected);
-    })
+    });
   }
 
 };
