@@ -41,6 +41,17 @@ module.exports = {
     pm.updateProperty(property.gameId, property, function (err) {
       callback(err);
     })
+  },
+
+  /**
+   * Allow building for the properties again (all properties of this gameplay)
+   * @param gameId
+   * @param callback
+   */
+  allowBuilding: function(gameId, callback) {
+    pm.allowBuilding(gameId, function(err, nbAffected) {
+      callback(err, nbAffected);
+    })
   }
 
 };

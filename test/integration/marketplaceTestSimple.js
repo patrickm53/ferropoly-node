@@ -164,6 +164,26 @@ describe('Marketplace integration tests', function () {
     });
   });
 
+
+  describe('Building houses', function () {
+    it('should do nothing as building is not allowed before paying interest', function (done) {
+      marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
+        expect(info.amount).to.be(0);
+        expect(info.log).to.be(undefined);
+        done(err);
+      })
+    });
+  });
+
+
+  describe('Pay rent & interest, allow building houses', function() {
+    it('should pay the rent', function(done) {
+      marketplace.payRents(gameId, function(err) {
+        done(err);
+      })
+    });
+  });
+
   describe('Building houses', function () {
     describe('Building houses #1', function () {
       it('should build two houses (1)', function (done) {
@@ -206,6 +226,15 @@ describe('Marketplace integration tests', function () {
         });
       });
     });
+
+    describe('Pay rent & interest, allow building houses', function() {
+      it('should pay the rent', function(done) {
+        marketplace.payRents(gameId, function(err) {
+          done(err);
+        })
+      });
+    });
+
     describe('Building houses #2', function () {
       it('should build two houses (2)', function (done) {
         var teamIndex = 0;
@@ -230,6 +259,15 @@ describe('Marketplace integration tests', function () {
         });
       });
     });
+
+    describe('Pay rent & interest, allow building houses', function() {
+      it('should pay the rent', function(done) {
+        marketplace.payRents(gameId, function(err) {
+          done(err);
+        })
+      });
+    });
+
     describe('Building houses #3', function () {
       it('should build two houses (3)', function (done) {
         var teamIndex = 0;
@@ -255,6 +293,15 @@ describe('Marketplace integration tests', function () {
         });
       });
     });
+
+    describe('Pay rent & interest, allow building houses', function() {
+      it('should pay the rent', function(done) {
+        marketplace.payRents(gameId, function(err) {
+          done(err);
+        })
+      });
+    });
+
     describe('Building houses #4', function () {
       it('should build two houses (4)', function (done) {
         var teamIndex = 0;
@@ -279,6 +326,15 @@ describe('Marketplace integration tests', function () {
         });
       });
     });
+
+    describe('Pay rent & interest, allow building houses', function() {
+      it('should pay the rent', function(done) {
+        marketplace.payRents(gameId, function(err) {
+          done(err);
+        })
+      });
+    });
+
     describe('Building houses #5 (Hotel)', function () {
       it('should build two houses (5)', function (done) {
         var teamIndex = 0;
@@ -320,6 +376,15 @@ describe('Marketplace integration tests', function () {
         });
       });
     });
+
+    describe('Pay rent & interest, allow building houses', function() {
+      it('should pay the rent', function(done) {
+        marketplace.payRents(gameId, function(err) {
+          done(err);
+        })
+      });
+    });
+
     describe('Building houses #6 (Hotel++???)', function () {
       it('should build build nothing', function (done) {
         var teamIndex = 0;

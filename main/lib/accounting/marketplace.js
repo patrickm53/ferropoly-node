@@ -148,7 +148,7 @@ function buildHouses(gameId, teamId, callback) {
 }
 
 /**
- * Pay Interest (this is the fix value) for all teams
+ * Pay Interest (this is the fix value) for all teams.
  * Money: bank->team
  * @param callback
  */
@@ -177,22 +177,17 @@ function payInterests(gameId, callback) {
   });
 }
 
-/**
- * Pays the rent for one specific team CHECK IF ALL PROPERTIES ARE IN ONE GROUP
- * Money: bank->propertIES->team
- * @param gameId
- * @param teamId
- * @param callback
- */
-function payRent(gameId, teamId, callback) {
-}
 
 /**
- * Pays the rents for all teams
- * Same moneyflow as payRent
+ * Pays the rents for all teams, also releasing the buildingEnabled lock for the next round
+ * Money: bank->propertIES->team
  * @param callback
  */
-function payRents(callback) {
+function payRents(gameId, callback) {
+  propWrap.allowBuilding(gameId, function (err, nbAffected) {
+    console.log('Building allowed again for ' + nbAffected.toString() + ' buildings');
+    callback(err);
+  });
 }
 
 /**
@@ -249,5 +244,6 @@ function manipulateTeamAccount(team, amount, reason, callback) {
 module.exports = {
   payInterests: payInterests,
   buyProperty: buyProperty,
-  buildHouses: buildHouses
+  buildHouses: buildHouses,
+  payRents: payRents
 };

@@ -66,6 +66,14 @@ function buyProperty(gameplay, property, team, callback) {
   })
 }
 
+/**
+ * Buy a building for a property
+ * @param gameplay
+ * @param property
+ * @param team
+ * @param callback
+ * @returns {*}
+ */
 function buyBuilding(gameplay, property, team, callback) {
   if (property.gamedata.owner !== team.uuid) {
     return callback(new Error('this is not the owner'));
@@ -74,7 +82,12 @@ function buyBuilding(gameplay, property, team, callback) {
     // there is nothing to do, already a hotel
     return callback(new Error('can not build, already a hotel there'));
   }
+  if(!property.gamedata.buildingEnabled) {
+    return callback(new Error('can not build now, wait for next round'));
+  }
   property.gamedata.buildings++;
+  property.gamedata.buildingEnabled = false;
+
   propWrap.updateProperty(property, function (err) {
     if (err) {
       return callback(err);
@@ -136,8 +149,22 @@ function getPropertyValue(property) {
   }
 }
 
+/**
+ * Get the price for a building
+ * @param property
+ * @returns {propertySchema.pricelist.pricePerHouse|*}
+ */
 function getBuildingPrice(property) {
   return property.pricelist.pricePerHouse;
+}
+
+/**
+ * Get the rent price of a property. If all in the group are the same team, you get mor for it
+ * @param property
+ * @param callback
+ */
+function getRent(property, callback) {
+
 }
 module.exports = {
   getBuildingPrice: getBuildingPrice,

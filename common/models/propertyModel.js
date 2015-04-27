@@ -22,7 +22,8 @@ var propertySchema = mongoose.Schema({
   },
   gamedata: {
     owner: String, // Reference to the owner, undefined or empty is 'no owner'
-    buildings: Number
+    buildings: Number,
+    buildingEnabled: {type: Boolean, default: false}
   },
   pricelist: {
     priceRange: {type: Number, default: -1},
@@ -245,7 +246,7 @@ var getPropertiesForGameplay = function (gameId, options, callback) {
         return callback(err, docs);
       });
   }
-  else if(options && options.propertyGroup) {
+  else if (options && options.propertyGroup) {
     return Property.find()
       .where('gameId').equals(gameId)
       .where('pricelist.propertyGroup').equals(options.propertyGroup)
@@ -327,6 +328,21 @@ var removeAllPropertiesFromGameplay = function (gameId, callback) {
 };
 
 /**
+ * Allows building for all properties in the gameplay
+ * @param gameId
+ * @param callback
+ * @returns {*}
+ */
+var allowBuilding = function (gameId, callback) {
+  if (!gameId) {
+    return callback(new Error('No gameId supplied'));
+  }
+  Property.update({gameId: gameId, 'gamedata.owner' : {'$exists' : true, '$ne' : ''}}, {'gamedata.buildingEnabled': true}, {multi: true}, function (err, numAffected) {
+    callback(err, numAffected);
+  })
+};
+
+/**
  * The Exports
  * @type {{Model: (*|Model)}}
  */
@@ -342,5 +358,6 @@ module.exports = {
   createPropertyFromLocation: createPropertyFromLocation,
   updatePositionInPriceList: updatePositionInPriceList,
   updateProperties: updateProperties,
-  finalizeProperties: finalizeProperties
+  finalizeProperties: finalizeProperties,
+  allowBuilding: allowBuilding
 };
