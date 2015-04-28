@@ -38,7 +38,7 @@ var teamAccountTransactionSchema = mongoose.Schema({
 }, {autoIndex: true});
 
 /**
- * The Team Account Transaction model
+ * The Gameplay model
  */
 var TeamAccountTransaction = mongoose.model('TeamAccountTransactions', teamAccountTransactionSchema);
 

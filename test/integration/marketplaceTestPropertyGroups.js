@@ -21,13 +21,17 @@ var gameId;
 var gameData;
 var pricelist;
 
-describe.only('Marketplace propertyGroup tests', function () {
+describe('Marketplace propertyGroup tests', function () {
   this.timeout(5000);
   before(function (done) {
     require('../fixtures/demoGamePlay').createDemo({}, function (err, res) {
         gameId = res.gameId;
         db.init(settings, function (err) {
           gameCache.getGameData(gameId, function (err, gd) {
+            if (err) {
+              console.error(err);
+              done(err);
+            }
             gameData = {
               gameplay: gd.gameplay,
               teams: _.values(gd.teams)
