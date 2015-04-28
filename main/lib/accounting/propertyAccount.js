@@ -146,7 +146,6 @@ function payRent(gameplay, property, debitor, callback) {
  * @param callback
  */
 function payInterest(gameplay, register, callback) {
-  console.log('propertyAccount.payInterest ');
   var t = 0;
   var error = null;
   if (register.length === 0) {
@@ -188,7 +187,6 @@ function payInterest(gameplay, register, callback) {
  * @param callback
  */
 function getRentRegister(gameplay, team, callback) {
-  console.log('Get register');
   propWrap.getTeamProperties(gameplay.internal.gameId, team.uuid, function (err, properties) {
     if (err) {
       return callback(err);
@@ -244,6 +242,7 @@ function getPropertyValue(gameplay, property, callback) {
     var factor = 1;
     if ((properties.length > 1) && (sameGroup === properties.length)) {
       // all properties in a group belong the same team, pay more!
+      console.log('Properties in same group, paying more!');
       factor = gameplay.gameParams.rentFactors.allPropertiesOfGroup || 2;
       retVal.allPropertiesOfGroup = true;
     }

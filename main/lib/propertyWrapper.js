@@ -41,7 +41,7 @@ module.exports = {
    * @param callback
    */
   getPropertiesOfGroup: function (gameId, groupId, callback) {
-    pm.getPropertiesForGameplay(gameId, {'options.propertyGroup': groupId}, function (err, properties) {
+    pm.getPropertiesForGameplay(gameId, {'propertyGroup': groupId}, function (err, properties) {
       return callback(err, properties);
     });
   },

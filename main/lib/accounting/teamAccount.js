@@ -79,7 +79,6 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
  * @param callback
  */
 function receiveFromBank(teamId, gameId, amount, info, callback) {
-  console.log('teamAccount.receiveFromBank');
   try {
     if (!teamId || !gameId || !_.isNumber(amount)) {
       callback(new Error('Parameter error in chargeToBank'));

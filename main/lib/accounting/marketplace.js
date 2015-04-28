@@ -184,16 +184,12 @@ function payInterests(gameId, callback) {
  * @param callback
  */
 function payRentsForTeam(gp, team, callback) {
-  console.log('team: ' + team.uuid);
   propertyAccount.getRentRegister(gp, team, function (err, info) {
-    console.log('getRentRegister finished');
     if (err) {
       console.log(err);
       return callback(err);
     }
-    console.log('register length ' + info.register.length);
     propertyAccount.payInterest(gp, info.register, function (err) {
-      console.log('payInterest finished ' + info.teamId + ' ' + info.totalAmount + ' ' + info.register);
       if (err) {
         console.log(err);
         return callback(err);
@@ -244,7 +240,6 @@ function payRents(gameId, callback) {
               error = err;
             }
             paid++;
-            console.log('one round ' + paid);
             if (paid === teams.length) {
               return callback(error);
             }
