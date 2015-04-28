@@ -220,31 +220,37 @@ function payRentsForTeam(gp, team, callback) {
  * @param callback
  */
 function payRents(gameId, callback) {
-  propWrap.allowBuilding(gameId, function (err, nbAffected) {
-    console.log('Building allowed again for ' + nbAffected.toString() + ' buildings');
+  payInterests(gameId, function (err) {
+    if (err) {
+      return callback(err);
+    }
 
-    gameCache.getGameData(gameId, function (err, res) {
-      if (err) {
-        console.error(err);
-        return callback(err);
-      }
-      var gp = res.gameplay;
-      var teams = _.valuesIn(res.teams);
-      var paid = 0;
-      var error = null;
+    propWrap.allowBuilding(gameId, function (err, nbAffected) {
+      console.log('Building allowed again for ' + nbAffected.toString() + ' buildings');
 
-      for (var i = 0; i < teams.length; i++) {
-        payRentsForTeam(gp, teams[i], function (err) {
-          if (err) {
-            error = err;
-          }
-          paid++;
-          console.log('one round ' + paid);
-          if (paid === teams.length) {
-            return callback(error);
-          }
-        })
-      }
+      gameCache.getGameData(gameId, function (err, res) {
+        if (err) {
+          console.error(err);
+          return callback(err);
+        }
+        var gp = res.gameplay;
+        var teams = _.valuesIn(res.teams);
+        var paid = 0;
+        var error = null;
+
+        for (var i = 0; i < teams.length; i++) {
+          payRentsForTeam(gp, teams[i], function (err) {
+            if (err) {
+              error = err;
+            }
+            paid++;
+            console.log('one round ' + paid);
+            if (paid === teams.length) {
+              return callback(error);
+            }
+          })
+        }
+      });
     });
   });
 }

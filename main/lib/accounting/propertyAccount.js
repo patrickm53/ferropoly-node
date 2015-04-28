@@ -237,8 +237,8 @@ function getPropertyValue(gameplay, property, callback) {
     }
 
     var retVal = {
-      name: property.location.name,
-      uuid: property.uuid
+      propertyName: property.location.name,
+      property: property.uuid
     };
 
     var factor = 1;
