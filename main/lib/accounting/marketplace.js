@@ -178,6 +178,42 @@ function payInterests(gameId, callback) {
 }
 
 /**
+ * Pays the rents (each hour) for a team
+ * @param gp
+ * @param team
+ * @param callback
+ */
+function payRentsForTeam(gp, team, callback) {
+  console.log('team: ' + team.uuid);
+  propertyAccount.getRentRegister(gp, team, function (err, info) {
+    console.log('getRentRegister finished');
+    if (err) {
+      console.log(err);
+      return callback(err);
+    }
+    console.log('register length ' + info.register.length);
+    propertyAccount.payInterest(gp, info.register, function (err) {
+      console.log('payInterest finished ' + info.teamId + ' ' + info.totalAmount + ' ' + info.register);
+      if (err) {
+        console.log(err);
+        return callback(err);
+      }
+      if (info.totalAmount > 0) {
+        teamAccount.receiveFromBank(info.teamId, gp.internal.gameId, info.totalAmount, {
+          info: 'Grundstückzins',
+          parts: info.register
+        }, function (err) {
+          return callback(err);
+        });
+      }
+      else {
+        return callback(err);
+      }
+    });
+  });
+}
+
+/**
  * Pays the rents for all teams, also releasing the buildingEnabled lock for the next round
  * Money: bank->propertIES->team
  * @param gameId
@@ -198,26 +234,18 @@ function payRents(gameId, callback) {
       var error = null;
 
       for (var i = 0; i < teams.length; i++) {
-        propertyAccount.getRentRegister(gp, teams[i], function (err, info) {
-          propertyAccount.payInterest(gp, info.register, function (err) {
-            teamAccount.receiveFromBank(teams[i].uuid, gp.internal.gameId, info.totalAmount, {
-              info: 'Grundstückzins',
-              parts: info.register
-            }, function (err) {
-              if (err) {
-                console.log(err);
-                error = err;
-              }
-              paid++;
-              if (paid === teams.length) {
-                callback(error);
-              }
-            });
-          });
-        });
+        payRentsForTeam(gp, teams[i], function (err) {
+          if (err) {
+            error = err;
+          }
+          paid++;
+          console.log('one round ' + paid);
+          if (paid === teams.length) {
+            return callback(error);
+          }
+        })
       }
     });
-
   });
 }
 

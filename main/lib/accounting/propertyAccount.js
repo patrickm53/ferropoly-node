@@ -146,8 +146,14 @@ function payRent(gameplay, property, debitor, callback) {
  * @param callback
  */
 function payInterest(gameplay, register, callback) {
+  console.log('propertyAccount.payInterest ');
   var t = 0;
   var error = null;
+  if (register.length === 0) {
+    // nothing to pay
+    console.log('nothing to pay');
+    return callback(null);
+  }
   for (var i = 0; i < register.length; i++) {
     // Save a property transaction
     var pt = new propertyTransaction.Model();
@@ -182,6 +188,7 @@ function payInterest(gameplay, register, callback) {
  * @param callback
  */
 function getRentRegister(gameplay, team, callback) {
+  console.log('Get register');
   propWrap.getTeamProperties(gameplay.internal.gameId, team.uuid, function (err, properties) {
     if (err) {
       return callback(err);
@@ -189,8 +196,13 @@ function getRentRegister(gameplay, team, callback) {
 
     var info = {
       register: [],
-      totalAmount: 0
+      totalAmount: 0,
+      teamId: team.uuid
     };
+    if (properties.length === 0) {
+      return callback(null, info);
+    }
+
     for (var i = 0; i < properties.length; i++) {
       getPropertyValue(gameplay, properties[i], function (err, propVal) {
         if (err) {
@@ -198,7 +210,7 @@ function getRentRegister(gameplay, team, callback) {
         }
         else {
           info.register.push(propVal);
-          info.totalAmount += propVal.rent;
+          info.totalAmount += propVal.amount;
         }
         if (info.register.length === properties.length) {
           return callback(null, info);

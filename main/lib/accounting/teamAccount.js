@@ -79,31 +79,38 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
  * @param callback
  */
 function receiveFromBank(teamId, gameId, amount, info, callback) {
-  if (!teamId || !gameId || !_.isNumber(amount)) {
-    callback(new Error('Parameter error in chargeToBank'));
-    return;
-  }
+  console.log('teamAccount.receiveFromBank');
+  try {
+    if (!teamId || !gameId || !_.isNumber(amount)) {
+      callback(new Error('Parameter error in chargeToBank'));
+      return;
+    }
 
-  if (amount === 0) {
-    return callback(new Error('Value must not be 0'));
-  }
+    if (amount === 0) {
+      return callback(new Error('Value must not be 0'));
+    }
 
-  var entry = new teamAccountTransaction.Model();
-  entry.gameId = gameId;
-  entry.teamId = teamId;
-  entry.transaction.amount = Math.abs(chargedAmount);
-  entry.transaction.origin = {category: 'bank'};
-  if (_.isString(info)) {
-    entry.transaction.info = info;
-  }
-  else if (_.isObject(info)) {
-    entry.transaction.info = info.info;
-    entry.transaction.parts = info.parts;
-  }
+    var entry = new teamAccountTransaction.Model();
+    entry.gameId = gameId;
+    entry.teamId = teamId;
+    entry.transaction.amount = Math.abs(amount);
+    entry.transaction.origin = {category: 'bank'};
+    if (_.isString(info)) {
+      entry.transaction.info = info;
+    }
+    else if (_.isObject(info)) {
+      entry.transaction.info = info.info;
+      entry.transaction.parts = info.parts;
+    }
 
-  teamAccountTransaction.book(entry, function (err) {
-    callback(err);
-  });
+    teamAccountTransaction.book(entry, function (err) {
+      callback(err);
+    });
+  }
+  catch(e) {
+    console.error(e);
+    callback(e);
+  }
 }
 /**
  * One team pays another one
