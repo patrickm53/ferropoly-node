@@ -14,6 +14,7 @@ var marketplace = require('../../main/lib/accounting/marketplace');
 var teamAccount = require('../../main/lib/accounting/teamAccount');
 var chancelleryAccount = require('../../main/lib/accounting/chancelleryAccount');
 
+var ct = require('../../common/models/accounting/chancelleryTransaction');
 var settings = require('./../../main/settings');
 
 var gameId;
@@ -23,6 +24,9 @@ var chancellery = {};
 function handleLotteryResult(teamIndex, info) {
   console.log(info);
   gameData.teams[teamIndex].expectedMoney += info.amount;
+  if (info.amount !== 0) {
+    gameData.teams[teamIndex].expectedEntries++;
+  }
   if (info.jackpot) {
     chancellery.expectedMoney -= info.amount;
   }
@@ -51,12 +55,14 @@ describe.only('Chancellery tests', function () {
 
           for (var i = 0; i < gameData.teams.length; i++) {
             gameData.teams[i].expectedMoney = 0;
+            gameData.teams[i].expectedEntries = 0;
           }
           done();
         });
       });
     });
   });
+
 
   describe('Playing the lottery', function () {
     it('should do it', function (done) {
@@ -132,7 +138,167 @@ describe.only('Chancellery tests', function () {
         done(err);
       })
     });
-
-
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        console.log(chancellery);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        console.log(chancellery);
+        done(err);
+      })
+    });
   });
+  describe('Verify the accounts', function () {
+    it('should have the correct value on the users account', function (done) {
+      teamAccount.getBalance(gameId, gameData.teams[0].uuid, function (err, info) {
+        expect(info.balance).to.be(gameData.teams[0].expectedMoney);
+        expect(info.entries).to.be(gameData.teams[0].expectedEntries);
+        done(err);
+      });
+    });
+    it('should have the correct value on the chancellery account', function (done) {
+      chancelleryAccount.getBalance(gameId,  function (err, info) {
+        expect(info.balance).to.be(chancellery.expectedMoney);
+       // expect(info.entries).to.be(gameData.teams[0].expectedEntries);
+        done(err);
+      });
+    });
+  })
 });

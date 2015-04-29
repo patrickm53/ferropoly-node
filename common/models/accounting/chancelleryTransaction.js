@@ -84,10 +84,27 @@ function getEntries(gameId, tsStart, tsEnd, callback) {
     })
 }
 
+// This does not work, if you have a solution for me, please contact me, thanks!
+function getBalance(gameId, tsStart, tsEnd, callback) {
+  ChancelleryTransaction.aggregate([
+    { $match: {
+      gameId: gameId
+    }},
+    { $unwind: "$records" },
+    { $group: {
+      _id: "$_id",
+      balance: { $sum: "$records.transaction.amount"  }
+    }}
+  ], function (err, result) {
+    console.log(result);
+    callback(err, result);
+  });
+}
 
 module.exports = {
   Model: ChancelleryTransaction,
   book: book,
   getEntries: getEntries,
-  dumpChancelleryData: dumpChancelleryData
+  dumpChancelleryData: dumpChancelleryData,
+  getBalance:getBalance
 };

@@ -11,7 +11,8 @@
 
 var chancelleryTransaction = require('../../../common/models/accounting/chancelleryTransaction');
 var teamAccount = require('./teamAccount');
-
+var _ = require('lodash');
+var moment = require('moment');
 /**
  * Internal function: Books the chancellery event in the chancellery and the teams account
  * @param gameplay
@@ -24,7 +25,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
   if (info.amount > 0) {
     // Positive amount: only bank is involved EXCEPT it is the jackpot
     if (info.jackpot) {
-      return teamAccount.receiveFromChancellery(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function(err) {
+      return teamAccount.receiveFromChancellery(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
         var entry = new chancelleryTransaction.Model();
         entry.gameId = gameplay.internal.gameId;
         entry.transaction = {
@@ -72,7 +73,7 @@ function playChancellery(gameplay, team, callback) {
   var min = gameplay.gameParams.chancellery.minLottery || 1000;
   var max = gameplay.gameParams.chancellery.maxLottery || 5000;
   var retVal = {};
-  retVal.amount = Math.floor((Math.random() * (max - min + 1) + min) / 100) * 100;
+  retVal.amount = Math.floor((Math.random() * (max - min + 1) + min) / 1000) * 1000;
   retVal.infoText = 'Chance/Kanzlei: ';
 
   var actionRand = Math.random();
@@ -115,6 +116,34 @@ function getJackpotSize(gameplay, callback) {
 }
 
 
+/**
+ * Gets the balance, at a given time or now
+ * @param gameId
+ * @param p1 timestamp until when the balance shall be gotten (optional, default: now)
+ * @param p2 callback
+ */
+function getBalance(gameId, p1, p2) {
+  var callback = p2;
+  var ts = p1;
+  if (_.isFunction(p1)) {
+    callback = p1;
+    ts = moment();
+  }
+
+  chancelleryTransaction.getEntries(gameId, undefined, ts, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    var saldo = 0;
+    for (var i = 0; i < data.length; i++) {
+      saldo += data[i].transaction.amount;
+    }
+    callback(err, {balance: saldo, entries: i});
+  })
+}
+
+
 module.exports = {
-  playChancellery: playChancellery
+  playChancellery: playChancellery,
+  getBalance: getBalance
 };
