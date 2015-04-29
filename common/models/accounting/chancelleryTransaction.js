@@ -1,5 +1,5 @@
 /**
- * The chancellery
+ * The chancellery transactions
  *
  * Created by kc on 20.04.15.
  */
@@ -7,7 +7,7 @@
 
 
 var mongoose = require('mongoose');
-
+var moment = require('moment');
 /**
  * The mongoose schema for a team account
  */
@@ -28,8 +28,18 @@ var chancelleryAccountTransactionSchema = mongoose.Schema({
 /**
  * The Gameplay model
  */
-var ChancelleryAccountTransaction = mongoose.model('ChancelleryTransactions', chancelleryAccountTransactionSchema);
+var ChancelleryTransaction = mongoose.model('ChancelleryTransactions', chancelleryAccountTransactionSchema);
 
+/**
+ * Book the transaction
+ * @param transaction
+ * @param callback
+ */
+function book(transaction, callback) {
+  transaction.save(function (err) {
+    callback(err);
+  });
+}
 
 /**
  * Dumps all data for a gameplay (when deleting the game data)
@@ -41,13 +51,43 @@ function dumpChancelleryData(gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   console.log('Removing all chancellery information for ' + gameId);
-  ChancelleryAccountTransaction.remove({gameId: gameId}, function (err) {
+  ChancelleryTransaction.remove({gameId: gameId}, function (err) {
     callback(err);
   })
 }
 
 
+/***
+ * Get the entries of the account
+ * @param gameId
+ * @param tsStart moment() to start, if undefined all
+ * @param tsEnd   moment() to end, if undefined now()
+ * @param callback
+ * @returns {*}
+ */
+function getEntries(gameId, tsStart, tsEnd, callback) {
+  if (!gameId) {
+    return callback(new Error('parameter error'));
+  }
+  if (!tsStart) {
+    tsStart = moment('2015-01-01');
+  }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
+  ChancelleryTransaction.find({gameId: gameId})
+    .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+    .sort('timestamp')
+    .lean()
+    .exec(function (err, data) {
+      callback(err, data);
+    })
+}
+
+
 module.exports = {
-  Model: ChancelleryAccountTransaction,
+  Model: ChancelleryTransaction,
+  book: book,
+  getEntries: getEntries,
   dumpChancelleryData: dumpChancelleryData
 };

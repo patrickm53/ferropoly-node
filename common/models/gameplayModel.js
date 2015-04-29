@@ -53,6 +53,13 @@ var gameplaySchema = mongoose.Schema({
       fourHouses: {type: Number, default: 4},
       hotel: {type: Number, default: 5},
       allPropertiesOfGroup: {type: Number, default: 2}
+    },
+    chancellery: {
+      minLottery: {type: Number, default: 1000},  // amount to loose or win each call
+      maxLottery: {type: Number, default: 5000},
+      minGambling: {type: Number, default: 1000}, // amount to bet in the individual games
+      maxGambling: {type: Number, default: 50000},
+      maxJackpotSize: {type: Number, default: 500000} // max jackpot size
     }
   },
   internal: {
@@ -202,7 +209,7 @@ var getGameplay = function (gameId, ownerEmail, callback) {
  * @param callback
  */
 var getAllGameplays = function (callback) {
-  Gameplay.find({}).lean().exec(function(err, docs) {
+  Gameplay.find({}).lean().exec(function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -265,7 +272,7 @@ var finalize = function (gameId, ownerEmail, callback) {
       return callback(new Error('Wrong user, not allowed to finalize'));
     }
     if (gp.log.priceListVersion === 0) {
-      return  callback(new Error('Can only finalize gameplays with pricelist'));
+      return callback(new Error('Can only finalize gameplays with pricelist'));
     }
     gp.internal.finalized = true;
     gp.scheduling.gameStartTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameStart);
@@ -421,5 +428,5 @@ module.exports = {
   countGameplays: countGameplays,
   checkIfGameIdExists: checkIfGameIdExists,
   finalize: finalize,
-  getAllGameplays:getAllGameplays
+  getAllGameplays: getAllGameplays
 };

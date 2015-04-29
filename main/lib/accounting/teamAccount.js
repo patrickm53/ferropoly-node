@@ -32,14 +32,16 @@ function payInterest(teamId, gameId, amount, callback) {
 }
 
 /**
- * Charging a teams account to the bank
+ * Internal function, charging to bank or chancellery
  * @param teamId
  * @param gameId
- * @param amount   amount to pay (will be always turned to a negative value)
- * @param info     optional text to be supplied with the transaction or object
+ * @param amount
+ * @param info
+ * @param category
  * @param callback
+ * @returns {*}
  */
-function chargeToBank(teamId, gameId, amount, info, callback) {
+function chargeToBankOrChancellery(teamId, gameId, amount, info, category, callback) {
   if (!teamId || !gameId || !_.isNumber(amount)) {
     callback(new Error('Parameter error in chargeToBank'));
     return;
@@ -56,7 +58,7 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
   entry.gameId = gameId;
   entry.teamId = teamId;
   entry.transaction.amount = chargedAmount;
-  entry.transaction.origin = {category: 'bank'};
+  entry.transaction.origin = {category: category};
   if (_.isString(info)) {
     entry.transaction.info = info;
   }
@@ -69,16 +71,45 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
     callback(err);
   });
 }
-
 /**
- * Get money for a teams account from the bank
+ * Charging a teams account to the bank
  * @param teamId
  * @param gameId
- * @param amount   amount to pay (will be always turned to a positive value)
+ * @param amount   amount to pay (will be always turned to a negative value)
  * @param info     optional text to be supplied with the transaction or object
  * @param callback
  */
-function receiveFromBank(teamId, gameId, amount, info, callback) {
+function chargeToBank(teamId, gameId, amount, info, callback) {
+  chargeToBankOrChancellery(teamId, gameId, amount, info, 'bank', function (err) {
+    callback(err);
+  });
+}
+
+/**
+ * Charging a teams account to the chancellery
+ * @param teamId
+ * @param gameId
+ * @param amount   amount to pay (will be always turned to a negative value)
+ * @param info     optional text to be supplied with the transaction or object
+ * @param callback
+ */
+function chargeToChancellery(teamId, gameId, amount, info, callback) {
+  chargeToBankOrChancellery(teamId, gameId, amount, info, 'chancellery', function (err) {
+    callback(err);
+  });
+}
+
+/**
+ * Internal function for receiving money from bank or chancellery
+ * @param teamId
+ * @param gameId
+ * @param amount
+ * @param info
+ * @param category
+ * @param callback
+ * @returns {*}
+ */
+function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, callback) {
   try {
     if (!teamId || !gameId || !_.isNumber(amount)) {
       callback(new Error('Parameter error in chargeToBank'));
@@ -93,7 +124,7 @@ function receiveFromBank(teamId, gameId, amount, info, callback) {
     entry.gameId = gameId;
     entry.teamId = teamId;
     entry.transaction.amount = Math.abs(amount);
-    entry.transaction.origin = {category: 'bank'};
+    entry.transaction.origin = {category: category};
     if (_.isString(info)) {
       entry.transaction.info = info;
     }
@@ -106,10 +137,38 @@ function receiveFromBank(teamId, gameId, amount, info, callback) {
       callback(err);
     });
   }
-  catch(e) {
+  catch (e) {
     console.error(e);
     callback(e);
   }
+}
+
+/**
+ * Get money for a teams account from the bank
+ * @param teamId
+ * @param gameId
+ * @param amount   amount to pay (will be always turned to a positive value)
+ * @param info     optional text to be supplied with the transaction or object
+ * @param callback
+ */
+function receiveFromBank(teamId, gameId, amount, info, callback) {
+  receiveFromBankOrChancellery(teamId, gameId, amount, info, 'bank', function (err) {
+    callback(err);
+  })
+}
+
+/**
+ * Get money for a teams account from the chancellery
+ * @param teamId
+ * @param gameId
+ * @param amount   amount to pay (will be always turned to a positive value)
+ * @param info     optional text to be supplied with the transaction or object
+ * @param callback
+ */
+function receiveFromChancellery(teamId, gameId, amount, info, callback) {
+  receiveFromBankOrChancellery(teamId, gameId, amount, info, 'chancellery', function (err) {
+    callback(err);
+  })
 }
 /**
  * One team pays another one
@@ -221,7 +280,9 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
 module.exports = {
   payInterest: payInterest,
   chargeToBank: chargeToBank,
-  receiveFromBank:receiveFromBank,
+  chargeToChancellery: chargeToChancellery,
+  receiveFromBank: receiveFromBank,
+  receiveFromChancellery: receiveFromChancellery,
   chargeToAnotherTeam: chargeToAnotherTeam,
   getBalance: getBalance,
   getAccountStatement: getAccountStatement
