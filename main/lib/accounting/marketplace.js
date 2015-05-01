@@ -8,6 +8,7 @@ var gameCache = require('../gameCache');
 var propWrap = require('../propertyWrapper');
 var teamAccount = require('./teamAccount');
 var propertyAccount = require('./propertyAccount');
+var chancelleryAccount = require('./chancelleryAccount');
 var _ = require('lodash');
 /**
  * Buy a property or at least try to
@@ -254,15 +255,28 @@ function payRents(gameId, callback) {
  * Chancellery, every time a team calls (be sure that they are on the line,
  * no false alarms: only call the function when really editing the team).
  *
- * You can loose or win a random amount
+ * You can loose or win a random amount or you can even win the jackpot
  *
  * Money: team->chancellery   (negative amount)
  *        bank->team          (positive amount)
  *
- * @param team
+ * @param gameId
+ * @param teamId
  * @param callback
  */
-function chancellery(team, callback) {
+function chancellery(gameId, teamId, callback) {
+  gameCache.getGameData(gameId, function (err, res) {
+    if (err) {
+      console.error(err);
+      return callback(err);
+    }
+    var gp = res.gameplay;
+    var team = res.teams[teamId];
+
+    chancelleryAccount.playChancellery(gp, team, function (err, res) {
+      callback(err, res);
+    })
+  })
 }
 
 /**
@@ -272,22 +286,26 @@ function chancellery(team, callback) {
  * Money: team->chancellery   (negative amount)
  *        bank->team          (positive amount)
  *
- * @param team
+ * @param gameId
+ * @param teamId
  * @param amount
  * @param callback
  */
-function chancelleryGame(team, amount, callback) {
+function chancelleryGamble(gameId, teamId, amount, callback) {
+  gameCache.getGameData(gameId, function (err, res) {
+    if (err) {
+      console.error(err);
+      return callback(err);
+    }
+    var gp = res.gameplay;
+    var team = res.teams[teamId];
+
+    chancelleryAccount.gamble(gp, team, amount, function (err, res) {
+      callback(err, res);
+    })
+  })
 }
 
-/**
- * The winner takes it all: getting the complete money of the chancellery
- *
- * Money: chancellery->team
- * @param team
- * @param callback
- */
-function getChancelleryJackpot(team, callback) {
-}
 
 /**
  * A very exceptional case, but might be needed: increasing or decreasing
@@ -305,5 +323,7 @@ module.exports = {
   payInterests: payInterests,
   buyProperty: buyProperty,
   buildHouses: buildHouses,
-  payRents: payRents
+  payRents: payRents,
+  chancelleryGamble: chancelleryGamble,
+  chancellery: chancellery
 };

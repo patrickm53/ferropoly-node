@@ -71,8 +71,44 @@ describe.only('Chancellery tests', function () {
         done(err);
       })
     });
+    it('should do it (using marketplace interface)', function (done) {
+      marketplace.chancellery(gameData.gameplay.internal.gameId, gameData.teams[0].uuid, function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
     it('should do it', function (done) {
       chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it (using marketplace interface)', function (done) {
+      marketplace.chancellery(gameData.gameplay.internal.gameId, gameData.teams[0].uuid, function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it (using marketplace interface)', function (done) {
+      marketplace.chancellery(gameData.gameplay.internal.gameId, gameData.teams[0].uuid, function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it', function (done) {
+      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        handleLotteryResult(0, info);
+        done(err);
+      })
+    });
+    it('should do it (using marketplace interface)', function (done) {
+      marketplace.chancellery(gameData.gameplay.internal.gameId, gameData.teams[0].uuid, function (err, info) {
         handleLotteryResult(0, info);
         done(err);
       })
@@ -89,44 +125,8 @@ describe.only('Chancellery tests', function () {
         done(err);
       })
     });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
-        handleLotteryResult(0, info);
-        done(err);
-      })
-    });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
-        handleLotteryResult(0, info);
-        done(err);
-      })
-    });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
-        handleLotteryResult(0, info);
-        done(err);
-      })
-    });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
-        handleLotteryResult(0, info);
-        done(err);
-      })
-    });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
-        handleLotteryResult(0, info);
-        done(err);
-      })
-    });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
-        handleLotteryResult(0, info);
-        done(err);
-      })
-    });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+    it('should do it (using marketplace interface)', function (done) {
+      marketplace.chancellery(gameData.gameplay.internal.gameId, gameData.teams[0].uuid, function (err, info) {
         handleLotteryResult(0, info);
         done(err);
       })
@@ -150,8 +150,8 @@ describe.only('Chancellery tests', function () {
         done(err);
       })
     });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+    it('should do it (using marketplace interface)', function (done) {
+      marketplace.chancellery(gameData.gameplay.internal.gameId, gameData.teams[0].uuid, function (err, info) {
         handleLotteryResult(0, info);
         done(err);
       })
@@ -168,8 +168,8 @@ describe.only('Chancellery tests', function () {
         done(err);
       })
     });
-    it('should do it', function (done) {
-      chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+    it('should do it (using marketplace interface)', function (done) {
+      marketplace.chancellery(gameData.gameplay.internal.gameId, gameData.teams[0].uuid, function (err, info) {
         handleLotteryResult(0, info);
         done(err);
       })
@@ -320,6 +320,25 @@ describe.only('Chancellery tests', function () {
         gameData.teams[1].expectedMoney = 4000;
         gameData.teams[1].expectedEntries++;
         chancellery.expectedMoney += 8000;
+        done(err);
+      });
+    });
+    it('should add some money if they win (marketplace interface)', function(done){
+      marketplace.chancelleryGamble(gameData.gameplay.internal.gameId, gameData.teams[1].uuid, 5555, function(err, info){
+        expect(info.amount).to.be(5555);
+        expect(info.infoText).to.be.a('string');
+        gameData.teams[1].expectedMoney += 5555;
+        gameData.teams[1].expectedEntries++;
+        done(err);
+      });
+    });
+    it('should subtract some money if they loose (marketplace interface)', function(done){
+      marketplace.chancelleryGamble(gameData.gameplay.internal.gameId, gameData.teams[1].uuid, -1235, function(err, info){
+        expect(info.amount).to.be(-1235);
+        expect(info.infoText).to.be.a('string');
+        gameData.teams[1].expectedMoney -= 1235;
+        gameData.teams[1].expectedEntries++;
+        chancellery.expectedMoney += 1235;
         done(err);
       });
     });
