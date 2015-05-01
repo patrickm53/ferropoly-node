@@ -36,7 +36,7 @@ function handleLotteryResult(teamIndex, info) {
   console.log(chancellery);
 }
 
-describe.only('Chancellery tests', function () {
+describe('Chancellery tests', function () {
   this.timeout(5000);
   before(function (done) {
     require('../fixtures/demoGamePlay').createDemo({}, function (err, res) {

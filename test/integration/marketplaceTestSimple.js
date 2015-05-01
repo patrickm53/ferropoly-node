@@ -172,7 +172,6 @@ describe('Marketplace integration tests', function () {
     });
   });
 
-
   describe('Building houses', function () {
     it('should do nothing as building is not allowed before paying interest', function (done) {
       marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
@@ -183,14 +182,13 @@ describe('Marketplace integration tests', function () {
     });
   });
 
-
-  describe('Pay rent & interest, allow building houses', function() {
-    it('should pay the rent #1', function(done) {
+  describe('Pay rent & interest, allow building houses', function () {
+    it('should pay the rent #1', function (done) {
       var teamIndex = 0;
       var expectedRent = 1120;
       var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-      marketplace.payRents(gameId, function(err) {
+      marketplace.payRents(gameId, function (err) {
         gameData.teams[0].expectedMoney += expectedIncome;
         gameData.teams[0].expectedEntries += 2;
 
@@ -205,10 +203,10 @@ describe('Marketplace integration tests', function () {
             expect(lastEntry.transaction.parts.length).to.be(2);
             expect(lastEntry.transaction.parts[1].propertyName.length).to.be.above(1);
             expect(lastEntry.transaction.parts[1].property.length).to.be.above(16);
-             expect(lastEntry.transaction.parts[1].amount).to.be.above(0);
+            expect(lastEntry.transaction.parts[1].amount).to.be.above(0);
             expect(lastEntry.transaction.amount).to.be(expectedRent);
+            done(err);
           });
-          done(err);
         });
       })
     });
@@ -250,21 +248,21 @@ describe('Marketplace integration tests', function () {
               expect(lastEntry.transaction.parts[1].buildingNb).to.be(buildingNbExpected);
               expect(lastEntry.transaction.parts[1].amount).to.be.lessThan(0);
               expect(lastEntry.transaction.amount).to.be(-4500);
+              done(err);
             });
-            done(err);
           });
         });
       });
     });
 
 
-    describe('Pay rent & interest, allow building houses', function() {
-      it('should pay the rent #2', function(done) {
+    describe('Pay rent & interest, allow building houses', function () {
+      it('should pay the rent #2', function (done) {
         var teamIndex = 0;
         var expectedRent = 4500;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function(err) {
+        marketplace.payRents(gameId, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -281,8 +279,8 @@ describe('Marketplace integration tests', function () {
               expect(lastEntry.transaction.parts[1].property.length).to.be.above(16);
               expect(lastEntry.transaction.parts[1].amount).to.be.above(0);
               expect(lastEntry.transaction.amount).to.be(expectedRent);
+              done(err);
             });
-            done(err);
           });
         })
       });
@@ -313,13 +311,13 @@ describe('Marketplace integration tests', function () {
       });
     });
 
-    describe('Pay rent & interest, allow building houses', function() {
-      it('should pay the rent #3', function(done) {
+    describe('Pay rent & interest, allow building houses', function () {
+      it('should pay the rent #3', function (done) {
         var teamIndex = 0;
         var expectedRent = 18000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function(err) {
+        marketplace.payRents(gameId, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -336,8 +334,8 @@ describe('Marketplace integration tests', function () {
               expect(lastEntry.transaction.parts[1].property.length).to.be.above(16);
               expect(lastEntry.transaction.parts[1].amount).to.be.above(0);
               expect(lastEntry.transaction.amount).to.be(expectedRent);
+              done(err);
             });
-            done(err);
           });
         })
       });
@@ -370,13 +368,13 @@ describe('Marketplace integration tests', function () {
     });
 
 
-    describe('Pay rent & interest, allow building houses', function() {
-      it('should pay the rent #4', function(done) {
+    describe('Pay rent & interest, allow building houses', function () {
+      it('should pay the rent #4', function (done) {
         var teamIndex = 0;
         var expectedRent = 27000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function(err) {
+        marketplace.payRents(gameId, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -393,8 +391,8 @@ describe('Marketplace integration tests', function () {
               expect(lastEntry.transaction.parts[1].property.length).to.be.above(16);
               expect(lastEntry.transaction.parts[1].amount).to.be.above(0);
               expect(lastEntry.transaction.amount).to.be(expectedRent);
+              done(err);
             });
-            done(err);
           });
         })
       });
@@ -426,13 +424,13 @@ describe('Marketplace integration tests', function () {
     });
 
 
-    describe('Pay rent & interest, allow building houses', function() {
-      it('should pay the rent #4', function(done) {
+    describe('Pay rent & interest, allow building houses', function () {
+      it('should pay the rent #4', function (done) {
         var teamIndex = 0;
         var expectedRent = 36000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function(err) {
+        marketplace.payRents(gameId, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -449,10 +447,10 @@ describe('Marketplace integration tests', function () {
               expect(lastEntry.transaction.parts[1].property.length).to.be.above(16);
               expect(lastEntry.transaction.parts[1].amount).to.be.above(0);
               expect(lastEntry.transaction.amount).to.be(expectedRent);
+              done(err);
             });
-            done(err);
           });
-        })
+        });
       });
     });
 
@@ -492,20 +490,20 @@ describe('Marketplace integration tests', function () {
               expect(lastEntry.transaction.parts[1].buildingNb).to.be(buildingNbExpected);
               expect(lastEntry.transaction.parts[1].amount).to.be.lessThan(0);
               expect(lastEntry.transaction.amount).to.be(-4500);
+              done(err);
             });
-            done(err);
           });
         });
       });
     });
 
-    describe('Pay rent & interest, allow building houses', function() {
-      it('should pay the rent #4', function(done) {
+    describe('Pay rent & interest, allow building houses', function () {
+      it('should pay the rent #4', function (done) {
         var teamIndex = 0;
         var expectedRent = 45000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function(err) {
+        marketplace.payRents(gameId, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -522,8 +520,8 @@ describe('Marketplace integration tests', function () {
               expect(lastEntry.transaction.parts[1].property.length).to.be.above(16);
               expect(lastEntry.transaction.parts[1].amount).to.be.above(0);
               expect(lastEntry.transaction.amount).to.be(expectedRent);
+              done(err);
             });
-            done(err);
           });
         })
       });
@@ -543,20 +541,36 @@ describe('Marketplace integration tests', function () {
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
             expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
             expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
-
-            teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
-              expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
-              var lastEntry = _.last(data);
-              expect(lastEntry.transaction.parts.length).to.be(2);
-              expect(lastEntry.transaction.parts[1].propertyName.length).to.be.above(1);
-              expect(lastEntry.transaction.parts[1].property.length).to.be.above(16);
-              expect(lastEntry.transaction.parts[1].buildingNb).to.be(buildingNbExpected);
-              expect(lastEntry.transaction.parts[1].amount).to.be.lessThan(0);
-              expect(lastEntry.transaction.amount).to.be(-4500);
-            });
             done(err);
           });
         });
+      });
+    });
+  });
+
+  describe('Manipulations', function () {
+    describe('Using the manipulateTeamAccount', function () {
+      it('should add some money', function (done) {
+        marketplace.manipulateTeamAccount(gameId, gameData.teams[5].uuid, 15000, 'Fehler beim buchen', function (err) {
+          expect(err).to.be(null);
+          teamAccount.getBalance(gameId, gameData.teams[5].uuid, function (err, info) {
+            console.log(info);
+            expect(info.balance).to.be(55000);
+            expect(info.entries).to.be(11);
+            done(err);
+          });
+        });
+      });
+      it('should take some money', function (done) {
+        marketplace.manipulateTeamAccount(gameId, gameData.teams[6].uuid, -20000, 'Fehler beim buchen', function (err) {
+          expect(err).to.be(null);
+          teamAccount.getBalance(gameId, gameData.teams[6].uuid, function (err, info) {
+            console.log(info);
+            expect(info.balance).to.be(20000);
+            expect(info.entries).to.be(11);
+            done(err);
+          });
+        })
       });
     });
   });

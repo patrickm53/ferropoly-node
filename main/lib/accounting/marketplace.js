@@ -311,12 +311,28 @@ function chancelleryGamble(gameId, teamId, amount, callback) {
  * A very exceptional case, but might be needed: increasing or decreasing
  * the account of a team due to an error, penalty or what so ever
  *
- * @param team
+ * @param gameId
+ * @param teamId
  * @param amount
  * @param reason
  * @param callback
  */
-function manipulateTeamAccount(team, amount, reason, callback) {
+function manipulateTeamAccount(gameId, teamId, amount, reason, callback) {
+  if (!reason) {
+    return callback(new Error('reason must be supplied'));
+  }
+
+  if (amount > 0) {
+    teamAccount.receiveFromBank(teamId, gameId, amount, 'Manuelle Gutschrift: ' + reason, function (err) {
+      callback(err);
+    });
+  }
+  else {
+    teamAccount.chargeToBank(teamId, gameId, amount, 'Manuelle Lastschrift: ' + reason, function (err) {
+      callback(err);
+    });
+
+  }
 }
 
 module.exports = {
@@ -325,5 +341,6 @@ module.exports = {
   buildHouses: buildHouses,
   payRents: payRents,
   chancelleryGamble: chancelleryGamble,
-  chancellery: chancellery
+  chancellery: chancellery,
+  manipulateTeamAccount: manipulateTeamAccount
 };
