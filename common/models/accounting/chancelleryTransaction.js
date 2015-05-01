@@ -105,6 +105,6 @@ module.exports = {
   Model: ChancelleryTransaction,
   book: book,
   getEntries: getEntries,
-  dumpChancelleryData: dumpChancelleryData,
-  getBalance:getBalance
+  dumpChancelleryData: dumpChancelleryData
+  //getBalance:getBalance
 };

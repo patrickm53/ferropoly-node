@@ -206,6 +206,8 @@ describe.only('Chancellery tests', function () {
     });
     it('should do it', function (done) {
       chancelleryAccount.playChancellery(gameData.gameplay, gameData.teams[0], function (err, info) {
+        expect(info.infoText).to.be.a('string');
+        expect(info.amount).to.be.a('number');
         handleLotteryResult(0, info);
         console.log(chancellery);
         done(err);
@@ -300,5 +302,41 @@ describe.only('Chancellery tests', function () {
         done(err);
       });
     });
-  })
+  });
+  describe('Gambling', function() {
+    it('should add some money if they win', function(done){
+      chancelleryAccount.gamble(gameData.gameplay, gameData.teams[1], 12000, function(err, info){
+        expect(info.amount).to.be(12000);
+        expect(info.infoText).to.be.a('string');
+        gameData.teams[1].expectedMoney = 12000;
+        gameData.teams[1].expectedEntries++;
+        done(err);
+      });
+    });
+    it('should subtract some money if they loose', function(done){
+      chancelleryAccount.gamble(gameData.gameplay, gameData.teams[1], -8000, function(err, info){
+        expect(info.amount).to.be(-8000);
+        expect(info.infoText).to.be.a('string');
+        gameData.teams[1].expectedMoney = 4000;
+        gameData.teams[1].expectedEntries++;
+        chancellery.expectedMoney += 8000;
+        done(err);
+      });
+    });
+    describe('checking the accounts', function() {
+      it('should have the correct value on the users account', function (done) {
+        teamAccount.getBalance(gameId, gameData.teams[1].uuid, function (err, info) {
+          expect(info.balance).to.be(gameData.teams[1].expectedMoney);
+          expect(info.entries).to.be(gameData.teams[1].expectedEntries);
+          done(err);
+        });
+      });
+      it('should have the correct value on the chancellery account', function (done) {
+        chancelleryAccount.getBalance(gameId,  function (err, info) {
+          expect(info.balance).to.be(chancellery.expectedMoney);
+           done(err);
+        });
+      });
+    });
+  });
 });

@@ -68,7 +68,13 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
   }
 
 }
-// Play chancellery, a random amount is won or lost. This can also be the jackpot
+
+/**
+ * Play chancellery, a random amount is won or lost. This can also be the jackpot
+ * @param gameplay
+ * @param team
+ * @param callback
+ */
 function playChancellery(gameplay, team, callback) {
   var min = gameplay.gameParams.chancellery.minLottery || 1000;
   var max = gameplay.gameParams.chancellery.maxLottery || 5000;
@@ -77,21 +83,21 @@ function playChancellery(gameplay, team, callback) {
   retVal.infoText = 'Chance/Kanzlei: ';
 
   var actionRand = Math.random();
-  if (actionRand < 0.1) {
+  if (actionRand > (gameplay.gameParams.chancellery.probabilityWin + gameplay.gameParams.chancellery.probabilityLoose)) {
     retVal.infoText = 'Parkplatzgewinn';
     retVal.jackpot = true;
-    chancelleryTransaction.getEntries(gameplay.internal.gameId, null, null, function (err, entries) {
-      retVal.amount = 0;
-      for (var i = 0; i < entries.length; i++) {
-        retVal.amount += entries[i].transaction.amount;
+    getBalance(gameplay.internal.gameId, function (err, info) {
+      if (err) {
+        return callback(err);
       }
+      retVal.amount = info.balance;
       bookChancelleryEvent(gameplay, team, retVal, function (err) {
         return callback(err, retVal);
       });
     });
   }
   else {
-    if (actionRand < 0.55) {
+    if (actionRand < gameplay.gameParams.chancellery.probabilityLoose) {
       retVal.amount *= (-1);
       retVal.infoText += ' Verlust';
     }
@@ -100,24 +106,25 @@ function playChancellery(gameplay, team, callback) {
     }
     bookChancelleryEvent(gameplay, team, retVal, function (err) {
       return callback(err, retVal);
-    })
+    });
   }
 }
 
 // Gambling: the team sets a value and wins it or looses it. Winning it is taken from bank,
 // loosing it goes to the chancellery
 function gamble(gameplay, team, amount, callback) {
-
-}
-
-// get the size of the jackpot
-function getJackpotSize(gameplay, callback) {
-
+  var retVal = {
+    amount: amount,
+    infoText: 'Chance/Kanzlei (Gambling): '
+  };
+  bookChancelleryEvent(gameplay, team, retVal, function (err) {
+    return callback(err, retVal);
+  });
 }
 
 
 /**
- * Gets the balance, at a given time or now
+ * Gets the balance, at a given time or now. This is the same as the "Jackpot"
  * @param gameId
  * @param p1 timestamp until when the balance shall be gotten (optional, default: now)
  * @param p2 callback
@@ -145,5 +152,6 @@ function getBalance(gameId, p1, p2) {
 
 module.exports = {
   playChancellery: playChancellery,
-  getBalance: getBalance
+  getBalance: getBalance,
+  gamble: gamble
 };
