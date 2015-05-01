@@ -13,7 +13,8 @@
 'use strict';
 var propWrap = require('../propertyWrapper');
 var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
-
+var _ = require('lodash');
+var moment = require('moment');
 /**
  * Buy a property. The property must be free, otherwise this function rises an error.
  * @param gameplay
@@ -66,6 +67,51 @@ function buyProperty(gameplay, property, team, callback) {
   })
 }
 
+/**
+ * Resets a property: deletes the owner and the saldo of the property, but does not manipulate
+ * any user account
+ * @param gameId
+ * @param property
+ * @param reason
+ * @param callback
+ */
+function resetProperty(gameId, property, reason, callback) {
+  getBalance(gameId, property.uuid, function (err, info) {
+    if (err) {
+      console.error(err);
+      return callback(err);
+    }
+    property.gamedata.buildingEnabled = false;
+    property.gamedata.buildings = 0;
+    property.gamedata.owner = undefined;
+
+    propWrap.updateProperty(property, function (err) {
+      if (err) {
+        console.error(err);
+        return callback(err);
+      }
+
+      var pt = new propertyTransaction.Model();
+      pt.gameId = gameId;
+      pt.propertyId = property.uuid;
+      pt.transaction = {
+        origin: {
+          category: 'bank'
+        },
+        amount: (-1) * info.balance,
+        info: 'Manuell zurückgesetzt: ' + reason
+      };
+
+      propertyTransaction.book(pt, function (err) {
+        if (err) {
+          console.error(err);
+        }
+        callback(err);
+      });
+
+    })
+  })
+}
 /**
  * Buy a building for a property
  * @param gameplay
@@ -217,6 +263,35 @@ function getRentRegister(gameplay, team, callback) {
     }
   });
 }
+
+
+/**
+ * Gets the balance of the property, at a given time or now
+ * @param gameId
+ * @param propertyId
+ * @param p1 timestamp until when the balance shall be gotten (optional, default: now)
+ * @param p2 callback
+ */
+function getBalance(gameId, propertyId, p1, p2) {
+  var callback = p2;
+  var ts = p1;
+  if (_.isFunction(p1)) {
+    callback = p1;
+    ts = moment();
+  }
+
+  propertyTransaction.getEntries(gameId, propertyId, undefined, ts, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    var saldo = 0;
+    for (var i = 0; i < data.length; i++) {
+      saldo += data[i].transaction.amount;
+    }
+    callback(err, {balance: saldo, entries: i});
+  })
+}
+
 /**
  * Returns the value of the property for rent and interest
  * @param property
@@ -292,7 +367,9 @@ module.exports = {
   getBuildingPrice: getBuildingPrice,
   getPropertyValue: getPropertyValue,
   getRentRegister: getRentRegister,
-  payInterest:payInterest,
+  payInterest: payInterest,
   buyProperty: buyProperty,
-  buyBuilding: buyBuilding
+  buyBuilding: buyBuilding,
+  getBalance: getBalance,
+  resetProperty: resetProperty
 };

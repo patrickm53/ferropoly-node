@@ -22,13 +22,15 @@ var pricelistLib = require('./../../common/lib/pricelist');
 var gameCache = require('../../main/lib/gameCache');
 var marketplace = require('../../main/lib/accounting/marketplace');
 var teamAccount = require('../../main/lib/accounting/teamAccount');
+var propertyAccount = require('../../main/lib/accounting/propertyAccount');
+
 var settings = require('./../../main/settings');
 
 var gameId;
 var gameData;
 var pricelist;
 
-describe('Marketplace integration tests', function () {
+describe.only('Marketplace integration tests', function () {
   this.timeout(5000);
   before(function (done) {
     require('../fixtures/demoGamePlay').createDemo({}, function (err, res) {
@@ -572,6 +574,16 @@ describe('Marketplace integration tests', function () {
           });
         })
       });
+    });
+    describe('Reset the property bought by group 0', function() {
+      it('should make the property available again', function(done) {
+        marketplace.resetProperty(gameId, pricelist[0].uuid, 'TEST', function(err) {
+          propertyAccount.getBalance(gameId, pricelist[0].uuid, function(err, info) {
+            expect(info.balance).to.be(0);
+            done(err);
+          });
+        });
+      })
     });
   });
 });

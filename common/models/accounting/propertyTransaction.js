@@ -7,7 +7,7 @@
 
 
 var mongoose = require('mongoose');
-
+var moment = require('moment');
 /**
  * The mongoose schema for a team account
  */
@@ -58,8 +58,40 @@ function dumpAccounts(gameId, callback) {
   })
 }
 
+
+/***
+ * Get the entries of the account
+ * @param gameId
+ * @param propertyId
+ * @param tsStart moment() to start, if undefined all
+ * @param tsEnd   moment() to end, if undefined now()
+ * @param callback
+ * @returns {*}
+ */
+function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
+  if (!gameId || !propertyId) {
+    return callback(new Error('parameter error'));
+  }
+
+  if (!tsStart) {
+    tsStart = moment('2015-01-01');
+  }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
+  PropertyAccountTransaction.find({gameId: gameId})
+    .where('propertyId').equals(propertyId)
+    .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+    .sort('timestamp')
+    .lean()
+    .exec(function (err, data) {
+      callback(err, data);
+    })
+}
+
 module.exports = {
   Model: PropertyAccountTransaction,
   dumpAccounts: dumpAccounts,
-  book: book
+  book: book,
+  getEntries: getEntries
 };

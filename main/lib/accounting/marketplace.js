@@ -335,6 +335,32 @@ function manipulateTeamAccount(gameId, teamId, amount, reason, callback) {
   }
 }
 
+/**
+ * Resets a property: removes the owner and buildings. Use only, if you have bought a property by mistake
+ * for a team. The affected teams account is not touched.
+ *
+ * @param gameId
+ * @param propertyId
+ * @param reason
+ * @param callback
+ * @returns {*}
+ */
+function resetProperty(gameId, propertyId, reason, callback) {
+  if (!reason) {
+    return callback(new Error('reason must be supplied'));
+  }
+
+
+  propWrap.getProperty(gameId, propertyId, function (err, prop) {
+    if (err) {
+      return callback(err);
+    }
+    propertyAccount.resetProperty(gameId, prop, reason, function (err) {
+      callback(err);
+    });
+  });
+}
+
 module.exports = {
   payInterests: payInterests,
   buyProperty: buyProperty,
@@ -342,5 +368,6 @@ module.exports = {
   payRents: payRents,
   chancelleryGamble: chancelleryGamble,
   chancellery: chancellery,
-  manipulateTeamAccount: manipulateTeamAccount
+  manipulateTeamAccount: manipulateTeamAccount,
+  resetProperty: resetProperty
 };
