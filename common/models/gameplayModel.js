@@ -14,6 +14,8 @@ var crypto = require('crypto');
 var uuid = require('node-uuid');
 var Moniker = require('moniker');
 var finalizedGameplays = [];
+var moment = require('moment-timezone');
+
 /**
  * The mongoose schema for an user
  */
@@ -243,12 +245,15 @@ var removeGameplay = function (gp, callback) {
  */
 function finalizeTime(date, time) {
   try {
-    var newDate = new Date(date);
     var e = time.split(':');
-    newDate.setHours(e[0]);
-    newDate.setMinutes(e[1]);
-    newDate.setSeconds(0);
-    return newDate;
+    var hour = e[0];
+    var minute = e[1];
+
+    var newDate = moment.tz(date.getTime(), 'Europe/Zurich');
+    newDate.minute(minute);
+    newDate.hour(hour);
+    newDate.second(0);
+    return newDate.toDate();
   }
   catch (e) {
     console.log('ERROR in finalizeTime: ' + e);

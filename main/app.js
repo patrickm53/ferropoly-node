@@ -27,6 +27,7 @@ var indexRoute = require('./routes/index');
 var login = require('./routes/login');
 var authtoken = require('./routes/authtoken');
 
+
 var app = express();
 
 /**
@@ -104,6 +105,9 @@ ferropolyDb.init(settings, function (err) {
       error: {}
     });
   });
+
+  // Now it is time to start the scheduler
+  var gameScheduler = require('./lib/gameScheduler')();
 
   var server = require('http').Server(app);
 

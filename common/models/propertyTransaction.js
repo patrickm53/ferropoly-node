@@ -86,7 +86,7 @@ function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
     .lean()
     .exec(function (err, data) {
       callback(err, data);
-    })
+    });
 }
 
 module.exports = {
