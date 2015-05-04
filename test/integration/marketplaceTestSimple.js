@@ -30,7 +30,7 @@ var gameId;
 var gameData;
 var pricelist;
 
-describe.only('Marketplace integration tests', function () {
+describe('Marketplace integration tests', function () {
   this.timeout(5000);
   before(function (done) {
     require('../fixtures/demoGamePlay').createDemo({}, function (err, res) {

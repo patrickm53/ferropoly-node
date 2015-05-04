@@ -10,6 +10,9 @@ var teamAccount = require('./teamAccount');
 var propertyAccount = require('./propertyAccount');
 var chancelleryAccount = require('./chancelleryAccount');
 var _ = require('lodash');
+
+var scheduler;
+
 /**
  * Buy a property or at least try to
  * 1) Success: property goes to the team, Money flow:
@@ -211,7 +214,7 @@ function payRentsForTeam(gp, team, callback) {
 }
 
 /**
- * Pays the rents for all teams, also releasing the buildingEnabled lock for the next round
+ * Pays the rents (interests and rents) for all teams, also releasing the buildingEnabled lock for the next round
  * Money: bank->propertIES->team
  * @param gameId
  * @param callback
@@ -362,6 +365,20 @@ function resetProperty(gameId, propertyId, reason, callback) {
 }
 
 module.exports = {
+  init: function(_scheduler) {
+    scheduler = _scheduler;
+    scheduler.on('interest', function(data) {
+      payRents(data.gameId, function(err) {
+        if (err) {
+          console.log('ERROR, interests not payed! Message: ' + err.message);
+          // what to do?
+          return;
+        }
+        console.log('Timed interests payed');
+      });
+    });
+  },
+
   payInterests: payInterests,
   buyProperty: buyProperty,
   buildHouses: buildHouses,

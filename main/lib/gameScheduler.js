@@ -16,6 +16,10 @@ var util = require('util');
 var _ = require('lodash');
 var schedule = require('node-schedule');
 
+/**
+ * Constructor of the scheduler
+ * @constructor
+ */
 function Scheduler() {
   EventEmitter.call(this);
 
@@ -30,6 +34,10 @@ function Scheduler() {
 
 util.inherits(Scheduler, EventEmitter);
 
+/**
+ * Update: load all events of next few hours.
+ * @param callback
+ */
 Scheduler.prototype.update = function(callback) {
   var self = this;
   eventRepo.getUpcomingEvents(function (err, events) {
@@ -51,16 +59,16 @@ Scheduler.prototype.update = function(callback) {
 
         if (moment(event.timestamp) < now) {
           console.log('Emit an old event:' + event._id);
-          self.emit(event.gameId + ':' + event.type, event);
+          self.emit(event.type, event);
         }
         else {
           console.log('Push event in joblist:' + event._id);
           self.jobs.push(schedule.scheduleJob(event.timestamp, function (ev) {
             console.log('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
-            self.emit(ev.gameId + ':' + ev.type, ev);
+            self.emit(ev.type, ev);
           }.bind(null, event)));
         }
-      };
+      }
     }
     callback(err);
   })
