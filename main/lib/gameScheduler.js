@@ -25,11 +25,6 @@ function Scheduler() {
 
   this.jobs = [];
 
-  this.update(function (err, events) {
-    if (err) {
-      console.log(err);
-    }
-  });
 }
 
 util.inherits(Scheduler, EventEmitter);

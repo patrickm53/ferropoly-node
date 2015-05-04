@@ -13,7 +13,7 @@ var _ = require('lodash');
 var db = require('./../../common/lib/ferropolyDb');
 var pricelistLib = require('./../../common/lib/pricelist');
 var gameCache = require('../../main/lib/gameCache');
-var marketplace = require('../../main/lib/accounting/marketplace');
+var marketplace = require('../../main/lib/accounting/marketplace').createMarketplace(null);
 var teamAccount = require('../../main/lib/accounting/teamAccount');
 var settings = require('./../../main/settings');
 

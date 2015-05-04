@@ -12,6 +12,25 @@ var chancelleryAccount = require('./chancelleryAccount');
 var _ = require('lodash');
 
 var scheduler;
+var marketplace;
+
+function Marketplace(scheduler) {
+  var self = this;
+  this.scheduler = scheduler;
+
+  if (this.scheduler) {
+    this.scheduler.on('interest', function(data) {
+      self.payRents(data.gameId, function(err) {
+        if (err) {
+          console.log('ERROR, interests not payed! Message: ' + err.message);
+          // what to do?
+          return;
+        }
+        console.log('Timed interests payed');
+      });
+    });
+  }
+}
 
 /**
  * Buy a property or at least try to
@@ -25,7 +44,7 @@ var scheduler;
  * @param propertyId
  * @param callback
  */
-function buyProperty(gameId, teamId, propertyId, callback) {
+Marketplace.prototype.buyProperty = function(gameId, teamId, propertyId, callback) {
   propWrap.getProperty(gameId, propertyId, function (err, property) {
     if (err) {
       return callback(err);
@@ -81,7 +100,7 @@ function buyProperty(gameId, teamId, propertyId, callback) {
       }
     });
   });
-}
+};
 
 /**
  * Build houses for all porperties of a team
@@ -90,7 +109,7 @@ function buyProperty(gameId, teamId, propertyId, callback) {
  * @param teamId
  * @param callback
  */
-function buildHouses(gameId, teamId, callback) {
+Marketplace.prototype.buildHouses = function(gameId, teamId, callback) {
   propWrap.getTeamProperties(gameId, teamId, function (err, properties) {
     if (err) {
       return callback(err);
@@ -149,14 +168,14 @@ function buildHouses(gameId, teamId, callback) {
       }
     });
   });
-}
+};
 
 /**
  * Pay Interest (this is the fix value) for all teams.
  * Money: bank->team
  * @param callback
  */
-function payInterests(gameId, callback) {
+Marketplace.prototype.payInterests = function(gameId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       console.error(err);
@@ -179,7 +198,7 @@ function payInterests(gameId, callback) {
       })
     }
   });
-}
+};
 
 /**
  * Pays the rents (each hour) for a team
@@ -187,7 +206,7 @@ function payInterests(gameId, callback) {
  * @param team
  * @param callback
  */
-function payRentsForTeam(gp, team, callback) {
+Marketplace.prototype.payRentsForTeam = function(gp, team, callback) {
   propertyAccount.getRentRegister(gp, team, function (err, info) {
     if (err) {
       console.log(err);
@@ -211,7 +230,7 @@ function payRentsForTeam(gp, team, callback) {
       }
     });
   });
-}
+};
 
 /**
  * Pays the rents (interests and rents) for all teams, also releasing the buildingEnabled lock for the next round
@@ -219,8 +238,9 @@ function payRentsForTeam(gp, team, callback) {
  * @param gameId
  * @param callback
  */
-function payRents(gameId, callback) {
-  payInterests(gameId, function (err) {
+Marketplace.prototype.payRents = function(gameId, callback) {
+  var self = this;
+  self.payInterests(gameId, function (err) {
     if (err) {
       return callback(err);
     }
@@ -239,7 +259,7 @@ function payRents(gameId, callback) {
         var error = null;
 
         for (var i = 0; i < teams.length; i++) {
-          payRentsForTeam(gp, teams[i], function (err) {
+          self.payRentsForTeam(gp, teams[i], function (err) {
             if (err) {
               error = err;
             }
@@ -252,7 +272,7 @@ function payRents(gameId, callback) {
       });
     });
   });
-}
+};
 
 /**
  * Chancellery, every time a team calls (be sure that they are on the line,
@@ -267,7 +287,7 @@ function payRents(gameId, callback) {
  * @param teamId
  * @param callback
  */
-function chancellery(gameId, teamId, callback) {
+Marketplace.prototype.chancellery = function(gameId, teamId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       console.error(err);
@@ -280,7 +300,7 @@ function chancellery(gameId, teamId, callback) {
       callback(err, res);
     })
   })
-}
+};
 
 /**
  * Chancellery Game: either you win or you loose. Usually only loosing money
@@ -294,7 +314,7 @@ function chancellery(gameId, teamId, callback) {
  * @param amount
  * @param callback
  */
-function chancelleryGamble(gameId, teamId, amount, callback) {
+Marketplace.prototype.chancelleryGamble = function(gameId, teamId, amount, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       console.error(err);
@@ -307,7 +327,7 @@ function chancelleryGamble(gameId, teamId, amount, callback) {
       callback(err, res);
     })
   })
-}
+};
 
 
 /**
@@ -320,7 +340,7 @@ function chancelleryGamble(gameId, teamId, amount, callback) {
  * @param reason
  * @param callback
  */
-function manipulateTeamAccount(gameId, teamId, amount, reason, callback) {
+Marketplace.prototype.manipulateTeamAccount = function(gameId, teamId, amount, reason, callback) {
   if (!reason) {
     return callback(new Error('reason must be supplied'));
   }
@@ -336,7 +356,7 @@ function manipulateTeamAccount(gameId, teamId, amount, reason, callback) {
     });
 
   }
-}
+};
 
 /**
  * Resets a property: removes the owner and buildings. Use only, if you have bought a property by mistake
@@ -348,11 +368,10 @@ function manipulateTeamAccount(gameId, teamId, amount, reason, callback) {
  * @param callback
  * @returns {*}
  */
-function resetProperty(gameId, propertyId, reason, callback) {
+Marketplace.prototype.resetProperty = function(gameId, propertyId, reason, callback) {
   if (!reason) {
     return callback(new Error('reason must be supplied'));
   }
-
 
   propWrap.getProperty(gameId, propertyId, function (err, prop) {
     if (err) {
@@ -362,29 +381,26 @@ function resetProperty(gameId, propertyId, reason, callback) {
       callback(err);
     });
   });
-}
+};
 
 module.exports = {
-  init: function(_scheduler) {
-    scheduler = _scheduler;
-    scheduler.on('interest', function(data) {
-      payRents(data.gameId, function(err) {
-        if (err) {
-          console.log('ERROR, interests not payed! Message: ' + err.message);
-          // what to do?
-          return;
-        }
-        console.log('Timed interests payed');
-      });
-    });
+  /**
+   * Create a marketplace
+   * @param scheduler
+   * @returns {Marketplace}
+   */
+  createMarketplace : function(scheduler) {
+    marketplace =  new Marketplace(scheduler);
+    return marketplace;
   },
-
-  payInterests: payInterests,
-  buyProperty: buyProperty,
-  buildHouses: buildHouses,
-  payRents: payRents,
-  chancelleryGamble: chancelleryGamble,
-  chancellery: chancellery,
-  manipulateTeamAccount: manipulateTeamAccount,
-  resetProperty: resetProperty
+  /**
+   * Gets the marketplace, throws an error, if not defined
+   * @returns {*}
+   */
+  getMarketplace : function() {
+    if (!marketplace) {
+      throw new Error('You must create a marketplace first before getting it');
+    }
+    return marketplace;
+  }
 };

@@ -10,7 +10,7 @@ var _ = require('lodash');
 
 var db = require('./../../common/lib/ferropolyDb');
 var gameCache = require('../../main/lib/gameCache');
-var marketplace = require('../../main/lib/accounting/marketplace');
+var marketplace = require('../../main/lib/accounting/marketplace').createMarketplace(null);
 var teamAccount = require('../../main/lib/accounting/teamAccount');
 var chancelleryAccount = require('../../main/lib/accounting/chancelleryAccount');
 

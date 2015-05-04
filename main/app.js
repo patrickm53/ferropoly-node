@@ -26,7 +26,6 @@ var ferropolyDb = require('../common/lib/ferropolyDb');
 var indexRoute = require('./routes/index');
 var login = require('./routes/login');
 var authtoken = require('./routes/authtoken');
-var marketplace = require('./lib/accounting/marketplace');
 
 var app = express();
 
@@ -108,7 +107,12 @@ ferropolyDb.init(settings, function (err) {
 
   // Now it is time to start the scheduler
   var gameScheduler = require('./lib/gameScheduler')();
-  marketplace.init(gameScheduler);
+  var marketplace = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
+  gameScheduler.update(function(err) {
+    if (err) {
+      console.log('Error while updating scheduler');
+    }
+  });
 
   var server = require('http').Server(app);
 
