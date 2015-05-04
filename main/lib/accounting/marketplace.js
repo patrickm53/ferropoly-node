@@ -10,12 +10,15 @@ var teamAccount = require('./teamAccount');
 var propertyAccount = require('./propertyAccount');
 var chancelleryAccount = require('./chancelleryAccount');
 var _ = require('lodash');
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
-var scheduler;
 var marketplace;
 
 function Marketplace(scheduler) {
   var self = this;
+  EventEmitter.call(this);
+
   this.scheduler = scheduler;
 
   if (this.scheduler) {
@@ -31,6 +34,8 @@ function Marketplace(scheduler) {
     });
   }
 }
+
+util.inherits(Marketplace, EventEmitter);
 
 /**
  * Buy a property or at least try to
@@ -385,7 +390,7 @@ Marketplace.prototype.resetProperty = function(gameId, propertyId, reason, callb
 
 module.exports = {
   /**
-   * Create a marketplace
+   * Create a marketplace. This should be done only once, afterwards get it using getMarketplace
    * @param scheduler
    * @returns {Marketplace}
    */
