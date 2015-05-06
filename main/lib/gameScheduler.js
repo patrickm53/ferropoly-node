@@ -20,10 +20,12 @@ var schedule = require('node-schedule');
  * Constructor of the scheduler
  * @constructor
  */
-function Scheduler() {
+function Scheduler(_settings) {
   EventEmitter.call(this);
 
+  this.settings = _settings;
   this.jobs = [];
+  this.updateJob = undefined;
 
 }
 
@@ -33,7 +35,8 @@ util.inherits(Scheduler, EventEmitter);
  * Update: load all events of next few hours.
  * @param callback
  */
-Scheduler.prototype.update = function(callback) {
+Scheduler.prototype.update = function (callback) {
+  console.log('Scheduler: update');
   var self = this;
   eventRepo.getUpcomingEvents(function (err, events) {
     if (err) {
@@ -48,7 +51,7 @@ Scheduler.prototype.update = function(callback) {
 
     if (events.length > 0) {
       var now = moment();
-      for (i = 0; i < events.length;i++) {
+      for (i = 0; i < events.length; i++) {
         var event = events[i];
         console.log(events[i]);
 
@@ -65,11 +68,44 @@ Scheduler.prototype.update = function(callback) {
         }
       }
     }
+
+    // Start the next update job
+    if (self.updateJob) {
+      self.updateJob.cancel();
+    }
+    self.updateJob = schedule.scheduleJob(moment().add({minutes: 181, seconds: 3}).toDate(), function () {
+      self.update(function (err) {
+        if (err) {
+          console.error(err);
+        }
+      });
+    });
+
     callback(err);
   })
 };
 
+/**
+ * Request a specific event for handling it
+ * @param event
+ * @param callback
+ */
+Scheduler.prototype.requestEventSave = function(event, callback) {
+  eventRepo.requestEventSave(event,settings.serverId, function(err, ev) {
+    return callback(err, ev);
+  });
+};
 
+/**
+ * Mark an event as handled
+ * @param event
+ * @param callback
+ */
+Scheduler.prototype.markEventHandled = function(event, callback) {
+  eventRepo.saveAfterHandling(event, function(err, ev) {
+    return callback(err, ev);
+  })
+};
 /*
  What needs to be done:
  - load all gameplays, get the next event
@@ -78,6 +114,6 @@ Scheduler.prototype.update = function(callback) {
 
  Design it as event emitter or do we all here?
  */
-module.exports = function () {
-  return new Scheduler();
+module.exports = function (settings) {
+  return new Scheduler(settings);
 };

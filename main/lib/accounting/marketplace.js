@@ -1,5 +1,5 @@
 /**
- * TEMPORARY playground for all market relevant actions. Check the name
+ * All market actions are done over the marketplace
  *
  * Created by kc on 20.04.15.
  */
@@ -22,8 +22,10 @@ function Marketplace(scheduler) {
   this.scheduler = scheduler;
 
   if (this.scheduler) {
-    this.scheduler.on('interest', function(data) {
-      self.payRents(data.gameId, function(err) {
+    this.scheduler.on('interest', function (data) {
+
+      // Todo: save handling of the event
+      self.payRents(data.gameId, function (err) {
         if (err) {
           console.log('ERROR, interests not payed! Message: ' + err.message);
           // what to do?
@@ -49,7 +51,7 @@ util.inherits(Marketplace, EventEmitter);
  * @param propertyId
  * @param callback
  */
-Marketplace.prototype.buyProperty = function(gameId, teamId, propertyId, callback) {
+Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callback) {
   propWrap.getProperty(gameId, propertyId, function (err, property) {
     if (err) {
       return callback(err);
@@ -114,7 +116,7 @@ Marketplace.prototype.buyProperty = function(gameId, teamId, propertyId, callbac
  * @param teamId
  * @param callback
  */
-Marketplace.prototype.buildHouses = function(gameId, teamId, callback) {
+Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
   propWrap.getTeamProperties(gameId, teamId, function (err, properties) {
     if (err) {
       return callback(err);
@@ -180,7 +182,7 @@ Marketplace.prototype.buildHouses = function(gameId, teamId, callback) {
  * Money: bank->team
  * @param callback
  */
-Marketplace.prototype.payInterests = function(gameId, callback) {
+Marketplace.prototype.payInterests = function (gameId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       console.error(err);
@@ -211,7 +213,7 @@ Marketplace.prototype.payInterests = function(gameId, callback) {
  * @param team
  * @param callback
  */
-Marketplace.prototype.payRentsForTeam = function(gp, team, callback) {
+Marketplace.prototype.payRentsForTeam = function (gp, team, callback) {
   propertyAccount.getRentRegister(gp, team, function (err, info) {
     if (err) {
       console.log(err);
@@ -243,7 +245,7 @@ Marketplace.prototype.payRentsForTeam = function(gp, team, callback) {
  * @param gameId
  * @param callback
  */
-Marketplace.prototype.payRents = function(gameId, callback) {
+Marketplace.prototype.payRents = function (gameId, callback) {
   var self = this;
   self.payInterests(gameId, function (err) {
     if (err) {
@@ -292,7 +294,7 @@ Marketplace.prototype.payRents = function(gameId, callback) {
  * @param teamId
  * @param callback
  */
-Marketplace.prototype.chancellery = function(gameId, teamId, callback) {
+Marketplace.prototype.chancellery = function (gameId, teamId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       console.error(err);
@@ -319,7 +321,7 @@ Marketplace.prototype.chancellery = function(gameId, teamId, callback) {
  * @param amount
  * @param callback
  */
-Marketplace.prototype.chancelleryGamble = function(gameId, teamId, amount, callback) {
+Marketplace.prototype.chancelleryGamble = function (gameId, teamId, amount, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       console.error(err);
@@ -345,7 +347,7 @@ Marketplace.prototype.chancelleryGamble = function(gameId, teamId, amount, callb
  * @param reason
  * @param callback
  */
-Marketplace.prototype.manipulateTeamAccount = function(gameId, teamId, amount, reason, callback) {
+Marketplace.prototype.manipulateTeamAccount = function (gameId, teamId, amount, reason, callback) {
   if (!reason) {
     return callback(new Error('reason must be supplied'));
   }
@@ -373,7 +375,7 @@ Marketplace.prototype.manipulateTeamAccount = function(gameId, teamId, amount, r
  * @param callback
  * @returns {*}
  */
-Marketplace.prototype.resetProperty = function(gameId, propertyId, reason, callback) {
+Marketplace.prototype.resetProperty = function (gameId, propertyId, reason, callback) {
   if (!reason) {
     return callback(new Error('reason must be supplied'));
   }
@@ -394,15 +396,15 @@ module.exports = {
    * @param scheduler
    * @returns {Marketplace}
    */
-  createMarketplace : function(scheduler) {
-    marketplace =  new Marketplace(scheduler);
+  createMarketplace: function (scheduler) {
+    marketplace = new Marketplace(scheduler);
     return marketplace;
   },
   /**
    * Gets the marketplace, throws an error, if not defined
    * @returns {*}
    */
-  getMarketplace : function() {
+  getMarketplace: function () {
     if (!marketplace) {
       throw new Error('You must create a marketplace first before getting it');
     }

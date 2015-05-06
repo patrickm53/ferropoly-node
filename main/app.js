@@ -106,7 +106,7 @@ ferropolyDb.init(settings, function (err) {
   });
 
   // Now it is time to start the scheduler
-  var gameScheduler = require('./lib/gameScheduler')();
+  var gameScheduler = require('./lib/gameScheduler')(settings);
   var marketplace = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
   gameScheduler.update(function(err) {
     if (err) {

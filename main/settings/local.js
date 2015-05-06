@@ -9,7 +9,8 @@ module.exports = function(settings) {
 
   settings.server = {
     port: 3004,
-    host: 'localhost'
+    host: 'localhost',
+    serverId: 'localhost-main'
   };
 
   settings.socketIoServer = {
