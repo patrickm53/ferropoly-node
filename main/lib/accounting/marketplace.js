@@ -22,10 +22,9 @@ function Marketplace(scheduler) {
   this.scheduler = scheduler;
 
   if (this.scheduler) {
-    this.scheduler.on('interest', function (data) {
+    this.scheduler.on('interest', function (event) {
 
-      // Todo: save handling of the event
-      self.payRents(data.gameId, function (err) {
+      self.payRents(event.gameId, function (err) {
         if (err) {
           console.log('ERROR, interests not payed! Message: ' + err.message);
           // what to do?

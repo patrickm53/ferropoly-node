@@ -110,7 +110,7 @@ function requestEventSave(event, serverId, callback) {
       }
 
       var ev = data[0];
-      if (ev.handler && ev.handler.id !== serverId) {
+      if (ev.handler && ev.handler.id && ev.handler.id !== serverId) {
         // Someone else is handling it, forget it
         return callback(null, null);
       }
@@ -140,7 +140,7 @@ function requestEventSave(event, serverId, callback) {
             if (!data || data.length === 0) {
               return callback(null, null);
             }
-            callback(null, data);
+            callback(null, data[0]);
           });
       });
     });
@@ -153,13 +153,15 @@ function requestEventSave(event, serverId, callback) {
  * @returns {*}
  */
 function saveAfterHandling(event, callback) {
-  if (!event.handler || event.handler.reserved) {
+  if (!event.handler || !event.handler.reserved) {
     return callback(new Error('This event is not properly handled, can not save it!'));
   }
   event.handler.handled = new Date();
+  event.handled = true;
 
   event.save(function (err, savedEvent) {
     if (err) {
+      console.log('Error while saving, start delay: ' + err.message);
       // concurrency error? It is important, that it is saved!
       _.delay(function (e, c) {
           saveAfterHandling(e, c);
@@ -168,6 +170,7 @@ function saveAfterHandling(event, callback) {
         event, callback);
       return;
     }
+    console.log('Event marked as finished');
     callback(null, savedEvent);
   });
 }

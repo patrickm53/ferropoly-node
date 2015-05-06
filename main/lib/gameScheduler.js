@@ -31,6 +31,31 @@ function Scheduler(_settings) {
 
 util.inherits(Scheduler, EventEmitter);
 
+Scheduler.prototype.handleEvent = function(channel, event) {
+  var self = this;
+  console.log('Handling event ' + channel);
+  eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    if (!ev) {
+      console.log('Event already handled by other instance');
+      return;
+    }
+    self.emit(channel, ev);
+
+    eventRepo.saveAfterHandling(ev, function (err) {
+      if (err) {
+        console.error('Error while saving handled event:' + err.message);
+        return;
+      }
+      console.log('Event handling finished');
+    })
+  });
+
+};
+
 /**
  * Update: load all events of next few hours.
  * @param callback
@@ -57,13 +82,13 @@ Scheduler.prototype.update = function (callback) {
 
         if (moment(event.timestamp) < now) {
           console.log('Emit an old event:' + event._id);
-          self.emit(event.type, event);
+          self.handleEvent(event.type, event);
         }
         else {
           console.log('Push event in joblist:' + event._id);
           self.jobs.push(schedule.scheduleJob(event.timestamp, function (ev) {
             console.log('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
-            self.emit(ev.type, ev);
+            self.handleEvent(ev.type, ev);
           }.bind(null, event)));
         }
       }
@@ -90,8 +115,8 @@ Scheduler.prototype.update = function (callback) {
  * @param event
  * @param callback
  */
-Scheduler.prototype.requestEventSave = function(event, callback) {
-  eventRepo.requestEventSave(event,settings.serverId, function(err, ev) {
+Scheduler.prototype.requestEventSave = function (event, callback) {
+  eventRepo.requestEventSave(event, this.settings.serverId, function (err, ev) {
     return callback(err, ev);
   });
 };
@@ -101,8 +126,8 @@ Scheduler.prototype.requestEventSave = function(event, callback) {
  * @param event
  * @param callback
  */
-Scheduler.prototype.markEventHandled = function(event, callback) {
-  eventRepo.saveAfterHandling(event, function(err, ev) {
+Scheduler.prototype.markEventHandled = function (event, callback) {
+  eventRepo.saveAfterHandling(event, function (err, ev) {
     return callback(err, ev);
   })
 };
