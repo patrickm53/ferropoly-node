@@ -31,6 +31,12 @@ function Scheduler(_settings) {
 
 util.inherits(Scheduler, EventEmitter);
 
+/**
+ * Handles an event: the event is requested from the DB for this instance, if this fails,
+ * another instance is handling it
+ * @param channel
+ * @param event
+ */
 Scheduler.prototype.handleEvent = function(channel, event) {
   var self = this;
   console.log('Handling event ' + channel);
@@ -43,17 +49,28 @@ Scheduler.prototype.handleEvent = function(channel, event) {
       console.log('Event already handled by other instance');
       return;
     }
+    // Now emit the event. The event callback is attached, without calling this callback, the
+    // event won't be marked as solved!
+    ev.callback = self.handleEventCallback;
     self.emit(channel, ev);
 
-    eventRepo.saveAfterHandling(ev, function (err) {
-      if (err) {
-        console.error('Error while saving handled event:' + err.message);
-        return;
-      }
-      console.log('Event handling finished');
-    })
   });
+};
 
+/**
+ * After handling an event it has to be marked as 'solved' by the designated handler by
+ * calling this callback (found in event.callback)
+ * @param err
+ * @param event
+ */
+Scheduler.prototype.handleEventCallback = function(err, event) {
+  eventRepo.saveAfterHandling(event, function (err) {
+    if (err) {
+      console.error('Error while saving handled event:' + err.message);
+      return;
+    }
+    console.log('Event handling finished');
+  });
 };
 
 /**

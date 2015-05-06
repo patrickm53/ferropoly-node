@@ -15,6 +15,11 @@ var util = require('util');
 
 var marketplace;
 
+/**
+ * Constructor
+ * @param scheduler the instance of the gameScheduler, must be defined for the game, can be null for the integration tests
+ * @constructor
+ */
 function Marketplace(scheduler) {
   var self = this;
   EventEmitter.call(this);
@@ -22,15 +27,18 @@ function Marketplace(scheduler) {
   this.scheduler = scheduler;
 
   if (this.scheduler) {
+    /**
+     * This is the 'interest' event launched by the gameScheduler
+     */
     this.scheduler.on('interest', function (event) {
-
       self.payRents(event.gameId, function (err) {
         if (err) {
           console.log('ERROR, interests not payed! Message: ' + err.message);
-          // what to do?
+          event.callback(err);
           return;
         }
         console.log('Timed interests payed');
+        event.callback(null, event);
       });
     });
   }
