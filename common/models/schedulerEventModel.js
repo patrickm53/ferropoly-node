@@ -153,6 +153,9 @@ function requestEventSave(event, serverId, callback) {
  * @returns {*}
  */
 function saveAfterHandling(event, callback) {
+  if (!event) {
+    return callback(new Error('No event supplied'));
+  }
   if (!event.handler || !event.handler.reserved) {
     return callback(new Error('This event is not properly handled, can not save it!'));
   }
