@@ -1,6 +1,6 @@
 {
   "name": "OpenShift-Sample-App",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "OpenShift Sample Application",
   "keywords": [
     "OpenShift",
@@ -47,9 +47,19 @@
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
-    "grunt": "^0.4.5",
-    "grunt-contrib-copy": "^0.8.0",
-    "mocha": "^2.2.4",
+    "grunt-bump": "^0.3.0",
+    "grunt-contrib-clean": "0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "0.7.0",
+    "grunt-contrib-cssmin": "^0.12.2",
+    "grunt-contrib-uglify": "^0.8.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-eslint": "3.0.0",
+    "grunt-mocha-test": "0.12.1",
+    "grunt-processhtml": "^0.3.7",
+    "grunt-shell": "^1.1.2",
+    "load-grunt-tasks": "2.0.0",
+    "mocha": "2.2.4",
     "sandboxed-module": "^2.0.0"
   },
   "bundleDependencies": [],
