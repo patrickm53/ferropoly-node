@@ -1,0 +1,23 @@
+extends layout
+block head
+  script
+    | var gp =
+    != gameplay
+    |;
+    | var pl =
+    != pricelist
+    |;
+    | var err = "
+    = err
+    |";
+    | var err = "
+    = err2
+    |";
+  script(src='/moment/moment.min.js')
+  link(rel='stylesheet', href='/css/index.css',  type='text/css')
+block content
+  div()
+  script
+    | console.log(gp);
+
+
