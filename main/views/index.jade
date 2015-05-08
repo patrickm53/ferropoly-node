@@ -1,6 +1,7 @@
 extends layout
 
 block head
+  script(src='/moment/moment.min.js')
   script(src='/js/indexmctrl.js')
   link(rel='stylesheet', href='/css/index.css',  type='text/css')
 
@@ -15,15 +16,22 @@ block content
     div(ng-show='gameplays.length > 0')
       .row
         div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in gameplays')
-          .panel.panel-default
-            .panel-heading
-              h3.panel-title {{gameplay.gamename}}
-            .panel-body
-              p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}
-              p Karte: {{gameplay.internal.map.toUpperCase()}}
-              p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
-              p Letzte Bearbeitung: {{gameplay.log.lastEdited | date:'d.M.yyyy H:mm'}}
-              p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
-                div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
-              p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
+            .panel.panel-default
+              .panel-heading
+                h3.panel-title {{gameplay.gamename}}
+              .panel-body
+                p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}
+                p Karte: {{gameplay.internal.map.toUpperCase()}}
+                p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
+                p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
+                  div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
+                p
+                  a.btn.btn-default.btn-sm(href='/gameinfo') Preislistenansicht
+                  | &nbsp;
+                  a.btn.btn-default.btn-sm(href='/admin') Spiel administrieren
+                p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
+              .panel-footer
+                p {{getGpInfo(gameplay)}}
+
+
 

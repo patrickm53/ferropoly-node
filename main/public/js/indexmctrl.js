@@ -29,6 +29,29 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
       });
   };
 
+  $scope.isGameRunning = function(gp) {
+    if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
+      return -1;
+    }
+    if (moment(gp.scheduling.gameStartTs).isAfter(moment())) {
+      return 1;
+    }
+    // Is running
+    return 0;
+  };
+  $scope.getGpInfo = function (gp) {
+    if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
+      return 'Spiel ist seit ' + moment(gp.scheduling.gameEndTs).fromNow(true) + ' zu Ende.';
+    }
+    if (moment(gp.scheduling.gameStartTs).isAfter(moment())) {
+      return 'Spiel startet erst in' + moment(gp.scheduling.gameStartTs).fromNow(true) + '.';
+    }
+    if (moment().isBetween(moment(gp.scheduling.gameStartTs), moment(gp.scheduling.gameEndTs))) {
+      return 'Spiel läuft seit ' + moment(gp.scheduling.gameStartTs).fromNow(true) + '.';
+    }
+    return ('x');
+  };
+
   // When document ready, load gameplays
   $(document).ready(function () {
     $http.get('/gameplays').
@@ -56,7 +79,6 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
         $scope.gameplays = [];
       });
   });
-
 
 
 }]);
