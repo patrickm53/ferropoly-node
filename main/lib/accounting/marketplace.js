@@ -31,9 +31,40 @@ function Marketplace(scheduler) {
      * This is the 'interest' event launched by the gameScheduler
      */
     this.scheduler.on('interest', function (event) {
+      console.log('Marketplace: onInterest');
       self.payRents(event.gameId, function (err) {
         if (err) {
           console.log('ERROR, interests not payed! Message: ' + err.message);
+          event.callback(err);
+          return;
+        }
+        console.log('Timed interests payed');
+        event.callback(null, event);
+      });
+    });
+    /**
+     * This is the 'start' event launched by the gameScheduler. Pay interests once.
+     */
+    this.scheduler.on('start', function (event) {
+      console.log('Marketplace: onStart');
+      self.payInterests(event.gameId, function (err) {
+        if (err) {
+          console.log('ERROR, initial interests not payed! Message: ' + err.message);
+          event.callback(err);
+          return;
+        }
+        console.log('Timed interests payed');
+        event.callback(null, event);
+      });
+    });
+    /**
+     * This is the 'end' event launched by the gameScheduler. Pay the final rents & interests
+     */
+    this.scheduler.on('end', function (event) {
+      console.log('Marketplace: onEnd');
+      self.payFinalRents(event.gameId, function (err) {
+        if (err) {
+          console.log('ERROR, final interests not payed! Message: ' + err.message);
           event.callback(err);
           return;
         }
@@ -181,6 +212,41 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         });
       }
     });
+  });
+};
+
+/**
+ * Pays the final interests in a game. The number of them was defined in the editor.
+ * @param gameId
+ * @param callback
+ */
+Marketplace.prototype.payFinalRents = function(gameId, callback) {
+  var self = this;
+
+  gameCache.getGameData(gameId, function (err, res) {
+    if (err) {
+      console.error(err);
+      return callback(err);
+    }
+    var gp = res.gameplay;
+    var paid = 0;
+    var error = null;
+    if (gp.gameParams.interestCyclesAtEndOfGame < 1) {
+      // No cycles, no interests, return
+      return callback(null);
+    }
+
+    for (var i = 0; i < gp.gameParams.interestCyclesAtEndOfGame; i++) {
+      self.payInterests(gameId, function (err) {
+        if (err) {
+          error = err;
+        }
+        paid++;
+        if (paid ===  gp.gameParams.interestCyclesAtEndOfGame) {
+          callback(error);
+        }
+      })
+    }
   });
 };
 

@@ -64,6 +64,10 @@ Scheduler.prototype.handleEvent = function(channel, event) {
  * @param event
  */
 Scheduler.prototype.handleEventCallback = function(err, event) {
+  if (err) {
+    console.log('Error in event handler callback: ' + err.message);
+    return;
+  }
   eventRepo.saveAfterHandling(event, function (err) {
     if (err) {
       console.error('Error while saving handled event:' + err.message);
