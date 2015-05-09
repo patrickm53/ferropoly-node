@@ -13,7 +13,7 @@ var _ = require('lodash');
 var settings = require('../settings');
 var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
-
+var teamModel = require('../../common/models/teamModel');
 var ngFile = '/js/indexctrl.js';
 if (settings.minifedjs) {
   ngFile = '/js/indexctrl.min.js'
@@ -39,18 +39,30 @@ router.get('*', function (req, res) {
       if (err2) {
         errMsg2 = err2.message;
       }
-      res.render('info', {
-        title: 'Ferropoly',
-        err: errMsg1,
-        err2: errMsg2,
-        gameplay: JSON.stringify(gp),
-        pricelist: JSON.stringify(pl)
+
+      teamModel.getTeams(gameId, function (err3, foundTeams) {
+        // Filter some info
+        var teams = [];
+        for (var i = 0; i < foundTeams.length; i++) {
+          teams.push({
+            name: foundTeams[i].data.name,
+            organization: foundTeams[i].data.organization,
+            teamLeaderName: foundTeams[i].data.teamLeader.name
+          });
+        }
+
+        res.render('info', {
+          title: 'Ferropoly',
+          ngFile: '/js/infoctrl.js',
+          err: errMsg1,
+          err2: errMsg2,
+          gameplay: JSON.stringify(gp),
+          pricelist: JSON.stringify(pl),
+          teams: JSON.stringify(teams)
+        });
       });
     });
-
   });
-
-
 });
 
 
