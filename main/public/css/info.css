@@ -2,3 +2,8 @@
     width  : 100%;
     height : 600px;
 }
+
+#location-list {
+    overflow: auto;
+    height: 800px;
+}

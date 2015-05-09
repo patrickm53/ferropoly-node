@@ -1,7 +1,19 @@
 //
    Created by kc on 09.05.15.
 .row
-  .col-md-8
+  .col-xs-md-8.col-md-8
     #map_canvas
-  .col-md-4
-    | Ortsliste
+  .col-xs-md-4.col-md-4#location-list
+    table(class='table table-striped table.condensed')
+      thead
+        th Pos
+        th Ort
+        th.pricelist Gruppe
+        th.pricelist Kaufpreis
+      tbody
+        tr(data-ng-repeat='p in pl' )
+          td {{p.pricelist.position + 1}}
+          td
+            a(href='#' ng-click='showMarker(p.marker)') {{p.location.name}}
+          td.pricelist {{p.pricelist.propertyGroup}}
+          td.pricelist {{p.pricelist.price}}

@@ -54,6 +54,7 @@ router.get('*', function (req, res) {
         res.render('info', {
           title: 'Ferropoly',
           ngFile: '/js/infoctrl.js',
+          hideLogout: true,
           err: errMsg1,
           err2: errMsg2,
           gameplay: JSON.stringify(gp),
