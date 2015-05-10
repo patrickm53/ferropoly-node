@@ -28,6 +28,7 @@ var login = require('./routes/login');
 var infoRoute = require('./routes/info');
 var authtoken = require('./routes/authtoken');
 var testRoute = require('./routes/test');
+var receptionRoute = require('./routes/reception');
 var app = express();
 
 /**
@@ -39,6 +40,8 @@ ferropolyDb.init(settings, function (err) {
     console.error(err);
     return;
   }
+
+  var server = require('http').Server(app);
 
   authStrategy.init(settings, users);
 
@@ -77,7 +80,25 @@ ferropolyDb.init(settings, function (err) {
   app.use('/', indexRoute);
   app.use('/info', infoRoute);
   app.use('/test', testRoute);
+  receptionRoute(app, server);
   authtoken.init(app);
+
+
+
+  // Now it is time to start the scheduler
+  var gameScheduler = require('./lib/gameScheduler')(settings);
+  var marketplace = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
+  gameScheduler.update(function(err) {
+    if (err) {
+      console.log('Error while updating scheduler');
+    }
+  });
+
+
+
+  app.set('port', settings.server.port);
+  app.set('ip', settings.server.host);
+
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
@@ -108,19 +129,6 @@ ferropolyDb.init(settings, function (err) {
     });
   });
 
-  // Now it is time to start the scheduler
-  var gameScheduler = require('./lib/gameScheduler')(settings);
-  var marketplace = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
-  gameScheduler.update(function(err) {
-    if (err) {
-      console.log('Error while updating scheduler');
-    }
-  });
-
-  var server = require('http').Server(app);
-
-  app.set('port', settings.server.port);
-  app.set('ip', settings.server.host);
   server.listen(app.get('port'), app.get('ip'), function () {
     console.log('%s: Node server started on %s:%d ...',
       new Date(Date.now()), app.get('ip'), app.get('port'));
