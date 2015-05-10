@@ -30,6 +30,7 @@ var authtoken = require('./routes/authtoken');
 var testRoute = require('./routes/test');
 var receptionRoute = require('./routes/reception');
 var app = express();
+var ferroSocket = require('./lib/ferroSocket');
 
 /**
  * Initialize DB connection, has to be only once for all models
@@ -80,7 +81,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/', indexRoute);
   app.use('/info', infoRoute);
   app.use('/test', testRoute);
-  receptionRoute(app, server);
+  app.use('/reception', receptionRoute);
   authtoken.init(app);
 
 
@@ -98,7 +99,7 @@ ferropolyDb.init(settings, function (err) {
 
   app.set('port', settings.server.port);
   app.set('ip', settings.server.host);
-
+  ferroSocket.create(server);
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

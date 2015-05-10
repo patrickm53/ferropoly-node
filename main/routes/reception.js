@@ -7,12 +7,12 @@
 var express = require('express');
 var router = express.Router();
 var _ = require('lodash');
-var uuid = require('node-uuid');
 
 var settings = require('../settings');
 var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
+var authTokenManager = require('../lib/authTokenManager');
 
 var ngFile = '/js/indexctrl.js';
 if (settings.minifedjs) {
@@ -22,7 +22,6 @@ if (settings.minifedjs) {
 /* GET the reception of all games */
 router.get('*', function (req, res) {
   var gameId = _.trimLeft(req.url, '/');
-  req.session.authToken = uuid.v4();
 
   gameplayModel.getGameplay(gameId, req.session.passport.user, function (err, gp) {
     if (!gp) {
@@ -46,7 +45,8 @@ router.get('*', function (req, res) {
           title: 'Ferropoly',
           ngFile: '/js/infoctrl.js',
           hideLogout: true,
-          authToken: req.session.authToken,
+          authToken: authTokenManager.getNewToken(req.session.passport.user),
+          user: req.session.passport.user,
           err: errMsg1,
           err2: errMsg2,
           gameplay: JSON.stringify(gp),
@@ -59,15 +59,4 @@ router.get('*', function (req, res) {
 });
 
 
-module.exports = function(app, server) {
-  app.use('/reception', router);
-
-  var io = require('socket.io')(server);
-
-  io.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-      console.log(data);
-    });
-  });
-};
+module.exports = router;
