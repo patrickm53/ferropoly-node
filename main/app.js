@@ -84,9 +84,11 @@ ferropolyDb.init(settings, function (err) {
   app.use('/reception', receptionRoute);
   authtoken.init(app);
 
+  app.set('port', settings.server.port);
+  app.set('ip', settings.server.host);
+  ferroSocket.create(server);
 
-
-  // Now it is time to start the scheduler
+  // Now it is time to start the scheduler (after initializing ferroSocket, is required by marketplace)
   var gameScheduler = require('./lib/gameScheduler')(settings);
   var marketplace = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
   gameScheduler.update(function(err) {
@@ -94,12 +96,6 @@ ferropolyDb.init(settings, function (err) {
       console.log('Error while updating scheduler');
     }
   });
-
-
-
-  app.set('port', settings.server.port);
-  app.set('ip', settings.server.host);
-  ferroSocket.create(server);
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

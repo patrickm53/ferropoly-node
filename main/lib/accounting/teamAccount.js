@@ -7,7 +7,7 @@
 var _ = require('lodash');
 var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
 var moment = require('moment');
-
+var ferroSocket;
 /**
  * Pays the interest for one team
  * @param teamId
@@ -270,12 +270,32 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
     tsStart = p2;
     tsEnd = moment();
   }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
 
   teamAccountTransaction.getEntries(gameId, teamId, tsStart, tsEnd, function (err, data) {
     callback(err, data);
   })
 }
-
+/**
+ * Handles the commands received over the ferroSocket
+ * @param data
+ */
+var socketCommandHandler = function (req) {
+  console.log('teamAccount socket handler: ' + req.cmd.name);
+  switch (req.cmd.name) {
+    case 'getAccountStatement':
+      getAccountStatement(req.gameId, req.cmd.teamId, req.cmd.start, req.cmd.end, function (err, data) {
+        var resp = {
+          err: err, cmd: {
+            name: 'accountStatement', data: data
+          }
+        };
+        req.response('teamAccount', resp);
+      });
+  }
+};
 
 module.exports = {
   payInterest: payInterest,
@@ -285,6 +305,11 @@ module.exports = {
   receiveFromChancellery: receiveFromChancellery,
   chargeToAnotherTeam: chargeToAnotherTeam,
   getBalance: getBalance,
-  getAccountStatement: getAccountStatement
+  getAccountStatement: getAccountStatement,
+
+  init: function () {
+    ferroSocket = require('../ferroSocket').get();
+    ferroSocket.on('teamAccount', socketCommandHandler);
+  }
 
 };

@@ -471,6 +471,9 @@ module.exports = {
    */
   createMarketplace: function (scheduler) {
     marketplace = new Marketplace(scheduler);
+
+    teamAccount.init();
+
     return marketplace;
   },
   /**

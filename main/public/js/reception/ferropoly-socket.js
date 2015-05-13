@@ -18,10 +18,14 @@ ferropolySocket.on('identify', function() {
   ferropolySocket.emit('identify', {user: ferropoly.user, authToken: ferropoly.authToken, gameId: ferropoly.gp.internal.gameId});
 });
 
+ferropolySocket.on('teamAccount', function(data) {
+  console.log(data);
+});
+
 // Now the initialized connection in set up
 ferropolySocket.on('initialized', function() {
   console.log('connected');
-  ferropolySocket.emit('test', '123');
+  ferropolySocket.emit('teamAccount', {cmd: {name:'getAccountStatement', teamId:ferropoly.teams[0].uuid}});
 });
 
 
