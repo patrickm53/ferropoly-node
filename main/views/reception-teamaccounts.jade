@@ -18,7 +18,7 @@ div(ng-app='teamAccountsApp' ng-controller='teamAccountsCtrl')
       th Teiltransaktionen
     tbody
       tr(ng-repeat='e in entries | orderBy:"timestamp"')
-        td {{e.timestamp | date:'dd.MM. hh:mm:ss'}}
+        td {{e.timestamp | date:'dd.MM. HH:mm:ss'}}
         td {{e.teamId}}
         td {{e.transaction.info}}
         td {{e.transaction.amount}}
