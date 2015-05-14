@@ -280,7 +280,7 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
 }
 /**
  * Handles the commands received over the ferroSocket
- * @param data
+ * @param req
  */
 var socketCommandHandler = function (req) {
   console.log('teamAccount socket handler: ' + req.cmd.name);

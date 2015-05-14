@@ -73,15 +73,15 @@ function bookTransfer(debitor, creditor, callback) {
 /***
  * Get the entries of the account
  * @param gameId
- * @param teamId
+ * @param teamId, if undefined, then all entries of all teams are returned
  * @param tsStart moment() to start, if undefined all
  * @param tsEnd   moment() to end, if undefined now()
  * @param callback
  * @returns {*}
  */
 function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
-  if (!gameId || !teamId) {
-    return callback(new Error('parameter error'));
+  if (!gameId) {
+    return callback(new Error('parameter error, missing gameId'));
   }
 
   if (!tsStart) {
@@ -90,14 +90,27 @@ function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
   if (!tsEnd) {
     tsEnd = moment();
   }
-  TeamAccountTransaction.find({gameId: gameId})
-    .where('teamId').equals(teamId)
-    .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-    .sort('timestamp')
-    .lean()
-    .exec(function (err, data) {
-      callback(err, data);
-    })
+  if (teamId) {
+    // Only of one team
+    TeamAccountTransaction.find({gameId: gameId})
+      .where('teamId').equals(teamId)
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec(function (err, data) {
+        callback(err, data);
+      })
+  }
+  else {
+    // all teams
+    TeamAccountTransaction.find({gameId: gameId})
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec(function (err, data) {
+        callback(err, data);
+      })
+  }
 }
 
 /**

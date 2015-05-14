@@ -1,0 +1,29 @@
+// team account information
+   Created by kc on 14.05.15.
+
+div(ng-app='teamAccountsApp' ng-controller='teamAccountsCtrl')
+  h1 Team Accounts
+  ul.nav.nav-tabs
+    li.active(role='presentation' ng-click='setTeam()')
+      a(href='#' role='presentation') Alle
+    li(role='presentation' ng-repeat='t in teams | orderBy:"data.name"')
+      a(href='#' role='presentation' ng-click='setTeam(t.uuid)') {{t.data.name}}
+
+  table.table.table-hover
+    thead
+      th Zeit
+      th TeamId
+      th Grund
+      th Betrag
+      th Teiltransaktionen
+    tbody
+      tr(ng-repeat='e in entries | orderBy:"timestamp"')
+        td {{e.timestamp | date:'dd.MM. hh:mm:ss'}}
+        td {{e.teamId}}
+        td {{e.transaction.info}}
+        td {{e.transaction.amount}}
+        td
+          details(ng-show='e.transaction.parts.length > 0')
+            ul
+              li(ng-repeat='d in e.transaction.parts') {{d.transaction.info}} : {{d.transaction.amount}}
+

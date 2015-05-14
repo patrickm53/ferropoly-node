@@ -2,11 +2,16 @@
    Created by kc on 10.05.15.
 extends layout
 
+block navbar
+  li
+    a(href='#dashboard' onclick="showPanel('#panel-main');") Übersicht
+  li
+    a(href='#kontobuch' onclick="showPanel('#panel-teamaccounts');") Kontobuch
+
 block head
   script(src='/moment/moment.min.js')
   script(src='/lodash/lodash.min.js')
   script(src='/socket.io/socket.io.js')
-  script(src='/js/reception/ferropoly-socket.js')
   script
     | var ferropoly = { authToken:"
     != authToken
@@ -24,3 +29,13 @@ block head
     = err2
     | "};
     | console.log(ferropoly.teams);
+  script(src='/js/reception/reception-framework.js')
+  script(src='/js/reception/ferropoly-socket.js')
+  script(src='/js/reception/datastore.js')
+  script(src='/js/reception/teamaccountsCtrl.js')
+
+block content
+  #panel-main
+    h1 Hauptpanel
+  #panel-teamaccounts
+    include reception-teamaccounts
