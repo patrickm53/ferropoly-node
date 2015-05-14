@@ -28,7 +28,7 @@ block content
                 p
                   a.btn.btn-default.btn-sm(href='/gameinfo') Preislistenansicht
                   | &nbsp;
-                  a.btn.btn-default.btn-sm(href='/admin') Spiel administrieren
+                  a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}') Spiel administrieren
                 p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
               .panel-footer
                 p {{getGpInfo(gameplay)}}
