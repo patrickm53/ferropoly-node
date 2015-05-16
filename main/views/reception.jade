@@ -6,12 +6,16 @@ block navbar
   li
     a(href='#dashboard' onclick="showPanel('#panel-main');") Übersicht
   li
+    a(href='#kontobuch' onclick="showPanel('#panel-managecall');") Anruf behandeln
+  li
     a(href='#kontobuch' onclick="showPanel('#panel-teamaccounts');") Kontobuch
 
 block head
   script(src='/moment/moment.min.js')
   script(src='/lodash/lodash.min.js')
   script(src='/socket.io/socket.io.js')
+  script
+    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts' ];
   script
     | var ferropoly = { authToken:"
     != authToken
@@ -32,10 +36,16 @@ block head
   script(src='/js/reception/reception-framework.js')
   script(src='/js/reception/ferropoly-socket.js')
   script(src='/js/reception/datastore.js')
+  script(src='/js/reception/activecall.js')
   script(src='/js/reception/teamaccountsCtrl.js')
+  script(src='/js/reception/managecallCtrl.js')
 
 block content
-  #panel-main
-    h1 Hauptpanel
-  #panel-teamaccounts
-    include reception-teamaccounts
+  div(ng-app='ferropolyApp')
+
+    #panel-main
+      h1 Hauptpanel
+    #panel-managecall
+      include reception-managecall
+    #panel-teamaccounts
+      include reception-teamaccounts

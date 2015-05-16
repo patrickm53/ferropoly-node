@@ -1,0 +1,10 @@
+//
+   Created by kc on 16.05.15.
+
+div(ng-controller='managecallCtrl')
+  include reception-managecall-confirmteam-modal
+
+  div(ng-show='callPanel === 0')
+    include reception-managecall-selectteam
+  div(ng-show='callPanel === 1')
+    include reception-managecall-action

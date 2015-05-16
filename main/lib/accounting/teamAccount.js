@@ -28,6 +28,7 @@ function payInterest(teamId, gameId, amount, callback) {
   entry.transaction.info = 'Startgeld';
   teamAccountTransaction.book(entry, function (err) {
     callback(err);
+    ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: entry});
   });
 }
 
@@ -68,6 +69,7 @@ function chargeToBankOrChancellery(teamId, gameId, amount, info, category, callb
   }
 
   teamAccountTransaction.book(entry, function (err) {
+    ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: entry});
     callback(err);
   });
 }
@@ -134,6 +136,7 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
     }
 
     teamAccountTransaction.book(entry, function (err) {
+      ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: entry});
       callback(err);
     });
   }
@@ -213,6 +216,8 @@ function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info
     if (err) {
       return callback(err);
     }
+    ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: chargingEntry});
+    ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: receivingEntry});
     callback(null, {amount: amount});
   });
 }

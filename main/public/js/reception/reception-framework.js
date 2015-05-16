@@ -6,15 +6,20 @@
 
 
 /**
- * Show the correct panel using JQuery
+ * Show the correct panel using JQuery. receptionPanels is defined in the main jade file
  * @param p
  */
 function showPanel(p) {
-  $('#panel-main').hide();
-  $('#panel-teamaccounts').hide();
+  for (var i = 0; i < receptionPanels.length; i++) {
+    $(receptionPanels[i]).hide();
+  }
   $(p).show();
 }
 
 $(document).ready(function () {
   showPanel('#panel-main');
 });
+
+
+
+var ferropolyApp = angular.module('ferropolyApp', []);
