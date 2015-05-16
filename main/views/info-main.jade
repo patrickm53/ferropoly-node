@@ -35,10 +35,10 @@ h2 {{gp.organisation}}
           h3.panel-title Preisliste
         .panel-body
           p Die Preisliste enthält {{pl.length}} Orte und kann &nbsp;
-            a(href='#' ng-click='panel=2') hier
+            a(href='#' onclick="showPanel('#p2');") hier
             | &nbsp;eingesehen werden.
           p Eine&nbsp;
-            a(href='#' ng-click='panel=3') Karte mit allen Orten
+            a(href='#' onclick="showPanel('#p3');") Karte mit allen Orten
             | &nbsp;ist ebenfalls verfügbar.
     .col-xs-12.col-md-6
       .panel.panel-default

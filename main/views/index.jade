@@ -26,7 +26,7 @@ block content
                 p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
                   div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
                 p
-                  a.btn.btn-default.btn-sm(href='/gameinfo') Preislistenansicht
+                  a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
                   | &nbsp;
                   a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}') Spiel administrieren
                 p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
