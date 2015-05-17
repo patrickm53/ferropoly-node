@@ -15,6 +15,8 @@ var propWrap = require('../propertyWrapper');
 var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
 var _ = require('lodash');
 var moment = require('moment');
+var ferroSocket;
+
 /**
  * Buy a property. The property must be free, otherwise this function rises an error.
  * @param gameplay
@@ -264,6 +266,40 @@ function getRentRegister(gameplay, team, callback) {
   });
 }
 
+/**
+ * Gets the account statement for all properties belonging to a team, all bookings up to a given time
+ *
+ * Param order p-params: [start] [end] callback
+ * If only one param (start|end) is supplied, it is handled as start
+ *
+ * @param gameId
+ * @param propertyId, when undefined: all
+ * @param p1
+ * @param p2
+ * @param p3
+ */
+function getAccountStatement(gameId, propertyId, p1, p2, p3) {
+  var tsStart = p1;
+  var tsEnd = p2;
+  var callback = p3;
+  if (_.isFunction(p1)) {
+    callback = p1;
+    tsStart = undefined;
+    tsEnd = moment();
+  }
+  else if (_.isFunction(p2)) {
+    callback = p2;
+    tsStart = p2;
+    tsEnd = moment();
+  }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
+
+  propertyTransaction.getEntries(gameId, propertyId, tsStart, tsEnd, function (err, data) {
+    callback(err, data);
+  })
+}
 
 /**
  * Gets the balance of the property, at a given time or now
@@ -362,6 +398,25 @@ function getBuildingPrice(property) {
   return property.pricelist.pricePerHouse;
 }
 
+/**
+ * Handles the commands received over the ferroSocket
+ * @param req
+ */
+var socketCommandHandler = function (req) {
+  console.log('propertyAccount socket handler: ' + req.cmd.name);
+  switch (req.cmd.name) {
+    case 'getAccountStatement':
+      getAccountStatement(req.gameId, req.cmd.propertyId, req.cmd.start, req.cmd.end, function (err, data) {
+        var resp = {
+          err: err, cmd: {
+            name: 'accountStatement', data: data
+          }
+        };
+        req.response('propertyAccount', resp);
+      });
+  }
+};
+
 
 module.exports = {
   getBuildingPrice: getBuildingPrice,
@@ -371,5 +426,10 @@ module.exports = {
   buyProperty: buyProperty,
   buyBuilding: buyBuilding,
   getBalance: getBalance,
-  resetProperty: resetProperty
+  resetProperty: resetProperty,
+
+  init: function () {
+    ferroSocket = require('../ferroSocket').get();
+    ferroSocket.on('propertyAccount', socketCommandHandler);
+  }
 };

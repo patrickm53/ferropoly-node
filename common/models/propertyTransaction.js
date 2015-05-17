@@ -79,14 +79,28 @@ function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
   if (!tsEnd) {
     tsEnd = moment();
   }
-  PropertyAccountTransaction.find({gameId: gameId})
-    .where('propertyId').equals(propertyId)
-    .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-    .sort('timestamp')
-    .lean()
-    .exec(function (err, data) {
-      callback(err, data);
-    });
+  if (!propertyId) {
+    // Get all
+    PropertyAccountTransaction.find({gameId: gameId})
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec(function (err, data) {
+        callback(err, data);
+      });
+  }
+  else {
+    // get only of the provided property
+    PropertyAccountTransaction.find({gameId: gameId})
+      .where('propertyId').equals(propertyId)
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec(function (err, data) {
+        callback(err, data);
+      });
+  }
+
 }
 
 module.exports = {

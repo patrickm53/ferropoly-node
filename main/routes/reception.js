@@ -40,21 +40,29 @@ router.get('*', function (req, res) {
         errMsg2 = err2.message;
       }
 
-      teamModel.getTeams(gameId, function (err3, foundTeams) {
-        res.render('reception', {
-          title: 'Ferropoly',
-          ngFile: '/js/infoctrl.js',
-          hideLogout: true,
-          authToken: authTokenManager.getNewToken(req.session.passport.user),
-          user: req.session.passport.user,
-          err: errMsg1,
-          err2: errMsg2,
-          gameplay: JSON.stringify(gp),
-          pricelist: JSON.stringify(pl),
-          teams: JSON.stringify(foundTeams)
+      authTokenManager.getNewToken(req.session.passport.user, function (err, token) {
+        if (err) {
+          console.error(err);
+        }
+        req.session.ferropolyToken = token;
+
+        teamModel.getTeams(gameId, function (err3, foundTeams) {
+          res.render('reception', {
+            title: 'Ferropoly',
+            ngFile: '/js/infoctrl.js',
+            hideLogout: true,
+            authToken: token,
+            user: req.session.passport.user,
+            err: errMsg1,
+            err2: errMsg2,
+            gameplay: JSON.stringify(gp),
+            pricelist: JSON.stringify(pl),
+            teams: JSON.stringify(foundTeams)
+          });
         });
       });
     });
+
   });
 });
 

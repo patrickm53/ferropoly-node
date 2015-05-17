@@ -53,6 +53,15 @@ var DataStore = function (initData, socket) {
 DataStore.prototype.getTeams = function () {
   return this.data.teams;
 };
+
+/**
+ * Returns the gameplay
+ * @returns {gameplay|*|result.gameplay|gameData.gameplay|$scope.gameplay}
+ */
+DataStore.prototype.getGameplay = function () {
+  return this.data.gameplay;
+};
+
 /**
  * Updates the team account entries.
  * @param teamId  ID of the team, undefined updates for all
@@ -77,12 +86,12 @@ DataStore.prototype.getTeamAccountEntries = function (teamId) {
 };
 /**
  * Updates the property account entries. (ACCOUNT, not the Properties!)
- * @param teamId  ID of the team, undefined updates for all
+ * @param propertyId  ID of the property, undefined updates for all
  */
-DataStore.prototype.updatePropertyAccountEntries = function (teamId) {
-  console.log('update team account for ' + teamId);
+DataStore.prototype.updatePropertyAccountEntries = function (propertyId) {
+  console.log('update property account for ' + propertyId);
   // So far we update all, optimize it later
-  this.socket.emit('propertyAccount', {cmd: {name: 'getAccountStatement', team: teamId}})
+  this.socket.emit('propertyAccount', {cmd: {name: 'getAccountStatement', propertyId: propertyId}})
 };
 /**
  * Get the property account entries
@@ -93,8 +102,8 @@ DataStore.prototype.getPropertyAccountEntries = function (teamId) {
   if (!teamId) {
     return this.data.propertyAccountEntries;
   }
-  return _.filter(this.data.teamAccountEntries, function (n) {
-    return  n.transaction.origin.uuid === teamId;
+  return _.filter(this.data.propertyAccountEntries, function (n) {
+    return n.transaction.origin.uuid === teamId;
   });
 };
 /**
@@ -112,7 +121,7 @@ DataStore.prototype.getChancelleryEntries = function (teamId) {
   if (!teamId) {
     return this.data.chancelleryEntries;
   }
-  return _.filter(this.data.teamAccountEntries, function (n) {
+  return _.filter(this.data.chancelleryEntries, function (n) {
     return n.transaction.origin.uuid === teamId;
   });
 };

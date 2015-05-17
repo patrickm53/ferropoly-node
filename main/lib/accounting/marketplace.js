@@ -473,6 +473,8 @@ module.exports = {
     marketplace = new Marketplace(scheduler);
 
     teamAccount.init();
+    propertyAccount.init();
+    propWrap.init();
 
     return marketplace;
   },

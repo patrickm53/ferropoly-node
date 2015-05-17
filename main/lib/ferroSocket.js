@@ -28,21 +28,23 @@ var FerroSocket = function (server) {
    */
   this.io.on('connection', function (socket) {
     socket.on('identify', function (data) {
-      if (authTokenManager.verifyToken(data.user, data.authToken)) {
+      authTokenManager.verifyToken(data.user, data.authToken, function (err) {
+        if (err) {
+          console.log('Invalid socket');
+          socket.disconnect();
+          return
+        }
         console.log('Verified socket added for ' + data.gameId + ' : ' + socket.id);
         self.addSocket(socket, data.gameId);
         self.registerChannels(socket);
-      }
-      else {
-        console.log('Invalid socket');
-        socket.disconnect();
-      }
+      });
     });
     socket.emit('identify', {});
 
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function () {
       console.log('disconnected socket ' + socket.id);
       self.removeSocket(socket);
+
     });
   });
 };
@@ -68,31 +70,49 @@ FerroSocket.prototype.addSocket = function (socket, gameId) {
  * Remove a socket after disconnection
  * @param socket
  */
-FerroSocket.prototype.removeSocket = function(socket) {
-  _.forIn(this.sockets, function(value, key) {
+FerroSocket.prototype.removeSocket = function (socket) {
+  _.forIn(this.sockets, function (value, key) {
     if (_.isArray(value)) {
-      _.remove(value, function(s) {
+      _.remove(value, function (s) {
         return s === socket;
       });
     }
   });
 };
 
-FerroSocket.prototype.registerChannels = function(socket) {
+FerroSocket.prototype.registerChannels = function (socket) {
   var self = this;
 
-  socket.on('test', function(data) {
+  socket.on('test', function (data) {
     console.log('test data received:' + data);
-    socket.emit('test', {h:'olla'});
+    socket.emit('test', {h: 'olla'});
   });
 
-  socket.on('teamAccount', function(data) {
+  socket.on('teamAccount', function (data) {
     console.log('teamAccount request received:' + data.cmd.name);
     data.gameId = socket.gameId;
-    data.response = function(channel, resp) {
+    data.response = function (channel, resp) {
       self.emitToClients(socket.gameId, channel, resp);
     };
     self.emit('teamAccount', data);
+  });
+
+  socket.on('propertyAccount', function (data) {
+    console.log('propertyAccount request received:' + data.cmd.name);
+    data.gameId = socket.gameId;
+    data.response = function (channel, resp) {
+      self.emitToClients(socket.gameId, channel, resp);
+    };
+    self.emit('propertyAccount', data);
+  });
+
+  socket.on('chancelleryAccount', function (data) {
+    console.log('chancelleryAccount request received:' + data.cmd.name);
+    data.gameId = socket.gameId;
+    data.response = function (channel, resp) {
+      self.emitToClients(socket.gameId, channel, resp);
+    };
+    self.emit('chancelleryAccount', data);
   });
 
   // Say the socket that we are operative
@@ -104,7 +124,7 @@ FerroSocket.prototype.registerChannels = function(socket) {
  * @param channel
  * @param data
  */
-FerroSocket.prototype.emitToClients = function(gameId, channel, data) {
+FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
   console.log('ferroSockets.emitToClients: ' + gameId + ' ' + channel);
   if (this.sockets[gameId]) {
     for (var i = 0; i < this.sockets[gameId].length; i++) {

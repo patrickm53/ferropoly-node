@@ -2,14 +2,6 @@
    Created by kc on 10.05.15.
 extends layout
 
-block navbar
-  li
-    a(href='#dashboard' onclick="showPanel('#panel-main');") Übersicht
-  li
-    a(href='#kontobuch' onclick="showPanel('#panel-managecall');") Anruf behandeln
-  li
-    a(href='#kontobuch' onclick="showPanel('#panel-teamaccounts');") Kontobuch
-
 block head
   script(src='/moment/moment.min.js')
   script(src='/lodash/lodash.min.js')
@@ -39,6 +31,20 @@ block head
   script(src='/js/reception/activecall.js')
   script(src='/js/reception/teamaccountsCtrl.js')
   script(src='/js/reception/managecallCtrl.js')
+  link(rel='stylesheet', href='/css/reception.css', type='text/css')
+
+block navbar
+  li
+    a(href='#dashboard' onclick="showPanel('#panel-main');") Übersicht
+  li
+    a(href='#kontobuch' onclick="showPanel('#panel-managecall');") Anruf behandeln
+  li
+    a(href='#kontobuch' onclick="showPanel('#panel-teamaccounts');") Kontobuch
+
+block navbar-right
+  li#online online
+  li#offline offline
+  li shut up
 
 block content
   div(ng-app='ferropolyApp')

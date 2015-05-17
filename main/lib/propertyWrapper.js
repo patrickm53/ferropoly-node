@@ -6,6 +6,26 @@
  */
 'use strict';
 var pm = require('../../common/models/propertyModel');
+var ferroSocket;
+
+/**
+ * Handles the commands received over the ferroSocket
+ * @param req
+ */
+var socketCommandHandler = function (req) {
+  console.log('properties socket handler: ' + req.cmd.name);
+  switch (req.cmd.name) {
+    case 'getProperties':
+      pm.getPropertiesForGameplay(req.gameId, {lean: true}, function (err, props) {
+        var resp = {
+          err: err, cmd: {
+            name: 'getProperties', data: props
+          }
+        };
+        req.response('properties', resp);
+      });
+  }
+};
 
 module.exports = {
   /**
@@ -64,6 +84,10 @@ module.exports = {
     pm.allowBuilding(gameId, function (err, nbAffected) {
       callback(err, nbAffected);
     });
-  }
+  },
 
+  init: function () {
+    ferroSocket = require('./ferroSocket').get();
+    ferroSocket.on('properties', socketCommandHandler);
+  }
 };
