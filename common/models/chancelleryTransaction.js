@@ -18,7 +18,7 @@ var chancelleryAccountTransactionSchema = mongoose.Schema({
 
   transaction: {
     origin: {
-      uuid: String // uuid of the origin, this is always the uuid of a  team
+      uuid: {type: String, default: 'none'} // uuid of the origin, this is always the uuid of a  team
     },
     amount: {type: Number, default: 0}, // value to be transferred, positive or negative
     info: String  // Info about the transaction
@@ -87,14 +87,18 @@ function getEntries(gameId, tsStart, tsEnd, callback) {
 // This does not work, if you have a solution for me, please contact me, thanks!
 function getBalance(gameId, tsStart, tsEnd, callback) {
   ChancelleryTransaction.aggregate([
-    { $match: {
-      gameId: gameId
-    }},
-    { $unwind: "$records" },
-    { $group: {
-      _id: "$_id",
-      balance: { $sum: "$records.transaction.amount"  }
-    }}
+    {
+      $match: {
+        gameId: gameId
+      }
+    },
+    {$unwind: "$records"},
+    {
+      $group: {
+        _id: "$_id",
+        balance: {$sum: "$records.transaction.amount"}
+      }
+    }
   ], function (err, result) {
     console.log(result);
     callback(err, result);
