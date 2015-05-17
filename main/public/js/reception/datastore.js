@@ -21,6 +21,7 @@ var DataStore = function (initData, socket) {
 
   this.data = initData;
   this.socket = socket;
+  this.teamAccountEntriesCallbacks = [];
   var self = this;
 
   this.socket.on('teamAccount', function (resp) {
@@ -28,6 +29,12 @@ var DataStore = function (initData, socket) {
       case 'accountStatement':
         self.data.teamAccountEntries = resp.cmd.data;
         console.log('received ' + resp.cmd.data.length + ' accountStatement entries');
+        if (self.teamAccountEntriesCallbacks.length > 0) {
+          for (var i = 0; i < self.teamAccountEntriesCallbacks.length; i++) {
+            self.teamAccountEntriesCallbacks[i]();
+          }
+          self.teamAccountEntriesCallbacks = [];
+        }
         break;
 
       case 'onTransaction':
@@ -42,7 +49,12 @@ var DataStore = function (initData, socket) {
   });
 
   this.socket.on('properties', function (resp) {
-    console.log('UNHANDLED: ' + resp);
+    switch (resp.cmd.name) {
+      case 'getProperties':
+        console.log('Pricelist updated, properties: ' + resp.cmd.data.length);
+        self.data.pricelist = resp.cmd.data;
+        break;
+    }
   });
 };
 
@@ -65,10 +77,14 @@ DataStore.prototype.getGameplay = function () {
 /**
  * Updates the team account entries.
  * @param teamId  ID of the team, undefined updates for all
+ * @param callback optional callback, called when data is available
  */
-DataStore.prototype.updateTeamAccountEntries = function (teamId) {
+DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   console.log('update team account for ' + teamId);
   // So far we update all, optimize it later
+  if (callback) {
+    this.teamAccountEntriesCallbacks.push(callback);
+  }
   this.socket.emit('teamAccount', {cmd: {name: 'getAccountStatement', team: teamId}})
 };
 /**
@@ -83,6 +99,18 @@ DataStore.prototype.getTeamAccountEntries = function (teamId) {
   return _.filter(this.data.teamAccountEntries, function (n) {
     return n.teamId === teamId;
   });
+};
+/**
+ * Get the balance of the team
+ * @param teamId
+ */
+DataStore.prototype.getTeamAccountBalance = function (teamId) {
+  var entries = this.getTeamAccountEntries(teamId);
+  var balance = 0;
+  for (var i = 0; i < entries.length; i++) {
+    balance += entries[i].transaction.amount;
+  }
+  return balance;
 };
 /**
  * Updates the property account entries. (ACCOUNT, not the Properties!)
@@ -110,7 +138,7 @@ DataStore.prototype.getPropertyAccountEntries = function (teamId) {
  * Updates the team account entries.
  */
 DataStore.prototype.updateChancellery = function () {
-  this.socket.emit('chancelleryAccount', {cmd: {name: 'getAccountStatement', team: teamId}})
+  this.socket.emit('chancelleryAccount', {cmd: {name: 'getAccountStatement'}})
 };
 /**
  * Get the team account entries
@@ -146,6 +174,22 @@ DataStore.prototype.getProperties = function (teamId) {
   return _.filter(this.data.pricelist, function (n) {
     return n.gamedata.owner === teamId;
   });
+};
+/**
+ * Run query over properties, full text
+ * @param query String to query
+ * @param limit max number of elements to be returned
+ * @returns {Array}
+ */
+DataStore.prototype.searchProperties = function(query, limit) {
+  console.log('Query: "' + query + '" Limit: ' + limit);
+  if (!query || query.length === 0) {
+    return [];
+  }
+  var items = _.filter(this.data.pricelist, function(p) {
+    return p.location.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+  });
+  return _.slice(items, 0, limit);
 };
 
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view

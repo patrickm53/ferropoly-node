@@ -44,11 +44,11 @@ block navbar
 block navbar-right
   li#online online
   li#offline offline
-  li shut up
 
 block content
-  div(ng-app='ferropolyApp')
+  #active-call.alert.alert-danger(role="alert") Anruf ist aktiv. Bitte unter "Anruf behandeln" beenden.
 
+  div(ng-app='ferropolyApp')
     #panel-main
       h1 Hauptpanel
     #panel-managecall

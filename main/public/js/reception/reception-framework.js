@@ -13,11 +13,22 @@ function showPanel(p) {
   for (var i = 0; i < receptionPanels.length; i++) {
     $(receptionPanels[i]).hide();
   }
+  // Panel with warning about active call
+  if (activeCall.isActive()) {
+    $('#active-call').show();
+  }
+  else {
+    $('#active-call').hide();
+  }
   // There are some things to be done when activating a panel
   switch(p) {
     case '#panel-teamaccounts':
-      ferropolySocket.emit('teamAccount', {cmd: {name:'getAccountStatement'}});
-      break
+      dataStore.updateTeamAccountEntries();
+      break;
+
+    case '#panel-managecall':
+      $('#active-call').hide();
+      break;
   }
   $(p).show();
 }
@@ -29,3 +40,9 @@ $(document).ready(function () {
 
 
 var ferropolyApp = angular.module('ferropolyApp', []);
+ferropolyApp.filter('offset', function() {
+  return function(input, start) {
+    start = parseInt(start, 10);
+    return input.slice(start);
+  };
+});

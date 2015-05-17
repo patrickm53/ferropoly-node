@@ -6,3 +6,8 @@
 #offline {
     color : red;
 }
+
+#active-call {
+    display: none;
+    font-weight: bold;
+}

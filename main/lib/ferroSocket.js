@@ -83,11 +83,6 @@ FerroSocket.prototype.removeSocket = function (socket) {
 FerroSocket.prototype.registerChannels = function (socket) {
   var self = this;
 
-  socket.on('test', function (data) {
-    console.log('test data received:' + data);
-    socket.emit('test', {h: 'olla'});
-  });
-
   socket.on('teamAccount', function (data) {
     console.log('teamAccount request received:' + data.cmd.name);
     data.gameId = socket.gameId;
@@ -113,6 +108,15 @@ FerroSocket.prototype.registerChannels = function (socket) {
       self.emitToClients(socket.gameId, channel, resp);
     };
     self.emit('chancelleryAccount', data);
+  });
+
+  socket.on('properties', function (data) {
+    console.log('properties request received:' + data.cmd.name);
+    data.gameId = socket.gameId;
+    data.response = function (channel, resp) {
+      self.emitToClients(socket.gameId, channel, resp);
+    };
+    self.emit('properties', data);
   });
 
   // Say the socket that we are operative

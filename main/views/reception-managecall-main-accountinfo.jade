@@ -1,0 +1,29 @@
+//
+   Created by kc on 17.05.15.
+
+// Account information
+.col-md-3
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title Konto
+    .panel-body
+      p Aktueller Kontostand: {{teamInfo.balance}}
+      table.table.table-hover
+        thead
+          th Zeit
+          th Buchungstext
+          th Betrag
+        tbody
+          tr(ng-repeat='e in teamInfo.accountEntries | orderBy:"timestamp" | offset: currentPage*itemsPerPage | limitTo: itemsPerPage')
+            td {{e.timestamp | date:'dd.MM. HH:mm:ss'}}
+            td {{e.transaction.info}}
+            td {{e.transaction.amount}}
+        tfoot
+          td(colspan=3)
+             ul.pagination
+               li(ng-class="prevPageDisabled()")
+                 a(href ng-click="prevPage()") «
+               li(ng-repeat="n in range()" ng-class="{active: n == currentPage}" ng-click="setPage(n)")
+                 a(href="#") {{n+1}}
+               li(ng-class="nextPageDisabled()")
+                 a(href ng-click="nextPage()") »
