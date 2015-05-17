@@ -3,6 +3,11 @@
  *
  * lodash is required
  *
+ * this.data contains:
+ * - teams: static, do not change during the game
+ * - 
+ *
+ *
  * Created by kc on 14.05.15.
  */
 'use strict';

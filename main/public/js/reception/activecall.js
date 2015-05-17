@@ -13,6 +13,9 @@ ActiveCall.prototype.getCurrentTeam = function() {
   return this.currentTeam;
 };
 
+ActiveCall.prototype.setCurrentTeam = function(team) {
+  this.currentTeam = team;
+};
 
 
 var activeCall = new ActiveCall();
