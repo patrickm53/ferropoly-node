@@ -15,6 +15,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var _ = require('lodash');
 var schedule = require('node-schedule');
+var gameCache = require('./gameCache');
 
 /**
  * Constructor of the scheduler
@@ -27,6 +28,14 @@ function Scheduler(_settings) {
   this.jobs = [];
   this.updateJob = undefined;
 
+  schedule.scheduleJob('0 22 * * *', function() {
+    // Clear cache at end of the day
+    gameCache.refreshCache(function(err) {
+      if (err) {
+        console.error(err);
+      }
+    })
+  });
 }
 
 util.inherits(Scheduler, EventEmitter);
@@ -122,6 +131,7 @@ Scheduler.prototype.update = function (callback) {
     self.updateJob = schedule.scheduleJob(moment().add({minutes: 181, seconds: 3}).toDate(), function () {
       self.update(function (err) {
         if (err) {
+          console.log('SCHEDULER UPDATE FAILED!');
           console.error(err);
         }
       });
