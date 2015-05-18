@@ -14,8 +14,8 @@ module.exports = function(settings) {
   };
 
   settings.socketIoServer = {
-    port: 8000,
-    host: 'spiel-ferropoly.rhcloud.com'
+    port: OPENSHIFT_NODEJS_PORT,
+    host: OPENSHIFT_NODEJS_IP
   };
 
   settings.locationDbSettings = {
