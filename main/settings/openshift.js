@@ -14,7 +14,7 @@ module.exports = function(settings) {
   };
 
   settings.socketIoServer = {
-    port: 80,
+    port: 8000,
     host: 'spiel-ferropoly.rhcloud.com'
   };
 
