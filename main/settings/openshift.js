@@ -15,7 +15,7 @@ module.exports = function(settings) {
 
   settings.socketIoServer = {
     port: 80,
-    host: 'main-ferropoly.rhcloud.com'
+    host: 'spiel-ferropoly.rhcloud.com'
   };
 
   settings.locationDbSettings = {
