@@ -126,7 +126,7 @@ ferropolyDb.init(settings, function (err) {
     });
   });
 
-  server.listen(settings.server.port, settings.server.ip, function () {
+  server.listen(settings.server.port, settings.server.host, function () {
     console.log('%s: Node server started on %s:%d ...',
       new Date(Date.now()), app.get('ip'), app.get('port'));
   });
