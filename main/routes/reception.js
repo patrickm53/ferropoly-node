@@ -55,7 +55,7 @@ router.get('*', function (req, res) {
             user: req.session.passport.user,
             err: errMsg1,
             err2: errMsg2,
-            socketUrl:'http://' + settings.server.host + ':' + settings.server.port,
+            socketUrl:'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
             gameplay: JSON.stringify(gp),
             pricelist: JSON.stringify(pl),
             teams: JSON.stringify(foundTeams)
