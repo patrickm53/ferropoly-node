@@ -14,8 +14,8 @@ module.exports = function(settings) {
   };
 
   settings.socketIoServer = {
-    port: OPENSHIFT_NODEJS_PORT,
-    host: OPENSHIFT_NODEJS_IP
+    port: process.env.OPENSHIFT_NODEJS_PORT,
+    host: process.env.OPENSHIFT_NODEJS_IP
   };
 
   settings.locationDbSettings = {
