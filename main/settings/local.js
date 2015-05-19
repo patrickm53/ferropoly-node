@@ -9,13 +9,13 @@ module.exports = function(settings) {
 
   settings.server = {
     port: 3004,
-    host: 'localhost',
+    host: '0.0.0.0',
     serverId: 'localhost-main'
   };
 
   settings.socketIoServer = {
     port: 3004,
-    host: 'localhost'
+    host: '192.168.1.43'
   };
 
   settings.locationDbSettings = {
