@@ -23,6 +23,34 @@ var FerroSocket = function (server) {
 
   this.sockets = {};
 
+  this.io.on('connect', function(socket) {
+    console.log('io connect event');
+  });
+  this.io.on('connection', function(socket) {
+    console.log('io connection event');
+  });
+  this.io.on('connect_error', function(obj) {
+    console.log('io connect_error event');
+    console.log(obj);
+  });
+  this.io.on('connect_timeout', function(socket) {
+    console.log('io connect_timeout event');
+  });
+  this.io.on('reconnect', function(socket) {
+    console.log('io reconnect event');
+  });
+  this.io.on('reconnect_attempt', function(socket) {
+    console.log('io reconnect_attempt event');
+  });
+  this.io.on('reconnecting', function(socket) {
+    console.log('io reconnecting event');
+  });
+  this.io.on('reconnect_error', function(socket) {
+    console.log('io reconnect_error event');
+  });
+  this.io.on('reconnect_failed', function(socket) {
+    console.log('io reconnect_failed event');
+  });
   /**
    * New client connects, verifiy its identity and if suceeded, add to the trusted
    * sockets (otherwise disconnect)

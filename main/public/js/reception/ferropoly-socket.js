@@ -37,7 +37,37 @@ ferropolySocket.on('initialized', function() {
 
 ferropolySocket.on('connection', function(){
   // Next the server issues an 'identify' request
-  console.log('connected');
+  console.log('socket.io connection event');
+});
+ferropolySocket.on('connect', function(){
+  // Next the server issues an 'identify' request
+  console.log('socket.io connect event');
+});
+ferropolySocket.on('connect_error', function(obj){
+  // Next the server issues an 'identify' request
+  console.log('socket.io connect_error event');
+  console.log(obj);
+});
+ferropolySocket.on('reconnect', function(){
+  // Next the server issues an 'identify' request
+  console.log('socket.io reconnect event');
+});
+ferropolySocket.on('reconnect_attempt', function(){
+  // Next the server issues an 'identify' request
+  console.log('socket.io reconnect_attempt event');
+});
+ferropolySocket.on('reconnecting', function(){
+   console.log('socket.io reconnecting event');
+});
+
+
+ferropolySocket.on('reconnect_error', function(){
+   console.log('socket.io reconnect_error event');
+});
+
+
+ferropolySocket.on('reconnect_failed', function(){
+   console.log('socket.io reconnect_failed event');
 });
 
 
