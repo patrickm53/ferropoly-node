@@ -35,7 +35,7 @@ ferropolySocket.on('initialized', function() {
 
 });
 
-ferropolySocket.on('connect', function(){
+ferropolySocket.on('connection', function(){
   // Next the server issues an 'identify' request
   console.log('connected');
 });
