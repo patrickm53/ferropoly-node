@@ -15,7 +15,7 @@ module.exports = function(settings) {
 
   settings.socketIoServer = {
     port: 3004,
-    host: '192.168.1.43'
+    host: 'localhost'
   };
 
   settings.locationDbSettings = {

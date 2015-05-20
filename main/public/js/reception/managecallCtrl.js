@@ -22,7 +22,22 @@ function managecallCtrl($scope) {
   $scope.teamInfo = {
     numberOfProperties: 0,
     balance: 0,
-    accountEntries: []
+    accountEntries: [],
+    events: []
+  };
+
+  $scope.propertyInvestCandidate = undefined;
+
+  function pushEvent(text) {
+    $scope.teamInfo.push(moment() + ' ' + text);
+  }
+  /**
+   * Returns the refreshed active team
+   * @returns {*}
+   */
+  $scope.refreshActiveTeam = function () {
+    $scope.selectedTeam = activeCall.getCurrentTeam();
+    return $scope.selectedTeam;
   };
 
   /**
@@ -97,8 +112,11 @@ function managecallCtrl($scope) {
     if (start > $scope.pageCount() - rangeSize) {
       start = $scope.pageCount() - rangeSize + 1;
     }
+    if (start < 0) {
+      start = 0;
+    }
 
-    for (var i = start; i < start + rangeSize; i++) {
+    for (var i = start; i < start + rangeSize && i < $scope.pageCount(); i++) {
       ret.push(i);
     }
     return ret;
@@ -106,9 +124,39 @@ function managecallCtrl($scope) {
   /**
    * Query on property find
    */
-  $scope.runPropertyQuery = function() {
+  $scope.runPropertyQuery = function () {
     $scope.propertyQueryResult = dataStore.searchProperties($scope.propertyQuery, 5);
-  }
+  };
+  /**
+   * Set the property invest candidate, which has to be confirmed
+   * @param candidate
+   */
+  $scope.setPropertyInvestCandidate = function (candidate) {
+    $scope.propertyInvestCandidate = candidate;
+  };
+  $scope.buyProperty = function (property) {
+    ferropolySocket.emit('marketplace', {
+      cmd: 'buyProperty',
+      propertyId: property.uuid,
+      teamId: activeCall.getCurrentTeam()
+    });
+    console.log('request pending');
+    pushEvent('Kaufanfrage für ' + property.location.name + ' übermittelt');
+  };
+
+
+
+
+  /***********************
+   * SOCKET EVENT HANDLERS
+   */
+  ferropolySocket.on('marketplace', function (resp) {
+    switch (resp.cmd) {
+      case 'buyProperty':
+        console.log('see what happened when buying this');
+        break;
+    }
+  });
 }
 
 managecallCtrl.$inject = ['$scope'];

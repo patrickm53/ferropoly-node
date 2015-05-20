@@ -19,4 +19,5 @@
             td {{p.location.name}}
             td {{p.pricelist.price}}
             td
-              button(type="button" class="btn btn-default" ng-click="") kaufen
+              button.btn.btn-default(type="button" data-toggle="modal" data-target="#confirmBuy" ng-click="setPropertyInvestCandidate(p)") kaufen
+
