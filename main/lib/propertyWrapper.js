@@ -13,14 +13,12 @@ var ferroSocket;
  * @param req
  */
 var socketCommandHandler = function (req) {
-  console.log('properties socket handler: ' + req.cmd.name);
-  switch (req.cmd.name) {
+  console.log('properties socket handler: ' + req.cmd);
+  switch (req.cmd) {
     case 'getProperties':
       pm.getPropertiesForGameplay(req.gameId, {lean: true}, function (err, props) {
         var resp = {
-          err: err, cmd: {
-            name: 'getProperties', data: props
-          }
+          err: err, cmd: 'getProperties', data: props
         };
         req.response('properties', resp);
       });
@@ -88,6 +86,9 @@ module.exports = {
 
   init: function () {
     ferroSocket = require('./ferroSocket').get();
-    ferroSocket.on('properties', socketCommandHandler);
+    if (ferroSocket) {
+      ferroSocket.on('properties', socketCommandHandler);
+    }
+
   }
 };

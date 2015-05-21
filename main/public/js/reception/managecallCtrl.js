@@ -22,15 +22,19 @@ function managecallCtrl($scope) {
   $scope.teamInfo = {
     numberOfProperties: 0,
     balance: 0,
-    accountEntries: [],
-    events: []
+    accountEntries: []
   };
 
   $scope.propertyInvestCandidate = undefined;
 
+  /**
+   * Local function for pushing an event
+   * @param text
+   */
   function pushEvent(text) {
-    $scope.teamInfo.push(moment() + ' ' + text);
+    dataStore.pushEvent(activeCall.getCurrentTeam().uuid, text);
   }
+
   /**
    * Returns the refreshed active team
    * @returns {*}
@@ -138,13 +142,11 @@ function managecallCtrl($scope) {
     ferropolySocket.emit('marketplace', {
       cmd: 'buyProperty',
       propertyId: property.uuid,
-      teamId: activeCall.getCurrentTeam()
+      teamId: activeCall.getCurrentTeam().uuid
     });
     console.log('request pending');
     pushEvent('Kaufanfrage für ' + property.location.name + ' übermittelt');
   };
-
-
 
 
   /***********************
@@ -155,6 +157,13 @@ function managecallCtrl($scope) {
       case 'buyProperty':
         console.log('see what happened when buying this');
         break;
+    }
+  });
+  ferropolySocket.on('teamAccount', function (resp) {
+    if ($scope.selectedTeam) {
+      $scope.teamInfo.balance = dataStore.getTeamAccountBalance($scope.selectedTeam.uuid);
+      $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries($scope.selectedTeam.uuid);
+      $scope.$apply();
     }
   });
 }

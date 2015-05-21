@@ -113,7 +113,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
   var self = this;
 
   socket.on('teamAccount', function (data) {
-    console.log('teamAccount request received:' + data.cmd.name);
+    console.log('teamAccount request received:' + data.cmd);
     data.gameId = socket.gameId;
     data.response = function (channel, resp) {
       self.emitToClients(socket.gameId, channel, resp);
@@ -122,7 +122,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
   });
 
   socket.on('propertyAccount', function (data) {
-    console.log('propertyAccount request received:' + data.cmd.name);
+    console.log('propertyAccount request received:' + data.cmd);
     data.gameId = socket.gameId;
     data.response = function (channel, resp) {
       self.emitToClients(socket.gameId, channel, resp);
@@ -131,7 +131,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
   });
 
   socket.on('chancelleryAccount', function (data) {
-    console.log('chancelleryAccount request received:' + data.cmd.name);
+    console.log('chancelleryAccount request received:' + data.cmd);
     data.gameId = socket.gameId;
     data.response = function (channel, resp) {
       self.emitToClients(socket.gameId, channel, resp);
@@ -140,12 +140,21 @@ FerroSocket.prototype.registerChannels = function (socket) {
   });
 
   socket.on('properties', function (data) {
-    console.log('properties request received:' + data.cmd.name);
+    console.log('properties request received:' + data.cmd);
     data.gameId = socket.gameId;
     data.response = function (channel, resp) {
       self.emitToClients(socket.gameId, channel, resp);
     };
     self.emit('properties', data);
+  });
+
+  socket.on('marketplace', function (data) {
+    console.log('marketplace request received:' + data.cmd);
+    data.gameId = socket.gameId;
+    data.response = function (channel, resp) {
+      self.emitToClients(socket.gameId, channel, resp);
+    };
+    self.emit('marketplace', data);
   });
 
   // Say the socket that we are operative

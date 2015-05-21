@@ -249,19 +249,21 @@ function getRentRegister(gameplay, team, callback) {
       return callback(null, info);
     }
 
+    function getPropertyValueCallback(err, propVal) {
+      if (err) {
+        info.register.push({err: err.message});
+      }
+      else {
+        info.register.push(propVal);
+        info.totalAmount += propVal.amount;
+      }
+      if (info.register.length === properties.length) {
+        return callback(null, info);
+      }
+    }
+
     for (var i = 0; i < properties.length; i++) {
-      getPropertyValue(gameplay, properties[i], function (err, propVal) {
-        if (err) {
-          info.register.push({err: err.message});
-        }
-        else {
-          info.register.push(propVal);
-          info.totalAmount += propVal.amount;
-        }
-        if (info.register.length === properties.length) {
-          return callback(null, info);
-        }
-      });
+      getPropertyValue(gameplay, properties[i], getPropertyValueCallback);
     }
   });
 }
@@ -403,14 +405,14 @@ function getBuildingPrice(property) {
  * @param req
  */
 var socketCommandHandler = function (req) {
-  console.log('propertyAccount socket handler: ' + req.cmd.name);
+  console.log('propertyAccount socket handler: ' + req.cmd);
   switch (req.cmd.name) {
     case 'getAccountStatement':
-      getAccountStatement(req.gameId, req.cmd.propertyId, req.cmd.start, req.cmd.end, function (err, data) {
+      getAccountStatement(req.gameId, req.propertyId, req.start, req.end, function (err, data) {
         var resp = {
-          err: err, cmd: {
-            name: 'accountStatement', data: data
-          }
+          err: err,
+          cmd: 'accountStatement',
+          data: data
         };
         req.response('propertyAccount', resp);
       });
@@ -430,6 +432,9 @@ module.exports = {
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
-    ferroSocket.on('propertyAccount', socketCommandHandler);
+    if (ferroSocket) {
+      ferroSocket.on('propertyAccount', socketCommandHandler);
+    }
+
   }
 };

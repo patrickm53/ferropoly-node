@@ -10,6 +10,7 @@
  * - teamAccountEntries:     changing, all entries of all team accounts
  * - chancelleryEntries:     changing, data of the chancellery
  * - propertyAccountEntries: changing, all entries of the propertiesAccount
+ * - events:                 changing, events of a team (local data only)
  *
  * The data is alway held in this store, updating is triggered by the application.
  *
@@ -20,15 +21,18 @@
 var DataStore = function (initData, socket) {
 
   this.data = initData;
+  this.data.events = {};
   this.socket = socket;
   this.teamAccountEntriesCallbacks = [];
   var self = this;
 
+  // Incoming team account messages
   this.socket.on('teamAccount', function (resp) {
-    switch (resp.cmd.name) {
+    console.log('onTeamAccount: ' + resp.cmd);
+    switch (resp.cmd) {
       case 'accountStatement':
-        self.data.teamAccountEntries = resp.cmd.data;
-        console.log('received ' + resp.cmd.data.length + ' accountStatement entries');
+        self.data.teamAccountEntries = resp.data;
+        console.log('received ' + resp.data.length + ' accountStatement entries');
         if (self.teamAccountEntriesCallbacks.length > 0) {
           for (var i = 0; i < self.teamAccountEntriesCallbacks.length; i++) {
             self.teamAccountEntriesCallbacks[i]();
@@ -38,21 +42,42 @@ var DataStore = function (initData, socket) {
         break;
 
       case 'onTransaction':
-        self.data.teamAccountEntries.push(resp.cmd.data);
+        self.data.teamAccountEntries.push(resp.data);
         console.log('received new team transaction');
         break;
     }
   });
 
+  // Incoming Chancellery Messages
   this.socket.on('chancelleryAccount', function (resp) {
     console.log('UNHANDLED: ' + resp);
   });
 
+  // Incoming Properties messages
   this.socket.on('properties', function (resp) {
-    switch (resp.cmd.name) {
+    console.log('onProperties');
+    console.log(resp);
+    switch (resp.cmd) {
       case 'getProperties':
-        console.log('Pricelist updated, properties: ' + resp.cmd.data.length);
-        self.data.pricelist = resp.cmd.data;
+        console.log('Pricelist updated, properties: ' + resp.data.length);
+        self.data.pricelist = resp.data;
+        break;
+    }
+  });
+
+  // Incoming marketplace messages
+  this.socket.on('marketplace', function (info) {
+    console.log('onMarketplace: ' + info.cmd);
+    console.log(info);
+    switch (info.cmd) {
+      case 'buyProperty':
+        if (info.result.property) {
+          var i = _.findIndex(self.data.pricelist, {uuid: info.result.property.uuid});
+          console.log(i);
+          if (i > -1) {
+            self.data.pricelist[i] = info.result.property;
+          }
+        }
         break;
     }
   });
@@ -85,7 +110,7 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   if (callback) {
     this.teamAccountEntriesCallbacks.push(callback);
   }
-  this.socket.emit('teamAccount', {cmd: {name: 'getAccountStatement', team: teamId}})
+  this.socket.emit('teamAccount', {cmd: 'getAccountStatement', team: teamId})
 };
 /**
  * Get the team account entries
@@ -119,7 +144,7 @@ DataStore.prototype.getTeamAccountBalance = function (teamId) {
 DataStore.prototype.updatePropertyAccountEntries = function (propertyId) {
   console.log('update property account for ' + propertyId);
   // So far we update all, optimize it later
-  this.socket.emit('propertyAccount', {cmd: {name: 'getAccountStatement', propertyId: propertyId}})
+  this.socket.emit('propertyAccount', {cmd: 'getAccountStatement', propertyId: propertyId})
 };
 /**
  * Get the property account entries
@@ -138,7 +163,7 @@ DataStore.prototype.getPropertyAccountEntries = function (teamId) {
  * Updates the team account entries.
  */
 DataStore.prototype.updateChancellery = function () {
-  this.socket.emit('chancelleryAccount', {cmd: {name: 'getAccountStatement'}})
+  this.socket.emit('chancelleryAccount', {cmd: 'getAccountStatement'})
 };
 /**
  * Get the team account entries
@@ -160,7 +185,7 @@ DataStore.prototype.getChancelleryEntries = function (teamId) {
 DataStore.prototype.updateProperties = function (teamId) {
   console.log('update pricelist for ' + teamId);
   // So far we update all, optimize it later
-  this.socket.emit('properties', {cmd: {name: 'getProperties', team: teamId}})
+  this.socket.emit('properties', {cmd: 'getProperties', team: teamId})
 };
 /**
  * Get the properties belonging to a team
@@ -181,15 +206,38 @@ DataStore.prototype.getProperties = function (teamId) {
  * @param limit max number of elements to be returned
  * @returns {Array}
  */
-DataStore.prototype.searchProperties = function(query, limit) {
+DataStore.prototype.searchProperties = function (query, limit) {
   console.log('Query: "' + query + '" Limit: ' + limit);
   if (!query || query.length === 0) {
     return [];
   }
-  var items = _.filter(this.data.pricelist, function(p) {
+  var items = _.filter(this.data.pricelist, function (p) {
     return p.location.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
   });
   return _.slice(items, 0, limit);
 };
 
+/**
+ * Pushes an event for a given team onto the event stack
+ * @param teamId
+ * @param eventText
+ */
+DataStore.prototype.pushEvent = function (teamId, eventText) {
+  if (!this.data.events[teamId]) {
+    this.data.events[teamId] = [];
+  }
+  this.data.events[teamId].push({ts: new Date(), message: eventText});
+};
+
+/**
+ * Get the events for a given team
+ * @param teamId
+ * @returns {*}
+ */
+DataStore.prototype.getEvents = function (teamId) {
+  if (!this.data.events[teamId]) {
+    this.data.events[teamId] = [];
+  }
+  return this.data.events[teamId];
+};
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view

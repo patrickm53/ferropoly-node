@@ -12,6 +12,7 @@ var chancelleryAccount = require('./chancelleryAccount');
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var ferroSocket = require('../ferroSocket');
 
 var marketplace;
 
@@ -25,6 +26,7 @@ function Marketplace(scheduler) {
   EventEmitter.call(this);
 
   this.scheduler = scheduler;
+  this.ferroSocket = ferroSocket.get();
 
   if (this.scheduler) {
     /**
@@ -73,6 +75,24 @@ function Marketplace(scheduler) {
       });
     });
   }
+
+  if (this.ferroSocket) {
+    this.ferroSocket.on('marketplace', function (req) {
+      console.log('Marketplace: ' + req.cmd);
+      switch (req.cmd) {
+        case 'buyProperty':
+          self.buyProperty(req.gameId, req.teamId, req.propertyId, function (err, res) {
+            if (err) {
+              req.response('marketplace', {cmd: 'buyProperty', err: err.message, result: res});
+            }
+            else {
+              req.response('marketplace', {cmd: 'buyProperty', result: res});
+            }
+          });
+          break;
+      }
+    });
+  }
 }
 
 util.inherits(Marketplace, EventEmitter);
@@ -113,6 +133,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       // Now check if the property is still available or sold. There are 3 cases to handle
       if (!property.gamedata || !property.gamedata.owner || property.gamedata.owner.length === 0) {
         // CASE 1: property is available, the team is going to buy it
+        console.log(property.location.name + ' is available');
         propertyAccount.buyProperty(gp, property, team, function (err, info) {
           if (err) {
             console.error(err);
@@ -130,18 +151,22 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       //------------------------------------------------------------------------------------------------------------------
       else if (property.gamedata.owner === teamId) {
         // CASE 2: property belongs to the team which wants to buy it, do nothing
+        console.log(property.location.name + ' already belongs the team');
         return callback(new Error('Grundstück gehört bereits dieser Gruppe'));
       }
       //------------------------------------------------------------------------------------------------------------------
       else {
         // CASE 3: property belongs to another team, pay the rent
-        teamAccount.chargeToAnotherTeam(gameId, teamId, property.gamedata.owner, propertyAccount.getPropertyValue(property), 'Kauf', function (err, info) {
-          if (err) {
-            console.error(err);
-            return callback(err);
-          }
-          return callback(null, {property: property, owner: property.gamedata.owner, amount: info.amount});
-        })
+        propertyAccount.getPropertyValue(gp, property, function (err, val) {
+          teamAccount.chargeToAnotherTeam(gameId, teamId, property.gamedata.owner, val.amount, 'Miete ' + property.location.name, function (err, info) {
+            console.log(property.location.name + ' is already sold to another team');
+            if (err) {
+              console.error(err);
+              return callback(err);
+            }
+            return callback(null, {property: property, owner: property.gamedata.owner, amount: info.amount});
+          })
+        });
       }
     });
   });
@@ -220,7 +245,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
  * @param gameId
  * @param callback
  */
-Marketplace.prototype.payFinalRents = function(gameId, callback) {
+Marketplace.prototype.payFinalRents = function (gameId, callback) {
   var self = this;
 
   gameCache.getGameData(gameId, function (err, res) {
@@ -242,7 +267,7 @@ Marketplace.prototype.payFinalRents = function(gameId, callback) {
           error = err;
         }
         paid++;
-        if (paid ===  gp.gameParams.interestCyclesAtEndOfGame) {
+        if (paid === gp.gameParams.interestCyclesAtEndOfGame) {
           callback(error);
         }
       })
