@@ -118,6 +118,7 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
  * @param teamId ID of the team, if undefined then all are returned
  */
 DataStore.prototype.getTeamAccountEntries = function (teamId) {
+  console.log('getTeamAccountEntries for: ' + teamId);
   if (!teamId) {
     return this.data.teamAccountEntries;
   }

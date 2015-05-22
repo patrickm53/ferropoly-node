@@ -9,7 +9,7 @@ ferropolyApp.controller('managecallCtrl', managecallCtrl);
 function managecallCtrl($scope) {
 
   // Pagination
-  $scope.itemsPerPage = 8;
+  $scope.itemsPerPage = 6;
   $scope.currentPage = 0;
   // Property Query
   $scope.propertyQuery = '';
@@ -50,12 +50,13 @@ function managecallCtrl($scope) {
    * @param team
    */
   $scope.preselectTeam = function (team) {
-    console.log(team);
+    console.log(team.data.name + ' / ' + team.uuid);
     $scope.preselectedTeam = team;
     // It's time to update the data!
     dataStore.updateChancellery();
     dataStore.updateProperties();
     dataStore.updateTeamAccountEntries(undefined, function () {
+      console.log('update received for teamAccount: ' + team.uuid);
       $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
@@ -87,6 +88,8 @@ function managecallCtrl($scope) {
     $scope.currentPage = 0;
     $scope.propertyQuery = '';
     $scope.propertyQueryResult = [];
+    $scope.selectedTeam = undefined;
+    $scope.preselectedTeam = undefined;
     activeCall.finish();
   };
 
@@ -111,7 +114,6 @@ function managecallCtrl($scope) {
     }
   };
   $scope.nextPageDisabled = function () {
-    console.log('currentPage: ' + $scope.currentPage + ' pageCount: ' + $scope.pageCount());
     return $scope.currentPage === ($scope.pageCount() - 1) ? "disabled" : "";
   };
   $scope.setPage = function (n) {
@@ -123,19 +125,15 @@ function managecallCtrl($scope) {
     var start;
 
     start = $scope.currentPage;
-    console.log('start: ' + start + ' rangeSize: ' + rangeSize);
     if (start > $scope.pageCount() - rangeSize) {
       start = $scope.pageCount() - rangeSize;
     }
     if (start < 0) {
       start = 0;
     }
-    console.log('start: ' + start);
     for (var i = start; i < start + rangeSize && i < $scope.pageCount(); i++) {
       ret.push(i);
     }
-    console.log('Entries: ' + $scope.teamInfo.accountEntries.length + ' / PageCount: ' + $scope.pageCount());
-    console.log(ret);
     return ret;
   };
   /**
