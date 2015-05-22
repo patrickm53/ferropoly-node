@@ -133,7 +133,7 @@ function managecallCtrl($scope) {
    * Query on property find
    */
   $scope.runPropertyQuery = function () {
-    $scope.propertyQueryResult = dataStore.searchProperties($scope.propertyQuery, 5);
+    $scope.propertyQueryResult = dataStore.searchProperties($scope.propertyQuery, 8);
   };
   /**
    * Set the property invest candidate, which has to be confirmed
