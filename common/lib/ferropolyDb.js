@@ -39,7 +39,13 @@ module.exports = {
     mongooseThis = mongoose.connect(settings.locationDbSettings.mongoDbUrl, options);
     db = mongoose.connection;
 
-    db.on('error', console.error.bind(console, 'MongoDb: connection error:'));
+    db.on('error', function (err) {
+      console.log('MongoDb Connection Error:');
+      console.log(err);
+      console.log('Killing myself, since I got a disconnect from the repo... (did you start mongodb?)');
+      /*eslint no-process-exit:0*/
+      process.exit(1);
+    });
 
 
     db.once('open', function cb() {
