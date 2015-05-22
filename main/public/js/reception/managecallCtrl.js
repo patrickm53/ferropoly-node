@@ -94,6 +94,18 @@ function managecallCtrl($scope) {
   };
 
   /**
+   * Buy houses for all properties of this team
+   */
+  $scope.buyHouses = function () {
+    ferropolySocket.emit('marketplace', {
+      cmd: 'buyHouses',
+      teamId: activeCall.getCurrentTeam().uuid
+    });
+    console.log('buyHouses request pending');
+    pushEvent('Bauanfrage für ' + activeCall.getCurrentTeam().data.name + ' (' + activeCall.getCurrentTeam().uuid + ') übermittelt');
+  };
+
+  /**
    * Pagination for User Account Info
    * http://fdietz.github.io/recipes-with-angular-js/common-user-interface-patterns/paginating-through-client-side-data.html
    */
@@ -167,6 +179,11 @@ function managecallCtrl($scope) {
     switch (resp.cmd) {
       case 'buyProperty':
         console.log('see what happened when buying this');
+        break;
+
+      case 'buyHouses':
+        console.log('Houses built');
+        console.log(resp);
         break;
     }
   });

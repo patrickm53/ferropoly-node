@@ -90,6 +90,17 @@ function Marketplace(scheduler) {
             }
           });
           break;
+
+        case 'buyHouses':
+          self.buildHouses(req.gameId, req.teamId, function(err, res) {
+            if (err) {
+              req.response('marketplace', {cmd: 'buyHouses', err: err.message, result: res});
+            }
+            else {
+              req.response('marketplace', {cmd: 'buyHouses', result: res});
+            }
+          });
+          break;
       }
     });
   }
