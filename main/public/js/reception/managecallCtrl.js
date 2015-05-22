@@ -9,7 +9,7 @@ ferropolyApp.controller('managecallCtrl', managecallCtrl);
 function managecallCtrl($scope) {
 
   // Pagination
-  $scope.itemsPerPage = 5;
+  $scope.itemsPerPage = 8;
   $scope.currentPage = 0;
   // Property Query
   $scope.propertyQuery = '';
@@ -94,7 +94,7 @@ function managecallCtrl($scope) {
     return $scope.currentPage === 0 ? "disabled" : "";
   };
   $scope.pageCount = function () {
-    return Math.ceil($scope.teamInfo.accountEntries.length / $scope.itemsPerPage) - 1;
+    return Math.ceil($scope.teamInfo.accountEntries.length / $scope.itemsPerPage);
   };
   $scope.nextPage = function () {
     if ($scope.currentPage < $scope.pageCount()) {
@@ -102,27 +102,31 @@ function managecallCtrl($scope) {
     }
   };
   $scope.nextPageDisabled = function () {
-    return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
+    console.log('currentPage: ' + $scope.currentPage + ' pageCount: ' + $scope.pageCount());
+    return $scope.currentPage === ($scope.pageCount() - 1) ? "disabled" : "";
   };
   $scope.setPage = function (n) {
     $scope.currentPage = n;
   };
   $scope.range = function () {
-    var rangeSize = 5;
+    var rangeSize = 8;
     var ret = [];
     var start;
 
     start = $scope.currentPage;
+    console.log('start: ' + start + ' rangeSize: ' + rangeSize);
     if (start > $scope.pageCount() - rangeSize) {
-      start = $scope.pageCount() - rangeSize + 1;
+      start = $scope.pageCount() - rangeSize;
     }
     if (start < 0) {
       start = 0;
     }
-
+    console.log('start: ' + start);
     for (var i = start; i < start + rangeSize && i < $scope.pageCount(); i++) {
       ret.push(i);
     }
+    console.log('Entries: ' + $scope.teamInfo.accountEntries.length + ' / PageCount: ' + $scope.pageCount());
+    console.log(ret);
     return ret;
   };
   /**
