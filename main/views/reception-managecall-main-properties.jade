@@ -4,3 +4,13 @@
     .panel-heading
       h3.panel-title Liegenschaften
     .panel-body
+      table.table.table-hover
+        thead
+          th Ort
+          th A
+          th B
+        tbody
+          tr(ng-repeat='p in teamInfo.properties | orderBy:"location.name"')
+            td {{p.location.name}}
+            td {{p.pricelist.price}}
+            td X

@@ -22,7 +22,8 @@ function managecallCtrl($scope) {
   $scope.teamInfo = {
     numberOfProperties: 0,
     balance: 0,
-    accountEntries: []
+    accountEntries: [],
+    properties: []
   };
 
   $scope.propertyInvestCandidate = undefined;
@@ -57,6 +58,7 @@ function managecallCtrl($scope) {
     dataStore.updateTeamAccountEntries(undefined, function () {
       $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
+      $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
       $scope.$apply();
     });
   };

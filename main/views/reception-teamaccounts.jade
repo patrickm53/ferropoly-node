@@ -25,7 +25,7 @@ div(ng-controller='teamAccountsCtrl')
         td {{e.transaction.info}}
         td {{e.transaction.amount}}
         td
-          details(ng-show='e.transaction.parts.length > 0')
+          div(ng-show='e.transaction.parts.length > 0')
             ul
-              li(ng-repeat='d in e.transaction.parts') {{d.transaction.info}} : {{d.transaction.amount}}
+              li(ng-repeat='d in e.transaction.parts') {{d.propertyName}} : {{d.amount}}
 
