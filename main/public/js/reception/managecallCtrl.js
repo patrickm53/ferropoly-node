@@ -78,6 +78,13 @@ function managecallCtrl($scope) {
    */
   $scope.finishCall = function () {
     $scope.callPanel = 0;
+    // Reset info, avoid that another call displays the data during fetching it
+    $scope.teamInfo.numberOfProperties = 0;
+    $scope.teamInfo.balance = 0;
+    $scope.teamInfo.accountEntries = [];
+    $scope.currentPage = 0;
+    $scope.propertyQuery = '';
+    $scope.propertyQueryResult = [];
     activeCall.finish();
   };
 
