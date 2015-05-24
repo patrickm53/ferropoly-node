@@ -1,0 +1,25 @@
+//
+   Created by kc on 16.05.15.
+
+h1 {{selectedTeam.data.name}}
+include reception-mc-m-buyproperty-modal
+
+div(role='tabpanel')
+  ul.nav.nav-tabs(role='tablist')
+    li.active(role='presentation')
+      a(href='#buy' aria-controls='buy' role='tab' data-toggle='tab' ng-click='showCallPanel("#buy")') Kaufen
+    li(role='presentation')
+      a(href='#possessions' aria-controls='possessions' role='tab' data-toggle='tab' ng-click='showCallPanel("#possessions")') Besitz
+  p
+
+
+  .tab-content
+    .row
+      #buy.tab-pane.active(role='tabpanel')
+          include reception-mc-m-buyproperty
+          include reception-mc-m-gambling
+
+      #possessions.tap-pane(role='tabpanel')
+          include reception-mc-m-properties
+          include reception-mc-m-accountinfo
+

@@ -163,7 +163,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       else if (property.gamedata.owner === teamId) {
         // CASE 2: property belongs to the team which wants to buy it, do nothing
         console.log(property.location.name + ' already belongs the team');
-        return callback(new Error('Grundstück gehört bereits dieser Gruppe'));
+        return callback(null, {property: property, amount: 0});
       }
       //------------------------------------------------------------------------------------------------------------------
       else {

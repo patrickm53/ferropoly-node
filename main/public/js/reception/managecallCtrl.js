@@ -4,7 +4,6 @@
  */
 'use strict';
 
-
 ferropolyApp.controller('managecallCtrl', managecallCtrl);
 function managecallCtrl($scope) {
 
@@ -35,6 +34,16 @@ function managecallCtrl($scope) {
   function pushEvent(text) {
     dataStore.pushEvent(activeCall.getCurrentTeam().uuid, text);
   }
+
+  /**
+   * Show the correct panel for call management
+   * @param panel
+   */
+  $scope.showCallPanel = function(panel) {
+    $('#possessions').hide();
+    $('#buy').hide();
+    $(panel).show();
+  };
 
   /**
    * Returns the refreshed active team
@@ -74,6 +83,7 @@ function managecallCtrl($scope) {
     $scope.selectedTeam = $scope.preselectedTeam;
     $scope.preselectedTeam = undefined;
     $scope.callPanel = 2;
+    $scope.showCallPanel('#buy');
   };
 
   /**
