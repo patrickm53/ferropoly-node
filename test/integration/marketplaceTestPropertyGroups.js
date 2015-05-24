@@ -50,6 +50,11 @@ describe('Marketplace propertyGroup tests', function () {
     )
   });
 
+  after(function(done) {
+    db.close(function(err) {
+      done(err);
+    })
+  });
 
   describe('Buying first property', function () {
     it('should buy the first property of a group', function (done) {

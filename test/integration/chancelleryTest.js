@@ -63,6 +63,11 @@ describe('Chancellery tests', function () {
     });
   });
 
+  after(function(done) {
+    db.close(function(err) {
+      done(err);
+    })
+  });
 
   describe('Playing the lottery', function () {
     it('should do it', function (done) {

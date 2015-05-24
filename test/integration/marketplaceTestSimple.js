@@ -55,6 +55,12 @@ describe('Marketplace integration tests', function () {
     )
   });
 
+  after(function(done) {
+    db.close(function(err) {
+      done(err);
+    })
+  });
+
   describe('Paying interest', function () {
     it('should pay once', function (done) {
       marketplace.payInterests(gameId, function (err) {
