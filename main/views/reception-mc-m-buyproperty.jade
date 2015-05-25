@@ -19,5 +19,21 @@
             td {{p.location.name}}
             td {{p.pricelist.price}}
             td
-              button.btn.btn-default(type="button" data-toggle="modal" data-target="#confirmBuy" ng-click="setPropertyInvestCandidate(p)") kaufen
+              button.btn.btn-default.btn-sm(type="button" data-toggle="modal" data-target="#confirmBuy" ng-click="setPropertyInvestCandidate(p)") kaufen
 
+// Build Houses
+.col-md-5
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title Häuser bauen & Gambling
+    .panel-body
+      button.btn.btn-default(type="button"  ng-click="buyHouses()") Häuser bauen
+
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title Letzte Aktionen
+    .panel-body
+
+
+.col-md-2
+  button(type="button" class="btn btn-default" ng-click="finishCall()") Anruf beenden

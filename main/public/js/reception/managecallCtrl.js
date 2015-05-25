@@ -22,7 +22,8 @@ function managecallCtrl($scope) {
     numberOfProperties: 0,
     balance: 0,
     accountEntries: [],
-    properties: []
+    properties: [],
+    lastActions: []
   };
 
   $scope.propertyInvestCandidate = undefined;
@@ -69,6 +70,7 @@ function managecallCtrl($scope) {
       $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
+      $scope.lastActions = [];
       $scope.$apply();
     });
   };
@@ -95,6 +97,7 @@ function managecallCtrl($scope) {
     $scope.teamInfo.numberOfProperties = 0;
     $scope.teamInfo.balance = 0;
     $scope.teamInfo.accountEntries = [];
+    $scope.teamInfo.lastActions = [];
     $scope.currentPage = 0;
     $scope.propertyQuery = '';
     $scope.propertyQueryResult = [];
@@ -188,6 +191,19 @@ function managecallCtrl($scope) {
   ferropolySocket.on('marketplace', function (resp) {
     switch (resp.cmd) {
       case 'buyProperty':
+        if (resp.err) {
+
+        }
+        else if (resp.result.amount > 0) {
+          // bought
+
+        }
+        else if (resp.result.amount === 0) {
+          // already own
+        }
+        else {
+          // belongs to other
+        }
         console.log('see what happened when buying this');
         break;
 
