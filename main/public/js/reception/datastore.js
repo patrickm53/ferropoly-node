@@ -11,6 +11,7 @@
  * - chancelleryEntries:     changing, data of the chancellery
  * - propertyAccountEntries: changing, all entries of the propertiesAccount
  * - events:                 changing, events of a team (local data only)
+ * - authToken:              static, the authorisation token for the api
  *
  * The data is alway held in this store, updating is triggered by the application.
  *
@@ -46,6 +47,23 @@ var DataStore = function (initData, socket) {
         console.log('received new team transaction');
         break;
     }
+  });
+
+  // Incoming Property Account Messages
+  this.socket.on('propertyAccount', function (ind) {
+    switch(ind.cmd) {
+      case 'propertyBought':
+      case 'buildingBuilt':
+        var i = _.findIndex(self.data.pricelist, {uuid: ind.property.uuid});
+        self.data.pricelist[i] = ind.property;
+        console.log('Property account, updated: ' + i + '(' + ind.cmd + ')');
+        break;
+
+      default:
+        console.log('UNHANDLED: ' + ind.cmd);
+        break;
+    }
+
   });
 
   // Incoming Chancellery Messages
@@ -240,5 +258,9 @@ DataStore.prototype.getEvents = function (teamId) {
     this.data.events[teamId] = [];
   }
   return this.data.events[teamId];
+};
+
+DataStore.prototype.getAuthToken = function() {
+  return this.data.authToken;
 };
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view

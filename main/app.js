@@ -29,6 +29,7 @@ var infoRoute = require('./routes/info');
 var authtoken = require('./routes/authtoken');
 var testRoute = require('./routes/test');
 var receptionRoute = require('./routes/reception');
+var marketplaceRoute = require('./routes/marketplace');
 var app = express();
 var ferroSocket = require('./lib/ferroSocket');
 
@@ -82,6 +83,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/info', infoRoute);
   app.use('/test', testRoute);
   app.use('/reception', receptionRoute);
+  app.use('/marketplace', marketplaceRoute);
   authtoken.init(app);
 
   app.set('port', settings.server.port);

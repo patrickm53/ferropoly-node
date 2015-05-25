@@ -63,6 +63,14 @@ function buyProperty(gameplay, property, team, callback) {
       if (err) {
         console.error(err);
       }
+
+      if (ferroSocket) {
+        ferroSocket.emitToClients(gameplay.internal.gameId, 'propertyAccount', {
+          cmd: 'propertyBought',
+          property: property,
+          transaction: pt
+        });
+      }
       callback(err, retVal);
     });
 
@@ -163,6 +171,13 @@ function buyBuilding(gameplay, property, team, callback) {
     propertyTransaction.book(pt, function (err) {
       if (err) {
         console.error(err);
+      }
+      if (ferroSocket) {
+        ferroSocket.emitToClients(gameplay.internal.gameId, 'propertyAccount', {
+          cmd: 'buildingBuilt',
+          property: property,
+          transaction: pt
+        });
       }
       callback(err, retVal);
     });

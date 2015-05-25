@@ -22,7 +22,7 @@ ferropolySocket.on('test', function(data) {
 ferropolySocket.on('identify', function() {
   console.log('identify received');
   console.log(ferropoly.authToken);
-  ferropolySocket.emit('identify', {user: ferropoly.user, authToken: ferropoly.authToken, gameId: ferropoly.gp.internal.gameId});
+  ferropolySocket.emit('identify', {user: ferropoly.user, authToken: ferropoly.authToken, gameId: ferropoly.gameplay.internal.gameId});
 });
 
 // Now the initialized connection in set up

@@ -75,35 +75,6 @@ function Marketplace(scheduler) {
       });
     });
   }
-
-  if (this.ferroSocket) {
-    this.ferroSocket.on('marketplace', function (req) {
-      console.log('Marketplace: ' + req.cmd);
-      switch (req.cmd) {
-        case 'buyProperty':
-          self.buyProperty(req.gameId, req.teamId, req.propertyId, function (err, res) {
-            if (err) {
-              req.response('marketplace', {cmd: 'buyProperty', err: err.message, result: res});
-            }
-            else {
-              req.response('marketplace', {cmd: 'buyProperty', result: res});
-            }
-          });
-          break;
-
-        case 'buyHouses':
-          self.buildHouses(req.gameId, req.teamId, function(err, res) {
-            if (err) {
-              req.response('marketplace', {cmd: 'buyHouses', err: err.message, result: res});
-            }
-            else {
-              req.response('marketplace', {cmd: 'buyHouses', result: res});
-            }
-          });
-          break;
-      }
-    });
-  }
 }
 
 util.inherits(Marketplace, EventEmitter);

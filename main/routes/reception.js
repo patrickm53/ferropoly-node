@@ -13,6 +13,7 @@ var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
 var authTokenManager = require('../lib/authTokenManager');
+var uuid = require('node-uuid');
 
 var ngFile = '/js/indexctrl.js';
 if (settings.minifedjs) {

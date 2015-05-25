@@ -5,7 +5,7 @@
 'use strict';
 
 ferropolyApp.controller('managecallCtrl', managecallCtrl);
-function managecallCtrl($scope) {
+function managecallCtrl($scope, $http) {
 
   // Pagination
   $scope.itemsPerPage = 6;
@@ -40,7 +40,7 @@ function managecallCtrl($scope) {
    * Show the correct panel for call management
    * @param panel
    */
-  $scope.showCallPanel = function(panel) {
+  $scope.showCallPanel = function (panel) {
     $('#possessions').hide();
     $('#buy').hide();
     $(panel).show();
@@ -110,12 +110,18 @@ function managecallCtrl($scope) {
    * Buy houses for all properties of this team
    */
   $scope.buyHouses = function () {
-    ferropolySocket.emit('marketplace', {
-      cmd: 'buyHouses',
+    $http.post('/marketplace/buildHouses', {
+      gameId: dataStore.getGameplay().internal.gameId,
+      authToken: dataStore.getAuthToken(),
       teamId: activeCall.getCurrentTeam().uuid
-    });
-    console.log('buyHouses request pending');
-    pushEvent('Bauanfrage für ' + activeCall.getCurrentTeam().data.name + ' (' + activeCall.getCurrentTeam().uuid + ') übermittelt');
+    }).
+      success(function (data) {
+        console.log(data);
+      }).
+      error(function (data, status) {
+        console.log('ERROR');
+        console.log(data);
+      })
   };
 
   /**
@@ -174,14 +180,25 @@ function managecallCtrl($scope) {
   $scope.setPropertyInvestCandidate = function (candidate) {
     $scope.propertyInvestCandidate = candidate;
   };
+  /**
+   * Buy a property
+   * @param property
+   */
   $scope.buyProperty = function (property) {
-    ferropolySocket.emit('marketplace', {
-      cmd: 'buyProperty',
+    $http.post('/marketplace/buyProperty', {
+      gameId: dataStore.getGameplay().internal.gameId,
+      authToken: dataStore.getAuthToken(),
       propertyId: property.uuid,
       teamId: activeCall.getCurrentTeam().uuid
-    });
-    console.log('request pending');
-    pushEvent('Kaufanfrage für ' + property.location.name + ' übermittelt');
+    }).
+      success(function (data) {
+        console.log(data);
+      }).
+      error(function (data, status) {
+        console.log('ERROR');
+        console.log(data);
+        console.log(status);
+      });
   };
 
 
@@ -190,22 +207,6 @@ function managecallCtrl($scope) {
    */
   ferropolySocket.on('marketplace', function (resp) {
     switch (resp.cmd) {
-      case 'buyProperty':
-        if (resp.err) {
-
-        }
-        else if (resp.result.amount > 0) {
-          // bought
-
-        }
-        else if (resp.result.amount === 0) {
-          // already own
-        }
-        else {
-          // belongs to other
-        }
-        console.log('see what happened when buying this');
-        break;
 
       case 'buyHouses':
         console.log('Houses built');
@@ -220,6 +221,17 @@ function managecallCtrl($scope) {
       $scope.$apply();
     }
   });
+  ferropolySocket.on('propertyAccount', function(ind) {
+    switch(ind.cmd) {
+      case 'propertyBought':
+      case 'buildingBuilt':
+        if (ind.property.gamedata.owner === $scope.selectedTeam.uuid) {
+          // Update of our own properties needed
+          $scope.teamInfo.properties = dataStore.getProperties($scope.selectedTeam.uuid);
+        }
+        break;
+    }
+  });
 }
 
-managecallCtrl.$inject = ['$scope'];
+managecallCtrl.$inject = ['$scope', '$http'];
