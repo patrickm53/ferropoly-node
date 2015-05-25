@@ -258,6 +258,38 @@ function getBalance(gameId, teamId, p1, p2) {
 }
 
 /**
+ * Returns the ranking list for a gameplay
+ * @param gameId
+ * @param callback
+ */
+function getRankingList(gameId, callback) {
+  // Get all entries, could be better done but I don't know how
+  teamAccountTransaction.getEntries(gameId, undefined, undefined, undefined, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    var retVal = {};
+    for (var i = 0; i < data.length; i++) {
+      if (!retVal[data[i].teamId]) {
+        retVal[data[i].teamId] = {
+          teamId: data[i].teamId,
+          asset: 0
+        };
+      }
+      retVal[data[i].teamId].asset += data[i].transaction.amount;
+    }
+    // Convert to array, sort and add rank
+    var sorted = _.sortBy(_.values(retVal), function (n) {
+      return n.asset * (-1);
+    });
+    for (i = 0; i < sorted.length; i++){
+      sorted[i].rank = i + 1;
+    }
+    callback(null, sorted);
+  });
+}
+
+/**
  * Gets the account statement, all bookings up to a given time
  *
  * Param order p-params: [start] [end] callback
@@ -317,6 +349,7 @@ module.exports = {
   chargeToAnotherTeam: chargeToAnotherTeam,
   getBalance: getBalance,
   getAccountStatement: getAccountStatement,
+  getRankingList: getRankingList,
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
