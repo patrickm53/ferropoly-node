@@ -49,10 +49,10 @@ router.post('/buyProperty', function (req, res) {
 /**
  * Pay the rents and interests. This should not be called except an urgent case (or during development)
  */
-router.post('/payRents', function(req, res) {
+router.get('/payRents/:gameId', function(req, res) {
   // Todo: add authToken check, maybe some more security
   var marketplace = marketplaceApi.getMarketplace();
-  marketplace.payRents(req.body.gameId, function(err) {
+  marketplace.payRents(req.params.gameId, function(err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }

@@ -33,7 +33,11 @@
     .panel-heading
       h3.panel-title Anruf-Log
     .panel-body
-
+      div(ng-repeat='e in callLog | orderBy:"-ts"')
+        div(class='alert {{e.class}}' role='alert')
+         .call-log-ts {{e.ts | date:'hh:mm:ss'}}&nbsp;
+         .call-log-title {{e.title}}:&nbsp;
+         .call-log-message {{e.message}}
 
 .col-md-2
   button(type="button" class="btn btn-default" ng-click="finishCall()") Anruf beenden

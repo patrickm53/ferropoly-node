@@ -23,7 +23,7 @@ function managecallCtrl($scope, $http) {
     balance: 0,
     accountEntries: [],
     properties: [],
-    lastActions: []
+    callLog: []
   };
 
   $scope.propertyInvestCandidate = undefined;
@@ -71,7 +71,7 @@ function managecallCtrl($scope, $http) {
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
       $scope.setPage(5000); // last page
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
-      $scope.lastActions = [];
+      $scope.callLog = [];
       $scope.$apply();
     });
   };
@@ -98,7 +98,7 @@ function managecallCtrl($scope, $http) {
     $scope.teamInfo.numberOfProperties = 0;
     $scope.teamInfo.balance = 0;
     $scope.teamInfo.accountEntries = [];
-    $scope.teamInfo.lastActions = [];
+    $scope.teamInfo.callLog = [];
     $scope.currentPage = 0;
     $scope.propertyQuery = '';
     $scope.propertyQueryResult = [];
@@ -118,9 +118,20 @@ function managecallCtrl($scope, $http) {
     }).
       success(function (data) {
         console.log(data);
+        var msg;
+        if (data.result.amount === 0) {
+          msg = 'Es konnten keine Häuser gebaut werden';
+        }
+        else {
+          msg = 'Belastung: ' + data.result.amount + ', Gebaute Häuser: ';
+          for (var i = 0; i < data.result.log.length; i++) {
+            msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
+          }
+        }
+        $scope.callLog.push({class: 'alert-success', title:'Hausbau', message: msg, ts: new Date()});
       }).
       error(function (data, status) {
-        console.log('ERROR');
+        $scope.callLog.push({class: 'alert-danger', title:'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
         console.log(data);
       })
   };
@@ -199,12 +210,35 @@ function managecallCtrl($scope, $http) {
       teamId: activeCall.getCurrentTeam().uuid
     }).
       success(function (data) {
-        console.log(data);
+        if (data.status === 'ok') {
+          console.log(data);
+          var res = data.result;
+          var infoClass = 'alert-success';
+          var title = 'Kauf ' + res.property.location.name;
+          var msg;
+          if (res.owner) {
+            // belongs another team
+            infoClass = 'alert-danger';
+            msg = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount;
+          }
+          else if (res.amount === 0) {
+            // our own
+            infoClass = 'alert-info';
+            msg = 'Das Grundstück gehört der anrufenden Gruppe';
+          }
+          else {
+            // we buy now
+            msg = 'Grundstück gekauft. Preis: ' + res.amount;
+          }
+          $scope.callLog.push({class:infoClass, title:title, message: msg, ts: new Date()});
+        }
       }).
       error(function (data, status) {
         console.log('ERROR');
         console.log(data);
         console.log(status);
+        $scope.callLog.push({class:'alert-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
+
       });
   };
 
@@ -228,8 +262,8 @@ function managecallCtrl($scope, $http) {
       $scope.$apply();
     }
   });
-  ferropolySocket.on('propertyAccount', function(ind) {
-    switch(ind.cmd) {
+  ferropolySocket.on('propertyAccount', function (ind) {
+    switch (ind.cmd) {
       case 'propertyBought':
       case 'buildingBuilt':
         if (ind.property.gamedata.owner === $scope.selectedTeam.uuid) {

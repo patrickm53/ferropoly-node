@@ -11,3 +11,16 @@
     display: none;
     font-weight: bold;
 }
+
+.call-log-title {
+  font-weight: bold;
+    display: inline-block;
+}
+
+.call-log-message {
+    display: inline-block;
+}
+
+.call-log-ts {
+    display: inline-block;
+}
