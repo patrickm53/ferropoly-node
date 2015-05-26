@@ -51,7 +51,7 @@ var DataStore = function (initData, socket) {
 
   // Incoming Property Account Messages
   this.socket.on('propertyAccount', function (ind) {
-    switch(ind.cmd) {
+    switch (ind.cmd) {
       case 'propertyBought':
       case 'buildingBuilt':
         var i = _.findIndex(self.data.pricelist, {uuid: ind.property.uuid});
@@ -90,11 +90,7 @@ var DataStore = function (initData, socket) {
     switch (info.cmd) {
       case 'buyProperty':
         if (info.result.property) {
-          var i = _.findIndex(self.data.pricelist, {uuid: info.result.property.uuid});
-          console.log(i);
-          if (i > -1) {
-            self.data.pricelist[i] = info.result.property;
-          }
+          self.updatePropertyInPricelist(info.result.property);
         }
         break;
     }
@@ -202,10 +198,40 @@ DataStore.prototype.getChancelleryEntries = function (teamId) {
  * @param teamId  ID of the team, undefined updates for all
  */
 DataStore.prototype.updateProperties = function (teamId) {
+  var self = this;
   console.log('update pricelist for ' + teamId);
-  // So far we update all, optimize it later
-  this.socket.emit('properties', {cmd: 'getProperties', team: teamId})
+
+  // see https://api.jquery.com/jquery.get/
+  $.get('/properties/get/' + this.getGameplay().internal.gameId + '/' + teamId, function (data) {
+    if (data.status === 'ok') {
+      for (var i = 0; i < data.properties.length; i++) {
+        self.updatePropertyInPricelist(data.properties[i]);
+      }
+    }
+    else {
+      console.log('ERROR when getting properties:');
+      console.log(data);
+    }
+  })
+    .fail(function (data) {
+      console.log('ERROR when getting properties (2):');
+      console.log(data);
+    });
 };
+/**
+ * Updates a received property in the pricelist
+ * @param property
+ */
+DataStore.prototype.updatePropertyInPricelist = function (property) {
+  if (property && property.uuid) {
+    var i = _.findIndex(this.data.pricelist, {uuid: property.uuid});
+    console.log(i);
+    if (i > -1) {
+      this.data.pricelist[i] = property;
+    }
+  }
+};
+
 /**
  * Get the properties belonging to a team
  *
@@ -216,6 +242,9 @@ DataStore.prototype.getProperties = function (teamId) {
     return this.data.pricelist;
   }
   return _.filter(this.data.pricelist, function (n) {
+    if (!n.gamedata) {
+      return false;
+    }
     return n.gamedata.owner === teamId;
   });
 };
@@ -260,7 +289,7 @@ DataStore.prototype.getEvents = function (teamId) {
   return this.data.events[teamId];
 };
 
-DataStore.prototype.getAuthToken = function() {
+DataStore.prototype.getAuthToken = function () {
   return this.data.authToken;
 };
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view

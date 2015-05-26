@@ -64,11 +64,12 @@ function managecallCtrl($scope, $http) {
     $scope.preselectedTeam = team;
     // It's time to update the data!
     dataStore.updateChancellery();
-    dataStore.updateProperties();
+    dataStore.updateProperties(team.uuid);
     dataStore.updateTeamAccountEntries(undefined, function () {
       console.log('update received for teamAccount: ' + team.uuid);
       $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
+      $scope.setPage(5000); // last page
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
       $scope.lastActions = [];
       $scope.$apply();
@@ -148,6 +149,12 @@ function managecallCtrl($scope, $http) {
     return $scope.currentPage === ($scope.pageCount() - 1) ? "disabled" : "";
   };
   $scope.setPage = function (n) {
+    if (n < 0) {
+      n = 0;
+    }
+    if (n > $scope.pageCount()) {
+      n = $scope.pageCount() - 1;
+    }
     $scope.currentPage = n;
   };
   $scope.range = function () {

@@ -8,23 +8,6 @@
 var pm = require('../../common/models/propertyModel');
 var ferroSocket;
 
-/**
- * Handles the commands received over the ferroSocket
- * @param req
- */
-var socketCommandHandler = function (req) {
-  console.log('properties socket handler: ' + req.cmd);
-  switch (req.cmd) {
-    case 'getProperties':
-      pm.getPropertiesForGameplay(req.gameId, {lean: true}, function (err, props) {
-        var resp = {
-          err: err, cmd: 'getProperties', data: props
-        };
-        req.response('properties', resp);
-      });
-  }
-};
-
 module.exports = {
   /**
    * Get the property for a given location and game
@@ -50,6 +33,15 @@ module.exports = {
       }
       callback(null, properties);
     });
+  },
+
+  /**
+   * Get all properties of a gameplay
+   * @param gameId
+   * @param callback
+   */
+  getAllProperties: function(gameId, callback) {
+    pm.getPropertiesForGameplay(gameId, undefined, callback);
   },
 
   /**
@@ -86,9 +78,6 @@ module.exports = {
 
   init: function () {
     ferroSocket = require('./ferroSocket').get();
-    if (ferroSocket) {
-      ferroSocket.on('properties', socketCommandHandler);
-    }
 
   }
 };

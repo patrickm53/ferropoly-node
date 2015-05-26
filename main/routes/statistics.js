@@ -11,7 +11,7 @@ var teamAccount = require('../lib/accounting/teamAccount');
 
 router.get('/rankingList/:gameId', function (req, res) {
   if (!req.params.gameId) {
-    return res.send({status: 'error', message: 'No gameId supplied'});s
+    return res.send({status: 'error', message: 'No gameId supplied'});
   }
   teamAccount.getRankingList(req.params.gameId, function(err, ranking) {
     if (err) {
