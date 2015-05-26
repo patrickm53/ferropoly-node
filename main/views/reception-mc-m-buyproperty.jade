@@ -35,7 +35,7 @@
     .panel-body
       div(ng-repeat='e in callLog | orderBy:"-ts"')
         div(class='alert {{e.class}}' role='alert')
-         .call-log-ts {{e.ts | date:'hh:mm:ss'}}&nbsp;
+         .call-log-ts {{e.ts | date:'HH:mm:ss'}}&nbsp;
          .call-log-title {{e.title}}:&nbsp;
          .call-log-message {{e.message}}
 

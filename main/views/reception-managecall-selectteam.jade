@@ -11,14 +11,15 @@ h2 Bitte anrufendes Team auswählen
         h3.panel-title {{t.data.name}}
       .panel-body
         p {{t.data.organization}}
-        p {{t.data.teamLeader.name}}
+        details
+          p {{t.data.teamLeader.name}}
+          p
+            a(href='tel:{{t.data.teamLeader.phone}}') {{t.data.teamLeader.phone}}
+          p
+            a(href='mailto:{{t.data.teamLeader.email}}') {{t.data.teamLeader.email}}
+          p {{t.data.remarks}}
         p
-          a(href='tel:{{t.data.teamLeader.phone}}') {{t.data.teamLeader.phone}}
-        p
-          a(href='mailto:{{t.data.teamLeader.email}}') {{t.data.teamLeader.email}}
-        p {{t.data.remarks}}
-        p
-          button.btn.btn-primary(href='#' ng-click="preselectTeam(t)" data-toggle="modal" data-target="#confirmTeam") Anruf bearbeiten
+        button.btn.btn-primary(href='#' ng-click="preselectTeam(t)" data-toggle="modal" data-target="#confirmTeam") Anruf bearbeiten
 
 
 
