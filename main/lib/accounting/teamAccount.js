@@ -323,22 +323,6 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
     callback(err, data);
   })
 }
-/**
- * Handles the commands received over the ferroSocket
- * @param req
- */
-var socketCommandHandler = function (req) {
-  console.log('teamAccount socket handler: ' + req.cmd);
-  switch (req.cmd) {
-    case 'getAccountStatement':
-      getAccountStatement(req.gameId, req.teamId, req.start, req.end, function (err, data) {
-        var resp = {
-          err: err, cmd: 'accountStatement', data: data
-        };
-        req.response('teamAccount', resp);
-      });
-  }
-};
 
 module.exports = {
   payInterest: payInterest,
@@ -353,10 +337,5 @@ module.exports = {
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
-    if (ferroSocket) {
-      ferroSocket.on('teamAccount', socketCommandHandler);
-    }
-
   }
-
 };

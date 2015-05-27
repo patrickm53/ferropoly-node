@@ -30,15 +30,12 @@ var DataStore = function (initData, socket) {
   this.socket.on('teamAccount', function (resp) {
     console.log('onTeamAccount: ' + resp.cmd);
     switch (resp.cmd) {
-      case 'accountStatement':
-        self.data.teamAccountEntries = resp.data;
-        console.log('received ' + resp.data.length + ' accountStatement entries');
-        break;
-
       case 'onTransaction':
         self.data.teamAccountEntries.push(resp.data);
         console.log('received new team transaction');
         break;
+      default:
+        console.log('UNHANDLED: ' + resp.cmd);
     }
   });
 

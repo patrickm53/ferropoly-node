@@ -112,15 +112,6 @@ FerroSocket.prototype.removeSocket = function (socket) {
 FerroSocket.prototype.registerChannels = function (socket) {
   var self = this;
 
-  socket.on('teamAccount', function (data) {
-    console.log('teamAccount request received:' + data.cmd);
-    data.gameId = socket.gameId;
-    data.response = function (channel, resp) {
-      self.emitToClients(socket.gameId, channel, resp);
-    };
-    self.emit('teamAccount', data);
-  });
-
   socket.on('propertyAccount', function (data) {
     console.log('propertyAccount request received:' + data.cmd);
     data.gameId = socket.gameId;
