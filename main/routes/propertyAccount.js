@@ -38,5 +38,25 @@ router.get('/getRentRegister/:gameId/:teamId', function (req, res) {
   });
 });
 
+/**
+ * Get all acount Info for a team
+ */
+router.get('/getAccountStatement/:gameId/:propertyId', function (req, res) {
+  if (!req.params.gameId) {
+    return res.send({status: 'error', message: 'No gameId/teamId supplied'});
+  }
+  if (req.params.propertyId === 'undefined') {
+    req.params.propertyId = undefined;
+  }
+
+  propertyAccount.getAccountStatement(req.params.gameId, req.params.propertyId, function (err, register) {
+    if (err) {
+      return res.send({status: 'error', message: err.message});
+    }
+    res.send({status: 'ok', register: register});
+  });
+
+});
+
 module.exports = router;
 

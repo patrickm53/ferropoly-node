@@ -444,6 +444,7 @@ module.exports = {
   buyBuilding: buyBuilding,
   getBalance: getBalance,
   resetProperty: resetProperty,
+  getAccountStatement: getAccountStatement,
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
