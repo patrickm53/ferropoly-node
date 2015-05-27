@@ -65,7 +65,7 @@ function managecallCtrl($scope, $http) {
     // It's time to update the data!
     dataStore.updateChancellery();
     dataStore.updateProperties(team.uuid);
-    dataStore.updateTeamAccountEntries(undefined, function () {
+    dataStore.updateTeamAccountEntries(team.uuid, function () {
       console.log('update received for teamAccount: ' + team.uuid);
       $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);

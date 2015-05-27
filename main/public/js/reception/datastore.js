@@ -24,7 +24,6 @@ var DataStore = function (initData, socket) {
   this.data = initData;
   this.data.events = {};
   this.socket = socket;
-  this.teamAccountEntriesCallbacks = [];
   var self = this;
 
   // Incoming team account messages
@@ -34,12 +33,6 @@ var DataStore = function (initData, socket) {
       case 'accountStatement':
         self.data.teamAccountEntries = resp.data;
         console.log('received ' + resp.data.length + ' accountStatement entries');
-        if (self.teamAccountEntriesCallbacks.length > 0) {
-          for (var i = 0; i < self.teamAccountEntriesCallbacks.length; i++) {
-            self.teamAccountEntriesCallbacks[i]();
-          }
-          self.teamAccountEntriesCallbacks = [];
-        }
         break;
 
       case 'onTransaction':
@@ -120,11 +113,42 @@ DataStore.prototype.getGameplay = function () {
  */
 DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   console.log('update team account for ' + teamId);
-  // So far we update all, optimize it later
-  if (callback) {
-    this.teamAccountEntriesCallbacks.push(callback);
-  }
-  this.socket.emit('teamAccount', {cmd: 'getAccountStatement', team: teamId})
+  var self = this;
+  // see https://api.jquery.com/jquery.get/
+  $.get('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId, function (data) {
+    if (data.status === 'ok') {
+      if (!teamId) {
+        // All entries were retrieved, replace them completely
+        self.data.teamAccountEntries = data.accountData;
+      }
+      else {
+        // replace all entries for this team with the received one
+        _.remove(self.data.teamAccountEntries, function (e) {
+          return e.teamId === teamId;
+        });
+        for (var i = 0; i < data.accountData.length; i++) {
+          self.data.teamAccountEntries.push(data.accountData[i]);
+        }
+      }
+      // Sort entries, independently how we got them
+      _.sortBy(self.data.teamAccountEntries, function (e) {
+        return e.timestamp;
+      });
+    }
+    else {
+      console.error('ERROR when getting accountData:');
+      console.log(data);
+    }
+  })
+    .fail(function (data) {
+      console.error('ERROR when getting accountData (2):');
+      console.log(data);
+    })
+    .always(function () {
+      if (callback) {
+        callback();
+      }
+    })
 };
 /**
  * Get the team account entries
