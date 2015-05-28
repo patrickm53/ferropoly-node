@@ -1,0 +1,17 @@
+//
+   Created by kc on 28.05.15.
+div(ng-controller='dashboardCtrl')
+  h1 Übersicht
+
+  .row
+    .col-md-4
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Aktuelle Rangliste
+        .panel-body
+          table.table
+            tr(ng-repeat='t in rankingList | orderBy:"rank"')
+              td {{t.rank}}
+              td {{teamIdToTeamName(t.teamId)}}
+              td {{t.asset}}
+

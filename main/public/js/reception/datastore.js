@@ -12,6 +12,7 @@
  * - propertyAccountEntries: changing, all entries of the propertiesAccount
  * - events:                 changing, events of a team (local data only)
  * - authToken:              static, the authorisation token for the api
+ * - rankingList:            changing, the ranking list of the game
  *
  * The data is alway held in this store, updating is triggered by the application.
  *
@@ -86,7 +87,6 @@ var DataStore = function (initData, socket) {
     }
   });
 };
-
 /**
  * Get all teams
  * @returns {teams|*|gameData.teams|$scope.teams|result.teams|Array}
@@ -94,7 +94,15 @@ var DataStore = function (initData, socket) {
 DataStore.prototype.getTeams = function () {
   return this.data.teams;
 };
-
+/**
+ * Converts the teamId to the teams name
+ * @param teamId
+ * @returns {*}
+ */
+DataStore.prototype.teamIdToTeamName = function(teamId) {
+  // Do not access data.teams directly as the 'this' context would be wrong
+  return _.result(_.find(dataStore.getTeams(), {uuid: teamId}), 'data.name');
+};
 /**
  * Returns the gameplay
  * @returns {gameplay|*|result.gameplay|gameData.gameplay|$scope.gameplay}
@@ -309,8 +317,35 @@ DataStore.prototype.getEvents = function (teamId) {
   }
   return this.data.events[teamId];
 };
-
+/**
+ * Returns the authToken needed for POST requests
+ * @returns {authToken|*|ferropoly.authToken|.session.authToken}
+ */
 DataStore.prototype.getAuthToken = function () {
   return this.data.authToken;
 };
+/**
+ * Get the current ranking list
+ * @param callback
+ */
+DataStore.prototype.getRankingList = function (callback) {
+  var self = this;
+  console.log('start query for ranking list');
+  // see https://api.jquery.com/jquery.get/
+  $.get('/statistics/rankingList/' + this.getGameplay().internal.gameId, function (data) {
+    if (data.status === 'ok') {
+      self.data.rankingList = data.ranking;
+      return callback(null, self.data.rankingList);
+    }
+    else {
+      self.data.rankingList = [];
+      return callback(new Error(data.message));
+    }
+  })
+    .fail(function (error) {
+      callback(error);
+    });
+};
+
+
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view

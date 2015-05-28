@@ -34,6 +34,7 @@ block head
   script(src='/js/reception/activecall.js')
   script(src='/js/reception/teamaccountsCtrl.js')
   script(src='/js/reception/managecallCtrl.js')
+  script(src='/js/reception/dashboardCtrl.js')
   link(rel='stylesheet', href='/css/reception.css', type='text/css')
 
 block navbar
@@ -53,7 +54,7 @@ block content
 
   div(ng-app='ferropolyApp')
     #panel-main
-      h1 Hauptpanel
+      include reception-main
     #panel-managecall
       include reception-mc
     #panel-teamaccounts
