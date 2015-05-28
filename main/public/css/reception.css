@@ -24,3 +24,8 @@
 .call-log-ts {
     display: inline-block;
 }
+
+.refresh-button {
+    position: absolute;
+    right: 25px;
+}

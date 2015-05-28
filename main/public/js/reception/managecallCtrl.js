@@ -54,7 +54,27 @@ function managecallCtrl($scope, $http) {
     $scope.selectedTeam = activeCall.getCurrentTeam();
     return $scope.selectedTeam;
   };
-
+  $scope.refreshAccountInfo = function(team) {
+    if (!team) {
+      team = $scope.selectedTeam;
+    }
+    dataStore.updateTeamAccountEntries(team.uuid, function () {
+      console.log('update received for teamAccount: ' + team.uuid);
+      $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
+      $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
+      $scope.setPage(5000); // last page
+      $scope.$apply();
+    });
+  };
+  $scope.refreshProperties = function(team) {
+    if (!team) {
+      team = $scope.selectedTeam;
+    }
+    dataStore.updateProperties(team.uuid, function() {
+      $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
+      $scope.$apply();
+    });
+  };
   /**
    * Preselect: we intend to work with this team, but it has to be confirmed
    * @param team
@@ -62,18 +82,11 @@ function managecallCtrl($scope, $http) {
   $scope.preselectTeam = function (team) {
     console.log(team.data.name + ' / ' + team.uuid);
     $scope.preselectedTeam = team;
+    $scope.callLog = [];
     // It's time to update the data!
     dataStore.updateChancellery();
-    dataStore.updateProperties(team.uuid);
-    dataStore.updateTeamAccountEntries(team.uuid, function () {
-      console.log('update received for teamAccount: ' + team.uuid);
-      $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
-      $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
-      $scope.setPage(5000); // last page
-      $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
-      $scope.callLog = [];
-      $scope.$apply();
-    });
+    $scope.refreshProperties(team);
+    $scope.refreshAccountInfo(team);
   };
 
   /**

@@ -127,6 +127,9 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
         self.data.teamAccountEntries = data.accountData;
       }
       else {
+        if (!self.data.teamAccountEntries) {
+          self.data.teamAccountEntries = [];
+        }
         // replace all entries for this team with the received one
         _.remove(self.data.teamAccountEntries, function (e) {
           return e.teamId === teamId;
@@ -226,7 +229,7 @@ DataStore.prototype.getChancelleryEntries = function (teamId) {
  * Updates the pricelist (complete or the only for the user supplied)
  * @param teamId  ID of the team, undefined updates for all
  */
-DataStore.prototype.updateProperties = function (teamId) {
+DataStore.prototype.updateProperties = function (teamId, callback) {
   var self = this;
   console.log('update pricelist for ' + teamId);
 
@@ -241,11 +244,18 @@ DataStore.prototype.updateProperties = function (teamId) {
       console.log('ERROR when getting properties:');
       console.log(data);
     }
+    if (callback) {
+      callback();
+    }
   })
     .fail(function (data) {
       console.log('ERROR when getting properties (2):');
       console.log(data);
+      if (callback) {
+        callback();
+      }
     });
+
 };
 /**
  * Updates a received property in the pricelist
@@ -254,7 +264,6 @@ DataStore.prototype.updateProperties = function (teamId) {
 DataStore.prototype.updatePropertyInPricelist = function (property) {
   if (property && property.uuid) {
     var i = _.findIndex(this.data.pricelist, {uuid: property.uuid});
-    console.log(i);
     if (i > -1) {
       this.data.pricelist[i] = property;
     }

@@ -6,6 +6,7 @@
   .panel.panel-default
     .panel-heading
       h3.panel-title Konto
+        i.fa.fa-refresh.refresh-button(ng-click='refreshAccountInfo()')
     .panel-body
       p Aktueller Kontostand: {{teamInfo.balance}}
       table.table.table-hover
