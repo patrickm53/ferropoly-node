@@ -21,7 +21,9 @@ var moment = require('moment');
  * @param callback
  */
 function bookChancelleryEvent(gameplay, team, info, callback) {
-
+  if (!gameplay || !team || !info) {
+    return callback(new Error('invalid params in bookChancelleryEvent'));
+  }
   if (info.amount > 0) {
     // Positive amount: only bank is involved EXCEPT it is the jackpot
     if (info.jackpot) {
@@ -76,6 +78,9 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
  * @param callback
  */
 function playChancellery(gameplay, team, callback) {
+  if (!gameplay || !team) {
+    return callback(new Error('invalid params in playChancellery'));
+  }
   var min = gameplay.gameParams.chancellery.minLottery || 1000;
   var max = gameplay.gameParams.chancellery.maxLottery || 5000;
   var retVal = {};
@@ -115,7 +120,7 @@ function playChancellery(gameplay, team, callback) {
 function gamble(gameplay, team, amount, callback) {
   var retVal = {
     amount: amount,
-    infoText: 'Chance/Kanzlei (Gambling): '
+    infoText: 'Chance/Kanzlei (Gambling)'
   };
   bookChancelleryEvent(gameplay, team, retVal, function (err) {
     return callback(err, retVal);
@@ -146,12 +151,30 @@ function getBalance(gameId, p1, p2) {
       saldo += data[i].transaction.amount;
     }
     callback(err, {balance: saldo, entries: i});
+  });
+}
+
+/**
+ * Returns all entries of the chancellery
+ * @param gameId
+ * @param callback
+ */
+function getAccountStatement(gameId, callback) {
+  if (!gameId) {
+    return callback(new Error('no gameId supplied'));
+  }
+  chancelleryTransaction.getEntries(gameId, undefined, moment(), function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    callback(err, data);
   })
 }
 
 
 module.exports = {
   playChancellery: playChancellery,
+  getAccountStatement: getAccountStatement,
   getBalance: getBalance,
   gamble: gamble
 };
