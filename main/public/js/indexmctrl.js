@@ -4,6 +4,7 @@
  */
 'use strict';
 
+moment.locale('de');
 var indexControl = angular.module('indexApp', []);
 indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http) {
 
@@ -41,13 +42,13 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
   };
   $scope.getGpInfo = function (gp) {
     if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
-      return 'Spiel ist seit ' + moment(gp.scheduling.gameEndTs).fromNow(true) + ' zu Ende.';
+      return 'Spiel ist ' + moment(gp.scheduling.gameEndTs).fromNow(false) + ' zu Ende gegangen.';
     }
     if (moment(gp.scheduling.gameStartTs).isAfter(moment())) {
-      return 'Spiel startet erst in' + moment(gp.scheduling.gameStartTs).fromNow(true) + '.';
+      return 'Spiel startet erst ' + moment(gp.scheduling.gameStartTs).fromNow(false) + '.';
     }
     if (moment().isBetween(moment(gp.scheduling.gameStartTs), moment(gp.scheduling.gameEndTs))) {
-      return 'Spiel läuft seit ' + moment(gp.scheduling.gameStartTs).fromNow(true) + '.';
+      return 'Spiel läuft ' + moment(gp.scheduling.gameStartTs).fromNow(false) + '.';
     }
     return ('x');
   };
