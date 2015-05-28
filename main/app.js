@@ -140,7 +140,10 @@ ferropolyDb.init(settings, function (err) {
     console.log('%s: Node server started on %s:%d ...',
       new Date(Date.now()), app.get('ip'), app.get('port'));
   });
+
+  console.log('Ferropoly Copyright (C) 2015 Christian Kuster, CH-8342 Wernetshausen');
+  console.log('This program comes with ABSOLUTELY NO WARRANTY;');
+  console.log('This is free software, and you are welcome to redistribute it');
+  console.log('under certain conditions; see www.ferropoly.ch for details.');
   console.log('Ferropoly Main server listening on port ' + app.get('port'));
-
-
 });
