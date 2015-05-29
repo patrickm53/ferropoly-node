@@ -43,7 +43,10 @@ function managecallCtrl($scope, $http) {
   $scope.showCallPanel = function (panel) {
     $('#possessions').hide();
     $('#buy').hide();
-    $(panel).show();
+    $('#tab-possessions').removeClass('active');
+    $('#tab-buy').removeClass('active');
+    $('#' + panel).show();
+    $('#tab-' + panel).addClass('active');
   };
 
   /**
@@ -117,17 +120,17 @@ function managecallCtrl($scope, $http) {
             });
           }
           $scope.callPanel = 2;
-          $scope.showCallPanel('#buy');
+          $scope.showCallPanel('buy');
         }).
         error(function (data, status) {
           console.log(data);
           $scope.callPanel = 2;
-          $scope.showCallPanel('#buy');
+          $scope.showCallPanel('buy');
         });
     }
     else {
       $scope.callPanel = 2;
-      $scope.showCallPanel('#buy');
+      $scope.showCallPanel('buy');
     }
   };
 

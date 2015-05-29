@@ -8,10 +8,10 @@ include reception-mc-m-buyproperty-modal
 
 div(role='tabpanel')
   ul.nav.nav-tabs(role='tablist')
-    li.active(role='presentation')
-      a(href='#buy' aria-controls='buy' role='tab' data-toggle='tab' ng-click='showCallPanel("#buy")') Kaufen
-    li(role='presentation')
-      a(href='#possessions' aria-controls='possessions' role='tab' data-toggle='tab' ng-click='showCallPanel("#possessions")') Besitz
+    li#tab-buy.active(role='presentation')
+      a(href='#buy' aria-controls='buy' role='tab' data-toggle='tab' ng-click='showCallPanel("buy")') Kaufen
+    li#tab-possessions(role='presentation')
+      a(href='#possessions' aria-controls='possessions' role='tab' data-toggle='tab' ng-click='showCallPanel("possessions")') Besitz
   p
 
 
