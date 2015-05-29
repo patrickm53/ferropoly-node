@@ -86,6 +86,7 @@ function managecallCtrl($scope, $http) {
     console.log(team.data.name + ' / ' + team.uuid);
     $scope.preselectedTeam = team;
     $scope.callLog = [];
+    $scope.gambleAmount = 0;
     // It's time to update the data!
     dataStore.updateChancellery();
     $scope.refreshProperties(team);
@@ -178,6 +179,38 @@ function managecallCtrl($scope, $http) {
       error(function (data, status) {
         $scope.callLog.push({class: 'alert-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
         console.log(data);
+      })
+  };
+  $scope.gambleAmount = 0;
+  $scope.gamble = function (factor) {
+    if (!_.isNumber($scope.gambleAmount)) {
+      return;
+    }
+
+    $http.post('/chancellery/gamble/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
+      authToken: dataStore.getAuthToken(),
+      amount: Math.abs($scope.gambleAmount) * factor
+    }).
+      success(function (data) {
+        console.log(data);
+        if (data.status === 'ok') {
+          var infoClass = 'alert-success';
+          if (data.result.amount < 0) {
+            infoClass = 'alert-danger';
+          }
+          $scope.callLog.push({
+            class: infoClass,
+            title: data.result.infoText,
+            message: data.result.amount,
+            ts: new Date()
+          });
+          $scope.$apply();
+        }
+      }).
+      error(function (data, status) {
+        $scope.callLog.push({class: 'alert-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
+        console.log(data);
+        $scope.$apply();
       })
   };
 

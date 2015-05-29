@@ -23,11 +23,26 @@
 
 // Build Houses
 .col-md-6
-  .panel.panel-default
-    .panel-heading
-      h3.panel-title Häuser bauen & Gambling
-    .panel-body
-      button.btn.btn-default(type="button"  ng-click="buyHouses()") Häuser bauen
+  .row
+    .col-md-6
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Häuserbau
+        .panel-body
+          button.btn.btn-default(type="button"  ng-click="buyHouses()") Häuser bauen
+    .col-md-6
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Gambling
+        .panel-body
+          input(type="number" inputmode="numeric" min=0 step=500 ng-model="gambleAmount")
+          p
+          p
+            button.btn.btn-success(type="button"  ng-click="gamble(1)") Gewinn
+            | &nbsp;&nbsp;
+            button.btn.btn-warning(type="button"  ng-click="gamble(-1)") Verlust
+
+
 
   .panel.panel-default
     .panel-heading

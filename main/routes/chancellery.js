@@ -70,6 +70,7 @@ router.get('/play/:gameId/:teamId', function (req, res) {
  * Gambling
  */
 router.post('/gamble/:gameId/:teamId', function (req, res) {
+  console.log(req.body);
   if (!req.body.authToken) {
     return res.send({status: 'error', message: 'Permission denied (1)'});
   }
