@@ -157,10 +157,8 @@ function managecallCtrl($scope, $http) {
    * Buy houses for all properties of this team
    */
   $scope.buyHouses = function () {
-    $http.post('/marketplace/buildHouses', {
-      gameId: dataStore.getGameplay().internal.gameId,
-      authToken: dataStore.getAuthToken(),
-      teamId: activeCall.getCurrentTeam().uuid
+    $http.post('/marketplace/buildHouses/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
+      authToken: dataStore.getAuthToken()
     }).
       success(function (data) {
         console.log(data);
@@ -281,11 +279,8 @@ function managecallCtrl($scope, $http) {
    * @param property
    */
   $scope.buyProperty = function (property) {
-    $http.post('/marketplace/buyProperty', {
-      gameId: dataStore.getGameplay().internal.gameId,
-      authToken: dataStore.getAuthToken(),
-      propertyId: property.uuid,
-      teamId: activeCall.getCurrentTeam().uuid
+    $http.post('/marketplace/buyProperty/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
+      authToken: dataStore.getAuthToken()
     }).
       success(function (data) {
         if (data.status === 'ok') {

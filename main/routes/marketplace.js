@@ -11,7 +11,7 @@ var marketplaceApi = require('../lib/accounting/marketplace')
 /**
  * Build Houses
  */
-router.post('/buildHouses', function (req, res) {
+router.post('/buildHouses/:gameId/:teamId', function (req, res) {
   var marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
     return res.send({status: 'error', message: 'Permission denied (1)'});
@@ -19,7 +19,7 @@ router.post('/buildHouses', function (req, res) {
   if (req.body.authToken !== req.session.ferropolyToken) {
     return res.send({status: 'error', message: 'Permission denied (2)'});
   }
-  marketplace.buildHouses(req.body.gameId, req.body.teamId, function (err, result) {
+  marketplace.buildHouses(req.params.gameId, req.params.teamId, function (err, result) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
@@ -30,7 +30,7 @@ router.post('/buildHouses', function (req, res) {
 /**
  * Buy Property
  */
-router.post('/buyProperty', function (req, res) {
+router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
   var marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
     return res.send({status: 'error', message: 'Permission denied (1)'});
@@ -38,7 +38,7 @@ router.post('/buyProperty', function (req, res) {
   if (req.body.authToken !== req.session.ferropolyToken) {
     return res.send({status: 'error', message: 'Permission denied (2)'});
   }
-  marketplace.buyProperty(req.body.gameId, req.body.teamId, req.body.propertyId, function (err, result) {
+  marketplace.buyProperty(req.params.gameId, req.params.teamId, req.params.propertyId, function (err, result) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
