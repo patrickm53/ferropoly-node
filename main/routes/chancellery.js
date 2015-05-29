@@ -45,7 +45,7 @@ router.get('/accountStatement/:gameId', function (req, res) {
 /**
  * play chancellery
  */
-router.get('/playChancellery/:gameId/:teamId', function (req, res) {
+router.get('/play/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId || !req.params.teamId) {
     return res.send({status: 'error', message: 'No gameId or teamId supplied'});
   }

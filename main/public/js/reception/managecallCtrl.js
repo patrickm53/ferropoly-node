@@ -54,7 +54,7 @@ function managecallCtrl($scope, $http) {
     $scope.selectedTeam = activeCall.getCurrentTeam();
     return $scope.selectedTeam;
   };
-  $scope.refreshAccountInfo = function(team) {
+  $scope.refreshAccountInfo = function (team) {
     if (!team) {
       team = $scope.selectedTeam;
     }
@@ -66,11 +66,11 @@ function managecallCtrl($scope, $http) {
       $scope.$apply();
     });
   };
-  $scope.refreshProperties = function(team) {
+  $scope.refreshProperties = function (team) {
     if (!team) {
       team = $scope.selectedTeam;
     }
-    dataStore.updateProperties(team.uuid, function() {
+    dataStore.updateProperties(team.uuid, function () {
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
       $scope.$apply();
     });
@@ -98,8 +98,37 @@ function managecallCtrl($scope, $http) {
     activeCall.setCurrentTeam($scope.preselectedTeam);
     $scope.selectedTeam = $scope.preselectedTeam;
     $scope.preselectedTeam = undefined;
-    $scope.callPanel = 2;
-    $scope.showCallPanel('#buy');
+
+    if (playChancellery) {
+      // Play chancellery in every standard call
+      $http.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid).
+        success(function (data) {
+          console.log(data);
+          if (data.status === 'ok') {
+            var infoClass = 'alert-success';
+            if (data.result.amount < 0) {
+              infoClass = 'alert-danger';
+            }
+            $scope.callLog.push({
+              class: infoClass,
+              title: data.result.infoText,
+              message: data.result.amount,
+              ts: new Date()
+            });
+          }
+          $scope.callPanel = 2;
+          $scope.showCallPanel('#buy');
+        }).
+        error(function (data, status) {
+          console.log(data);
+          $scope.callPanel = 2;
+          $scope.showCallPanel('#buy');
+        });
+    }
+    else {
+      $scope.callPanel = 2;
+      $scope.showCallPanel('#buy');
+    }
   };
 
   /**
@@ -141,10 +170,10 @@ function managecallCtrl($scope, $http) {
             msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
           }
         }
-        $scope.callLog.push({class: 'alert-success', title:'Hausbau', message: msg, ts: new Date()});
+        $scope.callLog.push({class: 'alert-success', title: 'Hausbau', message: msg, ts: new Date()});
       }).
       error(function (data, status) {
-        $scope.callLog.push({class: 'alert-danger', title:'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
+        $scope.callLog.push({class: 'alert-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
         console.log(data);
       })
   };
@@ -243,14 +272,14 @@ function managecallCtrl($scope, $http) {
             // we buy now
             msg = 'Grundstück gekauft. Preis: ' + res.amount;
           }
-          $scope.callLog.push({class:infoClass, title:title, message: msg, ts: new Date()});
+          $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
         }
       }).
       error(function (data, status) {
         console.log('ERROR');
         console.log(data);
         console.log(status);
-        $scope.callLog.push({class:'alert-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
+        $scope.callLog.push({class: 'alert-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
 
       });
   };
