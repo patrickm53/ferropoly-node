@@ -284,8 +284,14 @@ function getRankingList(gameId, callback) {
     var sorted = _.sortBy(_.values(retVal), function (n) {
       return n.asset * (-1);
     });
-    for (i = 0; i < sorted.length; i++){
-      sorted[i].rank = i + 1;
+    for (i = 0; i < sorted.length; i++) {
+      if (sorted[i - 1] && (sorted[i - 1].asset === sorted[i].asset)) {
+        // Same asset, same rank
+        sorted[i].rank = sorted[i - 1].rank;
+      }
+      else {
+        sorted[i].rank = i + 1;
+      }
     }
     callback(null, sorted);
   });
