@@ -163,7 +163,7 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
 function receiveFromBank(teamId, gameId, amount, info, callback) {
   receiveFromBankOrChancellery(teamId, gameId, amount, info, 'bank', function (err) {
     callback(err);
-  })
+  });
 }
 
 /**
@@ -177,7 +177,7 @@ function receiveFromBank(teamId, gameId, amount, info, callback) {
 function receiveFromChancellery(teamId, gameId, amount, info, callback) {
   receiveFromBankOrChancellery(teamId, gameId, amount, info, 'chancellery', function (err) {
     callback(err);
-  })
+  });
 }
 /**
  * One team pays another one
@@ -250,11 +250,12 @@ function getBalance(gameId, teamId, p1, p2) {
       return callback(err);
     }
     var saldo = 0;
-    for (var i = 0; i < data.length; i++) {
+    var i;
+    for (i = 0; i < data.length; i++) {
       saldo += data[i].transaction.amount;
     }
     callback(err, {balance: saldo, entries: i});
-  })
+  });
 }
 
 /**
@@ -269,7 +270,8 @@ function getRankingList(gameId, callback) {
       return callback(err);
     }
     var retVal = {};
-    for (var i = 0; i < data.length; i++) {
+    var i;
+    for (i = 0; i < data.length; i++) {
       if (!retVal[data[i].teamId]) {
         retVal[data[i].teamId] = {
           teamId: data[i].teamId,
@@ -321,7 +323,7 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
 
   teamAccountTransaction.getEntries(gameId, teamId, tsStart, tsEnd, function (err, data) {
     callback(err, data);
-  })
+  });
 }
 
 module.exports = {

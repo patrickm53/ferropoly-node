@@ -12,7 +12,7 @@ var gameplayModel = require('../../common/models/gameplayModel');
 
 var ngFile = '/js/indexctrl.js';
 if (settings.minifedjs) {
-  ngFile = '/js/indexctrl.min.js'
+  ngFile = '/js/indexctrl.min.js';
 }
 
 /* GET home page. */
@@ -33,7 +33,7 @@ router.get('/gameplays', function(req, res) {
           gamename: gameplay.gamename,
           scheduling: gameplay.scheduling,
           log: gameplay.log
-        })
+        });
       });
     }
     return res.send(retVal);

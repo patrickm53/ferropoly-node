@@ -29,7 +29,6 @@ module.exports = function (grunt) {
     copy: {
       main: {
         files: [
-
           {
             expand: true,
             cwd: '../ferropoly-editor/common/lib',
@@ -69,8 +68,18 @@ module.exports = function (grunt) {
             filter: 'isFile',
             timestamp: true
           }
-
         ]
+      }
+    },
+
+    eslint: {
+      src: [
+        'server.js',
+        'main/lib/**/*.js',
+        'main/routes/**/*.js'
+      ],
+      options: {
+        config: './.eslintrc'
       }
     }
 
@@ -81,6 +90,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-processhtml');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-shell');
@@ -92,4 +102,5 @@ module.exports = function (grunt) {
   grunt.registerTask('v:major', ['bump-only:major']);
   grunt.registerTask('demo', ['shell']);
   grunt.registerTask('update', ['copy']);
+  grunt.registerTask('lint', ['eslint']);
 };

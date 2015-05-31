@@ -6,7 +6,6 @@
 
 var express = require('express');
 var router = express.Router();
-var marketplaceApi = require('../lib/accounting/marketplace');
 var teamAccount = require('../lib/accounting/teamAccount');
 
 router.get('/rankingList/:gameId', function (req, res) {

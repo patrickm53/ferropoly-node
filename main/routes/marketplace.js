@@ -6,7 +6,7 @@
 
 var express = require('express');
 var router = express.Router();
-var marketplaceApi = require('../lib/accounting/marketplace')
+var marketplaceApi = require('../lib/accounting/marketplace');
 
 /**
  * Build Houses

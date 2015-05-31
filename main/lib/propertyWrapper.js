@@ -6,7 +6,6 @@
  */
 'use strict';
 var pm = require('../../common/models/propertyModel');
-var ferroSocket;
 
 module.exports = {
   /**
@@ -77,7 +76,5 @@ module.exports = {
   },
 
   init: function () {
-    ferroSocket = require('./ferroSocket').get();
-
   }
 };

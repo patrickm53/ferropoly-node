@@ -13,7 +13,6 @@ var eventRepo = require('../../common/models/schedulerEventModel');
 var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
-var _ = require('lodash');
 var schedule = require('node-schedule');
 var gameCache = require('./gameCache');
 
@@ -28,13 +27,13 @@ function Scheduler(_settings) {
   this.jobs = [];
   this.updateJob = undefined;
 
-  schedule.scheduleJob('0 22 * * *', function() {
+  schedule.scheduleJob('0 22 * * *', function () {
     // Clear cache at end of the day
-    gameCache.refreshCache(function(err) {
+    gameCache.refreshCache(function (err) {
       if (err) {
         console.error(err);
       }
-    })
+    });
   });
 }
 
@@ -46,7 +45,7 @@ util.inherits(Scheduler, EventEmitter);
  * @param channel
  * @param event
  */
-Scheduler.prototype.handleEvent = function(channel, event) {
+Scheduler.prototype.handleEvent = function (channel, event) {
   var self = this;
   console.log('Handling event ' + channel);
   eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
@@ -72,7 +71,7 @@ Scheduler.prototype.handleEvent = function(channel, event) {
  * @param err
  * @param event
  */
-Scheduler.prototype.handleEventCallback = function(err, event) {
+Scheduler.prototype.handleEventCallback = function (err, event) {
   if (err) {
     console.log('Error in event handler callback: ' + err.message);
     return;
@@ -93,19 +92,26 @@ Scheduler.prototype.handleEventCallback = function(err, event) {
 Scheduler.prototype.update = function (callback) {
   console.log('Scheduler: update');
   var self = this;
+  var i;
   eventRepo.getUpcomingEvents(function (err, events) {
     if (err) {
       return callback(err);
     }
 
     // Cancel all existing jobs
-    for (var i = 0; i < self.jobs.length; i++) {
+    for (i = 0; i < self.jobs.length; i++) {
       self.jobs[i].cancel();
     }
     self.jobs = [];
 
     if (events.length > 0) {
       var now = moment();
+
+      var handlerFunction = function (ev) {
+        console.log('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
+        self.handleEvent(ev.type, ev);
+      };
+
       for (i = 0; i < events.length; i++) {
         var event = events[i];
         console.log(events[i]);
@@ -116,10 +122,7 @@ Scheduler.prototype.update = function (callback) {
         }
         else {
           console.log('Push event in joblist:' + event._id);
-          self.jobs.push(schedule.scheduleJob(event.timestamp, function (ev) {
-            console.log('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
-            self.handleEvent(ev.type, ev);
-          }.bind(null, event)));
+          self.jobs.push(schedule.scheduleJob(event.timestamp, handlerFunction.bind(null, event)));
         }
       }
     }
@@ -138,7 +141,7 @@ Scheduler.prototype.update = function (callback) {
     });
 
     callback(err);
-  })
+  });
 };
 
 /**
@@ -160,7 +163,7 @@ Scheduler.prototype.requestEventSave = function (event, callback) {
 Scheduler.prototype.markEventHandled = function (event, callback) {
   eventRepo.saveAfterHandling(event, function (err, ev) {
     return callback(err, ev);
-  })
+  });
 };
 /*
  What needs to be done:

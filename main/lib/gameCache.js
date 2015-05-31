@@ -47,7 +47,7 @@ module.exports = {
 
         return callback(null, result);
       });
-    })
+    });
   },
 
   /**
@@ -95,8 +95,8 @@ module.exports = {
           if (gpHandled === gameplaysInCache) {
             return callback(teamError);
           }
-        })
+        });
       });
-    })
+    });
   }
 };

@@ -6,7 +6,6 @@
 'use strict';
 var uuid = require('node-uuid');
 var mongoose = require('mongoose');
-var moment = require('moment');
 var tokens = {};
 
 var tokenSchema = mongoose.Schema({
@@ -26,7 +25,7 @@ function getToken(user, callback) {
         return callback(err);
       }
       if (!docs || docs.length === 0) {
-        return callback()
+        return callback();
       }
       callback(err, docs[0]);
     });
@@ -50,7 +49,7 @@ module.exports = {
       token.id = uuid.v4();
       token.login = user;
       token.save(function(err) {
-        callback(null, token.id);
+        callback(err, token.id);
       });
     });
   },

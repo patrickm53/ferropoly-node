@@ -140,6 +140,9 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       else {
         // CASE 3: property belongs to another team, pay the rent
         propertyAccount.getPropertyValue(gp, property, function (err, val) {
+          if (err) {
+            return callback(err);
+          }
           teamAccount.chargeToAnotherTeam(gameId, teamId, property.gamedata.owner, val.amount, 'Miete ' + property.location.name, function (err, info) {
             console.log(property.location.name + ' is already sold to another team');
             if (err) {
@@ -147,7 +150,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
               return callback(err);
             }
             return callback(null, {property: property, owner: property.gamedata.owner, amount: info.amount});
-          })
+          });
         });
       }
     });
@@ -187,36 +190,38 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
       var log = [];
       var handled = 0;
 
-      for (var i = 0; i < properties.length; i++) {
-        propertyAccount.buyBuilding(gp, properties[i], team, function (err, info) {
-          if (err) {
-            console.log(err);
+      // Callback when buying building
+      var buyBuildingCallback = function (err, info) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          log.push(info);
+        }
+        handled++;
+        if (handled === properties.length) {
+          var totalAmount = 0;
+          for (var t = 0; t < log.length; t++) {
+            totalAmount += log[t].amount;
+          }
+          if (totalAmount === 0) {
+            // fine, we tried to build but there was nothing to build
+            return callback(null, {amount: 0});
           }
           else {
-            log.push(info);
+            teamAccount.chargeToBank(teamId, gameId, totalAmount, {info: 'Hausbau', parts: log}, function (err) {
+              if (err) {
+                console.error(err);
+                return callback(err);
+              }
+              return callback(null, {amount: totalAmount, log: log});
+            });
           }
+        }
+      };
 
-          handled++;
-          if (handled === properties.length) {
-            var totalAmount = 0;
-            for (var t = 0; t < log.length; t++) {
-              totalAmount += log[t].amount;
-            }
-            if (totalAmount === 0) {
-              // fine, we tried to build but there was nothing to build
-              return callback(null, {amount: 0});
-            }
-            else {
-              teamAccount.chargeToBank(teamId, gameId, totalAmount, {info: 'Hausbau', parts: log}, function (err) {
-                if (err) {
-                  console.error(err);
-                  return callback(err);
-                }
-                return callback(null, {amount: totalAmount, log: log});
-              });
-            }
-          }
-        });
+      for (var i = 0; i < properties.length; i++) {
+        propertyAccount.buyBuilding(gp, properties[i], team, buyBuildingCallback);
       }
     });
   });
@@ -243,16 +248,18 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       return callback(null);
     }
 
+    var payInterestsCallback = function (err) {
+      if (err) {
+        error = err;
+      }
+      paid++;
+      if (paid === gp.gameParams.interestCyclesAtEndOfGame) {
+        callback(error);
+      }
+    };
+
     for (var i = 0; i < gp.gameParams.interestCyclesAtEndOfGame; i++) {
-      self.payInterests(gameId, function (err) {
-        if (err) {
-          error = err;
-        }
-        paid++;
-        if (paid === gp.gameParams.interestCyclesAtEndOfGame) {
-          callback(error);
-        }
-      })
+      self.payInterests(gameId, payInterestsCallback);
     }
   });
 };
@@ -273,16 +280,18 @@ Marketplace.prototype.payInterests = function (gameId, callback) {
     var paid = 0;
     var error = null;
 
+    var payInterestCallback = function (err) {
+      if (err) {
+        error = err;
+      }
+      paid++;
+      if (paid === teams.length) {
+        callback(error);
+      }
+    };
+
     for (var i = 0; i < teams.length; i++) {
-      teamAccount.payInterest(teams[i].uuid, gameId, gp.gameParams.interest, function (err) {
-        if (err) {
-          error = err;
-        }
-        paid++;
-        if (paid === teams.length) {
-          callback(error);
-        }
-      })
+      teamAccount.payInterest(teams[i].uuid, gameId, gp.gameParams.interest, payInterestCallback);
     }
   });
 };
@@ -333,6 +342,9 @@ Marketplace.prototype.payRents = function (gameId, callback) {
     }
 
     propWrap.allowBuilding(gameId, function (err, nbAffected) {
+      if (err) {
+        return callback(err);
+      }
       console.log('Building allowed again for ' + nbAffected.toString() + ' buildings');
 
       gameCache.getGameData(gameId, function (err, res) {
@@ -345,16 +357,18 @@ Marketplace.prototype.payRents = function (gameId, callback) {
         var paid = 0;
         var error = null;
 
+        var payRentsCallback = function (err) {
+          if (err) {
+            error = err;
+          }
+          paid++;
+          if (paid === teams.length) {
+            return callback(error);
+          }
+        };
+
         for (var i = 0; i < teams.length; i++) {
-          self.payRentsForTeam(gp, teams[i], function (err) {
-            if (err) {
-              error = err;
-            }
-            paid++;
-            if (paid === teams.length) {
-              return callback(error);
-            }
-          })
+          self.payRentsForTeam(gp, teams[i], payRentsCallback);
         }
       });
     });
@@ -385,8 +399,8 @@ Marketplace.prototype.chancellery = function (gameId, teamId, callback) {
 
     chancelleryAccount.playChancellery(gp, team, function (err, res) {
       callback(err, res);
-    })
-  })
+    });
+  });
 };
 
 /**
@@ -412,8 +426,8 @@ Marketplace.prototype.chancelleryGamble = function (gameId, teamId, amount, call
 
     chancelleryAccount.gamble(gp, team, amount, function (err, res) {
       callback(err, res);
-    })
-  })
+    });
+  });
 };
 
 

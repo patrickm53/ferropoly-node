@@ -10,14 +10,9 @@ var express = require('express');
 var router = express.Router();
 var _ = require('lodash');
 
-var settings = require('../settings');
 var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
-var ngFile = '/js/indexctrl.js';
-if (settings.minifedjs) {
-  ngFile = '/js/indexctrl.min.js'
-}
 
 /* GET home page. */
 router.get('*', function (req, res) {

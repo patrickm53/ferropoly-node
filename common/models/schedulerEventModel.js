@@ -120,7 +120,6 @@ function requestEventSave(event, serverId, callback) {
       };
 
       // Now try to save and read it back again immediately
-      // issue: this does not reliable work, do not save delayed
       ev.save(function (err, savedEvent) {
         if (err) {
           // another one tried to save as well? Wait a second, try again the complete sequence

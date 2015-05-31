@@ -69,7 +69,7 @@ function dumpAccounts(gameId, callback) {
  * @returns {*}
  */
 function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
-  if (!gameId) {
+  if (!gameId || !propertyId) {
     return callback(new Error('parameter error'));
   }
 

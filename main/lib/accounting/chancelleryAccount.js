@@ -28,6 +28,9 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
     // Positive amount: only bank is involved EXCEPT it is the jackpot
     if (info.jackpot) {
       return teamAccount.receiveFromChancellery(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
+        if (err) {
+          return callback(err);
+        }
         var entry = new chancelleryTransaction.Model();
         entry.gameId = gameplay.internal.gameId;
         entry.transaction = {
@@ -41,8 +44,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         chancelleryTransaction.book(entry, function (err) {
           return callback(err);
         });
-
-      })
+      });
     }
     else {
       return teamAccount.receiveFromBank(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
@@ -53,6 +55,9 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
   else {
     // Negative amount: team is charged, amount goes to chancellery
     return teamAccount.chargeToChancellery(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
+      if (err) {
+        return callback(err);
+      }
       var entry = new chancelleryTransaction.Model();
       entry.gameId = gameplay.internal.gameId;
       entry.transaction = {
@@ -66,9 +71,8 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
       chancelleryTransaction.book(entry, function (err) {
         return callback(err);
       });
-    })
+    });
   }
-
 }
 
 /**
@@ -137,6 +141,7 @@ function gamble(gameplay, team, amount, callback) {
 function getBalance(gameId, p1, p2) {
   var callback = p2;
   var ts = p1;
+  var i;
   if (_.isFunction(p1)) {
     callback = p1;
     ts = moment();
@@ -147,7 +152,7 @@ function getBalance(gameId, p1, p2) {
       return callback(err);
     }
     var saldo = 0;
-    for (var i = 0; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
       saldo += data[i].transaction.amount;
     }
     callback(err, {balance: saldo, entries: i});
@@ -168,7 +173,7 @@ function getAccountStatement(gameId, callback) {
       return callback(err);
     }
     callback(err, data);
-  })
+  });
 }
 
 

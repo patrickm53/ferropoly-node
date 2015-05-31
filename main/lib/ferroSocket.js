@@ -61,7 +61,7 @@ var FerroSocket = function (server) {
         if (err) {
           console.log('Invalid socket');
           socket.disconnect();
-          return
+          return;
         }
         console.log('Verified socket added for ' + data.gameId + ' : ' + socket.id);
         self.addSocket(socket, data.gameId);

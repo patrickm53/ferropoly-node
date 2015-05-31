@@ -73,8 +73,7 @@ function buyProperty(gameplay, property, team, callback) {
       }
       callback(err, retVal);
     });
-
-  })
+  });
 }
 
 /**
@@ -118,9 +117,8 @@ function resetProperty(gameId, property, reason, callback) {
         }
         callback(err);
       });
-
-    })
-  })
+    });
+  });
 }
 /**
  * Buy a building for a property
@@ -185,22 +183,6 @@ function buyBuilding(gameplay, property, team, callback) {
 }
 
 /**
- * This is the rent function when a team comes to a already sold property
- * @param gameplay
- * @param property
- * @param debitor
- * @param callback
- */
-function payRent(gameplay, property, debitor, callback) {
-  getPropertyValue(gameplay, property, function (err, info) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null);
-  });
-}
-
-/**
  * Pays the interest (normally every hour) for properties: their value. This function
  * just books it in the property account. The register is the one retrieved using
  * getRentRegister
@@ -216,6 +198,18 @@ function payInterest(gameplay, register, callback) {
     console.log('nothing to pay');
     return callback(null);
   }
+
+  var transactionCallback = function (err) {
+    if (err) {
+      console.error(err);
+      error = err;
+    }
+    t++;
+    if (t === register.length) {
+      callback(error);
+    }
+  };
+
   for (var i = 0; i < register.length; i++) {
     // Save a property transaction
     var pt = new propertyTransaction.Model();
@@ -229,16 +223,7 @@ function payInterest(gameplay, register, callback) {
       info: 'Zinsen ' + register[i].name
     };
 
-    propertyTransaction.book(pt, function (err) {
-      if (err) {
-        console.error(err);
-        error = err;
-      }
-      t++;
-      if (t === register.length) {
-        callback(error);
-      }
-    });
+    propertyTransaction.book(pt, transactionCallback);
   }
 }
 
@@ -315,7 +300,7 @@ function getAccountStatement(gameId, propertyId, p1, p2, p3) {
 
   propertyTransaction.getEntries(gameId, propertyId, tsStart, tsEnd, function (err, data) {
     callback(err, data);
-  })
+  });
 }
 
 /**
@@ -338,11 +323,12 @@ function getBalance(gameId, propertyId, p1, p2) {
       return callback(err);
     }
     var saldo = 0;
-    for (var i = 0; i < data.length; i++) {
+    var i;
+    for (i = 0; i < data.length; i++) {
       saldo += data[i].transaction.amount;
     }
     callback(err, {balance: saldo, entries: i});
-  })
+  });
 }
 
 /**
