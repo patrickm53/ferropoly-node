@@ -1,0 +1,27 @@
+//
+   Created by kc on 31.05.15.
+#stats-load-error
+  .container-fluid
+    .jumbotron
+      h1 Statistik
+      p
+      p Das Charts-Modul konnte nicht geladen werden. Bitte später versuchen, Danke.
+
+#stats-main
+
+  div(ng-controller='ferrostatsCtrl')
+    div(role='tabpanel')
+    ul.nav.nav-tabs(role='tablist')
+      li#tab-buy.active(role='presentation')
+        a(href='#' aria-controls='stats-possessions' role='tab' data-toggle='tab' ng-click='showStatsPanel("stats-possessions")') Vermögen
+      li#tab-possessions(role='presentation')
+        a(href='#' aria-controls='stats-income' role='tab' data-toggle='tab' ng-click='showStatsPanel("stats-income")') Einkommen
+    p
+
+    .tab-content
+      #stats-income.tab-pane.active(role='tabpanel')
+        include reception-stats-income
+
+      #stats-possessions.tap-pane(role='tabpanel')
+        include reception-stats-possessions
+

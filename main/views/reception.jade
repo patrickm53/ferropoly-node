@@ -7,7 +7,7 @@ block head
   script(src='/lodash/lodash.min.js')
   script(src='/socket.io/socket.io.js')
   script
-    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts' ];
+    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats' ];
     | var socketUrl = "
     != socketUrl
     | ";
@@ -31,20 +31,27 @@ block head
   script(src='/js/reception/reception-framework.js')
   script(src='/js/reception/ferropoly-socket.js')
   script(src='/js/reception/datastore.js')
+  script(src='/js/reception/ferrostats.js')
   script(src='/js/reception/activecall.js')
   script(src='/js/reception/teamaccountsCtrl.js')
   script(src='/js/reception/managecallCtrl.js')
   script(src='/js/reception/dashboardCtrl.js')
+  script(src='/js/reception/ferrostatsCtrl.js')
   link(rel='stylesheet', href='/css/reception.css', type='text/css')
   link(rel='stylesheet', href='/font-awesome/css/font-awesome.min.css', type='text/css')
 
 block navbar
   li
-    a(href='#dashboard' onclick="showPanel('#panel-main');") Übersicht
+    a(href='#' onclick="showPanel('#panel-main');") Übersicht
   li
-    a(href='#managecall' onclick="showPanel('#panel-managecall');") Anruf behandeln
+    a(href='#' onclick="showPanel('#panel-managecall');") Anruf behandeln
   li
-    a(href='#kontobuch' onclick="showPanel('#panel-teamaccounts');") Kontobuch
+    a(href='#' onclick="showPanel('#panel-map');") Karte
+  li
+    a(href='#' onclick="showPanel('#panel-stats');") Statistik
+  li
+    a(href='#' onclick="showPanel('#panel-teamaccounts');") Kontobuch
+
 
 block navbar-right
   li#online online
@@ -60,3 +67,7 @@ block content
       include reception-mc
     #panel-teamaccounts
       include reception-teamaccounts
+    #panel-map
+      include reception-map
+    #panel-stats
+      include reception-stats

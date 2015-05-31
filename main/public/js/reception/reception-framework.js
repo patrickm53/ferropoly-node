@@ -33,13 +33,22 @@ function showPanel(p) {
   $(p).show();
 }
 
+/**
+ * Function called when document is ready
+ */
 $(document).ready(function () {
   showPanel('#panel-main');
 });
 
-
-
+/**
+ * The ferropoly app object for the angular controllers
+ * @type {*|module}
+ */
 var ferropolyApp = angular.module('ferropolyApp', []);
+
+/**
+ * Filter function for the pagers
+ */
 ferropolyApp.filter('offset', function() {
   return function(input, start) {
     start = parseInt(start, 10);

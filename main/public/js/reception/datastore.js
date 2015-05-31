@@ -13,6 +13,7 @@
  * - events:                 changing, events of a team (local data only)
  * - authToken:              static, the authorisation token for the api
  * - rankingList:            changing, the ranking list of the game
+ * - incomeList:             changing (stats), income of all teams
  *
  * The data is alway held in this store, updating is triggered by the application.
  *
@@ -32,11 +33,15 @@ var DataStore = function (initData, socket) {
     console.log('onTeamAccount: ' + resp.cmd);
     switch (resp.cmd) {
       case 'onTransaction':
+        if (!self.data.teamAccountEntries) {
+          self.data.teamAccountEntries = [];
+        }
         self.data.teamAccountEntries.push(resp.data);
         console.log('received new team transaction');
         break;
       default:
         console.log('UNHANDLED: ' + resp.cmd);
+        break;
     }
   });
 
@@ -343,6 +348,9 @@ DataStore.prototype.getRankingList = function (callback) {
   // see https://api.jquery.com/jquery.get/
   $.get('/statistics/rankingList/' + this.getGameplay().internal.gameId, function (data) {
     if (data.status === 'ok') {
+      for (var i = 0; i < data.ranking.length; i++) {
+        data.ranking[i].teamName = self.teamIdToTeamName(data.ranking[i].teamId);
+      }
       self.data.rankingList = data.ranking;
       return callback(null, self.data.rankingList);
     }
@@ -356,5 +364,29 @@ DataStore.prototype.getRankingList = function (callback) {
     });
 };
 
+/**
+ * Get the current income list
+ * @param callback
+ */
+DataStore.prototype.getIncomeList = function (callback) {
+  var self = this;
+  console.log('start query for ranking list');
+  $.get('/statistics/income/' + this.getGameplay().internal.gameId, function (data) {
+    if (data.status === 'ok') {
+      for (var i = 0; i < data.info.length; i++) {
+        data.info[i].teamName = self.teamIdToTeamName(data.info[i].teamId);
+      }
+      self.data.incomeList = data.info;
+      return callback(null, self.data.incomeList);
+    }
+    else {
+      self.data.incomeList = [];
+      return callback(new Error(data.message));
+    }
+  })
+    .fail(function (error) {
+      callback(error);
+    });
+};
 
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view

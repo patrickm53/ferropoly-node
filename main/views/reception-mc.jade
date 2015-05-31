@@ -2,12 +2,12 @@
    Created by kc on 16.05.15.
 
 div(ng-controller='managecallCtrl')
-  include reception-managecall-confirmteam-modal
+  include reception-mc-confirmteam-modal
 
   div(ng-show='callPanel === 0')
-    include reception-managecall-selectteam
+    include reception-mc-selectteam
   div(ng-show='callPanel === 1')
-    include reception-managecall-action
+    include reception-mc-action
   div(ng-show='callPanel === 2')
     // Reception ManaceCall Main
     include reception-mc-m

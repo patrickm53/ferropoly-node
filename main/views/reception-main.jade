@@ -13,6 +13,6 @@ div(ng-controller='dashboardCtrl')
           table.table
             tr(ng-repeat='t in rankingList | orderBy:"rank"')
               td {{t.rank}}
-              td {{teamIdToTeamName(t.teamId)}}
+              td {{t.teamName}}
               td {{t.asset}}
 
