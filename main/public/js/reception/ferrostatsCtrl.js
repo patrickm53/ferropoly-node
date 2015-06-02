@@ -8,6 +8,13 @@ ferropolyApp.controller('ferrostatsCtrl', ferrostatsCtrl);
 function ferrostatsCtrl($scope, $http) {
   $scope.rankingList = [];
   $scope.incomeList = [];
+  $scope.refreshHandler = $scope.showStatsIncome;
+
+  $scope.refresh = function() {
+    if($scope.refreshHandler) {
+      $scope.refreshHandler();
+    }
+  };
 
   /**
    * Show the income statistics
@@ -83,6 +90,7 @@ function ferrostatsCtrl($scope, $http) {
       $('#' + $scope.panels[i].id).hide().removeClass('active');
       if ($scope.panels[i].id === panel) {
         $scope.panels[i].handler();
+        $scope.refreshHandler = $scope.panels[i].handler;
       }
     }
     $('#' + panel).show();
@@ -92,7 +100,7 @@ function ferrostatsCtrl($scope, $http) {
 
   // Set the startup panel
   $scope.showStatsPanel('stats-possessions');
-};
+}
 
 ferrostatsCtrl.$inject = ['$scope', '$http'];
 

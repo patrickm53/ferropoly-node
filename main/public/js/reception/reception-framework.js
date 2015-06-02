@@ -10,15 +10,17 @@
  * @param p
  */
 function showPanel(p) {
+  var activeCallAlert = $('#active-call');
+
   for (var i = 0; i < receptionPanels.length; i++) {
     $(receptionPanels[i]).hide();
   }
   // Panel with warning about active call
   if (activeCall.isActive()) {
-    $('#active-call').show();
+    activeCallAlert.show();
   }
   else {
-    $('#active-call').hide();
+    activeCallAlert.hide();
   }
   // There are some things to be done when activating a panel
   switch(p) {
@@ -27,7 +29,11 @@ function showPanel(p) {
       break;
 
     case '#panel-managecall':
-      $('#active-call').hide();
+      activeCallAlert.hide();
+      break;
+
+    case '#panel-stats':
+      angular.element('#ferrostats-ctrl').scope().refresh();
       break;
   }
   $(p).show();
