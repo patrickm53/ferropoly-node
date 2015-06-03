@@ -7,7 +7,6 @@
 ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.teams = dataStore.getTeams();
 
-
   // as we need fast access to the teams name, we cache the names locally
   $scope.teamNames = {};
   for (var i = 0; i < $scope.teams.length; i++) {
@@ -18,12 +17,24 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
   console.log($scope.filter);
   $scope.entries = dataStore.getTeamAccountEntries();
 
+  /**
+   * Set the team, get entries, set the panel
+   * @param teamId
+   */
   $scope.setTeam = function (teamId) {
+    $('#account-undefined').removeClass('active');
+    for (var i = 0; i < $scope.teams.length; i++){
+      $('#account-' + $scope.teams[i].uuid).removeClass('active');
+    }
+    $('#account-' + teamId).addClass('active');
     console.log('set team Id: ' + teamId);
     $scope.entries = dataStore.getTeamAccountEntries(teamId);
     console.log('entries: ' + $scope.entries.length);
   };
 
+  /**
+   * Socket.io handler, updating the values
+   */
   ferropolySocket.on('teamAccount', function () {
     // Update scope variable
     $scope.entries = dataStore.getTeamAccountEntries();
