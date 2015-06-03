@@ -6,6 +6,10 @@ block head
   script(src='/js/indexmctrl.js')
   link(rel='stylesheet', href='/css/index.css',  type='text/css')
 
+block navbar-right
+  li
+    a(href='/about') Hilfe / Info
+
 block content
   div(ng-app='indexApp' ng-controller='indexCtrl')
     h1 Willkommen beim Ferropoly!
