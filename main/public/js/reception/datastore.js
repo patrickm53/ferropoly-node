@@ -127,6 +127,7 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   // see https://api.jquery.com/jquery.get/
   $.get('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId, function (data) {
     if (data.status === 'ok') {
+      console.log('/teamAccount ok');
       if (!teamId) {
         // All entries were retrieved, replace them completely
         self.data.teamAccountEntries = data.accountData;
@@ -158,6 +159,7 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
       console.log(data);
     })
     .always(function () {
+      console.log('updateTeamAccountEntries.always()');
       if (callback) {
         callback();
       }
@@ -170,6 +172,10 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
  */
 DataStore.prototype.getTeamAccountEntries = function (teamId) {
   console.log('getTeamAccountEntries for: ' + teamId);
+  if (!this.data.teamAccountEntries) {
+    this.data.teamAccountEntries = [];
+  }
+
   if (!teamId) {
     return this.data.teamAccountEntries;
   }

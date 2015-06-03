@@ -5,8 +5,8 @@
 'use strict';
 
 ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope, $http) {
-
   $scope.teams = dataStore.getTeams();
+
 
   // as we need fast access to the teams name, we cache the names locally
   $scope.teamNames = {};
@@ -29,4 +29,14 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
     $scope.entries = dataStore.getTeamAccountEntries();
     $scope.$apply();
   });
+
+
+  /**
+   * Refresh view, needed when entering it
+   */
+  $scope.refreshTeamAccounts = function() {
+    console.log('refreshTeamAccounts!');
+    $scope.setTeam(undefined);
+    $scope.$apply();
+  };
 }]);

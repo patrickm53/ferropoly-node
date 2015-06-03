@@ -25,7 +25,7 @@ function showPanel(p) {
   // There are some things to be done when activating a panel
   switch(p) {
     case '#panel-teamaccounts':
-      dataStore.updateTeamAccountEntries();
+      dataStore.updateTeamAccountEntries(undefined, angular.element('#team-accounts-ctrl').scope().refreshTeamAccounts);
       break;
 
     case '#panel-managecall':
