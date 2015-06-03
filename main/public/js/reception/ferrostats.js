@@ -4,6 +4,14 @@
  */
 'use strict';
 
+/**
+ * Initialisations of the statistics part to be done when document is ready
+ */
+$(document).ready(function () {
+  console.log('hiding #stats-main');
+  $('#stats-load-error').show();
+  $('#stats-main').hide();
+});
 /***
  * Constructor
  * @constructor
@@ -11,8 +19,6 @@
 var FerroStats = function () {
   var self = this;
   this.graphApiAvailable = false;
-  $('#stats-load-error').show();
-  $('#stats-main').hide();
 
   /**
    * Called, when the graph api was loaded
@@ -20,6 +26,7 @@ var FerroStats = function () {
   function onGraphApiLoaded() {
     console.log('Google Grap API loaded');
     self.graphApiAvailable = true;
+    console.log('showing #stats-main');
     $('#stats-load-error').hide();
     $('#stats-main').show();
   }

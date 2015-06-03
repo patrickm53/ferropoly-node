@@ -43,7 +43,9 @@ function showPanel(p) {
  * Function called when document is ready
  */
 $(document).ready(function () {
+  console.log('document ready');
   showPanel('#panel-main');
+
 });
 
 /**
