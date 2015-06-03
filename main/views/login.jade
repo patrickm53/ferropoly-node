@@ -1,12 +1,20 @@
 extends layout
 
+block head
+  link(rel='stylesheet', href='/css/login.css')
+  script.
+    $(document).ready(function () {
+      var i = (new Date().getSeconds() % 5) + 1;
+      $('body').addClass('bg' + i);
+    });
+
+block navbar-right
+  li
+    a(href='http://www.ferropoly.ch') Impressum / Kontakt
 
 block content
 
-  .container-fluid
-    .row
-      .col-xs-1.col-sm-3.col-md-4.col-lg-4
-      .col-xs-10.col-sm-6.col-md-4.col-lg-4
+  .login-box.ls-box-shape
         form(action='login' method='post')
           h3 Ferropoly Login
           label(for='inputUserName' class='sr-only') Benutzername
@@ -23,4 +31,4 @@ block content
                 img(src='images/google-chrome-icon.png')
             .col-xs-10.col-md-9
               | Diese Anwendung ist für den Chrome-Browser optimiert. Mit anderen Browsern können Probleme auftreten.
-      .col-xs-1.col-sm-3.col-md-4.col-lg-4
+

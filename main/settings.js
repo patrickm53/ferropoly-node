@@ -10,6 +10,7 @@ var pkg = require('./../package.json'),
 
 var settings = {
   name: pkg.name,
+  appName: pkg.title,
   version: pkg.version,
   debug: (process.env.NODE_ENV !== 'production' || process.env.DEBUG) ? true : false
 };

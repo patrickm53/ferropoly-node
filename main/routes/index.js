@@ -17,7 +17,7 @@ if (settings.minifedjs) {
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  res.render('index', {title: 'Ferropoly', ngController: 'indexCtrl', ngApp: 'indexApp', ngFile: ngFile});
+  res.render('index', {title: 'Ferropoly Spielauswertung', ngController: 'indexCtrl', ngApp: 'indexApp', ngFile: ngFile});
 });
 
 router.get('/gameplays', function(req, res) {
