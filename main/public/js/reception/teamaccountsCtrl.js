@@ -41,7 +41,13 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
     $scope.$apply();
   });
 
-
+  $scope.getTransactionInfoText = function(entry) {
+    var retVal = entry.transaction.info;
+    if (entry.transaction.origin.category === 'team') {
+      retVal += ' (' + $scope.teamNames[entry.transaction.origin.uuid] + ')';
+    }
+    return retVal;
+  };
   /**
    * Refresh view, needed when entering it
    */
