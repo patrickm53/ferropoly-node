@@ -45,12 +45,12 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
       return 'Spiel ist ' + moment(gp.scheduling.gameEndTs).fromNow(false) + ' zu Ende gegangen.';
     }
     if (moment(gp.scheduling.gameStartTs).isAfter(moment())) {
-      return 'Spiel startet erst ' + moment(gp.scheduling.gameStartTs).fromNow(false) + '.';
+      return 'Spiel startet ' + moment(gp.scheduling.gameStartTs).fromNow(false) + '.';
     }
     if (moment().isBetween(moment(gp.scheduling.gameStartTs), moment(gp.scheduling.gameEndTs))) {
-      return 'Spiel läuft ' + moment(gp.scheduling.gameStartTs).fromNow(false) + '.';
+      return 'Spiel startete ' + moment(gp.scheduling.gameStartTs).fromNow(false) + '.';
     }
-    return ('x');
+    return ('');
   };
 
   // When document ready, load gameplays
