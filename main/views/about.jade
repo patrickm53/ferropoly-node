@@ -4,14 +4,51 @@
 extends Layout
 
 block content
-  h1 Ferropoly - diese Seite wird dann mal noch schöner :-)
-  h2 Hilfe & Infos
-  | Hilfe zur Software wie auch ein Kontaktformular und weitere Infos zum Spiel sind auf der Webseite &nbsp;
-  a(href='http://www.ferropoly.ch') www.ferropoly.ch
-  | &nbsp; zu finden.
-  p Todo: Version der App hier anzeigen
-  h2 Nutzungsbedingungen
-  | Die Nutzung dieser Software unterliegt den AGB, welche bei der Anmeldung zu diesem Dienst akzeptiert wurden und auf&nbsp;
-  a(href='http://www.ferropoly.ch') www.ferropoly.ch
-  | &nbsp;publiziert sind.
-  p Eine gewerbliche Benutzung der Software (Organisation von Spielen gegen Vergütung über den effektiven Spesen) ist ohne ausdrückliche Genehmigung des Autors explizit untersagt.
+  row
+    .col-md-4
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Hilfe & Infos
+        .panel-body
+          | Hilfe zur Software, Spielregeln und weitere Infos zum Spiel sind auf der Webseite &nbsp;
+          a(href='http://www.ferropoly.ch') www.ferropoly.ch
+          | &nbsp; zu finden.
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title über dieses Programm
+        .panel-body
+          p © 2015 Christian Kuster, CH-8342 Wernetshausen
+          p
+            a(href='mailto:info@ferropoly.ch') info@ferropoly.ch
+          p Version: #{versionInfo}
+          p
+          p Source-Code und Bugtracking auf GitHub:
+          a(href='https://github.com/ancasicolica/ferropoly-main') https://github.com/ancasicolica/ferropoly-main
+
+    .col-md-4
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Nutzungsbedingungen
+        .panel-body
+          | Die Nutzung dieser Software unterliegt den AGB, welche bei der Anmeldung zu diesem Dienst akzeptiert wurden und auf&nbsp;
+          a(href='http://www.ferropoly.ch') www.ferropoly.ch
+          | &nbsp;publiziert sind.
+          h4 Die wichtigesten Punkte:
+          ul
+            li Die Durchführung des Spiels erfolgt für Teilnehmer wie Organisator auf eigene Gefahr. Der Betreiber der Webseite kann u.a. für Datenverlust und Serverausfälle nicht haftbar gemacht werden.
+            li Eine gewerbliche Benutzung der Software (Organisation von Spielen gegen Vergütung über den effektiven Spesen) ist ohne ausdrückliche Genehmigung des Autors explizit untersagt.
+    .col-md-4
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Fairplay
+        .panel-body
+          p Diese Software darf gratis für die Durchführung von Spielen verwendet werden. Hinter dieser Software steckt viel Arbeit und für den Betrieb der Server wende ich einen Teil meines Sackgeldes wie auch meiner Freizeit auf.
+          p Deshalb würde ich mich darüber sehr freuen, wenn Dir ein ausgetragenes Spiel den Preis einer Tageskarte wert wäre.
+          p
+          form(action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top")
+           input(type="hidden" name="cmd" value="_s-xclick")
+           input(type="hidden" name="hosted_button_id" value="CNR7L9MLQJT5W")
+           input(type="image" src="https://www.paypalobjects.com/de_DE/CH/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="Jetzt einfach, schnell und sicher online bezahlen – mit PayPal.")
+           img(alt="" border="0" src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif" width="1" height="1")
+
+
