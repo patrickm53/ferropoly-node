@@ -4,14 +4,6 @@
  */
 'use strict';
 
-/**
- * Initialisations of the statistics part to be done when document is ready
- */
-$(document).ready(function () {
-  console.log('hiding #stats-main');
-  $('#stats-load-error').show();
-  $('#stats-main').hide();
-});
 /***
  * Constructor
  * @constructor
@@ -20,6 +12,16 @@ var FerroStats = function () {
   var self = this;
   this.graphApiAvailable = false;
 
+  this.loadChartApi();
+};
+/**
+ * Load the charts api
+ */
+FerroStats.prototype.loadChartApi = function() {
+  var self = this;
+  if (this.graphApiAvailable) {
+    return;
+  }
   /**
    * Called, when the graph api was loaded
    */
@@ -42,7 +44,6 @@ var FerroStats = function () {
       console.log(exception);
     });
 };
-
 /**
  * Draw the income chart
  * @param data
@@ -142,3 +143,13 @@ FerroStats.prototype.drawIncomeDetailChart = function (register, chartId) {
   chart.draw(data, options);
 };
 var ferroStats = new FerroStats();
+
+/**
+ * Initialisations of the statistics part to be done when document is ready
+ */
+$(document).ready(function () {
+  console.log('hiding #stats-main');
+  $('#stats-load-error').show();
+  $('#stats-main').hide();
+  ferroStats.loadChartApi();
+});

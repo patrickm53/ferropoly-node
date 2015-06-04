@@ -11,6 +11,7 @@ function ferrostatsCtrl($scope, $http) {
   $scope.refreshHandler = $scope.showStatsIncome;
 
   $scope.refresh = function() {
+    ferroStats.loadChartApi();
     if($scope.refreshHandler) {
       $scope.refreshHandler();
     }
