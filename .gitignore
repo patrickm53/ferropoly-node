@@ -34,4 +34,7 @@ node_modules
 # Webstorm
 .idea
 
+# Generated HTML
+main/views/*.html
+
 

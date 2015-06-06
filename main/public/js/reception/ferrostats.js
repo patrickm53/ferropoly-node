@@ -11,9 +11,8 @@
 var FerroStats = function () {
   var self = this;
   this.graphApiAvailable = false;
-
-  this.loadChartApi();
 };
+
 /**
  * Load the charts api
  */
