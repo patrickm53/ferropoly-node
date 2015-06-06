@@ -36,11 +36,11 @@ function Marketplace(scheduler) {
       console.log('Marketplace: onInterest');
       self.payRents(event.gameId, function (err) {
         if (err) {
-          console.log('ERROR, interests not payed! Message: ' + err.message);
+          console.log('ERROR, interests not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        console.log('Timed interests payed');
+        console.log('Timed interests paid');
         event.callback(null, event);
       });
     });
@@ -49,13 +49,13 @@ function Marketplace(scheduler) {
      */
     this.scheduler.on('start', function (event) {
       console.log('Marketplace: onStart');
-      self.payInterests(event.gameId, function (err) {
+      self.payInitialAsset(event.gameId, function (err) {
         if (err) {
-          console.log('ERROR, initial interests not payed! Message: ' + err.message);
+          console.log('ERROR, initial assets not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        console.log('Timed interests payed');
+        console.log('Initial assets paid');
         event.callback(null, event);
       });
     });
@@ -66,11 +66,11 @@ function Marketplace(scheduler) {
       console.log('Marketplace: onEnd');
       self.payFinalRents(event.gameId, function (err) {
         if (err) {
-          console.log('ERROR, final interests not payed! Message: ' + err.message);
+          console.log('ERROR, final interests not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        console.log('Timed interests payed');
+        console.log('Timed interests paid');
         event.callback(null, event);
       });
     });
@@ -224,6 +224,38 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         propertyAccount.buyBuilding(gp, properties[i], team, buyBuildingCallback);
       }
     });
+  });
+};
+
+/**
+ * Pays the initial assets of a game
+ * @param gameId
+ * @param callback
+ */
+Marketplace.prototype.payInitialAsset = function(gameId, callback) {
+  gameCache.getGameData(gameId, function (err, res) {
+    if (err) {
+      console.error(err);
+      return callback(err);
+    }
+    var gp = res.gameplay;
+    var teams = _.valuesIn(res.teams);
+    var paid = 0;
+    var error = null;
+
+    var payInitialAssetCallback = function (err) {
+      if (err) {
+        error = err;
+      }
+      paid++;
+      if (paid === teams.length) {
+        callback(error);
+      }
+    };
+
+    for (var i = 0; i < teams.length; i++) {
+      teamAccount.receiveFromBank(teams[i].uuid, gameId, gp.gameParams.startCapital, 'Startkapital', payInitialAssetCallback);
+    }
   });
 };
 
