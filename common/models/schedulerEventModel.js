@@ -122,11 +122,12 @@ function requestEventSave(event, serverId, callback) {
       // Now try to save and read it back again immediately
       ev.save(function (err, savedEvent) {
         if (err) {
+          console.log('Error while saving event:' + err.message);
           // another one tried to save as well? Wait a second, try again the complete sequence
           _.delay(function (e, s, c) {
               requestEventSave(e, s, c);
             },
-            1000,
+            _.random(100,2000),
             event, serverId, callback);
           return;
         }
