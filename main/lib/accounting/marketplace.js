@@ -248,7 +248,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       return callback(null);
     }
 
-    var payInterestsCallback = function (err) {
+    var payRentsCallback = function (err) {
       if (err) {
         error = err;
       }
@@ -258,8 +258,8 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       }
     };
 
-    for (var i = 0; i < gp.gameParams.interestCyclesAtEndOfGame; i++) {
-      self.payInterests(gameId, payInterestsCallback);
+    for (var i = 0; i < gp.gameParams.payRentsCallback; i++) {
+      self.payRents(gameId, payRentsCallback);
     }
   });
 };
