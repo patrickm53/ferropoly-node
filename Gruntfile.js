@@ -32,7 +32,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '../ferropoly-editor/common/lib',
-            src: '**',
+            src: '*.js',
             dest: 'common/lib/',
             flatten: true,
             filter: 'isFile',
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '../ferropoly-editor/common/models',
-            src: '**',
+            src: '*.js',
             dest: 'common/models/',
             flatten: true,
             filter: 'isFile',
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '../ferropoly-editor/common/models/accounting',
-            src: '**',
+            src: '*.js',
             dest: 'common/models/accounting',
             flatten: true,
             filter: 'isFile',
@@ -62,7 +62,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '../ferropoly-editor/common/routes',
-            src: '**',
+            src: '*.js',
             dest: 'common/routes/',
             flatten: true,
             filter: 'isFile',
