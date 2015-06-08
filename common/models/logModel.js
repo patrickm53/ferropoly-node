@@ -6,6 +6,7 @@
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
 var moment = require('moment');
+var logger = require('../lib/logger').getLogger('locationModel');
 
 /**
  * The mongoose schema for a property
@@ -47,7 +48,7 @@ var addEntry = function (gameId, category, text, callback) {
  * @param callback
  */
 var deleteAllEntries = function (gameId, callback) {
-  console.log('Removing all entries in the log');
+  logger.info('Removing all entries in the log');
   Log.find({gameId: gameId}).remove().exec(callback);
 };
 

@@ -9,6 +9,8 @@ var mongoose = require('mongoose');
 var uuid = require('node-uuid');
 var moment = require('moment');
 var _ = require('lodash');
+var logger = require('../lib/logger').getLogger('schedulerEventModel');
+
 /**
  * The mongoose schema for a scheduleEvent
  */
@@ -49,7 +51,7 @@ function saveEvents(events, callback) {
         nbSaved++;
 
         if (nbSaved === events.length) {
-          console.log('Events saved');
+          logger.info('Events saved');
           callback(error);
         }
       });
@@ -67,7 +69,7 @@ function dumpEvents(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  console.log('Removing all existing scheduler event information for ' + gameId);
+  logger.info('Removing all existing scheduler event information for ' + gameId);
   scheduleEventModel.remove({gameId: gameId}, function (err) {
     callback(err);
   });
@@ -122,7 +124,7 @@ function requestEventSave(event, serverId, callback) {
       // Now try to save and read it back again after a short, random period
       ev.save(function (err, savedEvent) {
         if (err) {
-          console.log('Error while saving event:' + err.message);
+          logger.info('Error while saving event:' + err.message);
           // another one tried to save as well? Wait a second, try again the complete sequence
           _.delay(function (e, s, c) {
               requestEventSave(e, s, c);
@@ -133,7 +135,7 @@ function requestEventSave(event, serverId, callback) {
         }
         // This delay avoids collisions between two parallel servers
         var delay = _.random(250, 3000);
-        console.log('requestEventSave: delay: ' + delay + ' for event ' + savedEvent._id);
+        logger.info('requestEventSave: delay: ' + delay + ' for event ' + savedEvent._id);
         _.delay(function (_eventId, _serverId, _callback) {
             scheduleEventModel.find()
               .where('_id').equals(_eventId)
@@ -172,7 +174,7 @@ function saveAfterHandling(event, callback) {
 
   event.save(function (err, savedEvent) {
     if (err) {
-      console.log('Error while saving, start delay: ' + err.message);
+      logger.info('Error while saving, start delay: ' + err.message);
       // concurrency error? It is important, that it is saved!
       _.delay(function (e, c) {
           saveAfterHandling(e, c);
@@ -181,7 +183,7 @@ function saveAfterHandling(event, callback) {
         event, callback);
       return;
     }
-    console.log('Event marked as finished');
+    logger.info('Event marked as finished');
     callback(null, savedEvent);
   });
 }

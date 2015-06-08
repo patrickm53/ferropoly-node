@@ -13,6 +13,7 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var uuid = require('node-uuid');
 var pbkdf2 = require('pbkdf2-sha256');
+var logger = require('../lib/logger').getLogger('userModel');
 
 /**
  * The mongoose schema for an user
@@ -124,7 +125,7 @@ var updateUser = function (user, password, callback) {
         if (foundUser) {
           return callback(new Error('User with this email-address already exists, retrieve first!'));
         }
-        console.log('New user:' + user.personalData.email);
+        logger.info('New user:' + user.personalData.email);
         if (!password) {
           return callback(new Error('Password missing'));
         }
@@ -143,7 +144,7 @@ var updateUser = function (user, password, callback) {
       var editedUser = docs[0];
       copyUser(user, editedUser);
       // Update User
-      console.log('Update user:' + user.personalData.email);
+      logger.info('Update user:' + user.personalData.email);
       if (password) {
         generatePasswordHash(editedUser, password);
       }

@@ -8,6 +8,7 @@
 
 var LocalStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
+var logger = require('./logger').getLogger('authStrategy');
 var users;
 
 /**
@@ -27,7 +28,7 @@ var createHash = function (password) {
  */
 var strategy = new LocalStrategy(
   function (username, password, done) {
-    console.log('Login attempt: ' + username);
+    logger.info('Login attempt: ' + username);
     users.getUserByMailAddress(username, function (err, foundUser) {
       if (err || !foundUser) {
         return done(null, false);
@@ -49,7 +50,7 @@ var strategy = new LocalStrategy(
  * @param done
  */
 var serializeUser = function (user, done) {
-  console.log("serializeUser:" + user);
+  logger.info("serializeUser:" + user);
   done(null, user.personalData.email);
 };
 
@@ -60,7 +61,7 @@ var serializeUser = function (user, done) {
  * @returns {*}
  */
 var deserializeUser = function (user, done) {
-  console.log("deserializeUser:" + user);
+  logger.info("deserializeUser:" + user);
   return users.getUserByMailAddress(user, function (err, foundUser) {
     if (err || !foundUser) {
       return done("not logged in", null);

@@ -5,9 +5,10 @@
  */
 'use strict';
 
-
 var mongoose = require('mongoose');
 var moment = require('moment');
+var logger = require('../../lib/logger').getLogger('chancelleryTransaction');
+
 /**
  * The mongoose schema for a team account
  */
@@ -50,7 +51,7 @@ function dumpChancelleryData(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  console.log('Removing all chancellery information for ' + gameId);
+  logger.info('Removing all chancellery information for ' + gameId);
   ChancelleryTransaction.remove({gameId: gameId}, function (err) {
     callback(err);
   })
@@ -100,7 +101,7 @@ function getBalance(gameId, tsStart, tsEnd, callback) {
       }
     }
   ], function (err, result) {
-    console.log(result);
+    logger.info(result);
     callback(err, result);
   });
 }

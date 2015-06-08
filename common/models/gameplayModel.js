@@ -15,6 +15,7 @@ var uuid = require('node-uuid');
 var Moniker = require('moniker');
 var finalizedGameplays = [];
 var moment = require('moment-timezone');
+var logger = require('../lib/logger').getLogger('gameplayModel');
 
 /**
  * The mongoose schema for an user
@@ -231,7 +232,7 @@ var removeGameplay = function (gp, callback) {
   if (!gp || !gp.internal || !gp.internal.gameId) {
     return callback(new Error('Invalid gameplay'));
   }
-  console.log('Removing gameplay ' + gp.internal.gameId + ' (' + gp.gamename + ')');
+  logger.info('Removing gameplay ' + gp.internal.gameId + ' (' + gp.gamename + ')');
   Gameplay.remove({'internal.gameId': gp.internal.gameId}, function (err) {
     callback(err);
   });
@@ -256,7 +257,7 @@ function finalizeTime(date, time) {
     return newDate.toDate();
   }
   catch (e) {
-    console.log('ERROR in finalizeTime: ' + e);
+    logger.info('ERROR in finalizeTime: ' + e);
     return new Date();
   }
 }
@@ -289,7 +290,7 @@ var finalize = function (gameId, ownerEmail, callback) {
       if (err) {
         return callback(err);
       }
-      console.log('Gameplay finalized: ' + gpSaved.internal.gameId);
+      logger.info('Gameplay finalized: ' + gpSaved.internal.gameId);
       callback(null, gpSaved);
     });
   })
@@ -303,7 +304,7 @@ var finalize = function (gameId, ownerEmail, callback) {
 var isFinalized = function (gameId, callback) {
   if (finalizedGameplays[gameId]) {
     // return cached value
-    console.log('return cached value');
+    logger.info('return cached value');
     return true;
   }
   Gameplay.find({'internal.gameId': gameId}, function (err, docs) {
@@ -329,10 +330,10 @@ var updateGameplay = function (gp, callback) {
 
   if (!gp.save) {
     // If this not a gameplay object, we have to load the existing game and update it
-    console.log('nod a gameplay, converting');
+    logger.info('nod a gameplay, converting');
     return getGameplay(gp.internal.gameId, gp.internal.owner, function (err, loadedGp) {
       if (err) {
-        console.log('Error while loading gameplay: ' + err.message);
+        logger.info('Error while loading gameplay: ' + err.message);
         return (err);
       }
       // we need to assign the data now to this gameplay loaded
@@ -359,7 +360,7 @@ var updateGameplay = function (gp, callback) {
     if (err) {
       return callback(err);
     }
-    console.log('Gameplay update: ' + gpSaved.internal.gameId + ' #' + nbAffected);
+    logger.info('Gameplay update: ' + gpSaved.internal.gameId + ' #' + nbAffected);
     callback(null, gpSaved);
   });
 };

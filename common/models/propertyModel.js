@@ -8,6 +8,8 @@
 
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
+var logger = require('../lib/logger').getLogger('propertyModel');
+
 /**
  * The mongoose schema for a property
  */
@@ -75,7 +77,7 @@ var updateProperties = function (properties, callback) {
     for (var i = 0; i < properties.length; i++) {
       properties[i].save(function (err) {
         if (err) {
-          console.log('ERROR in updateProperties: ' + err.message);
+          logger.info('ERROR in updateProperties: ' + err.message);
         }
         nb++;
         if (nb === properties.length) {
@@ -167,12 +169,12 @@ var updatePositionInPriceList = function (gameId, propertyId, position, callback
       return callback(err);
     }
     if (docs.length === 0) {
-      console.log('Did not find location with uuid ' + propertyId);
+      logger.info('Did not find location with uuid ' + propertyId);
       return callback(new Error('location not available'));
     }
     docs[0].pricelist.positionInPriceRange = position;
     docs[0].save(function (err, savedProperty) {
-      console.log(savedProperty.location.name + ' updated');
+      logger.info(savedProperty.location.name + ' updated');
       callback(err, savedProperty);
     });
   });
@@ -290,7 +292,7 @@ var removePropertyFromGameplay = function (gameId, locationId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  console.log('Removing one property for ' + gameId);
+  logger.info('Removing one property for ' + gameId);
   Property.remove({gameId: gameId, 'location.uuid': locationId}, function (err) {
     callback(err);
   })
@@ -320,7 +322,7 @@ var removeAllPropertiesFromGameplay = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  console.log('Removing all properties for ' + gameId);
+  logger.info('Removing all properties for ' + gameId);
   Property.remove({gameId: gameId}, function (err) {
     callback(err);
   })

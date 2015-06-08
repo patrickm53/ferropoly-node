@@ -8,6 +8,7 @@
  */
 
 var mongoose = require('mongoose');
+var logger = require('../lib/logger').getLogger('locationModel');
 
 /**
  * The mongoose schema for a location
@@ -36,7 +37,7 @@ var Location = mongoose.model('Location', locationSchema);
 var getAllLocations = function (callback) {
   Location.find({}).lean().exec(function (err, docs) {
     if (err) {
-      console.log(err.message);
+      logger.error('Location.find failed: ', err);
       return callback(err);
     }
     var locations = [];
@@ -63,7 +64,7 @@ var getAllLocationsForMap = function (map, callback) {
   }
   Location.find(query).lean().exec(function (err, docs) {
     if (err) {
-      console.log(err.message);
+      logger.error('LocationFind failed', err);
       return callback(err);
     }
     var locations = [];

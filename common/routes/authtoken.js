@@ -7,13 +7,14 @@ var express = require('express');
 var router = express.Router();
 var session = require('express-session');
 var uuid = require('node-uuid');
+var logger = require('../lib/logger').getLogger('authToken');
 
 /* GET the authtoken, which you only can get when logged in */
 router.get('/', function (req, res) {
   if (!req.session.authToken) {
     req.session.authToken = uuid.v4();
   }
-  console.log(req.session.AuthToken);
+  logger.info(req.session.AuthToken);
 
   res.send({authToken: req.session.authToken, user: req.session.passport.user});
 });

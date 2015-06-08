@@ -6,6 +6,7 @@
  */
 
 var mongoose = require('mongoose');
+var logger = require('./logger').getLogger('ferropolyDb');
 
 var db = undefined;
 var mongooseThis = undefined;
@@ -20,7 +21,7 @@ module.exports = {
   },
 
   init: function (settings, callback) {
-    console.log('Connecting to MongoDb');
+    logger.info('Connecting to MongoDb');
 
     // Already initialized
     if (db) {
@@ -40,22 +41,21 @@ module.exports = {
     db = mongoose.connection;
 
     db.on('error', function (err) {
-      console.log('MongoDb Connection Error:');
-      console.log(err);
-      console.log('Killing myself, since I got a disconnect from the repo... (did you start mongodb?)');
+      logger.error('MongoDb Connection Error:', err);
+      logger.info('Killing myself, since I got a disconnect from the repo... (did you start mongodb?)');
       /*eslint no-process-exit:0*/
       process.exit(1);
     });
 
 
     db.once('open', function cb() {
-      console.log('yay!');
+      logger.info('yay!');
       return callback(null, db);
     });
   },
 
   close: function (callback) {
-    console.log('Disconnecting MongoDb');
+    logger.info('Disconnecting MongoDb');
     if (mongooseThis) {
       mongooseThis.disconnect(function (err) {
         db = undefined;

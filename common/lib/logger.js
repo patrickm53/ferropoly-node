@@ -26,7 +26,7 @@ var loggerSettings = {
 var logger = new winston.Logger();
 winston.setLevels(loggerSettings.levels);
 winston.addColors(loggerSettings.colors);
-logger.add(winston.transports.Console, {level: 'debug'});
+logger.add(winston.transports.Console, {level: 'debug', colorize:true});
 
 /**
  * Core logging function

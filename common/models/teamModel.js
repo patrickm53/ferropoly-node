@@ -7,6 +7,8 @@
 
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
+var logger = require('../lib/logger').getLogger('teamModel');
+
 /**
  * The mongoose schema for a property
  */
@@ -103,7 +105,7 @@ var deleteTeam = function (teamId, callback) {
  * @param callback
  */
 var deleteAllTeams = function (gameId, callback) {
-  console.log('Removing all teams for ' + gameId);
+  logger.info('Removing all teams for ' + gameId);
   Team.find({gameId: gameId}).remove().exec(function (err) {
     callback(err);
   });

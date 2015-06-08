@@ -11,6 +11,7 @@ var url = require('url');
 var router = express.Router();
 var settings;
 var _ = require('lodash');
+var logger = require('../lib/logger').getLogger('login');
 
 /**
  * Get the login page
@@ -57,7 +58,7 @@ module.exports = {
     app.get('*', function (req, res, next) {
       var uri = url.parse(req.url).pathname;
       if (uri === '/signup') {
-        console.log('Signup !');
+        logger.info('Signup !');
         return next();
       }
       if (uri === '/configuration.js') {
@@ -77,7 +78,7 @@ module.exports = {
       }
       if (!req.session.passport.user) {
         // valid user in session
-        console.log(uri + " redirected in login.js to login");
+        logger.info(uri + " redirected in login.js to login");
         req.session.targetUrl = req.url;
         res.redirect('/login');
       } else {

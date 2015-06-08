@@ -5,9 +5,10 @@
  */
 'use strict';
 
-
 var mongoose = require('mongoose');
 var moment = require('moment');
+var logger = require('../../lib/logger').getLogger('propertyTransaction');
+
 /**
  * The mongoose schema for a team account
  */
@@ -52,7 +53,7 @@ function dumpAccounts(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  console.log('Removing all account information for ' + gameId);
+  logger.info('Removing all account information for ' + gameId);
   PropertyAccountTransaction.remove({gameId: gameId}, function (err) {
     callback(err);
   })
