@@ -7,7 +7,7 @@
 'use strict';
 var express = require('express');
 var path = require('path');
-var logger = require('morgan');
+var morgan = require('morgan');
 //var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var settings = require('./settings');
@@ -38,14 +38,14 @@ var propertiesRoute = require('./routes/properties');
 var aboutRoute = require('./routes/about');
 var app = express();
 var ferroSocket = require('./lib/ferroSocket');
-
+var logger = require('../common/lib/logger').getLogger('main:app');
 /**
  * Initialize DB connection, has to be only once for all models
  */
 ferropolyDb.init(settings, function (err) {
   if (err) {
-    console.log('Failed to init ferropolyDb');
-    console.error(err);
+    logger.warning('Failed to init ferropolyDb');
+    logger.error(err);
     return;
   }
 
@@ -59,7 +59,7 @@ ferropolyDb.init(settings, function (err) {
 
   // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-  app.use(logger('dev'));
+  app.use(morgan('dev'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
  // app.use(cookieParser());
@@ -107,7 +107,7 @@ ferropolyDb.init(settings, function (err) {
   var marketplace = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
   gameScheduler.update(function(err) {
     if (err) {
-      console.log('Error while updating scheduler');
+      logger.info('Error while updating scheduler');
     }
   });
 
@@ -141,13 +141,13 @@ ferropolyDb.init(settings, function (err) {
   });
 
   server.listen(settings.server.port, settings.server.host, function () {
-    console.log('%s: Node server started on %s:%d ...',
+    logger.info('%s: Node server started on %s:%d ...',
       new Date(Date.now()), app.get('ip'), app.get('port'));
   });
 
-  console.log('Ferropoly Copyright (C) 2015 Christian Kuster, CH-8342 Wernetshausen');
-  console.log('This program comes with ABSOLUTELY NO WARRANTY;');
-  console.log('This is free software, and you are welcome to redistribute it');
-  console.log('under certain conditions; see www.ferropoly.ch for details.');
-  console.log('Ferropoly Main server listening on port ' + app.get('port'));
+  logger.info('Ferropoly Copyright (C) 2015 Christian Kuster, CH-8342 Wernetshausen');
+  logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
+  logger.info('This is free software, and you are welcome to redistribute it');
+  logger.info('under certain conditions; see www.ferropoly.ch for details.');
+  logger.info('Ferropoly Main server listening on port ' + app.get('port'));
 });
