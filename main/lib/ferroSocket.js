@@ -112,41 +112,20 @@ FerroSocket.prototype.removeSocket = function (socket) {
 FerroSocket.prototype.registerChannels = function (socket) {
   var self = this;
 
-  socket.on('propertyAccount', function (data) {
-    console.log('propertyAccount request received:' + data.cmd);
-    data.gameId = socket.gameId;
-    data.response = function (channel, resp) {
-      self.emitToClients(socket.gameId, channel, resp);
-    };
-    self.emit('propertyAccount', data);
-  });
-
-  socket.on('chancelleryAccount', function (data) {
-    console.log('chancelleryAccount request received:' + data.cmd);
-    data.gameId = socket.gameId;
-    data.response = function (channel, resp) {
-      self.emitToClients(socket.gameId, channel, resp);
-    };
-    self.emit('chancelleryAccount', data);
-  });
-
-  socket.on('properties', function (data) {
-    console.log('properties request received:' + data.cmd);
-    data.gameId = socket.gameId;
-    data.response = function (channel, resp) {
-      self.emitToClients(socket.gameId, channel, resp);
-    };
-    self.emit('properties', data);
-  });
-
-  socket.on('marketplace', function (data) {
-    console.log('marketplace request received:' + data.cmd);
-    data.gameId = socket.gameId;
-    data.response = function (channel, resp) {
-      self.emitToClients(socket.gameId, channel, resp);
-    };
-    self.emit('marketplace', data);
-  });
+  function registerChannel(channelName) {
+    socket.on(channelName, function (data) {
+      console.log(channelName + ' request received:' + data.cmd);
+      data.gameId = socket.gameId;
+      data.response = function (channel, resp) {
+        self.emitToClients(socket.gameId, channel, resp);
+      };
+      self.emit(channelName, data);
+    });
+  }
+  registerChannel('propertyAccount');
+  registerChannel('chancelleryAccount');
+  registerChannel('properties');
+  registerChannel('marketplace');
 
   // Say the socket that we are operative
   socket.emit('initialized', {result: true});

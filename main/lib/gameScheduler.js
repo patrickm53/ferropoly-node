@@ -15,14 +15,13 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var schedule = require('node-schedule');
 var gameCache = require('./gameCache');
-var moment = require('moment');
 
 /**
  * Constructor of the scheduler
  * @constructor
  */
 function Scheduler(_settings) {
-  console.log(moment().format("dddd, MMMM Do YYYY, H:mm:ss") + ': initializing scheduler');
+  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': initializing scheduler');
   EventEmitter.call(this);
 
   this.settings = _settings;
@@ -49,7 +48,7 @@ util.inherits(Scheduler, EventEmitter);
  */
 Scheduler.prototype.handleEvent = function (channel, event) {
   var self = this;
-  console.log(moment().format("dddd, MMMM Do YYYY, H:mm:ss") + ': Handling event ' + channel);
+  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Handling event ' + channel);
   eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
     if (err) {
       console.error(err);
@@ -83,7 +82,7 @@ Scheduler.prototype.handleEventCallback = function (err, event) {
       console.error('Error while saving handled event:' + err.message);
       return;
     }
-    console.log(moment().format("dddd, MMMM Do YYYY, H:mm:ss") + ': Event handling finished');
+    console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event handling finished');
   });
 };
 
@@ -92,7 +91,7 @@ Scheduler.prototype.handleEventCallback = function (err, event) {
  * @param callback
  */
 Scheduler.prototype.update = function (callback) {
-  console.log(moment().format("dddd, MMMM Do YYYY, H:mm:ss") + ': Scheduler update');
+  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Scheduler update');
   var self = this;
   var i;
   eventRepo.getUpcomingEvents(function (err, events) {

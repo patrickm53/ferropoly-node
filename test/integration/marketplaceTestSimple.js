@@ -161,7 +161,7 @@ describe('Marketplace integration tests', function () {
         expect(info.property.pricelist.price).to.be(price);
         expect(info.amount).to.be(price);
 
-        console.log('Team ' + gameData.teams[teamIndex].uuid + ' bought ' + pricelist[index].uuid + ' ' + pricelist[index].location.name)
+        console.log('Team ' + gameData.teams[teamIndex].uuid + ' bought ' + pricelist[index].uuid + ' ' + pricelist[index].location.name);
 
         gameData.teams[teamIndex].expectedMoney -= price;
         gameData.teams[teamIndex].expectedEntries++;

@@ -12,7 +12,6 @@ var chancelleryAccount = require('./chancelleryAccount');
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
-var ferroSocket = require('../ferroSocket');
 
 var marketplace;
 
@@ -26,7 +25,6 @@ function Marketplace(scheduler) {
   EventEmitter.call(this);
 
   this.scheduler = scheduler;
-  this.ferroSocket = ferroSocket.get();
 
   if (this.scheduler) {
     /**
