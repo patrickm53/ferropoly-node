@@ -119,7 +119,7 @@ function requestEventSave(event, serverId, callback) {
         reserved: new Date()
       };
 
-      // Now try to save and read it back again immediately
+      // Now try to save and read it back again after a short, random period
       ev.save(function (err, savedEvent) {
         if (err) {
           console.log('Error while saving event:' + err.message);
@@ -127,22 +127,29 @@ function requestEventSave(event, serverId, callback) {
           _.delay(function (e, s, c) {
               requestEventSave(e, s, c);
             },
-            _.random(100,2000),
+            _.random(100, 2000),
             event, serverId, callback);
           return;
         }
-        scheduleEventModel.find()
-          .where('_id').equals(savedEvent._id)
-          .where('handler.id').equals(serverId)
-          .exec(function (err, data) {
-            if (err) {
-              return callback(err);
-            }
-            if (!data || data.length === 0) {
-              return callback(null, null);
-            }
-            callback(null, data[0]);
-          });
+        // This delay avoids collisions between two parallel servers
+        var delay = _.random(250, 3000);
+        console.log('requestEventSave: delay: ' + delay + ' for event ' + savedEvent._id);
+        _.delay(function (_eventId, _serverId, _callback) {
+            scheduleEventModel.find()
+              .where('_id').equals(_eventId)
+              .where('handler.id').equals(_serverId)
+              .exec(function (err, data) {
+                if (err) {
+                  return _callback(err);
+                }
+                if (!data || data.length === 0) {
+                  return _callback(null, null);
+                }
+                _callback(null, data[0]);
+              });
+          },
+          delay,
+          savedEvent._id, serverId, callback);
       });
     });
 }

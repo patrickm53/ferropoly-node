@@ -48,21 +48,21 @@ util.inherits(Scheduler, EventEmitter);
  */
 Scheduler.prototype.handleEvent = function (channel, event) {
   var self = this;
-  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Handling event ' + channel);
+  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Handling event ' + event._id + ' for ' + channel);
   eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
     if (err) {
-      console.error(err);
+      console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Error while handling event: ' + event._id + ' message: ' + err.message);
       return;
     }
     if (!ev) {
-      console.log('Event already handled by other instance');
+      console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event already handled by other instance: ' + event._id + ' for ' + channel);
       return;
     }
+    console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': event handled by this instance: ' + event._id + ' for ' + channel);
     // Now emit the event. The event callback is attached, without calling this callback, the
     // event won't be marked as solved!
     ev.callback = self.handleEventCallback;
     self.emit(channel, ev);
-
   });
 };
 
