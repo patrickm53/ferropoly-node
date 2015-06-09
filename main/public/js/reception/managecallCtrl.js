@@ -36,6 +36,9 @@ function managecallCtrl($scope, $http) {
     dataStore.pushEvent(activeCall.getCurrentTeam().uuid, text);
   }
 
+  $scope.getTeamColor = function(teamId) {
+    return dataStore.getTeamColor(teamId);
+  };
   /**
    * Show the correct panel for call management
    * @param panel

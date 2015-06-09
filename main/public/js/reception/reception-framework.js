@@ -4,7 +4,6 @@
  */
 'use strict';
 
-
 /**
  * Show the correct panel using JQuery. receptionPanels is defined in the main jade file
  * @param p

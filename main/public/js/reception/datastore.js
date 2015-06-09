@@ -28,6 +28,11 @@ var DataStore = function (initData, socket) {
   this.socket = socket;
   var self = this;
 
+  this.teamColors = [
+    'blue', 'brown', 'darkgreen', 'gold', 'red', 'olive', 'peru', 'cyan', 'indianred', 'khaki',
+    'greenyellow', 'plum', 'skyblue', 'navy', 'darkred', 'lightsalmon', 'lime', 'fuchsia', 'indigo', 'chocolate'
+  ];
+
   // Incoming team account messages
   this.socket.on('teamAccount', function (resp) {
     console.log('onTeamAccount: ' + resp.cmd);
@@ -98,6 +103,18 @@ var DataStore = function (initData, socket) {
  */
 DataStore.prototype.getTeams = function () {
   return this.data.teams;
+};
+/**
+ * Returns the color of the team
+ * @param teamId
+ * @returns {*}
+ */
+DataStore.prototype.getTeamColor = function(teamId) {
+ var index =  _.findIndex(this.data.teams, {'uuid':teamId});
+  if (index > -1 && index < this.teamColors.length) {
+    return this.teamColors[index];
+  }
+  return 'black';
 };
 /**
  * Converts the teamId to the teams name

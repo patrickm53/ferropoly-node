@@ -30,6 +30,10 @@
     right: 25px;
 }
 
+#color-tag {
+    position: absolute;
+    right: 25px;
+}
 .finish-call-button {
     display: inline-block;
     position: absolute;
