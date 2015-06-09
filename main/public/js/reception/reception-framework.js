@@ -35,6 +35,10 @@ function showPanel(p) {
     case '#panel-stats':
       angular.element('#ferrostats-ctrl').scope().refresh();
       break;
+
+    case '#panel-map':
+      refreshMapPanel();
+      break;
   }
   $(p).show();
 }

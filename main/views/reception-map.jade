@@ -1,8 +1,15 @@
 //
    Created by kc on 31.05.15.
+div(ng-controller='mapCtrl')
+  #map-load-error(ng-hide='mapApiLoaded()')
+    .row
+      .jumbotron
+        h1 Karte
+        p Leider gab es ein Problem beim Laden der Google-Maps API.
 
-.jumbotron
-  h1 Karte
-  p Hier wird die Karte mit den Standorten der Teams, den Orten auf der Preisliste und deren Status angezeigt.
-  p
-  p Kommt bald...
+  #map-main(ng-show='mapApiLoaded()')
+    .row
+      .col-xs-md-8.col-md-8
+         #map_canvas
+      .col-xs-md-4.col-md-4
+         h1 hier folgen infos
