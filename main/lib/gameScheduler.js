@@ -15,13 +15,14 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var schedule = require('node-schedule');
 var gameCache = require('./gameCache');
+var logger = require('../../common/lib/logger').getLogger('gameScheduler');
 
 /**
  * Constructor of the scheduler
  * @constructor
  */
 function Scheduler(_settings) {
-  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': initializing scheduler');
+  logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': initializing scheduler');
   EventEmitter.call(this);
 
   this.settings = _settings;
@@ -32,7 +33,7 @@ function Scheduler(_settings) {
     // Clear cache at end of the day
     gameCache.refreshCache(function (err) {
       if (err) {
-        console.error(err);
+        logger.error(err);
       }
     });
   });
@@ -48,17 +49,17 @@ util.inherits(Scheduler, EventEmitter);
  */
 Scheduler.prototype.handleEvent = function (channel, event) {
   var self = this;
-  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Handling event ' + event._id + ' for ' + channel);
+  logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Handling event ' + event._id + ' for ' + channel);
   eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
     if (err) {
-      console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Error while handling event: ' + event._id + ' message: ' + err.message);
+      logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Error while handling event: ' + event._id + ' message: ' + err.message);
       return;
     }
     if (!ev) {
-      console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event already handled by other instance: ' + event._id + ' for ' + channel);
+      logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event already handled by other instance: ' + event._id + ' for ' + channel);
       return;
     }
-    console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': event handled by this instance: ' + event._id + ' for ' + channel);
+    logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': event handled by this instance: ' + event._id + ' for ' + channel);
     // Now emit the event. The event callback is attached, without calling this callback, the
     // event won't be marked as solved!
     ev.callback = self.handleEventCallback;
@@ -74,15 +75,15 @@ Scheduler.prototype.handleEvent = function (channel, event) {
  */
 Scheduler.prototype.handleEventCallback = function (err, event) {
   if (err) {
-    console.log('Error in event handler callback: ' + err.message);
+    logger.info('Error in event handler callback: ' + err.message);
     return;
   }
   eventRepo.saveAfterHandling(event, function (err) {
     if (err) {
-      console.error('Error while saving handled event:' + err.message);
+      logger.error('Error while saving handled event:' + err.message);
       return;
     }
-    console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event handling finished');
+    logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event handling finished');
   });
 };
 
@@ -91,7 +92,7 @@ Scheduler.prototype.handleEventCallback = function (err, event) {
  * @param callback
  */
 Scheduler.prototype.update = function (callback) {
-  console.log(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Scheduler update');
+  logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Scheduler update');
   var self = this;
   var i;
   eventRepo.getUpcomingEvents(function (err, events) {
@@ -109,20 +110,20 @@ Scheduler.prototype.update = function (callback) {
       var now = moment();
 
       var handlerFunction = function (ev) {
-        console.log('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
+        logger.info('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
         self.handleEvent(ev.type, ev);
       };
 
       for (i = 0; i < events.length; i++) {
         var event = events[i];
-        console.log(events[i]);
+        logger.info(events[i]);
 
         if (moment(event.timestamp) < now) {
-          console.log('Emit an old event:' + event._id);
+          logger.info('Emit an old event:' + event._id);
           self.handleEvent(event.type, event);
         }
         else {
-          console.log('Push event in joblist:' + event._id);
+          logger.info('Push event in joblist:' + event._id);
           self.jobs.push(schedule.scheduleJob(event.timestamp, handlerFunction.bind(null, event)));
         }
       }
@@ -135,8 +136,8 @@ Scheduler.prototype.update = function (callback) {
     self.updateJob = schedule.scheduleJob(moment().add({minutes: 181, seconds: 3}).toDate(), function () {
       self.update(function (err) {
         if (err) {
-          console.log('SCHEDULER UPDATE FAILED!');
-          console.error(err);
+          logger.info('SCHEDULER UPDATE FAILED!');
+          logger.error(err);
         }
       });
     });

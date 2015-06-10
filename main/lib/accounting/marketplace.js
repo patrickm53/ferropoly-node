@@ -12,6 +12,7 @@ var chancelleryAccount = require('./chancelleryAccount');
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var logger = require('../../../common/lib/logger').getLogger('marketplace');
 
 var marketplace;
 
@@ -31,14 +32,14 @@ function Marketplace(scheduler) {
      * This is the 'interest' event launched by the gameScheduler
      */
     this.scheduler.on('interest', function (event) {
-      console.log('Marketplace: onInterest');
+      logger.info('Marketplace: onInterest');
       self.payRents(event.gameId, function (err) {
         if (err) {
-          console.log('ERROR, interests not paid! Message: ' + err.message);
+          logger.info('ERROR, interests not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        console.log('Timed interests paid');
+        logger.info('Timed interests paid');
         event.callback(null, event);
       });
     });
@@ -46,14 +47,14 @@ function Marketplace(scheduler) {
      * This is the 'start' event launched by the gameScheduler. Pay interests once.
      */
     this.scheduler.on('start', function (event) {
-      console.log('Marketplace: onStart');
+      logger.info('Marketplace: onStart');
       self.payInitialAsset(event.gameId, function (err) {
         if (err) {
-          console.log('ERROR, initial assets not paid! Message: ' + err.message);
+          logger.info('ERROR, initial assets not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        console.log('Initial assets paid');
+        logger.info('Initial assets paid');
         event.callback(null, event);
       });
     });
@@ -61,14 +62,14 @@ function Marketplace(scheduler) {
      * This is the 'end' event launched by the gameScheduler. Pay the final rents & interests
      */
     this.scheduler.on('end', function (event) {
-      console.log('Marketplace: onEnd');
+      logger.info('Marketplace: onEnd');
       self.payFinalRents(event.gameId, function (err) {
         if (err) {
-          console.log('ERROR, final interests not paid! Message: ' + err.message);
+          logger.info('ERROR, final interests not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        console.log('Timed interests paid');
+        logger.info('Timed interests paid');
         event.callback(null, event);
       });
     });
@@ -99,7 +100,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
     }
     gameCache.getGameData(gameId, function (err, res) {
       if (err) {
-        console.error(err);
+        logger.error(err);
         return callback(err);
       }
       var gp = res.gameplay;
@@ -113,10 +114,10 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       // Now check if the property is still available or sold. There are 3 cases to handle
       if (!property.gamedata || !property.gamedata.owner || property.gamedata.owner.length === 0) {
         // CASE 1: property is available, the team is going to buy it
-        console.log(property.location.name + ' is available');
+        logger.info(property.location.name + ' is available');
         propertyAccount.buyProperty(gp, property, team, function (err, info) {
           if (err) {
-            console.error(err);
+            logger.error(err);
             return callback(err);
           }
           teamAccount.chargeToBank(teamId, gameId, info.amount, 'Kauf ' + property.location.name, function (err) {
@@ -131,7 +132,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       //------------------------------------------------------------------------------------------------------------------
       else if (property.gamedata.owner === teamId) {
         // CASE 2: property belongs to the team which wants to buy it, do nothing
-        console.log(property.location.name + ' already belongs the team');
+        logger.info(property.location.name + ' already belongs the team');
         return callback(null, {property: property, amount: 0});
       }
       //------------------------------------------------------------------------------------------------------------------
@@ -142,9 +143,9 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
             return callback(err);
           }
           teamAccount.chargeToAnotherTeam(gameId, teamId, property.gamedata.owner, val.amount, 'Miete ' + property.location.name, function (err, info) {
-            console.log(property.location.name + ' is already sold to another team');
+            logger.info(property.location.name + ' is already sold to another team');
             if (err) {
-              console.error(err);
+              logger.error(err);
               return callback(err);
             }
             return callback(null, {property: property, owner: property.gamedata.owner, amount: info.amount});
@@ -169,13 +170,13 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
     }
 
     if (properties.length === 0) {
-      console.log('nothing to build');
+      logger.info('nothing to build');
       return callback(null, {amount: 0, log: []});
     }
 
     gameCache.getGameData(gameId, function (err, res) {
       if (err) {
-        console.error(err);
+        logger.error(err);
         return callback(err);
       }
       var gp = res.gameplay;
@@ -191,7 +192,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
       // Callback when buying building
       var buyBuildingCallback = function (err, info) {
         if (err) {
-          console.log(err);
+          logger.info(err);
         }
         else {
           log.push(info);
@@ -209,7 +210,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
           else {
             teamAccount.chargeToBank(teamId, gameId, totalAmount, {info: 'Hausbau', parts: log}, function (err) {
               if (err) {
-                console.error(err);
+                logger.error(err);
                 return callback(err);
               }
               return callback(null, {amount: totalAmount, log: log});
@@ -233,7 +234,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
 Marketplace.prototype.payInitialAsset = function(gameId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return callback(err);
     }
     var gp = res.gameplay;
@@ -267,7 +268,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return callback(err);
     }
     var gp = res.gameplay;
@@ -302,7 +303,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
 Marketplace.prototype.payInterests = function (gameId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return callback(err);
     }
     var gp = res.gameplay;
@@ -335,12 +336,12 @@ Marketplace.prototype.payInterests = function (gameId, callback) {
 Marketplace.prototype.payRentsForTeam = function (gp, team, callback) {
   propertyAccount.getRentRegister(gp, team, function (err, info) {
     if (err) {
-      console.log(err);
+      logger.info(err);
       return callback(err);
     }
     propertyAccount.payInterest(gp, info.register, function (err) {
       if (err) {
-        console.log(err);
+        logger.info(err);
         return callback(err);
       }
       if (info.totalAmount > 0) {
@@ -375,11 +376,11 @@ Marketplace.prototype.payRents = function (gameId, callback) {
       if (err) {
         return callback(err);
       }
-      console.log('Building allowed again for ' + nbAffected.toString() + ' buildings');
+      logger.info('Building allowed again for ' + nbAffected.toString() + ' buildings');
 
       gameCache.getGameData(gameId, function (err, res) {
         if (err) {
-          console.error(err);
+          logger.error(err);
           return callback(err);
         }
         var gp = res.gameplay;
@@ -421,7 +422,7 @@ Marketplace.prototype.payRents = function (gameId, callback) {
 Marketplace.prototype.chancellery = function (gameId, teamId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return callback(err);
     }
     var gp = res.gameplay;
@@ -448,7 +449,7 @@ Marketplace.prototype.chancellery = function (gameId, teamId, callback) {
 Marketplace.prototype.chancelleryGamble = function (gameId, teamId, amount, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return callback(err);
     }
     var gp = res.gameplay;

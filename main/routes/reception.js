@@ -13,6 +13,7 @@ var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
 var authTokenManager = require('../lib/authTokenManager');
+var logger = require('../../common/lib/logger').getLogger('routes:reception');
 
 /* GET the reception of all games */
 router.get('*', function (req, res) {
@@ -37,7 +38,7 @@ router.get('*', function (req, res) {
 
       authTokenManager.getNewToken(req.session.passport.user, function (err, token) {
         if (err) {
-          console.error(err);
+          logger.error(err);
         }
         req.session.ferropolyToken = token;
 

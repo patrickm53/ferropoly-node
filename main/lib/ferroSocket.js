@@ -6,6 +6,7 @@
 'use strict';
 var EventEmitter = require('events').EventEmitter;
 var authTokenManager = require('./authTokenManager');
+var logger = require('../../common/lib/logger').getLogger('ferroSocket');
 
 var _ = require('lodash');
 var util = require('util');
@@ -24,32 +25,32 @@ var FerroSocket = function (server) {
   this.sockets = {};
 
   this.io.on('connect', function(socket) {
-    console.log('io connect event');
+    logger.info('io connect event');
   });
   this.io.on('connection', function(socket) {
-    console.log('io connection event');
+    logger.info('io connection event');
   });
   this.io.on('connect_error', function(obj) {
-    console.log('io connect_error event');
-    console.log(obj);
+    logger.info('io connect_error event');
+    logger.info(obj);
   });
   this.io.on('connect_timeout', function(socket) {
-    console.log('io connect_timeout event');
+    logger.info('io connect_timeout event');
   });
   this.io.on('reconnect', function(socket) {
-    console.log('io reconnect event');
+    logger.info('io reconnect event');
   });
   this.io.on('reconnect_attempt', function(socket) {
-    console.log('io reconnect_attempt event');
+    logger.info('io reconnect_attempt event');
   });
   this.io.on('reconnecting', function(socket) {
-    console.log('io reconnecting event');
+    logger.info('io reconnecting event');
   });
   this.io.on('reconnect_error', function(socket) {
-    console.log('io reconnect_error event');
+    logger.info('io reconnect_error event');
   });
   this.io.on('reconnect_failed', function(socket) {
-    console.log('io reconnect_failed event');
+    logger.info('io reconnect_failed event');
   });
   /**
    * New client connects, verifiy its identity and if suceeded, add to the trusted
@@ -59,11 +60,11 @@ var FerroSocket = function (server) {
     socket.on('identify', function (data) {
       authTokenManager.verifyToken(data.user, data.authToken, function (err) {
         if (err) {
-          console.log('Invalid socket');
+          logger.info('Invalid socket');
           socket.disconnect();
           return;
         }
-        console.log('Verified socket added for ' + data.gameId + ' : ' + socket.id);
+        logger.info('Verified socket added for ' + data.gameId + ' : ' + socket.id);
         self.addSocket(socket, data.gameId);
         self.registerChannels(socket);
       });
@@ -71,7 +72,7 @@ var FerroSocket = function (server) {
     socket.emit('identify', {});
 
     socket.on('disconnect', function () {
-      console.log('disconnected socket ' + socket.id);
+      logger.info('disconnected socket ' + socket.id);
       self.removeSocket(socket);
 
     });
@@ -91,7 +92,7 @@ FerroSocket.prototype.addSocket = function (socket, gameId) {
   if (!_.includes(this.sockets[gameId], socket)) {
     socket.gameId = gameId;
     this.sockets[gameId].push(socket);
-    console.log('Socketmanager: new socket added ' + socket.id);
+    logger.info('Socketmanager: new socket added ' + socket.id);
   }
 };
 
@@ -114,7 +115,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
 
   function registerChannel(channelName) {
     socket.on(channelName, function (data) {
-      console.log(channelName + ' request received:' + data.cmd);
+      logger.info(channelName + ' request received:' + data.cmd);
       data.gameId = socket.gameId;
       data.response = function (channel, resp) {
         self.emitToClients(socket.gameId, channel, resp);
@@ -137,7 +138,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
  * @param data
  */
 FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
-  console.log('ferroSockets.emitToClients: ' + gameId + ' ' + channel);
+  logger.info('ferroSockets.emitToClients: ' + gameId + ' ' + channel);
   if (this.sockets[gameId]) {
     for (var i = 0; i < this.sockets[gameId].length; i++) {
       this.sockets[gameId][i].emit(channel, data);

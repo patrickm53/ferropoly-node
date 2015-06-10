@@ -10,6 +10,8 @@
 
 var teamModel = require('../../common/models/teamModel');
 var gpModel = require('../../common/models/gameplayModel');
+var logger = require('../../common/lib/logger').getLogger('gameCache');
+
 var moment = require('moment');
 var _ = require('lodash');
 
@@ -22,7 +24,7 @@ module.exports = {
     }
     // not in cache
     gpModel.getGameplay(gameId, null, function (err, gp) {
-      console.log('GP Query for ' + gameId);
+      logger.info('GP Query for ' + gameId);
       if (err) {
         return callback(err);
       }
@@ -41,7 +43,7 @@ module.exports = {
 
         // check if we have to add it to cache or not
         if (moment().isBetween(gp.scheduling.gameStartTs, gp.scheduling.gameEndTs)) {
-          console.log('GP added to cache');
+          logger.info('GP added to cache');
           gameCache[gameId] = result;
         }
 
@@ -59,7 +61,7 @@ module.exports = {
    * @param callback
    */
   refreshCache: function (callback) {
-    console.log('Refreshing gameCache');
+    logger.info('Refreshing gameCache');
     gpModel.getAllGameplays(function (err, gameplays) {
 
       gameCache = {};

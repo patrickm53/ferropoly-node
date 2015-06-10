@@ -8,6 +8,8 @@ var express = require('express');
 var router = express.Router();
 var chancellery = require('../lib/accounting/chancelleryAccount');
 var gameCache = require('../lib/gameCache');
+var logger = require('../../common/lib/logger').getLogger('routes:chancellery');
+
 var _ = require('lodash');
 
 /**
@@ -51,7 +53,7 @@ router.get('/play/:gameId/:teamId', function (req, res) {
   }
   gameCache.getGameData(req.params.gameId, function (err, data) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return res.send({status: 'error', message: err.message});
     }
     var gp = data.gameplay;
@@ -70,7 +72,7 @@ router.get('/play/:gameId/:teamId', function (req, res) {
  * Gambling
  */
 router.post('/gamble/:gameId/:teamId', function (req, res) {
-  console.log(req.body);
+  logger.info(req.body);
   if (!req.body.authToken) {
     return res.send({status: 'error', message: 'Permission denied (1)'});
   }
@@ -86,7 +88,7 @@ router.post('/gamble/:gameId/:teamId', function (req, res) {
   }
   gameCache.getGameData(req.params.gameId, function (err, data) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return res.send({status: 'error', message: err.message});
     }
     var gp = data.gameplay;

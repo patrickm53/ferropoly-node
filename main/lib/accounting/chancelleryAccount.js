@@ -13,6 +13,7 @@ var chancelleryTransaction = require('../../../common/models/accounting/chancell
 var teamAccount = require('./teamAccount');
 var _ = require('lodash');
 var moment = require('moment');
+
 /**
  * Internal function: Books the chancellery event in the chancellery and the teams account
  * @param gameplay

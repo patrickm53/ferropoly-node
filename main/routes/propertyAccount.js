@@ -9,6 +9,8 @@ var express = require('express');
 var router = express.Router();
 var propertyAccount = require('../lib/accounting/propertyAccount');
 var gameCache = require('../lib/gameCache');
+var logger = require('../../common/lib/logger').getLogger('routes:propertyAccount');
+
 /**
  * Get all acount Info for a team
  */
@@ -19,7 +21,7 @@ router.get('/getRentRegister/:gameId/:teamId', function (req, res) {
 
   gameCache.getGameData(req.params.gameId, function (err, data) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return res.send({status: 'error', message: err.message});
     }
     var gp = data.gameplay;

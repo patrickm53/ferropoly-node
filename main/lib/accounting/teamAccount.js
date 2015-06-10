@@ -7,6 +7,8 @@
 var _ = require('lodash');
 var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
 var moment = require('moment');
+var logger = require('../../../common/lib/logger').getLogger('teamAccount');
+
 var ferroSocket;
 /**
  * Pays the interest for one team
@@ -147,7 +149,7 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
     });
   }
   catch (e) {
-    console.error(e);
+    logger.error(e);
     callback(e);
   }
 }

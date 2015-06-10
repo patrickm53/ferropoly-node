@@ -15,6 +15,8 @@ var propWrap = require('../propertyWrapper');
 var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
 var _ = require('lodash');
 var moment = require('moment');
+var logger = require('../../../common/lib/logger').getLogger('propertyAccount');
+
 var ferroSocket;
 
 /**
@@ -28,7 +30,7 @@ function buyProperty(gameplay, property, team, callback) {
 
   if (!(!property.gamedata || !property.gamedata.owner || property.gamedata.owner === '')) {
     // This property already belongs to someone, we do not accept it
-    console.warn('Can not buy property ' + property.location.name + ', it is not free');
+    logger.warn('Can not buy property ' + property.location.name + ', it is not free');
     return callback(new Error('Property not free'));
   }
 
@@ -61,7 +63,7 @@ function buyProperty(gameplay, property, team, callback) {
 
     propertyTransaction.book(pt, function (err) {
       if (err) {
-        console.error(err);
+        logger.error(err);
       }
 
       if (ferroSocket) {
@@ -87,7 +89,7 @@ function buyProperty(gameplay, property, team, callback) {
 function resetProperty(gameId, property, reason, callback) {
   getBalance(gameId, property.uuid, function (err, info) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return callback(err);
     }
     property.gamedata.buildingEnabled = false;
@@ -96,7 +98,7 @@ function resetProperty(gameId, property, reason, callback) {
 
     propWrap.updateProperty(property, function (err) {
       if (err) {
-        console.error(err);
+        logger.error(err);
         return callback(err);
       }
 
@@ -113,7 +115,7 @@ function resetProperty(gameId, property, reason, callback) {
 
       propertyTransaction.book(pt, function (err) {
         if (err) {
-          console.error(err);
+          logger.error(err);
         }
         callback(err);
       });
@@ -168,7 +170,7 @@ function buyBuilding(gameplay, property, team, callback) {
 
     propertyTransaction.book(pt, function (err) {
       if (err) {
-        console.error(err);
+        logger.error(err);
       }
       if (ferroSocket) {
         ferroSocket.emitToClients(gameplay.internal.gameId, 'propertyAccount', {
@@ -195,13 +197,13 @@ function payInterest(gameplay, register, callback) {
   var error = null;
   if (register.length === 0) {
     // nothing to pay
-    console.log('nothing to pay');
+    logger.info('nothing to pay');
     return callback(null);
   }
 
   var transactionCallback = function (err) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       error = err;
     }
     t++;
@@ -356,7 +358,7 @@ function getPropertyValue(gameplay, property, callback) {
     var factor = 1;
     if ((properties.length > 1) && (sameGroup === properties.length)) {
       // all properties in a group belong the same team, pay more!
-      console.log('Properties in same group, paying more!');
+      logger.info('Properties in same group, paying more!');
       factor = gameplay.gameParams.rentFactors.allPropertiesOfGroup || 2;
       retVal.allPropertiesOfGroup = true;
     }
@@ -406,7 +408,7 @@ function getBuildingPrice(property) {
  * @param req
  */
 var socketCommandHandler = function (req) {
-  console.log('propertyAccount socket handler: ' + req.cmd);
+  logger.info('propertyAccount socket handler: ' + req.cmd);
   switch (req.cmd.name) {
     case 'getAccountStatement':
       getAccountStatement(req.gameId, req.propertyId, req.start, req.end, function (err, data) {

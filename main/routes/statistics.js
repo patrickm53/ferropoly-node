@@ -9,6 +9,8 @@ var router = express.Router();
 var teamAccount = require('../lib/accounting/teamAccount');
 var propertyAccount = require('../lib/accounting/propertyAccount');
 var gameCache = require('../lib/gameCache');
+var logger = require('../../common/lib/logger').getLogger('routes:statistics');
+
 var _ = require('lodash');
 
 /**
@@ -36,7 +38,7 @@ router.get('/income/:gameId', function (req, res) {
 
   gameCache.getGameData(req.params.gameId, function (err, data) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return res.send({status: 'error', message: err.message});
     }
     var gp = data.gameplay;

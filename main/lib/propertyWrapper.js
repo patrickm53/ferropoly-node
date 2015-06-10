@@ -6,6 +6,7 @@
  */
 'use strict';
 var pm = require('../../common/models/propertyModel');
+var logger = require('../../common/lib/logger').getLogger('propertyWrapper');
 
 module.exports = {
   /**
@@ -27,7 +28,7 @@ module.exports = {
   getTeamProperties: function (gameId, teamId, callback) {
     pm.getPropertiesForTeam(gameId, teamId, function (err, properties) {
       if (err) {
-        console.error(err);
+        logger.error(err);
         return callback(err);
       }
       callback(null, properties);
