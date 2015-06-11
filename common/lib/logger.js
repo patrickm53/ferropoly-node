@@ -23,8 +23,8 @@ var loggerSettings = {
     debug: 'grey'
   }};
 
-var logger = new winston.Logger({ levels: loggerSettings.levels });
-//winston.setLevels(loggerSettings.levels);
+var logger = new winston.Logger();
+winston.setLevels(loggerSettings.levels);
 winston.addColors(loggerSettings.colors);
 logger.add(winston.transports.Console, {level: 'debug', colorize:true});
 

@@ -33,6 +33,7 @@ var marketplaceRoute = require('./routes/marketplace');
 var statisticsRoute = require('./routes/statistics');
 var teamAccountRoute = require('./routes/teamAccount');
 var propertyAccountRoute = require('./routes/propertyAccount');
+var travelLogRoute = require('./routes/travellog');
 var chancelleryRoute = require('./routes/chancellery');
 var propertiesRoute = require('./routes/properties');
 var aboutRoute = require('./routes/about');
@@ -96,6 +97,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/teamAccount', teamAccountRoute);
   app.use('/propertyAccount', propertyAccountRoute);
   app.use('/chancellery', chancelleryRoute);
+  app.use('/travellog', travelLogRoute);
   authtoken.init(app);
 
   app.set('port', settings.server.port);

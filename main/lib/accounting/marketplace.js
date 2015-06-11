@@ -13,6 +13,7 @@ var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var logger = require('../../../common/lib/logger').getLogger('marketplace');
+var travelLog = require('../../../common/models/travelLogModel');
 
 var marketplace;
 
@@ -91,6 +92,16 @@ util.inherits(Marketplace, EventEmitter);
  * @param callback
  */
 Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callback) {
+
+  travelLog.addEntry(gameId, teamId, propertyId, function(err) {
+    if (err) {
+      logger.error(err);
+    }
+    // we do not care about this return, it's asynchronous and that's ok
+  });
+
+  logger.info('buyProperty :' + gameId + ' team: ' + teamId + ' property:' + propertyId);
+
   propWrap.getProperty(gameId, propertyId, function (err, property) {
     if (err) {
       return callback(err);

@@ -68,7 +68,7 @@ var getLogEntries = function (gameId, tsStart, tsEnd, callback) {
   if (!tsEnd) {
     tsEnd = moment();
   }
-  return Team.find({gameId: gameId})
+  return Log.find({gameId: gameId})
     .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
     .sort('timestamp')
     .lean()
