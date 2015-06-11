@@ -39,6 +39,9 @@ function managecallCtrl($scope, $http) {
   $scope.getTeamColor = function(teamId) {
     return dataStore.getTeamColor(teamId);
   };
+  $scope.getPropertyName = function(propertyId) {
+    return dataStore.getPropertyById(propertyId).location.name;
+  };
   /**
    * Show the correct panel for call management
    * @param panel
@@ -46,8 +49,10 @@ function managecallCtrl($scope, $http) {
   $scope.showCallPanel = function (panel) {
     $('#possessions').hide();
     $('#buy').hide();
+    $('#log').hide();
     $('#tab-possessions').removeClass('active');
     $('#tab-buy').removeClass('active');
+    $('#tab-log').removeClass('active');
     $('#' + panel).show();
     $('#tab-' + panel).addClass('active');
   };
@@ -78,7 +83,10 @@ function managecallCtrl($scope, $http) {
     }
     dataStore.updateProperties(team.uuid, function () {
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
-      $scope.$apply();
+      dataStore.updateTravelLog(team.uuid, function() {
+        $scope.teamInfo.travelLog = dataStore.getTravelLog(team.uuid);
+        $scope.$apply();
+      });
     });
   };
   /**
@@ -148,6 +156,7 @@ function managecallCtrl($scope, $http) {
     $scope.teamInfo.balance = 0;
     $scope.teamInfo.accountEntries = [];
     $scope.teamInfo.callLog = [];
+    $scope.teamInfo.travelLog = [];
     $scope.currentPage = 0;
     $scope.propertyQuery = '';
     $scope.propertyQueryResult = [];

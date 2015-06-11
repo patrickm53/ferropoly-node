@@ -13,6 +13,8 @@ div(role='tabpanel')
       a(href='#buy' aria-controls='buy' role='tab' data-toggle='tab' ng-click='showCallPanel("buy")') Kaufen
     li#tab-possessions(role='presentation')
       a(href='#possessions' aria-controls='possessions' role='tab' data-toggle='tab' ng-click='showCallPanel("possessions")') Besitz
+    li#tab-log(role='presentation')
+      a(href='#log' aria-controls='log' role='tab' data-toggle='tab' ng-click='showCallPanel("log")') Log
   p
 
 
@@ -25,3 +27,5 @@ div(role='tabpanel')
           include reception-mc-m-properties
           include reception-mc-m-accountinfo
 
+      #log.tap-pane(role='tabpanel')
+          include reception-mc-m-log

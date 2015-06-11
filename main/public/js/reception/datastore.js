@@ -14,6 +14,7 @@
  * - authToken:              static, the authorisation token for the api
  * - rankingList:            changing, the ranking list of the game
  * - incomeList:             changing (stats), income of all teams
+ * - travelLog:              changing, the log where the team was
  *
  * The data is alway held in this store, updating is triggered by the application.
  *
@@ -124,6 +125,74 @@ DataStore.prototype.getTeamColor = function(teamId) {
 DataStore.prototype.teamIdToTeamName = function(teamId) {
   // Do not access data.teams directly as the 'this' context would be wrong
   return _.result(_.find(dataStore.getTeams(), {uuid: teamId}), 'data.name');
+};
+
+/**
+ * Updates the travel log
+ * @param teamId
+ * @param callback
+ */
+DataStore.prototype.updateTravelLog = function(teamId, callback) {
+  console.log('update travel log for ' + teamId);
+  var self = this;
+  // see https://api.jquery.com/jquery.get/
+  $.get('/travellog/' + this.getGameplay().internal.gameId + '/' + teamId, function (data) {
+    if (data.status === 'ok') {
+      console.log('/travellog ok');
+      if (!teamId) {
+        // All entries were retrieved, replace them completely
+        self.data.travelLog = data.travelLog;
+      }
+      else {
+        if (!self.data.travelLog) {
+          self.data.travelLog = [];
+        }
+        // replace all entries for this team with the received one
+        _.remove(self.data.travelLog, function (e) {
+          return e.teamId === teamId;
+        });
+        for (var i = 0; i < data.travelLog.length; i++) {
+          self.data.travelLog.push(data.travelLog[i]);
+        }
+      }
+      // Sort entries, independently how we got them
+      _.sortBy(self.data.travelLog, function (e) {
+        return e.timestamp;
+      });
+    }
+    else {
+      console.error('ERROR when getting travelLog:');
+      console.log(data);
+    }
+  })
+    .fail(function (data) {
+      console.error('ERROR when getting travelLog (2):');
+      console.log(data);
+    })
+    .always(function () {
+      console.log('travelLog.always()');
+      if (callback) {
+        callback();
+      }
+    })
+};
+
+/**
+ * Gets the travel log for one team (or all, if teamId is undefined)
+ * @param teamId
+ */
+DataStore.prototype.getTravelLog = function(teamId) {
+  console.log('getTravelLog for: ' + teamId);
+  if (!this.data.travelLog) {
+    this.data.travelLog = [];
+  }
+
+  if (!teamId) {
+    return this.data.travelLog;
+  }
+  return _.filter(this.data.travelLog, function (n) {
+    return n.teamId === teamId;
+  });
 };
 /**
  * Returns the gameplay
@@ -331,6 +400,14 @@ DataStore.prototype.searchProperties = function (query, limit) {
   return _.slice(items, 0, limit);
 };
 
+/**
+ * Returns the property data by providing its id
+ * @param propertyId
+ * @returns {*}
+ */
+DataStore.prototype.getPropertyById = function(propertyId) {
+  return _.find(this.data.pricelist, {uuid: propertyId});
+};
 /**
  * Pushes an event for a given team onto the event stack
  * @param teamId

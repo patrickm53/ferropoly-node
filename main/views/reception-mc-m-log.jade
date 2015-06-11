@@ -1,0 +1,16 @@
+// Properties
+.col-md-4
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title Reiselog
+        i.fa.fa-refresh.refresh-button(ng-click='refreshProperties()')
+    .panel-body
+      table.table.table-hover
+        thead
+          th Zeit
+          th Ort
+        tbody
+          tr(ng-repeat='p in teamInfo.travelLog | orderBy:"timestamp"')
+            td {{p.timestamp | date:'dd.MM. HH:mm:ss'}}
+            td {{getPropertyName(p.propertyId)}}
+
