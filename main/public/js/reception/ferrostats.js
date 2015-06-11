@@ -57,10 +57,11 @@ FerroStats.prototype.drawRankingChart = function (data, chartId) {
   var chartData = new google.visualization.DataTable();
   chartData.addColumn('string', 'Team');
   chartData.addColumn('number', 'Vermögen');
+  chartData.addColumn({ type: 'string', role: 'style' });
 
   var maxValue = 0;
   for (var i = 0; i < data.length; i++) {
-    chartData.addRow([data[i].teamName, data[i].asset]);
+    chartData.addRow([data[i].teamName, data[i].asset, dataStore.getTeamColor(data[i].teamId)]);
     if (data[i].asset > maxValue) {
       maxValue = data[i].asset;
     }
@@ -95,10 +96,11 @@ FerroStats.prototype.drawIncomeChart = function (data, chartId) {
   var chartData = new google.visualization.DataTable();
   chartData.addColumn('string', 'Team');
   chartData.addColumn('number', 'Einkommen');
+  chartData.addColumn({ type: 'string', role: 'style' });
 
   var maxValue = 0;
   for (var i = 0; i < data.length; i++) {
-    chartData.addRow([data[i].teamName, data[i].totalAmount]);
+    chartData.addRow([data[i].teamName, data[i].totalAmount, dataStore.getTeamColor(data[i].teamId)]);
     if (data[i].totalAmount > maxValue) {
       maxValue = data[i].totalAmount;
     }
