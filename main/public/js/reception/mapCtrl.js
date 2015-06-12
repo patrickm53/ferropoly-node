@@ -36,35 +36,69 @@ function refreshMapPanel() {
   }, 250);
 }
 
+function createTravelLogMarker(property, color) {
+  var markerOptions = {
+    strokeColor: color,
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: color,
+    fillOpacity: 0.35,
+    map: map,
+    center: new google.maps.LatLng(parseFloat(property.location.position.lat), parseFloat(property.location.position.lng)),
+    radius: 4000
+  };
+  // Add the circle for this city to the map.
+  return new google.maps.Circle(markerOptions);
+}
+
 /**
  * The angular controller for the maps
  */
 ferropolyApp.controller('mapCtrl', mapCtrl);
 function mapCtrl($scope, $http) {
 
-  function createTravelLogMarker(property, color) {
-    var markerOptions = {
-      strokeColor: color,
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: color,
-      fillOpacity: 0.35,
-      map: map,
-      center:new google.maps.LatLng(parseFloat(property.location.position.lat), parseFloat(property.location.position.lng)),
-      radius: 4000
-    };
-    // Add the circle for this city to the map.
-    return new google.maps.Circle(markerOptions);
-  }
-
+  $scope.travelLogMarkers = [];
+  $scope.teams = [];
+  /**
+   * Build the team info for the map
+   */
+  $scope.buildTeamInfo = function () {
+    var teams = dataStore.getTeams();
+    for (var i = 0; i < teams.length; i++) {
+      $scope.teams.push({
+        teamId: teams[i].uuid,
+        name: dataStore.teams[i].data.name,
+        color: dataStore.getTeamColor(teams[i].uuid),
+        displayOnMap: true,
+        drawTravelLog: function () {
+          drawTravelLog(teams[i].uuid);
+        },
+        removeTravelLogMarkers: function () {
+          $scope.deleteTravelLogMarkers(teams[i].uuid);
+        }
+      });
+    }
+  };
+  /**
+   * Returns true when the api was loaded
+   */
   $scope.mapApiLoaded = function () {
     return (google && google.maps);
   };
 
+  /**
+   * Get the travel log
+   * @param teamId
+   * @returns {*}
+   */
   $scope.getTravelLog = function (teamId) {
     return dataStore.getTravelLog(teamId);
   };
 
+  /**
+   * Draw the travel log for one or all teams
+   * @param teamId
+   */
   $scope.drawTravelLog = function (teamId) {
     console.log('drawTravelLog for ' + teamId);
     if (!teamId) {
@@ -74,12 +108,27 @@ function mapCtrl($scope, $http) {
       }
       return;
     }
-    $scope.circles = [];
+    // remove old markers of the team first
+    $scope.deleteTravelLogMarkers(teamId);
     var log = dataStore.getTravelLog(teamId);
     for (var i = 0; i < log.length; i++) {
-      createTravelLogMarker(dataStore.getPropertyById(log[i].propertyId), dataStore.getTeamColor(teamId));
+      $scope.travelLogMarkers.push({
+        teamId: teamId,
+        marker: createTravelLogMarker(dataStore.getPropertyById(log[i].propertyId), dataStore.getTeamColor(teamId))
+      });
     }
   };
+
+  /**
+   * Delete the travel log markers for a given team
+   * @param teamId
+   */
+  $scope.deleteTravelLogMarkers = function (teamId) {
+    var removedElements = _.remove($scope.travelLogMarkers, {teamId: teamId});
+    for (var i = 0; i < removedElements.length; i++) {
+      removedElements[i].marker.setMap(null);
+    }
+  }
 }
 
 
