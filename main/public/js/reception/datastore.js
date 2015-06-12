@@ -408,6 +408,18 @@ DataStore.prototype.searchProperties = function (query, limit) {
 DataStore.prototype.getPropertyById = function(propertyId) {
   return _.find(this.data.pricelist, {uuid: propertyId});
 };
+
+/**
+ * Returns the center of the map
+ */
+DataStore.prototype.getMapCenter = function() {
+  var latSum = 0, lngSum = 0;
+  for (var i = 0; i < this.data.pricelist.length; i++) {
+    latSum += parseFloat(this.data.pricelist[i].location.position.lat);
+    lngSum += parseFloat(this.data.pricelist[i].location.position.lng);
+  }
+  return {lat: latSum / this.data.pricelist.length, lng: lngSum / this.data.pricelist.length};
+};
 /**
  * Pushes an event for a given team onto the event stack
  * @param teamId
