@@ -83,7 +83,7 @@ function playRound(gameId, teamId, travelLog, properties, callback) {
       var propertyId = selectClosestsProperty(travelLog, properties);
       mp.buyProperty(gameId, teamId, propertyId, function () {
         callback();
-      })
+      });
     });
   });
   // build houses

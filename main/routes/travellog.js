@@ -6,7 +6,6 @@
 var express = require('express');
 var router = express.Router();
 var travelLog = require('../../common/models/travelLogModel');
-var gameCache = require('../lib/gameCache');
 var logger = require('../../common/lib/logger').getLogger('routes:travellog');
 
 var _ = require('lodash');
