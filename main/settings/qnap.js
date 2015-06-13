@@ -25,5 +25,11 @@ module.exports = function(settings) {
   settings.cron = {
   };
 
+
+  settings.autopilot = {
+    interval: 289432,
+    active: true
+  };
+
   return settings;
 };

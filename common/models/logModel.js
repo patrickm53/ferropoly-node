@@ -6,6 +6,7 @@
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
 var moment = require('moment');
+var _ = require('lodash');
 var logger = require('../lib/logger').getLogger('locationModel');
 
 /**
@@ -34,6 +35,9 @@ var Log = mongoose.model('Log', logSchema);
 var addEntry = function (gameId, category, text, callback) {
   if (!gameId || !category || !text) {
     return callback(new Error('all params in createEntry must be set'));
+  }
+  if (!_.isString(gameId) || !_.isString(category) || !_.isString(text)) {
+    return callback(new Error('all params in createEntry must be strings'));
   }
   var logEntry = new Log();
   logEntry.gameId = gameId;

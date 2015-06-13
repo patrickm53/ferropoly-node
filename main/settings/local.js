@@ -25,5 +25,10 @@ module.exports = function(settings) {
   settings.cron = {
   };
 
+  settings.autopilot = {
+    interval: 10000,
+    active: false
+  };
+
   return settings;
 };

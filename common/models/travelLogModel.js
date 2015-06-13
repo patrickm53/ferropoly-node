@@ -7,7 +7,7 @@
 var mongoose = require('mongoose');
 var logger = require('../lib/logger').getLogger('travelLogModel');
 var moment = require('moment');
-
+var _ = require('lodash');
 /**
  * The mongoose schema for an user
  */
@@ -35,6 +35,9 @@ var TravelLog = mongoose.model('TravelLog', travelLogSchema);
 var addEntry = function (gameId, teamId, propertyId, callback) {
   if (!gameId || !teamId || !propertyId) {
     return callback(new Error('all params in addEntry must be set'));
+  }
+  if (!_.isString(gameId) || !_.isString(teamId) || !_.isString(propertyId)) {
+    return callback(new Error('all params in createEntry must be strings'));
   }
   var logEntry = new TravelLog();
   logEntry.gameId = gameId;
