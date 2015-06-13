@@ -39,7 +39,14 @@ var propertiesRoute = require('./routes/properties');
 var aboutRoute = require('./routes/about');
 var app = express();
 var ferroSocket = require('./lib/ferroSocket');
+var autopilot = require('./lib/autopilot');
 var logger = require('../common/lib/logger').getLogger('main:app');
+
+logger.info('Ferropoly Copyright (C) 2015 Christian Kuster, CH-8342 Wernetshausen');
+logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
+logger.info('This is free software, and you are welcome to redistribute it');
+logger.info('under certain conditions; see www.ferropoly.ch for details.');
+
 /**
  * Initialize DB connection, has to be only once for all models
  */
@@ -145,11 +152,12 @@ ferropolyDb.init(settings, function (err) {
   server.listen(settings.server.port, settings.server.host, function () {
     logger.info('%s: Node server started on %s:%d ...',
       new Date(Date.now()), app.get('ip'), app.get('port'));
+
+
+    logger.info('Ferropoly Main server listening on port ' + app.get('port'));
+
+    autopilot.init(settings);
   });
 
-  logger.info('Ferropoly Copyright (C) 2015 Christian Kuster, CH-8342 Wernetshausen');
-  logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
-  logger.info('This is free software, and you are welcome to redistribute it');
-  logger.info('under certain conditions; see www.ferropoly.ch for details.');
-  logger.info('Ferropoly Main server listening on port ' + app.get('port'));
+
 });
