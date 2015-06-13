@@ -29,16 +29,19 @@ block head
     | "};
     | console.log(ferropoly.teams);
   script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU&sensor=TRUE')
-  script(src='/js/reception/reception-framework.js')
-  script(src='/js/reception/ferropoly-socket.js')
-  script(src='/js/reception/datastore.js')
-  script(src='/js/reception/ferrostats.js')
-  script(src='/js/reception/activecall.js')
-  script(src='/js/reception/teamaccountsCtrl.js')
-  script(src='/js/reception/managecallCtrl.js')
-  script(src='/js/reception/dashboardCtrl.js')
-  script(src='/js/reception/mapCtrl.js')
-  script(src='/js/reception/ferrostatsCtrl.js')
+  if minifedjs
+    script(src='/js/reception.min.js')
+  else
+    script(src='/js/reception/reception-framework.js')
+    script(src='/js/reception/ferropoly-socket.js')
+    script(src='/js/reception/datastore.js')
+    script(src='/js/reception/ferrostats.js')
+    script(src='/js/reception/activecall.js')
+    script(src='/js/reception/teamaccountsCtrl.js')
+    script(src='/js/reception/managecallCtrl.js')
+    script(src='/js/reception/dashboardCtrl.js')
+    script(src='/js/reception/mapCtrl.js')
+    script(src='/js/reception/ferrostatsCtrl.js')
   link(rel='stylesheet', href='/css/reception.css', type='text/css')
   link(rel='stylesheet', href='/font-awesome/css/font-awesome.min.css', type='text/css')
 

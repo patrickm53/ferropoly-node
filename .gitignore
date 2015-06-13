@@ -38,3 +38,4 @@ node_modules
 main/views/*.html
 
 
+main/public/js/reception.js

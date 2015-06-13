@@ -25,7 +25,42 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    concat: {
+      options: {
+      },
+      dist: {
+        src: [
+          './main/public/js/reception/reception-framework.js',
+          './main/public/js/reception/ferropoly-socket.js',
+          './main/public/js/reception/datastore.js',
+          './main/public/js/reception/ferrostats.js',
+          './main/public/js/reception/activecall.js',
+          './main/public/js/reception/teamaccountsCtrl.js',
+          './main/public/js/reception/managecallCtrl.js',
+          './main/public/js/reception/dashboardCtrl.js',
+          './main/public/js/reception/mapCtrl.js',
+          './main/public/js/reception/ferrostatsCtrl.js'
+        ],
+        dest: './main/public/js/reception.js'
+      }
+    },
+    uglify: {
+      js: {
+        files: {
+          './main/public/js/reception.min.js': ['./main/public/js/reception.js']
+        }
+      },
+      options: {
+        unused: false,
+        dead_code: true,
+        properties: false,
+        beautify: false,
+        compress: false,
+        mangle: false, // do not rename variables
+        banner: '/* <%= pkg.name %> V<%= pkg.version %>, <%= grunt.template.today("dd-mm-yyyy") %>, (c) Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch */\n'
 
+      }
+    },
     copy: {
       main: {
         files: [
@@ -81,6 +116,24 @@ module.exports = function (grunt) {
       options: {
         config: './.eslintrc'
       }
+    },
+
+    bump: {
+      options: {
+        files: ['package.json'],
+        updateConfigs: [],
+        commit: true,
+        commitMessage: 'New version added v%VERSION%',
+        commitFiles: ['-a'],
+        tagName: 'v%VERSION%',
+        tagMessage: 'Version %VERSION%',
+        push: true,
+        pushTo: 'git@bitbucket.org:christian_kuster/ferropoly_main.git',
+        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+        globalReplace: false,
+        prereleaseName: false,
+        regExp: false
+      }
     }
 
 
@@ -96,7 +149,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-bump');
   grunt.registerTask('default', ['uglify:js']);
-  grunt.registerTask('minify', ['uglify:js']);
+  grunt.registerTask('minify', ['concat','uglify:js']);
   grunt.registerTask('v:patch', ['bump-only:patch']);
   grunt.registerTask('v:minor', ['bump-only:minor']);
   grunt.registerTask('v:major', ['bump-only:major']);

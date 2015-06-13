@@ -45,6 +45,7 @@ router.get('*', function (req, res) {
         teamModel.getTeams(gameId, function (err3, foundTeams) {
           res.render('reception', {
             title: 'Ferropoly',
+            minifedjs: settings.minifedjs,
             ngFile: '/js/infoctrl.js',
             hideLogout: true,
             authToken: token,
