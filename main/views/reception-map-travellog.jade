@@ -1,0 +1,15 @@
+//
+   Created by kc on 14.06.15.
+table.table.table-condensed
+  thead
+    th Gruppe
+    th Anzeigen
+    th
+  tbody
+    tr(data-ng-repeat='t in teams')
+      td {{t.name}}
+      td
+        input(type='checkbox' ng-model='t.displayOnMap' ng-click='drawTravelLog()')
+      td
+        font(color='{{t.color}}') &#9608
+button(type="button" class="btn btn-primary" ng-click='drawTravelLog()' ) TravelLog zeichnen

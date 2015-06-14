@@ -26,7 +26,7 @@ module.exports = function(settings) {
   };
 
   settings.autopilot = {
-    interval: 10000,
+    interval: 2000,
     active: false
   };
 

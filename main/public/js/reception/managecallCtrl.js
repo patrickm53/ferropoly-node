@@ -351,7 +351,7 @@ function managecallCtrl($scope, $http) {
     switch (ind.cmd) {
       case 'propertyBought':
       case 'buildingBuilt':
-        if (ind.property.gamedata.owner === $scope.selectedTeam.uuid) {
+        if ($scope.selectedTeam && ind.property.gamedata.owner === $scope.selectedTeam.uuid) {
           // Update of our own properties needed
           $scope.teamInfo.properties = dataStore.getProperties($scope.selectedTeam.uuid);
         }

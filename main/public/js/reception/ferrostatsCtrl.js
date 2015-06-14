@@ -83,7 +83,7 @@ function ferrostatsCtrl($scope, $http) {
     }];
 
   /**
-   * Show the correct panel for call management
+   * Show the correct panel for stats
    * @param panel
    */
   $scope.showStatsPanel = function (panel) {

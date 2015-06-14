@@ -384,6 +384,17 @@ DataStore.prototype.getProperties = function (teamId) {
   });
 };
 /**
+ * Returns the free properties
+ */
+DataStore.prototype.getFreeProperties = function() {
+  return _.filter(this.data.pricelist, function (n) {
+    if (!n.gamedata) {
+      return true;
+    }
+    return !n.gamedata.owner;
+  });
+};
+/**
  * Run query over properties, full text
  * @param query String to query
  * @param limit max number of elements to be returned
