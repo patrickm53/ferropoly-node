@@ -110,8 +110,8 @@ DataStore.prototype.getTeams = function () {
  * @param teamId
  * @returns {*}
  */
-DataStore.prototype.getTeamColor = function(teamId) {
- var index =  _.findIndex(this.data.teams, {'uuid':teamId});
+DataStore.prototype.getTeamColor = function (teamId) {
+  var index = _.findIndex(this.data.teams, {'uuid': teamId});
   if (index > -1 && index < this.teamColors.length) {
     return this.teamColors[index];
   }
@@ -122,7 +122,7 @@ DataStore.prototype.getTeamColor = function(teamId) {
  * @param teamId
  * @returns {*}
  */
-DataStore.prototype.teamIdToTeamName = function(teamId) {
+DataStore.prototype.teamIdToTeamName = function (teamId) {
   // Do not access data.teams directly as the 'this' context would be wrong
   return _.result(_.find(dataStore.getTeams(), {uuid: teamId}), 'data.name');
 };
@@ -132,7 +132,7 @@ DataStore.prototype.teamIdToTeamName = function(teamId) {
  * @param teamId
  * @param callback
  */
-DataStore.prototype.updateTravelLog = function(teamId, callback) {
+DataStore.prototype.updateTravelLog = function (teamId, callback) {
   console.log('update travel log for ' + teamId);
   var self = this;
   // see https://api.jquery.com/jquery.get/
@@ -181,7 +181,7 @@ DataStore.prototype.updateTravelLog = function(teamId, callback) {
  * Gets the travel log for one team (or all, if teamId is undefined)
  * @param teamId
  */
-DataStore.prototype.getTravelLog = function(teamId) {
+DataStore.prototype.getTravelLog = function (teamId) {
   console.log('getTravelLog for: ' + teamId);
   if (!this.data.travelLog) {
     this.data.travelLog = [];
@@ -306,11 +306,36 @@ DataStore.prototype.getPropertyAccountEntries = function (teamId) {
 /**
  * Updates the team account entries.
  */
-DataStore.prototype.updateChancellery = function () {
-  this.socket.emit('chancelleryAccount', {cmd: 'getAccountStatement'})
+DataStore.prototype.updateChancellery = function (callback) {
+  // obsolete:  this.socket.emit('chancelleryAccount', {cmd: 'getAccountStatement'})
+  var self = this;
+  console.log('update chancellery');
+
+  // see https://api.jquery.com/jquery.get/
+  $.get('/chancellery/account/statement/' + this.getGameplay().internal.gameId, function (data) {
+    if (data.status === 'ok') {
+      self.data.chancelleryEntries = data.entries;
+    }
+    else {
+      console.log('ERROR when getting chancellery data:');
+      console.log(data);
+      self.data.chancelleryEntries = [];
+    }
+    if (callback) {
+      callback();
+    }
+  })
+    .fail(function (data) {
+      console.log('ERROR when getting chancellery data (2):');
+      console.log(data);
+      self.data.chancelleryEntries = [];
+      if (callback) {
+        callback();
+      }
+    });
 };
 /**
- * Get the team account entries
+ * Get the chancellery entries
  *
  * @param teamId ID of the team, if undefined then all are returned
  */
@@ -321,6 +346,10 @@ DataStore.prototype.getChancelleryEntries = function (teamId) {
   return _.filter(this.data.chancelleryEntries, function (n) {
     return n.transaction.origin.uuid === teamId;
   });
+};
+
+DataStore.prototype.getChancelleryAsset = function() {
+  return _.sum(this.data.chancelleryEntries, 'transaction.amount');
 };
 /**
  * Updates the pricelist (complete or the only for the user supplied)
@@ -386,7 +415,7 @@ DataStore.prototype.getProperties = function (teamId) {
 /**
  * Returns the free properties
  */
-DataStore.prototype.getFreeProperties = function() {
+DataStore.prototype.getFreeProperties = function () {
   return _.filter(this.data.pricelist, function (n) {
     if (!n.gamedata) {
       return true;
@@ -416,14 +445,14 @@ DataStore.prototype.searchProperties = function (query, limit) {
  * @param propertyId
  * @returns {*}
  */
-DataStore.prototype.getPropertyById = function(propertyId) {
+DataStore.prototype.getPropertyById = function (propertyId) {
   return _.find(this.data.pricelist, {uuid: propertyId});
 };
 
 /**
  * Returns the center of the map
  */
-DataStore.prototype.getMapCenter = function() {
+DataStore.prototype.getMapCenter = function () {
   var latSum = 0, lngSum = 0;
   for (var i = 0; i < this.data.pricelist.length; i++) {
     latSum += parseFloat(this.data.pricelist[i].location.position.lat);

@@ -3,7 +3,16 @@
  * Created by kc on 14.05.15.
  */
 'use strict';
+var panelUpdateHandlers = {}; // Handlers being called when a panel gets activated
 
+/**
+ * Registers an update handler
+ * @param panel
+ * @param handler
+ */
+function registerPanelUpdateHandler(panel, handler) {
+  panelUpdateHandlers[panel] = handler;
+}
 /**
  * Show the correct panel using JQuery. receptionPanels is defined in the main jade file
  * @param p
@@ -21,7 +30,7 @@ function showPanel(p) {
   else {
     activeCallAlert.hide();
   }
-  // There are some things to be done when activating a panel
+  // There are some things to be done when activating a panel (THE OLD WAY)
   switch(p) {
     case '#panel-teamaccounts':
       dataStore.updateTeamAccountEntries(undefined, angular.element('#team-accounts-ctrl').scope().refreshTeamAccounts);
@@ -38,6 +47,11 @@ function showPanel(p) {
     case '#panel-map':
       refreshMapPanel();
       break;
+  }
+
+  // Update panel info (THE NEW WAY)
+  if (panelUpdateHandlers[p]) {
+    panelUpdateHandlers[p]();
   }
   $(p).show();
 }

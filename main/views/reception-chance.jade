@@ -1,0 +1,27 @@
+//
+   Created by kc on 15.06.15.
+
+div#chance-ctrl(ng-controller='chanceCtrl')
+  .row
+    .col-md-3
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Übersicht
+        .panel-body
+          p Anzahl Einträge: {{entries.length}}
+          p Kontostand: {{chancelleryAsset}}
+    .col-md-9
+      table.table.table-hover.table-condensed
+        thead
+          th #
+          th Zeit
+          th Team
+          th Info
+          th Betrag
+        tbody
+          tr(ng-repeat='e in entries | orderBy:"timestamp"')
+            td {{$index + 1}}
+            td {{e.timestamp | date:'dd.MM. HH:mm:ss'}}
+            td {{teamNames[e.transaction.origin.uuid]}}
+            td {{e.transaction.info}}
+            td {{e.transaction.amount}}
