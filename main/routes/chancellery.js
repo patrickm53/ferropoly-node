@@ -31,7 +31,7 @@ router.get('/balance/:gameId', function (req, res) {
 /**
  * Get all account entries of the chancellery
  */
-router.get('/accountStatement/:gameId', function (req, res) {
+router.get('/account/statement/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }

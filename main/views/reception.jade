@@ -7,7 +7,7 @@ block head
   script(src='/lodash/lodash.min.js')
   script(src='/socket.io/socket.io.js')
   script
-    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats' ];
+    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats', '#panel-chance', '#panel-properties' ];
     | var socketUrl = "
     != socketUrl
     | ";
@@ -42,6 +42,8 @@ block head
     script(src='/js/reception/dashboardCtrl.js')
     script(src='/js/reception/mapCtrl.js')
     script(src='/js/reception/ferrostatsCtrl.js')
+    script(src='/js/reception/chanceCtrl.js')
+    script(src='/js/reception/propertiesCtrl.js')
   link(rel='stylesheet', href='/css/reception.css', type='text/css')
   link(rel='stylesheet', href='/font-awesome/css/font-awesome.min.css', type='text/css')
 
@@ -56,6 +58,10 @@ block navbar
     a(href='#' onclick="showPanel('#panel-stats');") Statistik
   li
     a(href='#' onclick="showPanel('#panel-teamaccounts');") Kontobuch
+  li
+    a(href='#' onclick="showPanel('#panel-chance');") Chance / Kanzlei
+  li
+    a(href='#' onclick="showPanel('#panel-properties');") Orte
 
 
 block navbar-right
@@ -76,3 +82,7 @@ block content
       include reception-map
     #panel-stats
       include reception-stats
+    #panel-chance
+      include reception-chance
+    #panel-properties
+      include reception-properties

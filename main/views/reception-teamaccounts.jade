@@ -2,14 +2,14 @@
    Created by kc on 14.05.15.
 
 div#team-accounts-ctrl(ng-controller='teamAccountsCtrl')
-  h1 Team Accounts
+  h1 Kontobücher Teams
   ul.nav.nav-tabs
     li#account-undefined.active(role='presentation' ng-click='setTeam()')
       a(href='#' role='presentation') Alle
     li(role='presentation' ng-repeat='t in teams | orderBy:"data.name"' id='account-{{t.uuid}}')
       a(href='#' role='presentation' ng-click='setTeam(t.uuid)') {{t.data.name}}
 
-  table.table.table-hover
+  table.table.table-hover.table-condensed
     thead
       th
       th Zeit
