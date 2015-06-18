@@ -12,4 +12,11 @@ table.table.table-condensed
         input(type='checkbox' ng-model='t.displayOnMap' ng-click='drawTravelLog()')
       td
         font(color='{{t.color}}') &#9608
+    tr
+      td
+        strong alle
+      td
+        input(type='checkbox' ng-model='travelLogAll' ng-click='enableTravelLogAll()')
+      td
+
 button(type="button" class="btn btn-primary" ng-click='drawTravelLog()' ) Karte aktualisieren

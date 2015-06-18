@@ -113,6 +113,7 @@ function createFreePropertyMarker(property) {
 ferropolyApp.controller('mapCtrl', mapCtrl);
 function mapCtrl($scope, $http) {
 
+  $scope.travelLogAll = false;
   $scope.travelLogMarkers = [];
   $scope.teams = [];
   $scope.activePanel = 'none';
@@ -126,9 +127,19 @@ function mapCtrl($scope, $http) {
         teamId: teams[i].uuid,
         name: teams[i].data.name,
         color: dataStore.getTeamColor(teams[i].uuid),
-        displayOnMap: true
+        displayOnMap: false
       });
     }
+  };
+
+  /**
+   * The main switch for showing all on travel log
+   */
+  $scope.enableTravelLogAll = function() {
+    for (var i = 0; i < $scope.teams.length; i++) {
+      $scope.teams[i].displayOnMap = $scope.travelLogAll;
+    }
+    $scope.drawTravelLog();
   };
   /**
    * Returns true when the api was loaded
