@@ -115,6 +115,7 @@ function mapCtrl($scope, $http) {
 
   $scope.travelLogMarkers = [];
   $scope.teams = [];
+  $scope.activePanel = 'none';
   /**
    * Build the team info for the map
    */
@@ -146,9 +147,20 @@ function mapCtrl($scope, $http) {
   };
 
   /**
+   * Update handler when activating the tab
+   */
+  $scope.updateMap = function() {
+    if ($scope.activePanel === 'maps-travellog') {
+      $scope.drawTravelLog();
+    }
+  };
+  /**
    * Draw the travel log on the map
    */
   $scope.drawTravelLog = function () {
+    if ($scope.activePanel !== 'maps-travellog') {
+      return;
+    }
     var i;
     $scope.deleteFreePropertyMarkers();
     $scope.deleteTravelLogMarkers();
@@ -234,12 +246,13 @@ function mapCtrl($scope, $http) {
     }
     $('#' + panel).show();
     $('#tab-' + panel).addClass('active');
-
+    $scope.activePanel = panel;
   };
   // initial panel
   $scope.showMapsPanel('maps-travellog');
   $scope.buildTeamInfo();
+  registerPanelUpdateHandler('#panel-map', $scope.updateMap);
+
 }
 
 
-mapCtrl.$inject = ['$scope', '$http'];
