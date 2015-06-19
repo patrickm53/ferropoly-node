@@ -10,6 +10,8 @@
 ferropolyApp.controller('propertiesCtrl', propertiesCtrl);
 function propertiesCtrl($scope, $http) {
   $scope.properties = [];
+  $scope.listPredicate = 'pricelist.position';
+  $scope.reverse = false;
 
   $scope.updateProperties = function() {
     dataStore.updateProperties(undefined, function() {
