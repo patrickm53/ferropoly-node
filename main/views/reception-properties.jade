@@ -1,3 +1,20 @@
 //
    Created by kc on 15.06.15.
+div(ng-controller='propertiesCtrl')
+  table.tab.e.table-striped.table-condensed
+    thead
+      th Pos
+      th Ort
+      th.pricelist Gruppe
+      th.pricelist Kaufpreis
+      th.pricelist Besitzer
+      th.pricelist Anzahl Häuser
+    tbody
+      tr(data-ng-repeat='p in properties' )
+        td {{p.pricelist.position + 1}}
+        td {{p.location.name}}
+        td.pricelist {{p.pricelist.propertyGroup}}
+        td.pricelist {{p.pricelist.price}}
+        td.pricelist {{getTeamName(p.gamedata.owner)}}
+        td.pricelist {{p.gamedata.buildings}}
 
