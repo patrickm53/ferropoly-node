@@ -194,6 +194,23 @@ DataStore.prototype.getTravelLog = function (teamId) {
     return n.teamId === teamId;
   });
 };
+
+/**
+ * Returns the trave log for a property (who was there when)
+ * @param propertyId
+ */
+DataStore.prototype.getTravelLogForProperty = function(propertyId) {
+  console.log('getTravelLogForProperty for: ' + propertyId);
+  if (!this.data.travelLog) {
+    this.data.travelLog = [];
+  }
+
+  var propLog = _.filter(this.data.travelLog, function (n) {
+    return n.propertyId === propertyId;
+  });
+  return _.sortBy(propLog, 'timestamp');
+};
+
 /**
  * Returns the gameplay
  * @returns {gameplay|*|result.gameplay|gameData.gameplay|$scope.gameplay}
