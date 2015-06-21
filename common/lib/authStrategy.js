@@ -40,6 +40,10 @@ var strategy = new LocalStrategy(
           return done(null, foundUser);
         });
       }
+      else {
+        logger.info('invalid password supplied for ' + foundUser);
+        return done(null, false);
+      }
     });
   }
 );

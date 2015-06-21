@@ -57,7 +57,7 @@ module.exports = {
     // Filter for get, redirect to login page if not logged out
     app.get('*', function (req, res, next) {
       var uri = url.parse(req.url).pathname;
-      if (uri === '/signup') {
+      if (_.startsWith(uri, '/signup')) {
         logger.info('Signup !');
         return next();
       }

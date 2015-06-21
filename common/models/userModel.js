@@ -31,7 +31,9 @@ var userSchema = mongoose.Schema({
   },
   login: {
     passwordSalt: String,
-    passwordHash: String
+    passwordHash: String,
+    verifiedEmail: {type: Boolean, default: false},
+    verificationText: String
   },
   info: {
     registrationDate: Date,
