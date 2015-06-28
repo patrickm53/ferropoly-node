@@ -108,7 +108,7 @@ function requestEventSave(event, serverId, callback) {
         return callback(err);
       }
       if (data.length === 0) {
-        return callback(new Error('Event not found! ID: ' + event.id));
+        return callback(new Error('Event not found! ID: ' + event._id));
       }
 
       var ev = data[0];

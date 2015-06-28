@@ -22,7 +22,7 @@ var logger = require('../../common/lib/logger').getLogger('gameScheduler');
  * @constructor
  */
 function Scheduler(_settings) {
-  logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': initializing scheduler');
+  logger.info('initializing scheduler');
   EventEmitter.call(this);
 
   this.settings = _settings;
@@ -33,7 +33,7 @@ function Scheduler(_settings) {
     // Clear cache at end of the day
     gameCache.refreshCache(function (err) {
       if (err) {
-        logger.error(err);
+        logger.error('Error in Constructor', err);
       }
     });
   });
@@ -49,17 +49,17 @@ util.inherits(Scheduler, EventEmitter);
  */
 Scheduler.prototype.handleEvent = function (channel, event) {
   var self = this;
-  logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Handling event ' + event._id + ' for ' + channel);
+  logger.info('Handling event ' + event._id + ' for ' + channel);
   eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
     if (err) {
-      logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Error while handling event: ' + event._id + ' message: ' + err.message);
+      logger.info('Error while handling event: ' + event._id + ' message: ' + err.message);
       return;
     }
     if (!ev) {
-      logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event already handled by other instance: ' + event._id + ' for ' + channel);
+      logger.info('Event already handled by other instance: ' + event._id + ' for ' + channel);
       return;
     }
-    logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': event handled by this instance: ' + event._id + ' for ' + channel);
+    logger.info('event handled by this instance: ' + event._id + ' for ' + channel);
     // Now emit the event. The event callback is attached, without calling this callback, the
     // event won't be marked as solved!
     ev.callback = self.handleEventCallback;
@@ -75,15 +75,15 @@ Scheduler.prototype.handleEvent = function (channel, event) {
  */
 Scheduler.prototype.handleEventCallback = function (err, event) {
   if (err) {
-    logger.info('Error in event handler callback: ' + err.message);
+    logger.info('Error in event handler callback', err);
     return;
   }
   eventRepo.saveAfterHandling(event, function (err) {
     if (err) {
-      logger.error('Error while saving handled event:' + err.message);
+      logger.error('Error while saving handled event', err);
       return;
     }
-    logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Event handling finished');
+    logger.info('Event handling finished');
   });
 };
 
@@ -92,7 +92,7 @@ Scheduler.prototype.handleEventCallback = function (err, event) {
  * @param callback
  */
 Scheduler.prototype.update = function (callback) {
-  logger.info(moment().format('dddd, MMMM Do YYYY, H:mm:ss') + ': Scheduler update');
+  logger.info('Scheduler update');
   var self = this;
   var i;
   eventRepo.getUpcomingEvents(function (err, events) {
@@ -116,7 +116,7 @@ Scheduler.prototype.update = function (callback) {
 
       for (i = 0; i < events.length; i++) {
         var event = events[i];
-        logger.info(events[i]);
+        logger.info('upcoming Event', events[i]);
 
         if (moment(event.timestamp) < now) {
           logger.info('Emit an old event:' + event._id);
@@ -133,11 +133,14 @@ Scheduler.prototype.update = function (callback) {
     if (self.updateJob) {
       self.updateJob.cancel();
     }
-    self.updateJob = schedule.scheduleJob(moment().add({minutes: 181, seconds: 3}).toDate(), function () {
+    // Todo: this time is to short, we don't need to update so often.
+    // The problem is that new games won't be recognized after creation until the scheduler was updated, now
+    // we get new games at least once an hour. Should be fixed with a communication between Editor and Main,
+    // added as GitHub ticket #2 in EDITOR project (as the trigger has to come from the editor)
+    self.updateJob = schedule.scheduleJob(moment().add({minutes: 54, seconds: 3}).toDate(), function () {
       self.update(function (err) {
         if (err) {
-          logger.info('SCHEDULER UPDATE FAILED!');
-          logger.error(err);
+          logger.error('SCHEDULER UPDATE FAILED!', err);
         }
       });
     });
