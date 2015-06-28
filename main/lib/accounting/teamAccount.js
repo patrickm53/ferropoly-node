@@ -261,6 +261,28 @@ function getBalance(gameId, teamId, p1, p2) {
 }
 
 /**
+ * Handles a negative balance at the end of a round: pay an interest
+ * @param gameId
+ * @param teamId
+ * @param rate : the rate of interest, a percentage between 0 and 100
+ * @param callback
+ */
+function negativeBalanceHandling(gameId, teamId, rate, callback) {
+  getBalance(gameId, teamId, function (err, info) {
+    if (err) {
+      return callback(err);
+    }
+    if (info.balance < 0) {
+      var interest = Math.abs(info.balance * rate / 100);
+      logger.info('Negative balance, pay interest ' + interest + ' from ' + info.balance);
+      chargeToChancellery(teamId, gameId, interest, 'Strafzins (negatives Guthaben)', callback);
+    }
+    else {
+      callback();
+    }
+  });
+}
+/**
  * Returns the ranking list for a gameplay
  * @param gameId
  * @param callback
@@ -342,6 +364,7 @@ module.exports = {
   receiveFromChancellery: receiveFromChancellery,
   chargeToAnotherTeam: chargeToAnotherTeam,
   getBalance: getBalance,
+  negativeBalanceHandling: negativeBalanceHandling,
   getAccountStatement: getAccountStatement,
   getRankingList: getRankingList,
 

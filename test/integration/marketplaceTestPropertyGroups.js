@@ -50,8 +50,8 @@ describe('Marketplace propertyGroup tests', function () {
     )
   });
 
-  after(function(done) {
-    db.close(function(err) {
+  after(function (done) {
+    db.close(function (err) {
       done(err);
     })
   });
@@ -85,13 +85,19 @@ describe('Marketplace propertyGroup tests', function () {
 
   });
 
-  describe('Pay rent & interest, allow building houses', function() {
-    it('should pay the rent #1', function(done) {
+  describe('Pay rent & interest, allow building houses', function () {
+    it('should pay the rent #1', function (done) {
       var teamIndex = 1;
       var expectedRent = 250;
       var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-      marketplace.payRents(gameId, function(err) {
+      if (gameData.teams[teamIndex].expectedMoney < 0) {
+        gameData.teams[teamIndex].expectedMoney -= Math.abs(gameData.teams[teamIndex].expectedMoney * .2);
+        gameData.teams[teamIndex].expectedEntries++;
+      }
+
+      marketplace.payRents(gameId, function (err) {
+
         gameData.teams[teamIndex].expectedMoney += expectedIncome;
         gameData.teams[teamIndex].expectedEntries += 2;
 
@@ -114,7 +120,7 @@ describe('Marketplace propertyGroup tests', function () {
       })
     });
   });
-  describe('Buy second one', function() {
+  describe('Buy second one', function () {
     it('should buy the second property of a group', function (done) {
       var teamIndex = 1;
       var propertyIndex = 17;
@@ -165,13 +171,18 @@ describe('Marketplace propertyGroup tests', function () {
     });
   });
 
-  describe('Pay rent & interest, allow building houses', function() {
-    it('should pay the rent #1', function(done) {
+  describe('Pay rent & interest, allow building houses', function () {
+    it('should pay the rent #1', function (done) {
       var teamIndex = 1;
       var expectedRent = (1000 * 2) + (250 * 2);
       var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-      marketplace.payRents(gameId, function(err) {
+      if (gameData.teams[teamIndex].expectedMoney < 0) {
+        gameData.teams[teamIndex].expectedMoney -= Math.abs(gameData.teams[teamIndex].expectedMoney * .2);
+        gameData.teams[teamIndex].expectedEntries++;
+      }
+
+      marketplace.payRents(gameId, function (err) {
         gameData.teams[teamIndex].expectedMoney += expectedIncome;
         gameData.teams[teamIndex].expectedEntries += 2;
 

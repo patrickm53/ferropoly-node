@@ -93,7 +93,7 @@ util.inherits(Marketplace, EventEmitter);
  */
 Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callback) {
 
-  travelLog.addEntry(gameId, teamId, propertyId, function(err) {
+  travelLog.addEntry(gameId, teamId, propertyId, function (err) {
     if (err) {
       logger.error(err);
     }
@@ -242,7 +242,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
  * @param gameId
  * @param callback
  */
-Marketplace.prototype.payInitialAsset = function(gameId, callback) {
+Marketplace.prototype.payInitialAsset = function (gameId, callback) {
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       logger.error(err);
@@ -339,6 +339,38 @@ Marketplace.prototype.payInterests = function (gameId, callback) {
 };
 
 /**
+ * Checks for a negative asset and pays to the chancellery if so
+ * @param gameId
+ * @param callback
+ */
+Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
+  gameCache.getGameData(gameId, function (err, res) {
+    if (err) {
+      logger.error(err);
+      return callback(err);
+    }
+    var gp = res.gameplay;
+    var teams = _.valuesIn(res.teams);
+    var paid = 0;
+    var error = null;
+
+    var handlingCallback = function (err) {
+      if (err) {
+        error = err;
+      }
+      paid++;
+      if (paid === teams.length) {
+        callback(error);
+      }
+    };
+
+    for (var i = 0; i < teams.length; i++) {
+      teamAccount.negativeBalanceHandling(gameId, teams[i].uuid, gp.gameParams.debtInterest, handlingCallback);
+    }
+  });
+};
+
+/**
  * Pays the rents (each hour) for a team
  * @param gp
  * @param team
@@ -372,46 +404,57 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, callback) {
 
 /**
  * Pays the rents (interests and rents) for all teams, also releasing the buildingEnabled lock for the next round
+ * If the team has debts, a percentage of it will be payed too.
+ *
  * Money: bank->propertIES->team
  * @param gameId
  * @param callback
  */
 Marketplace.prototype.payRents = function (gameId, callback) {
   var self = this;
-  self.payInterests(gameId, function (err) {
+
+  gameCache.getGameData(gameId, function (err, res) {
     if (err) {
+      logger.error(err);
       return callback(err);
     }
+    var gp = res.gameplay;
+    var teams = _.valuesIn(res.teams);
 
-    propWrap.allowBuilding(gameId, function (err, nbAffected) {
+    // check negative asset and pay rent
+    self.checkNegativeAsset(gameId, function (err) {
       if (err) {
         return callback(err);
       }
-      logger.info('Building allowed again for ' + nbAffected.toString() + ' buildings');
 
-      gameCache.getGameData(gameId, function (err, res) {
+      self.payInterests(gameId, function (err) {
         if (err) {
-          logger.error(err);
           return callback(err);
         }
-        var gp = res.gameplay;
-        var teams = _.valuesIn(res.teams);
-        var paid = 0;
-        var error = null;
 
-        var payRentsCallback = function (err) {
+        propWrap.allowBuilding(gameId, function (err, nbAffected) {
           if (err) {
-            error = err;
+            return callback(err);
           }
-          paid++;
-          if (paid === teams.length) {
-            return callback(error);
-          }
-        };
+          logger.info('Building allowed again for ' + nbAffected.toString() + ' buildings');
 
-        for (var i = 0; i < teams.length; i++) {
-          self.payRentsForTeam(gp, teams[i], payRentsCallback);
-        }
+          var paid = 0;
+          var error = null;
+
+          var payRentsCallback = function (err) {
+            if (err) {
+              error = err;
+            }
+            paid++;
+            if (paid === teams.length) {
+              return callback(error);
+            }
+          };
+
+          for (var i = 0; i < teams.length; i++) {
+            self.payRentsForTeam(gp, teams[i], payRentsCallback);
+          }
+        });
       });
     });
   });
