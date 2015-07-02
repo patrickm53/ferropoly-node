@@ -22,6 +22,8 @@ module.exports = {
    */
   init: function(_options) {
     options = _options;
+    //activate for debug only
+    //logger.info('options for mailer', options.mailer);
     transporter = nodemailer.createTransport(smtpTransport(options.mailer));
   },
 
@@ -43,7 +45,7 @@ module.exports = {
       html: mailContents.html
     }, function(err, info) {
       if (err) {
-        logger.error(err);
+        logger.error('cant send mail', err);
       }
       logger.info(info);
       callback(err, info);

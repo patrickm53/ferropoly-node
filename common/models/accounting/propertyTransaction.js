@@ -38,6 +38,7 @@ var PropertyAccountTransaction = mongoose.model('PropertyTransactions', property
  * @param callback
  */
 function book(transaction, callback) {
+  transaction.transaction.amount = Math.floor(transaction.transaction.amount);
   transaction.save(function (err) {
     callback(err);
   });

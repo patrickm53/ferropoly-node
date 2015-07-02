@@ -14,6 +14,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var logger = require('../../../common/lib/logger').getLogger('marketplace');
 var travelLog = require('../../../common/models/travelLogModel');
+var async = require('async');
 
 var marketplace;
 
@@ -351,24 +352,24 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
     }
     var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
-    var paid = 0;
-    var error = null;
 
-    var handlingCallback = function (err) {
-      if (err) {
-        error = err;
-      }
-      paid++;
-      if (paid === teams.length) {
-        callback(error);
-      }
-    };
-
-    for (var i = 0; i < teams.length; i++) {
-      teamAccount.negativeBalanceHandling(gameId, teams[i].uuid, gp.gameParams.debtInterest, handlingCallback);
-    }
+    async.each(teams, function (team, cb) {
+      teamAccount.negativeBalanceHandling(gameId, team.uuid, gp.gameParams.debtInterest, function (err, info) {
+        if (err) {
+          return cb(err);
+        }
+        if (info && info.amount !== 0) {
+          chancelleryAccount.payToChancellery(gp, team, info.amount, 'Strafzins (negatives Guthaben)', cb);
+          return;
+        }
+        cb();
+      })
+    }, function (err) {
+      callback(err);
+    });
   });
-};
+
+}
 
 /**
  * Pays the rents (each hour) for a team

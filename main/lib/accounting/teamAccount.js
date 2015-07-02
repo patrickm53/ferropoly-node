@@ -76,7 +76,7 @@ function chargeToBankOrChancellery(teamId, gameId, amount, info, category, callb
     if (ferroSocket) {
       ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: entry});
     }
-    callback(err);
+    callback(err, {amount: chargedAmount});
   });
 }
 /**
@@ -273,7 +273,7 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
       return callback(err);
     }
     if (info.balance < 0) {
-      var interest = Math.abs(info.balance * rate / 100);
+      var interest = Math.floor(Math.abs(info.balance * rate / 100));
       logger.info('Negative balance, pay interest ' + interest + ' from ' + info.balance);
       chargeToChancellery(teamId, gameId, interest, 'Strafzins (negatives Guthaben)', callback);
     }

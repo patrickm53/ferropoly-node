@@ -132,6 +132,23 @@ function gamble(gameplay, team, amount, callback) {
   });
 }
 
+/**
+ * Pays a given amount to the chancellery, "Parkplatz"
+ * @param gameplay
+ * @param team
+ * @param amount
+ * @param text
+ * @param callback
+ */
+function payToChancellery(gameplay, team, amount, text, callback) {
+  var retVal = {
+    amount: amount,
+    infoText: text
+  };
+  bookChancelleryEvent(gameplay, team, retVal, function (err) {
+    return callback(err, retVal);
+  });
+}
 
 /**
  * Gets the balance, at a given time or now. This is the same as the "Jackpot"
@@ -182,5 +199,6 @@ module.exports = {
   playChancellery: playChancellery,
   getAccountStatement: getAccountStatement,
   getBalance: getBalance,
-  gamble: gamble
+  gamble: gamble,
+  payToChancellery: payToChancellery
 };
