@@ -100,6 +100,10 @@ function playChancellery(gameplay, team, callback) {
       if (err) {
         return callback(err);
       }
+      if (info.balance === 0) {
+        // Parkplatz is empty, we have to play another round!
+        return playChancellery(gameplay, team, callback);
+      }
       retVal.amount = info.balance;
       bookChancelleryEvent(gameplay, team, retVal, function (err) {
         return callback(err, retVal);
