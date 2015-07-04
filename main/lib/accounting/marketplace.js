@@ -251,22 +251,14 @@ Marketplace.prototype.payInitialAsset = function (gameId, callback) {
     }
     var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
-    var paid = 0;
-    var error = null;
 
-    var payInitialAssetCallback = function (err) {
-      if (err) {
-        error = err;
+    async.each(teams, function (team, callback) {
+        teamAccount.receiveFromBank(team.uuid, gameId, gp.gameParams.startCapital, 'Startkapital', callback);
+      },
+      function (err) {
+        callback(err);
       }
-      paid++;
-      if (paid === teams.length) {
-        callback(error);
-      }
-    };
-
-    for (var i = 0; i < teams.length; i++) {
-      teamAccount.receiveFromBank(teams[i].uuid, gameId, gp.gameParams.startCapital, 'Startkapital', payInitialAssetCallback);
-    }
+    );
   });
 };
 
@@ -301,7 +293,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       }
     };
 
-    for (var i = 0; i < gp.gameParams.payRentsCallback; i++) {
+    for (var i = 0; i < gp.gameParams.interestCyclesAtEndOfGame; i++) {
       self.payRents(gameId, payRentsCallback);
     }
   });
@@ -320,22 +312,14 @@ Marketplace.prototype.payInterests = function (gameId, callback) {
     }
     var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
-    var paid = 0;
-    var error = null;
 
-    var payInterestCallback = function (err) {
-      if (err) {
-        error = err;
+    async.each(teams, function (team, callback) {
+        teamAccount.payInterest(team.uuid, gameId, gp.gameParams.interest, callback);
+      },
+      function (err) {
+        callback(err);
       }
-      paid++;
-      if (paid === teams.length) {
-        callback(error);
-      }
-    };
-
-    for (var i = 0; i < teams.length; i++) {
-      teamAccount.payInterest(teams[i].uuid, gameId, gp.gameParams.interest, payInterestCallback);
-    }
+    );
   });
 };
 
@@ -439,22 +423,13 @@ Marketplace.prototype.payRents = function (gameId, callback) {
           }
           logger.info('Building allowed again for ' + nbAffected.toString() + ' buildings');
 
-          var paid = 0;
-          var error = null;
-
-          var payRentsCallback = function (err) {
-            if (err) {
-              error = err;
+          async.each(teams, function (team, callback) {
+              self.payRentsForTeam(gp, team, callback);
+            },
+            function (err) {
+              callback(err);
             }
-            paid++;
-            if (paid === teams.length) {
-              return callback(error);
-            }
-          };
-
-          for (var i = 0; i < teams.length; i++) {
-            self.payRentsForTeam(gp, teams[i], payRentsCallback);
-          }
+          );
         });
       });
     });
