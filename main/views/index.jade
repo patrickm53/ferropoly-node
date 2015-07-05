@@ -36,7 +36,8 @@ block content
                   p
                     a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
                     | &nbsp;
-                    a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized') Spiel administrieren
+                    a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel administrieren
+                    a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-hide='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel ansehen
                 p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
               .panel-footer
                 p {{getGpInfo(gameplay)}}

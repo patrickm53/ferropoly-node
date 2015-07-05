@@ -220,6 +220,23 @@ DataStore.prototype.getGameplay = function () {
 };
 
 /**
+ * Checks whether a game is active or not
+ * @returns {boolean}
+ */
+DataStore.prototype.isGameActive = function() {
+  var start = moment(this.data.gameplay.scheduling.gameStartTs);
+  var end = moment(this.data.gameplay.scheduling.gameEndTs);
+  if (moment().isAfter(end)) {
+    console.log('Game over');
+    return false;
+  }
+  if (moment().isBefore(start)) {
+    console.log('Game not started yet');
+    return false;
+  }
+  return true;
+};
+/**
  * Updates the team account entries.
  * @param teamId  ID of the team, undefined updates for all
  * @param callback optional callback, called when data is available

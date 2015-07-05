@@ -25,8 +25,11 @@ function managecallCtrl($scope, $http) {
     properties: [],
     callLog: []
   };
-
   $scope.propertyInvestCandidate = undefined;
+
+  $scope.isGameActive = function() {
+    return dataStore.isGameActive();
+  }
 
   /**
    * Local function for pushing an event

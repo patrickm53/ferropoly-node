@@ -84,6 +84,11 @@ module.exports = {
       var gpHandled = 0;
       var teamError = null;
       _.forOwn(gameCache, function (gp) {
+        logger.info('GP value:', gp);
+        if (!gp.internal) {
+          logger.error('gp.internal not defined', gp);
+          return;
+        }
         teamModel.getTeams(gp.internal.gameId, function (err, teams) {
           if (err) {
             teamError = err;
