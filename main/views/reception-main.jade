@@ -10,7 +10,9 @@ div(ng-controller='dashboardCtrl' ng-cloak)
           h3.panel-title Aktuelle Rangliste
             i.fa.fa-refresh.refresh-button(ng-click='refreshRankingList()')
         .panel-body
-          table.table
+          div(ng-show='rankingList.length === 0')
+            p Es gibt noch keine Buchungen, deshalb kann die Rangliste nicht dargestellt werden.
+          table.table(ng-show='rankingList.length')
             tr(ng-repeat='t in rankingList | orderBy:"rank"')
               td {{t.rank}}
               td {{t.teamName}}
