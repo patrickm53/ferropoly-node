@@ -30,10 +30,13 @@ block content
                 p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
                 p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
                   div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
-                p
-                  a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
-                  | &nbsp;
-                  a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}') Spiel administrieren
+                div(ng-hide='gameplay.internal.finalized')
+                  .alert.alert-danger Das Spiel wurde noch nicht finalisiert! Bitte im Editor unter 'Preisliste' erledigen.
+                div(ng-show='gameplay.internal.finalized')
+                  p
+                    a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
+                    | &nbsp;
+                    a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized') Spiel administrieren
                 p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
               .panel-footer
                 p {{getGpInfo(gameplay)}}
