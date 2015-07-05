@@ -4,19 +4,101 @@
  */
 'use strict';
 var map;
+
+function initializeMap() {
+  if (google.maps) {
+    // Create an array of styles.
+    var styles =
+      [{
+        "stylers": [
+          {"saturation": -29},
+          {"lightness": 38}
+        ]
+      },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry",
+          "stylers": [
+            {"visibility": "simplified"}
+          ]
+        }, {
+        "featureType": "transit.station.bus",
+        "stylers": [
+          {"hue": "#ffff00"},
+          {"visibility": "on"}
+        ]
+      }, {
+        "featureType": "administrative.locality",
+        "elementType": "labels",
+        "stylers": [
+          {"visibility": "on"},
+          {"weight": 0.1},
+          {"color": "#252320"}
+        ]
+      }, {
+        "featureType": "road",
+        "elementType": "labels",
+        "stylers": [
+          {"visibility": "off"}
+        ]
+      }, {
+        "featureType": "administrative.country",
+        "elementType": "geometry.stroke",
+        "stylers": [
+          {"visibility": "on"},
+          {"weight": 1.6},
+          {"color": "#a50f08"}
+        ]
+      }, {
+        "featureType": "transit.station.rail",
+        "stylers": [
+          {"visibility": "on"},
+          {"hue": "#006eff"},
+          {"weight": 1.1}
+        ]
+      }, {
+        "featureType": "transit.line",
+        "elementType": "geometry.fill",
+        "stylers": [
+          {"visibility": "on"},
+          {"color": "#333333"},
+          {"weight": 1.5}
+        ]
+      }, {
+        "featureType": "landscape.natural.landcover"
+      }
+      ];
+
+    // Create a new StyledMapType object, passing it the array of styles,
+    // as well as the name to be displayed on the map type control.
+    var styledMap = new google.maps.StyledMapType(styles,
+      {name: "Bahnkarte"});
+
+    // Create a map object, and include the MapTypeId to add
+    // to the map type control.
+    var mapOptions = {
+      zoom: 8,
+      center: new google.maps.LatLng(47.29725, 8.867215),
+
+      mapTypeControlOptions: {
+        mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+      }
+    };
+
+    console.log(document.getElementById('map_canvas'));
+    map = new google.maps.Map(document.getElementById('map_canvas'),
+      mapOptions);
+
+    //Associate the styled map with the MapTypeId and set it to display.
+    map.mapTypes.set('map_style', styledMap);
+    map.setMapTypeId('map_style');
+  }
+}
 /**
  * Load map when ready
  */
 $(document).ready(function () {
-  if (google.maps) {
-    var mapOptions = {
-      center: new google.maps.LatLng(47.29725, 8.867215),
-      zoom: 8,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById("map_canvas"),
-      mapOptions);
-  }
+  initializeMap();
 });
 
 /**
@@ -135,7 +217,7 @@ function mapCtrl($scope, $http) {
   /**
    * The main switch for showing all on travel log
    */
-  $scope.enableTravelLogAll = function() {
+  $scope.enableTravelLogAll = function () {
     for (var i = 0; i < $scope.teams.length; i++) {
       $scope.teams[i].displayOnMap = $scope.travelLogAll;
     }
@@ -160,7 +242,7 @@ function mapCtrl($scope, $http) {
   /**
    * Update handler when activating the tab
    */
-  $scope.updateMap = function() {
+  $scope.updateMap = function () {
     if ($scope.activePanel === 'maps-travellog') {
       $scope.drawTravelLog();
     }
