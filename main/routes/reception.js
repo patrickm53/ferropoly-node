@@ -55,12 +55,12 @@ router.get('*', function (req, res) {
             socketUrl:'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
             gameplay: JSON.stringify(gp),
             pricelist: JSON.stringify(pl),
-            teams: JSON.stringify(foundTeams)
+            teams: JSON.stringify(foundTeams),
+            currentGameId: gameId
           });
         });
       });
     });
-
   });
 });
 

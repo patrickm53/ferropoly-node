@@ -8,7 +8,8 @@ div(ng-controller='dashboardCtrl' ng-cloak)
       .panel.panel-default
         .panel-heading
           h3.panel-title Aktuelle Rangliste
-            i.fa.fa-refresh.refresh-button(ng-click='refreshRankingList()')
+            a.fa.fa-download.button-right-1(href='/download/rankinglist/#{gameId}')
+            i.fa.fa-refresh.button-right-0(ng-click='refreshRankingList()')
         .panel-body
           div(ng-show='rankingList.length === 0')
             p Es gibt noch keine Buchungen, deshalb kann die Rangliste nicht dargestellt werden.

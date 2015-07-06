@@ -8,36 +8,47 @@
 }
 
 #active-call {
-    display: none;
-    font-weight: bold;
+    display     : none;
+    font-weight : bold;
 }
 
 .call-log-title {
-  font-weight: bold;
-    display: inline-block;
+    font-weight : bold;
+    display     : inline-block;
 }
 
 .call-log-message {
-    display: inline-block;
+    display : inline-block;
 }
 
 .call-log-ts {
-    display: inline-block;
+    display : inline-block;
 }
 
 .refresh-button {
-    position: absolute;
-    right: 25px;
+    position : absolute;
+    right    : 25px;
+}
+
+.button-right-0 {
+    position : absolute;
+    right    : 25px;
+}
+
+.button-right-1 {
+    position : absolute;
+    right    : 50px;
 }
 
 #color-tag {
-    position: absolute;
-    right: 25px;
+    position : absolute;
+    right    : 25px;
 }
+
 .finish-call-button {
-    display: inline-block;
-    position: absolute;
-    right: 10px;
+    display  : inline-block;
+    position : absolute;
+    right    : 10px;
 }
 
 #map_canvas {
