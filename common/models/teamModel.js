@@ -15,7 +15,7 @@ var logger = require('../lib/logger').getLogger('teamModel');
 var teamSchema = mongoose.Schema({
   _id: String,
   gameId: String, // Gameplay this team plays with
-  uuid: {type: String, index: { unique: true }},     // UUID of this team (index)
+  uuid: {type: String, index: {unique: true}},     // UUID of this team (index)
   data: {
     name: String, // Name of the team
     organization: String, // Organization the team belongs to
@@ -26,7 +26,7 @@ var teamSchema = mongoose.Schema({
     },
     remarks: String
   }
-}, { _id: false });
+}, {_id: false});
 
 /**
  * The Property model
@@ -64,7 +64,7 @@ var updateTeam = function (team, callback) {
       if (!team.gameId) {
         return callback(new Error('no game id'));
       }
-      return createTeam(team, team.gameId, function(err, newTeam) {
+      return createTeam(team, team.gameId, function (err, newTeam) {
         if (err) {
           return callback(new Error('can not create new team: ' + err.message));
         }
@@ -127,7 +127,25 @@ var getTeams = function (gameId, callback) {
     }
     return callback(null, docs);
   });
+};
 
+/**
+ * Returns the teams as object, each team accessible using team[teamId]
+ * @param gameId
+ * @param callback
+ */
+var getTeamsAsObject = function (gameId, callback) {
+  getTeams(gameId, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    // Add all teams to the result
+    var teams = {};
+    for (var i = 0; i < data.length; i++) {
+      teams[data[i].uuid] = data[i];
+    }
+    callback(null, teams);
+  });
 };
 
 module.exports = {
@@ -136,5 +154,6 @@ module.exports = {
   updateTeam: updateTeam,
   deleteTeam: deleteTeam,
   deleteAllTeams: deleteAllTeams,
-  getTeams: getTeams
+  getTeams: getTeams,
+  getTeamsAsObject: getTeamsAsObject
 };
