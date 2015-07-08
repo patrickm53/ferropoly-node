@@ -6,7 +6,7 @@
 var map;
 
 function initializeMap() {
-  if (google.maps) {
+  if (!_.isUndefined(google)) {
     // Create an array of styles.
     var styles =
       [{
@@ -105,7 +105,7 @@ $(document).ready(function () {
  * Refresh map panel when activating it
  */
 function refreshMapPanel() {
-  if (!google.maps) {
+  if (_.isUndefined(google)) {
     return;
   }
   dataStore.updateTravelLog();
@@ -176,6 +176,10 @@ function createFreePropertyMarkers() {
  * @returns {google.maps.Circle}
  */
 function createFreePropertyMarker(property) {
+  if (_.isUndefined(google)) {
+    return;
+  }
+
   var markerOptions = {
     strokeColor: 'black',
     strokeOpacity: 0.6,
@@ -300,6 +304,9 @@ function mapCtrl($scope, $http) {
    * Deletes the free property markers
    */
   $scope.deleteFreePropertyMarkers = function () {
+    if (_.isUndefined(google)) {
+      return;
+    }
     if ($scope.freePropertyMarkers) {
       for (var i = 0; i < $scope.freePropertyMarkers.length; i++) {
         $scope.freePropertyMarkers[i].setMap(null);

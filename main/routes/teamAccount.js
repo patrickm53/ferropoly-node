@@ -31,6 +31,8 @@ router.get('/get/:gameId/:teamId', function (req, res) {
       }
       teamBalance[data[i].teamId] += data[i].transaction.amount;
       data[i].balance = teamBalance[data[i].teamId];
+    //  data[i].transaction = _.omit(data[i].transaction, 'origin');
+      data[i] = _.omit(data[i], ['_id', 'gameId','__v']);
     }
     res.send({status:'ok', accountData: data});
   });
