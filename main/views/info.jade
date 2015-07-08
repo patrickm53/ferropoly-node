@@ -35,15 +35,15 @@ block navbar
 block content
   div(ng-app='infoApp' ng-controller='infoCtrl')
     div(id='ps')
-      include info-loading
+      include info/info-loading
     div(id='p0' ng-cloak)
-      include info-error
+      include info/info-error
     div(id='p1' ng-cloak)
-      include info-main
+      include info/info-main
     div(id='p2' ng-cloak)
-      include info-list
+      include info/info-list
     div(id='p3' ng-cloak)
-      include info-map
+      include info/info-map
     script
       | console.log(gp);
 
