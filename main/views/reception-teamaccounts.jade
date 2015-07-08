@@ -3,6 +3,7 @@
 
 div#team-accounts-ctrl(ng-controller='teamAccountsCtrl')
   h1 Kontobücher Teams
+    a.fa.fa-download.button-right-0.download-accountinfo(href='/download/teamAccount/{{downloadUrl()}}')
   ul.nav.nav-tabs
     li#account-undefined.active(role='presentation' ng-click='setTeam()')
       a(href='#' role='presentation') Alle

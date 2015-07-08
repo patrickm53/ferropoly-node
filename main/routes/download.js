@@ -82,6 +82,7 @@ router.get('/rankingList/:gameId', function (req, res) {
  * Returns the account info as CSV
  */
 router.get('/teamAccount/:gameId/:teamId', function (req, res) {
+  var filename;
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
@@ -96,6 +97,16 @@ router.get('/teamAccount/:gameId/:teamId', function (req, res) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }
+      if (req.params.teamId) {
+        if (!teams[req.params.teamId]) {
+          return res.send({status: 'error', message: 'Unkown team'});
+        }
+        filename = 'kontobuch-' + _.kebabCase(_.escape(teams[req.params.teamId].data.name)) + '.csv';
+      }
+      else {
+        filename = 'kontobuch-alle.csv';
+      }
+
       // Format all data
       for (var i = 0; i < data.length; i++) {
         data[i].teamName = teams[data[i].teamId].data.name;
@@ -127,7 +138,7 @@ router.get('/teamAccount/:gameId/:teamId', function (req, res) {
       res.set({
         'Content-Type': 'application/csv; charset=utf-8',
         'Content-Description': 'File Transfer',
-        'Content-Disposition': 'attachment; filename=rangliste.csv',
+        'Content-Disposition': 'attachment; filename='+ filename,
         'Content-Length': '123'
       });
       res.send(csv);

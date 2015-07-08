@@ -40,6 +40,10 @@
     right    : 50px;
 }
 
+.download-accountinfo {
+    color     : black;
+}
+
 #color-tag {
     position : absolute;
     right    : 25px;

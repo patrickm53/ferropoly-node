@@ -6,6 +6,7 @@
 
 ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.teams = dataStore.getTeams();
+  $scope.currentTeamId = 'undefined';
 
   // as we need fast access to the teams name, we cache the names locally
   $scope.teamNames = {};
@@ -29,7 +30,16 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
     $('#account-' + teamId).addClass('active');
     console.log('set team Id: ' + teamId);
     $scope.entries = dataStore.getTeamAccountEntries(teamId);
+    $scope.currentTeamId = teamId;
     console.log('entries: ' + $scope.entries.length);
+  };
+
+  /**
+   * URL (last parts) needed for downloading the account csv
+   * @returns {string}
+   */
+  $scope.downloadUrl = function() {
+    return  dataStore.getGameplay().internal.gameId + '/' + $scope.currentTeamId;
   };
 
   /**
