@@ -7,7 +7,7 @@
 var express = require('express');
 var router = express.Router();
 var marketplaceApi = require('../lib/accounting/marketplace');
-
+var accessor = require('../lib/accessor');
 /**
  * Build Houses
  */
@@ -50,13 +50,17 @@ router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
  * Pay the rents and interests. This should not be called except an urgent case (or during development)
  */
 router.get('/payRents/:gameId', function(req, res) {
-  // Todo: add authToken check, maybe some more security
-  var marketplace = marketplaceApi.getMarketplace();
-  marketplace.payRents(req.params.gameId, function(err) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    res.send({status: 'ok'});
+    var marketplace = marketplaceApi.getMarketplace();
+    marketplace.payRents(req.params.gameId, function (err) {
+      if (err) {
+        return res.send({status: 'error', message: err.message});
+      }
+      res.send({status: 'ok'});
+    });
   });
 });
 module.exports = router;

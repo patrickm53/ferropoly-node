@@ -9,7 +9,7 @@ var router = express.Router();
 var chancellery = require('../lib/accounting/chancelleryAccount');
 var gameCache = require('../lib/gameCache');
 var logger = require('../../common/lib/logger').getLogger('routes:chancellery');
-
+var accessor = require('../lib/accessor');
 var _ = require('lodash');
 
 /**
@@ -19,12 +19,16 @@ router.get('/balance/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-
-  chancellery.getBalance(req.params.gameId, function(err, data) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    res.send({status: 'ok', data: data});
+    chancellery.getBalance(req.params.gameId, function (err, data) {
+      if (err) {
+        return res.send({status: 'error', message: err.message});
+      }
+      res.send({status: 'ok', data: data});
+    });
   });
 });
 
@@ -35,12 +39,17 @@ router.get('/account/statement/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-
-  chancellery.getAccountStatement(req.params.gameId, function(err, data) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    res.send({status: 'ok', entries: data});
+
+    chancellery.getAccountStatement(req.params.gameId, function (err, data) {
+      if (err) {
+        return res.send({status: 'error', message: err.message});
+      }
+      res.send({status: 'ok', entries: data});
+    });
   });
 });
 
@@ -51,19 +60,24 @@ router.get('/play/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId || !req.params.teamId) {
     return res.send({status: 'error', message: 'No gameId or teamId supplied'});
   }
-  gameCache.getGameData(req.params.gameId, function (err, data) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      logger.error(err);
       return res.send({status: 'error', message: err.message});
     }
-    var gp = data.gameplay;
-    var team = data.teams[req.params.teamId];
-
-    chancellery.playChancellery(gp, team, function (err, data) {
+    gameCache.getGameData(req.params.gameId, function (err, data) {
       if (err) {
+        logger.error(err);
         return res.send({status: 'error', message: err.message});
       }
-      res.send({status: 'ok', result: data});
+      var gp = data.gameplay;
+      var team = data.teams[req.params.teamId];
+
+      chancellery.playChancellery(gp, team, function (err, data) {
+        if (err) {
+          return res.send({status: 'error', message: err.message});
+        }
+        res.send({status: 'ok', result: data});
+      });
     });
   });
 });

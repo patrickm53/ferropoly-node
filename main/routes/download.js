@@ -11,6 +11,8 @@ var _ = require('lodash');
 var teamAccount = require('../lib/accounting/teamAccount');
 var teamModel = require('../../common/models/teamModel');
 var moment = require('moment');
+var accessor = require('../lib/accessor');
+
 /**
  * Creates a CSV
  * @param columns Object with the property names and their titles. Each property is one column
@@ -52,30 +54,36 @@ router.get('/rankingList/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-
-  teamModel.getTeamsAsObject(req.params.gameId, function (err, teams) {
-    if (err) {
-      return res.send({status: 'error', message: err.message});
-    }
-
-    teamAccount.getRankingList(req.params.gameId, function (err, ranking) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }
-      for (var i = 0; i < ranking.length; i++) {
-        ranking[i].teamName = teams[ranking[i].teamId].data.name;
-      }
-      var csv = createCsv({'rank': 'Rang', 'teamName': 'Team', 'asset': 'Vermögen'}, ranking);
+      teamModel.getTeamsAsObject(req.params.gameId, function (err, teams) {
+        if (err) {
+          return res.send({status: 'error', message: err.message});
+        }
 
-      res.set({
-        'Content-Type': 'application/csv; charset=utf-8',
-        'Content-Description': 'File Transfer',
-        'Content-Disposition': 'attachment; filename=rangliste.csv',
-        'Content-Length': '123'
+        teamAccount.getRankingList(req.params.gameId, function (err, ranking) {
+          if (err) {
+            return res.send({status: 'error', message: err.message});
+          }
+          for (var i = 0; i < ranking.length; i++) {
+            ranking[i].teamName = teams[ranking[i].teamId].data.name;
+          }
+          var csv = createCsv({'rank': 'Rang', 'teamName': 'Team', 'asset': 'Vermögen'}, ranking);
+
+          res.set({
+            'Content-Type': 'application/csv; charset=utf-8',
+            'Content-Description': 'File Transfer',
+            'Content-Disposition': 'attachment; filename=rangliste.csv',
+            'Content-Length': '123'
+          });
+          res.send(csv);
+        });
       });
-      res.send(csv);
-    });
-  });
+    }
+  )
+  ;
 });
 
 /**
@@ -89,62 +97,66 @@ router.get('/teamAccount/:gameId/:teamId', function (req, res) {
   if (req.params.teamId === 'undefined') {
     req.params.teamId = undefined;
   }
-  teamModel.getTeamsAsObject(req.params.gameId, function (err, teams) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    teamAccount.getAccountStatement(req.params.gameId, req.params.teamId, function (err, data) {
+    teamModel.getTeamsAsObject(req.params.gameId, function (err, teams) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }
-      if (req.params.teamId) {
-        if (!teams[req.params.teamId]) {
-          return res.send({status: 'error', message: 'Unkown team'});
+      teamAccount.getAccountStatement(req.params.gameId, req.params.teamId, function (err, data) {
+        if (err) {
+          return res.send({status: 'error', message: err.message});
         }
-        filename = 'kontobuch-' + _.kebabCase(_.escape(teams[req.params.teamId].data.name)) + '.csv';
-      }
-      else {
-        filename = 'kontobuch-alle.csv';
-      }
+        if (req.params.teamId) {
+          if (!teams[req.params.teamId]) {
+            return res.send({status: 'error', message: 'Unkown team'});
+          }
+          filename = 'kontobuch-' + _.kebabCase(_.escape(teams[req.params.teamId].data.name)) + '.csv';
+        }
+        else {
+          filename = 'kontobuch-alle.csv';
+        }
 
-      // Format all data
-      for (var i = 0; i < data.length; i++) {
-        data[i].teamName = teams[data[i].teamId].data.name;
-        data[i].time = moment(data[i].timestamp).format('HH:mm:ss');
-        data[i].info = data[i].transaction.info;
-        data[i].category = _.startCase(data[i].transaction.origin.category);
-        data[i].amount = data[i].transaction.amount;
-        data[i].partsText = '';
-        if (!teams[data[i].teamId].balance) {
-          teams[data[i].teamId].balance = 0;
+        // Format all data
+        for (var i = 0; i < data.length; i++) {
+          data[i].teamName = teams[data[i].teamId].data.name;
+          data[i].time = moment(data[i].timestamp).format('HH:mm:ss');
+          data[i].info = data[i].transaction.info;
+          data[i].category = _.startCase(data[i].transaction.origin.category);
+          data[i].amount = data[i].transaction.amount;
+          data[i].partsText = '';
+          if (!teams[data[i].teamId].balance) {
+            teams[data[i].teamId].balance = 0;
+          }
+          teams[data[i].teamId].balance += data[i].transaction.amount;
+          data[i].balance = teams[data[i].teamId].balance;
+          for (var t = 0; t < data[i].transaction.parts.length; t++) {
+            data[i].partsText += data[i].transaction.parts[t].propertyName + ':' + data[i].transaction.parts[t].amount + ' ';
+          }
+          data[i] = _.omit(data[i], 'transaction');
         }
-        teams[data[i].teamId].balance += data[i].transaction.amount;
-        data[i].balance = teams[data[i].teamId].balance;
-        for (var t = 0; t < data[i].transaction.parts.length; t++) {
-          data[i].partsText += data[i].transaction.parts[t].propertyName + ':' + data[i].transaction.parts[t].amount + ' ';
-        }
-        data[i] = _.omit(data[i], 'transaction');
-      }
-      var csv = createCsv({
-        'time': 'Zeit',
-        'teamName': 'Team',
-        'info': 'Buchungstext',
-        'partsText': 'Teilbuchungen',
-        'category': 'Kategorie',
-        'amount': 'Betrag',
-        'balance': 'Saldo'
-      }, data);
+        var csv = createCsv({
+          'time': 'Zeit',
+          'teamName': 'Team',
+          'info': 'Buchungstext',
+          'partsText': 'Teilbuchungen',
+          'category': 'Kategorie',
+          'amount': 'Betrag',
+          'balance': 'Saldo'
+        }, data);
 
-      res.set({
-        'Content-Type': 'application/csv; charset=utf-8',
-        'Content-Description': 'File Transfer',
-        'Content-Disposition': 'attachment; filename='+ filename,
-        'Content-Length': '123'
+        res.set({
+          'Content-Type': 'application/csv; charset=utf-8',
+          'Content-Description': 'File Transfer',
+          'Content-Disposition': 'attachment; filename=' + filename,
+          'Content-Length': '123'
+        });
+        res.send(csv);
       });
-      res.send(csv);
     });
   });
-
 });
 
 module.exports = router;

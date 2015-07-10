@@ -10,6 +10,7 @@ var teamAccount = require('../lib/accounting/teamAccount');
 var propertyAccount = require('../lib/accounting/propertyAccount');
 var gameCache = require('../lib/gameCache');
 var logger = require('../../common/lib/logger').getLogger('routes:statistics');
+var accessor = require('../lib/accessor');
 
 var _ = require('lodash');
 
@@ -20,11 +21,16 @@ router.get('/rankingList/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-  teamAccount.getRankingList(req.params.gameId, function(err, ranking) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    res.send({status:'ok', ranking: ranking});
+    teamAccount.getRankingList(req.params.gameId, function (err, ranking) {
+      if (err) {
+        return res.send({status: 'error', message: err.message});
+      }
+      res.send({status: 'ok', ranking: ranking});
+    });
   });
 });
 
@@ -35,31 +41,36 @@ router.get('/income/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-
-  gameCache.getGameData(req.params.gameId, function (err, data) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      logger.error(err);
       return res.send({status: 'error', message: err.message});
     }
-    var gp = data.gameplay;
-    var teams = _.values(data.teams);
-
-    // Callback for iteration
-    var info = [];
-    function collector(err, result) {
+    gameCache.getGameData(req.params.gameId, function (err, data) {
       if (err) {
+        logger.error(err);
         return res.send({status: 'error', message: err.message});
       }
-      info.push(result);
-      if (info.length === teams.length) {
-        return res.send({status:'ok', info: info});
-      }
-    }
+      var gp = data.gameplay;
+      var teams = _.values(data.teams);
 
-    // Iterate through teams
-    for (var i = 0; i < teams.length; i++) {
-      propertyAccount.getRentRegister(gp, teams[i], collector);
-    }
+      // Callback for iteration
+      var info = [];
+
+      function collector(err, result) {
+        if (err) {
+          return res.send({status: 'error', message: err.message});
+        }
+        info.push(result);
+        if (info.length === teams.length) {
+          return res.send({status: 'ok', info: info});
+        }
+      }
+
+      // Iterate through teams
+      for (var i = 0; i < teams.length; i++) {
+        propertyAccount.getRentRegister(gp, teams[i], collector);
+      }
+    });
   });
 });
 module.exports = router;
