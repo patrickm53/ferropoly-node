@@ -34,6 +34,8 @@ module.exports = {
         return callback(err);
       }
 
+      logger.info('Read cache:', gc);
+  
       if (gc.gameplay.owner.organisatorEmail === userId) {
         // it's the admin, return always ok
         return callback(null);
