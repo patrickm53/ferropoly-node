@@ -390,6 +390,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
 
     async.each(teams, function (team, cb) {
       teamAccount.negativeBalanceHandling(gameId, team.uuid, gp.gameParams.debtInterest, function (err, info) {
+        logger.info('negativeBalanceHandlingResult', info);
         if (err) {
           return cb(err);
         }

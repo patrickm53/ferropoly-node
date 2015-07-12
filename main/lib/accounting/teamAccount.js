@@ -7,7 +7,7 @@
 var _ = require('lodash');
 var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
 var moment = require('moment');
-var logger = require('../../../common/lib/logger').getLogger('teamAccount');
+var logger = require('../../../common/lib/logger').getLogger('accounting:teamAccount');
 
 var ferroSocket;
 /**
@@ -88,9 +88,7 @@ function chargeToBankOrChancellery(teamId, gameId, amount, info, category, callb
  * @param callback
  */
 function chargeToBank(teamId, gameId, amount, info, callback) {
-  chargeToBankOrChancellery(teamId, gameId, amount, info, 'bank', function (err) {
-    callback(err);
-  });
+  chargeToBankOrChancellery(teamId, gameId, amount, info, 'bank', callback);
 }
 
 /**
@@ -102,9 +100,7 @@ function chargeToBank(teamId, gameId, amount, info, callback) {
  * @param callback
  */
 function chargeToChancellery(teamId, gameId, amount, info, callback) {
-  chargeToBankOrChancellery(teamId, gameId, amount, info, 'chancellery', function (err) {
-    callback(err);
-  });
+  chargeToBankOrChancellery(teamId, gameId, amount, info, 'chancellery', callback);
 }
 
 /**
