@@ -38,6 +38,7 @@ var chancelleryRoute = require('./routes/chancellery');
 var propertiesRoute = require('./routes/properties');
 var downloadRoute = require('./routes/download');
 var aboutRoute = require('./routes/about');
+var appInfoRoute = require('../common/routes/info');
 var app = express();
 var ferroSocket = require('./lib/ferroSocket');
 var autopilot = require('./lib/autopilot');
@@ -93,6 +94,7 @@ ferropolyDb.init(settings, function (err) {
   app.use(express.static(path.join(__dirname, 'public')));
 
   // Routes initialisation
+  app.use('/appinfo', appInfoRoute);
   login.init(app, settings);
   app.use('/', indexRoute);
   app.use('/info', infoRoute);
