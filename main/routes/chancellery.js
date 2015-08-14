@@ -96,23 +96,29 @@ router.post('/gamble/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId || !req.params.teamId || !req.body.amount) {
     return res.send({status: 'error', message: 'No gameId, teamId or amount supplied'});
   }
-  var amount = parseInt(req.body.amount);
-  if (!_.isNumber(amount)) {
-    return res.send({status: 'error', message: 'amount is not a number'});
-  }
-  gameCache.getGameData(req.params.gameId, function (err, data) {
+  
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      logger.error(err);
       return res.send({status: 'error', message: err.message});
     }
-    var gp = data.gameplay;
-    var team = data.teams[req.params.teamId];
-
-    chancellery.gamble(gp, team, amount, function (err, data) {
+    var amount = parseInt(req.body.amount);
+    if (!_.isNumber(amount)) {
+      return res.send({status: 'error', message: 'amount is not a number'});
+    }
+    gameCache.getGameData(req.params.gameId, function (err, data) {
       if (err) {
+        logger.error(err);
         return res.send({status: 'error', message: err.message});
       }
-      res.send({status: 'ok', result: data});
+      var gp = data.gameplay;
+      var team = data.teams[req.params.teamId];
+
+      chancellery.gamble(gp, team, amount, function (err, data) {
+        if (err) {
+          return res.send({status: 'error', message: err.message});
+        }
+        res.send({status: 'ok', result: data});
+      });
     });
   });
 });

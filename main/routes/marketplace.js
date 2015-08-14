@@ -19,11 +19,16 @@ router.post('/buildHouses/:gameId/:teamId', function (req, res) {
   if (req.body.authToken !== req.session.ferropolyToken) {
     return res.send({status: 'error', message: 'Permission denied (2)'});
   }
-  marketplace.buildHouses(req.params.gameId, req.params.teamId, function (err, result) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    res.send({status: 'ok', result: result});
+    marketplace.buildHouses(req.params.gameId, req.params.teamId, function (err, result) {
+      if (err) {
+        return res.send({status: 'error', message: err.message});
+      }
+      res.send({status: 'ok', result: result});
+    });
   });
 });
 
@@ -38,11 +43,16 @@ router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
   if (req.body.authToken !== req.session.ferropolyToken) {
     return res.send({status: 'error', message: 'Permission denied (2)'});
   }
-  marketplace.buyProperty(req.params.gameId, req.params.teamId, req.params.propertyId, function (err, result) {
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    res.send({status: 'ok', result: result});
+    marketplace.buyProperty(req.params.gameId, req.params.teamId, req.params.propertyId, function (err, result) {
+      if (err) {
+        return res.send({status: 'error', message: err.message});
+      }
+      res.send({status: 'ok', result: result});
+    });
   });
 });
 

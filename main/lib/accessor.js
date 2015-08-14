@@ -10,9 +10,7 @@ var gamecache = require('./gameCache');
 var PLAYER = 1;
 var ADMIN = 2;
 /**
- * Returns the rights, either:
- * 'ADMIN' if this is the owner of the game (or in future: a delegated user)
- * 'PLAYER' if this a player accessing
+ * Checks the rights: has a user the required minimal rights level?
  *
  * If no rights are given, an error is issued
  *
@@ -38,6 +36,7 @@ module.exports = {
         // it's the admin, return always ok
         return callback(null);
       }
+      // Todo: handle player rights for future features
       logger.debug('No access rights granted for ' + userId);
       return callback(new Error('No access rights granted'));
     })
