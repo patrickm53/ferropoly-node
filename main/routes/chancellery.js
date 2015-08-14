@@ -96,7 +96,7 @@ router.post('/gamble/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId || !req.params.teamId || !req.body.amount) {
     return res.send({status: 'error', message: 'No gameId, teamId or amount supplied'});
   }
-  
+
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
