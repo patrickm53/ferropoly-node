@@ -15,6 +15,10 @@ html(lang='de')
     script(src='/bootstrap/js/bootstrap.min.js')
     script(src='/angular/angular.js')
     block head
+    // Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent
+    script.
+      window.cookieconsent_options = {"message":"Cookies erleichtern die Bereitstellung dieser Webapplikation. Mit der Nutzung von der Ferropoly-Webseiten erklären Sie sich damit einverstanden, dass wir Cookies verwenden.","dismiss":"Alles klar!","learnMore":"Mehr infos","link":"http://ferropoly.ch/wordpress/datenschutz-cookies/","theme":"dark-floating"};
+    script(src="//s3.amazonaws.com/cc.silktide.com/cookieconsent.latest.min.js")
 
   body
     nav.navbar.navbar-inverse.navbar-navbar-fixed-top
