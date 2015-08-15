@@ -24,6 +24,18 @@ body.bg2 {
     background-image : url("/images/ferropoly_background05.jpg");
 }
 
+.bg6 {
+    background-image : url("/images/ferropoly_background06.jpg");
+}
+
+.bg7 {
+    background-image : url("/images/ferropoly_background07.jpg");
+}
+
+.bg8 {
+    background-image : url("/images/ferropoly_background08.jpg");
+}
+
 .login-box {
     max-width : 330px;
 

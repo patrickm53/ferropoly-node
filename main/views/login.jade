@@ -4,7 +4,7 @@ block head
   link(rel='stylesheet', href='/css/login.css')
   script.
     $(document).ready(function () {
-      var i = (new Date().getSeconds() % 5) + 1;
+      var i = (new Date().getSeconds() % 8) + 1;
       $('body').addClass('bg' + i);
     });
 
@@ -16,7 +16,7 @@ block content
 
   .login-box.ls-box-shape
         form(action='login' method='post')
-          h3 Ferropoly Login
+          h3 Ferropoly Spiel Login
           label(for='inputUserName' class='sr-only') Benutzername
           input(type='text' name='username' id='inputUserName' class='form-control' placeholder='Benutzername' required autofocus)
           p
