@@ -17,6 +17,10 @@ var settings = {
   preview: process.env.FERROPOLY_PREVIEW // is only defined when preview is enabled
 };
 
+if (process.env.FERROPOLY_PREVIEW) {
+  settings.version += '.BETA';
+}
+
 if (process.env.OPENSHIFT_NODEJS_IP) {
   process.env.DEPLOY_TYPE = 'openshift';
 }
