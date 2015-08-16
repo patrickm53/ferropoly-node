@@ -21,7 +21,8 @@ router.get('/', function (req, res) {
     title: settings.appName + ' Login',
     hideLogout: true,
     showSignUp: true,
-    versionInfo: settings.version
+    versionInfo: settings.version,
+    preview: settings.preview
   });
 });
 

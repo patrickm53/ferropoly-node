@@ -8,13 +8,13 @@
 module.exports = function(settings) {
 
   settings.server = {
-    port: 3004,
+    port: process.env.FERROPOLY_MAIN_PORT,
     host: '0.0.0.0',
     serverId: 'localhost-main'
   };
 
   settings.socketIoServer = {
-    port: 3004,
+    port: process.env.FERROPOLY_MAIN_PORT,
     host: 'localhost'
   };
 

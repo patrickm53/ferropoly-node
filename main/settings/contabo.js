@@ -1,5 +1,5 @@
 /**
- * Settings for the contabo server
+ * Settings for the contabo server, its IP is 5.189.159.156
  * Created by kc on 15.08.15.
  */
 'use strict';
@@ -8,14 +8,14 @@
 module.exports = function(settings) {
 
   settings.server = {
-    port: 3004,
-    host: '5.189.159.156',
-    serverId: 'app.ferropoly.ch'
+    port: process.env.FERROPOLY_MAIN_PORT,
+    host: 'app.ferropoly.ch',
+    serverId: 'app.ferropoly.ch-v' + settings.version
   };
 
   settings.socketIoServer = {
-    port: 3004,
-    host: '5.189.159.156'
+    port: process.env.FERROPOLY_MAIN_PORT,
+    host: 'app.ferropoly.ch'
   };
 
   settings.locationDbSettings = {

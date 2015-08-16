@@ -13,7 +13,8 @@ var settings = {
   name: pkg.name,
   appName: pkg.title,
   version: pkg.version,
-  debug: (process.env.NODE_ENV !== 'production' || process.env.DEBUG) ? true : false
+  debug: (process.env.NODE_ENV !== 'production' || process.env.DEBUG) ? true : false,
+  preview: process.env.FERROPOLY_PREVIEW // is only defined when preview is enabled
 };
 
 if (process.env.OPENSHIFT_NODEJS_IP) {
