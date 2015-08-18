@@ -19,7 +19,7 @@ module.exports = function(settings) {
   };
 
   settings.locationDbSettings = {
-    mongoDbUrl: 'mongodb://localhost/ferropoly'
+    mongoDbUrl: process.env.FERROPOLY_CONNECTION_STRING
   };
 
   settings.cron = {
