@@ -6,6 +6,7 @@
  */
 'use strict';
 var gamecache = require('./gameCache');
+var gameplays = require('../../common/models/gameplayModel');
 
 var PLAYER = 1;
 var ADMIN = 2;
@@ -32,8 +33,26 @@ module.exports = {
         return callback(err);
       }
 
-      if (gc.gameplay.owner.organisatorEmail === userId) {
-        // it's the admin, return always ok
+      if (!gc) {
+        // either the gameId does not exist or it needs to be refreshed. Try to get it directly
+        gameplays.getGameplay(gameId, userId, function(err, gp) {
+          if (err) {
+            return callback(err);
+          }
+          if (!gp) {
+            return callback(new Error('no such gameplay'));
+          }
+          // The gameplay is here, refresh cache
+          gamecache.refreshCache(function() {
+            if (gp.owner.organisatorEmail === userId) {
+              return callback(null);
+            }
+            logger.debug('No access rights granted for ' + userId);
+            return callback(new Error('No access rights granted'));
+          });
+        });
+      } else if (gc.gameplay.owner.organisatorEmail === userId) {
+        // it's the admin and the game is in the cache, return always ok
         return callback(null);
       }
       // Todo: handle player rights for future features
