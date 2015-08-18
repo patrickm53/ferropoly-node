@@ -16,7 +16,7 @@ var util = require('util');
 var schedule = require('node-schedule');
 var gameCache = require('./gameCache');
 var logger = require('../../common/lib/logger').getLogger('gameScheduler');
-
+var settings = require('../settings');
 /**
  * Constructor of the scheduler
  * @constructor
@@ -178,6 +178,5 @@ Scheduler.prototype.markEventHandled = function (event, callback) {
 
  Design it as event emitter or do we all here?
  */
-module.exports = function (settings) {
-  return new Scheduler(settings);
-};
+var gameScheduler = new Scheduler(settings);
+module.exports = gameScheduler;
