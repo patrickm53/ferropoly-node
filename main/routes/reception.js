@@ -16,17 +16,15 @@ var authTokenManager = require('../lib/authTokenManager');
 var logger = require('../../common/lib/logger').getLogger('routes:reception');
 
 /* GET the reception of all games */
-router.get('*', function (req, res) {
-  var gameId = _.trimLeft(req.url, '/');
+router.get('/:gameId', function (req, res) {
+  var gameId = req.params.gameId;
 
   gameplayModel.getGameplay(gameId, req.session.passport.user, function (err, gp) {
-    if (!gp) {
-      gp = {};
+    if (err || !gp) {
+     return  res.status(404).send('Error 404: Game not found');
     }
     var errMsg1 = '';
-    if (err) {
-      errMsg1 = err.message;
-    }
+  
     pricelist.getPricelist(gameId, function (err2, pl) {
       if (!pl) {
         pl = {};
