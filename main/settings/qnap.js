@@ -25,6 +25,11 @@ module.exports = function(settings) {
   settings.cron = {
   };
 
+  // This is the second highest priorized scheduler right after the contabo main instance
+  settings.scheduler = {
+    delay: 10
+  };
+
 
   settings.autopilot = {
     interval: 289432,

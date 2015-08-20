@@ -26,6 +26,9 @@ function Scheduler(_settings) {
   EventEmitter.call(this);
 
   this.settings = _settings;
+  if (!this.settings.scheduler) {
+    this.scheduler = {delay: 15};
+  }
   this.jobs = [];
   this.updateJob = undefined;
 
@@ -124,7 +127,8 @@ Scheduler.prototype.update = function (callback) {
         }
         else {
           logger.info('Push event in joblist:' + event._id);
-          self.jobs.push(schedule.scheduleJob(event.timestamp, handlerFunction.bind(null, event)));
+          var scheduledTs = moment(event.timestamp).add({seconds: self.settings.scheduler.delay});
+          self.jobs.push(schedule.scheduleJob(scheduledTs, handlerFunction.bind(null, event)));
         }
       }
     }

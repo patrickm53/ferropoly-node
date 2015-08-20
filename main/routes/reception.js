@@ -21,10 +21,10 @@ router.get('/:gameId', function (req, res) {
 
   gameplayModel.getGameplay(gameId, req.session.passport.user, function (err, gp) {
     if (err || !gp) {
-     return  res.status(404).send('Error 404: Game not found');
+      return res.status(404).send('Error 404: Game not found');
     }
     var errMsg1 = '';
-  
+
     pricelist.getPricelist(gameId, function (err2, pl) {
       if (!pl) {
         pl = {};
@@ -50,7 +50,7 @@ router.get('/:gameId', function (req, res) {
             user: req.session.passport.user,
             err: errMsg1,
             err2: errMsg2,
-            socketUrl:'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
+            socketUrl: 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
             gameplay: JSON.stringify(gp),
             pricelist: JSON.stringify(pl),
             teams: JSON.stringify(foundTeams),

@@ -28,5 +28,10 @@ module.exports = function(settings) {
 
   };
 
+  // This is the third highest priorized scheduler right after the qnap main instance
+  settings.scheduler = {
+    delay: 20
+  };
+
   return settings;
 };
