@@ -128,7 +128,7 @@ Scheduler.prototype.update = function (callback) {
         else {
           logger.info('Push event in joblist:' + event._id);
           var scheduledTs = moment(event.timestamp).add({seconds: self.settings.scheduler.delay});
-          self.jobs.push(schedule.scheduleJob(scheduledTs, handlerFunction.bind(null, event)));
+          self.jobs.push(schedule.scheduleJob(scheduledTs.toDate(), handlerFunction.bind(null, event)));
         }
       }
     }

@@ -26,7 +26,7 @@ module.exports = function(settings) {
   };
 
   settings.scheduler = {
-    delay: 0
+    delay: 5
   };
 
   settings.autopilot = {
