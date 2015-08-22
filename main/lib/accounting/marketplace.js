@@ -463,6 +463,10 @@ Marketplace.prototype.payRents = function (gameId, callback) {
     var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
+    if (!gp) {
+      return callback(new Error('Gameplay with id ' + gameId + ' not found (payRents)'));
+    }
+
     if (!self.isOpen(gp)) {
       return callback(new Error('Marketplace is closed'));
     }

@@ -4,18 +4,12 @@
  */
 'use strict';
 
-
-module.exports = function(settings) {
+module.exports = function (settings) {
 
   settings.server = {
     port: process.env.FERROPOLY_MAIN_PORT,
     host: 'app.ferropoly.ch',
     serverId: 'app.ferropoly.ch-v' + settings.version
-  };
-
-  settings.socketIoServer = {
-    port: process.env.FERROPOLY_MAIN_PORT,
-    host: 'app.ferropoly.ch'
   };
 
   settings.locationDbSettings = {
@@ -27,18 +21,29 @@ module.exports = function(settings) {
   };
 
   if (process.env.FERROPOLY_PREVIEW) {
+    //**** PREVIEW SETTINGS ****
+    settings.socketIoServer = {
+      port: process.env.FERROPOLY_MAIN_PORT,
+      host: 'spiel-preview.ferropoly.ch'
+    };
+
     settings.scheduler = {
       // The preview instance shall do only something if there is no other going to handle it
       delay: 60
     };
   }
   else {
+    //**** RELEASE SETTINGS ****
+    settings.socketIoServer = {
+      port: process.env.FERROPOLY_MAIN_PORT,
+      host: 'spiel.ferropoly.ch'
+    };
+
     // This is the highest priorized scheduler: the contabo main instance
     settings.scheduler = {
       delay: 0
     };
   }
-
-
+  
   return settings;
 };
