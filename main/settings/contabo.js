@@ -23,7 +23,7 @@ module.exports = function (settings) {
   if (process.env.FERROPOLY_PREVIEW) {
     //**** PREVIEW SETTINGS ****
     settings.socketIoServer = {
-      port: process.env.FERROPOLY_MAIN_PORT,
+      port: 80, // using proxy!
       host: 'spiel-preview.ferropoly.ch'
     };
 
@@ -35,7 +35,7 @@ module.exports = function (settings) {
   else {
     //**** RELEASE SETTINGS ****
     settings.socketIoServer = {
-      port: process.env.FERROPOLY_MAIN_PORT,
+      port: 80, // using proxy!
       host: 'spiel.ferropoly.ch'
     };
 
@@ -44,6 +44,6 @@ module.exports = function (settings) {
       delay: 0
     };
   }
-  
+
   return settings;
 };
