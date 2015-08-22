@@ -7,7 +7,7 @@
 var EventEmitter = require('events').EventEmitter;
 var authTokenManager = require('./authTokenManager');
 var logger = require('../../common/lib/logger').getLogger('ferroSocket');
-
+var settings = require('../settings');
 var _ = require('lodash');
 var util = require('util');
 var ferroSocket;
@@ -24,32 +24,39 @@ var FerroSocket = function (server) {
 
   this.sockets = {};
 
-  this.io.on('connect', function(socket) {
+  this.io.on('connect', function (socket) {
     logger.info('io connect event');
   });
-  this.io.on('connection', function(socket) {
+  this.io.on('connection', function (socket) {
     logger.info('io connection event');
+    socket.emit('welcome', {
+      name: settings.name,
+      appName: settings.appName,
+      version: settings.version,
+      debug: settings.debug,
+      preview: settings.preview
+    });
   });
-  this.io.on('connect_error', function(obj) {
+  this.io.on('connect_error', function (obj) {
     logger.info('io connect_error event');
     logger.info(obj);
   });
-  this.io.on('connect_timeout', function(socket) {
+  this.io.on('connect_timeout', function (socket) {
     logger.info('io connect_timeout event');
   });
-  this.io.on('reconnect', function(socket) {
+  this.io.on('reconnect', function (socket) {
     logger.info('io reconnect event');
   });
-  this.io.on('reconnect_attempt', function(socket) {
+  this.io.on('reconnect_attempt', function (socket) {
     logger.info('io reconnect_attempt event');
   });
-  this.io.on('reconnecting', function(socket) {
+  this.io.on('reconnecting', function (socket) {
     logger.info('io reconnecting event');
   });
-  this.io.on('reconnect_error', function(socket) {
+  this.io.on('reconnect_error', function (socket) {
     logger.info('io reconnect_error event');
   });
-  this.io.on('reconnect_failed', function(socket) {
+  this.io.on('reconnect_failed', function (socket) {
     logger.info('io reconnect_failed event');
   });
   /**
@@ -123,6 +130,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
       self.emit(channelName, data);
     });
   }
+
   registerChannel('propertyAccount');
   registerChannel('chancelleryAccount');
   registerChannel('properties');

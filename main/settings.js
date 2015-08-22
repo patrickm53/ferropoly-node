@@ -14,7 +14,7 @@ var settings = {
   appName: pkg.title,
   version: pkg.version,
   debug: (process.env.NODE_ENV !== 'production' || process.env.DEBUG) ? true : false,
-  preview: process.env.FERROPOLY_PREVIEW // is only defined when preview is enabled
+  preview: process.env.FERROPOLY_PREVIEW ? true : false // is only defined when preview is enabled
 };
 
 if (process.env.FERROPOLY_PREVIEW) {
