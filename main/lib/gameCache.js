@@ -20,12 +20,17 @@ var gameCache = {};
 module.exports = {
   getGameData: function (gameId, callback) {
     if (gameCache[gameId]) {
+      if (!gameCache.gameplay || !gameCache.teams) {
+        logger.info('Missing important info in gameplay with id', gameId);
+        return callback(new Error('cached game corrupt: ' + gameId));
+      }
       return callback(null, gameCache[gameId]);
     }
     // not in cache
     gpModel.getGameplay(gameId, null, function (err, gp) {
       logger.info('GP Query for ' + gameId);
       if (err) {
+        logger.error('getGameData, getting gameplay failed', err);
         return callback(err);
       }
 
@@ -33,6 +38,7 @@ module.exports = {
 
       teamModel.getTeams(gameId, function (err, teams) {
         if (err) {
+          logger.error('getGameData, getting teams failed', err);
           return callback(err);
         }
         // Add all teams to the result
@@ -45,6 +51,11 @@ module.exports = {
         if (moment().isBetween(gp.scheduling.gameStartTs, gp.scheduling.gameEndTs)) {
           logger.info('GP added to cache');
           gameCache[gameId] = result;
+        }
+
+        if (!result || !result.gameplay || !result.teams) {
+          logger.info('Missing important info in gameplay with id', gameId);
+          return callback(new Error('new game in cache is corrupt: ' + gameId));
         }
 
         return callback(null, result);
