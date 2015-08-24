@@ -20,7 +20,7 @@ var gameCache = {};
 module.exports = {
   getGameData: function (gameId, callback) {
     if (gameCache[gameId]) {
-      if (!gameCache.gameplay || !gameCache.teams) {
+      if (!gameCache[gameId].gameplay || !gameCache[gameId].teams) {
         logger.info('Missing important info in gameplay with id', gameId);
         return callback(new Error('cached game corrupt: ' + gameId));
       }
