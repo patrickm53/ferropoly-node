@@ -14,6 +14,7 @@ var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
 var authTokenManager = require('../lib/authTokenManager');
 var logger = require('../../common/lib/logger').getLogger('routes:reception');
+var gamecache = require('../lib/gameCache');
 
 /* GET the reception of all games */
 router.get('/:gameId', function (req, res) {
@@ -40,21 +41,27 @@ router.get('/:gameId', function (req, res) {
         }
         req.session.ferropolyToken = token;
 
-        teamModel.getTeams(gameId, function (err3, foundTeams) {
-          res.render('reception', {
-            title: 'Ferropoly',
-            minifedjs: settings.minifedjs,
-            ngFile: '/js/infoctrl.js',
-            hideLogout: true,
-            authToken: token,
-            user: req.session.passport.user,
-            err: errMsg1,
-            err2: errMsg2,
-            socketUrl: 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
-            gameplay: JSON.stringify(gp),
-            pricelist: JSON.stringify(pl),
-            teams: JSON.stringify(foundTeams),
-            currentGameId: gameId
+        // Refresh the game cache now
+        gamecache.refreshCache(function (err) {
+          if (err) {
+            logger.error('Gamecache error', err.message);
+          }
+          teamModel.getTeams(gameId, function (err3, foundTeams) {
+            res.render('reception', {
+              title: 'Ferropoly',
+              minifedjs: settings.minifedjs,
+              ngFile: '/js/infoctrl.js',
+              hideLogout: true,
+              authToken: token,
+              user: req.session.passport.user,
+              err: errMsg1,
+              err2: errMsg2,
+              socketUrl: 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
+              gameplay: JSON.stringify(gp),
+              pricelist: JSON.stringify(pl),
+              teams: JSON.stringify(foundTeams),
+              currentGameId: gameId
+            });
           });
         });
       });

@@ -88,14 +88,14 @@ module.exports = {
       var gameplaysInCache = 0;
       for (var i = 0; i < gameplays.length; i++) {
         if (moment().isSame(gameplays[i].scheduling.gameDate, 'day')) { // Todo: game is today!!
-          gameCache[gameplays[i].internal.gameId] = {gp: gameplays[i], teams: {}};
+          gameCache[gameplays[i].internal.gameId] = {gameplay: gameplays[i], teams: {}};
           gameplaysInCache++;
         }
       }
       var gpHandled = 0;
       var teamError = null;
       _.forOwn(gameCache, function (cacheEntry) {
-        var gp = cacheEntry.gp;
+        var gp = cacheEntry.gameplay;
         logger.info('GP value:', gp);
         if (!gp.internal) {
           logger.error('gp.internal not defined', gp);
