@@ -97,6 +97,12 @@ module.exports = {
           logger.info('not added to cache: ' + gameplays[i].internal.gameId);
         }
       }
+
+      if (gameplaysInCache === 0) {
+        logger.info('No gameplays added to cache, it remains empty');
+        return callback();
+      }
+
       var gpHandled = 0;
       var teamError = null;
       _.forOwn(gameCache, function (cacheEntry) {
