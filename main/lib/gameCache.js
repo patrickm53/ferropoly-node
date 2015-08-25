@@ -86,10 +86,15 @@ module.exports = {
         return;
       }
       var gameplaysInCache = 0;
+      logger.info('Gameplays found: ' + gameplays.length);
       for (var i = 0; i < gameplays.length; i++) {
         if (moment().isSame(gameplays[i].scheduling.gameDate, 'day')) { // Todo: game is today!!
+          logger.info('adding to cache: ' + gameplays[i].internal.gameId);
           gameCache[gameplays[i].internal.gameId] = {gameplay: gameplays[i], teams: {}};
           gameplaysInCache++;
+        }
+        else {
+          logger.info('not added to cache: ' + gameplays[i].internal.gameId);
         }
       }
       var gpHandled = 0;
