@@ -15,6 +15,7 @@ var authStrategy = require('../common/lib/authStrategy');
 var passport = require('passport');
 var flash = require('connect-flash');
 var session = require('express-session');
+var compression = require('compression');
 var MongoStore = require('connect-mongo')(session);
 // Model includes
 var users = require('../common/models/userModel');
@@ -74,6 +75,9 @@ ferropolyDb.init(settings, function (err) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
  // app.use(cookieParser());
+
+  // Using compression speeds up the connection (and uses much less data for mobile)
+  app.use(compression());
 
   // Define Strategy, login
   passport.use(authStrategy.strategy);
