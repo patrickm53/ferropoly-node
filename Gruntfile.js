@@ -26,8 +26,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
-      options: {
-      },
+      options: {},
       dist: {
         src: [
           './main/public/js/reception/reception-framework.js',
@@ -44,6 +43,25 @@ module.exports = function (grunt) {
           './main/public/js/reception/propertiesCtrl.js'
         ],
         dest: './main/public/js/reception.js'
+      },
+      framework: {
+        src: [
+          './main/public/jquery/jquery-2.1.3.min.js',
+          './main/public/bootstrap/js/bootstrap.min.js',
+          './main/public/angular/angular.min.js',
+          './main/public/moment/moment.min.js',
+          './main/public/lodash/lodash.min.js'
+        ],
+        dest: './main/public/js/framework.min.js'
+      },
+      css: {
+        src: [
+          './main/public/bootstrap/css/bootstrap.min.css',
+          './main/public/bootstrap/css/bootstrap-theme.min.css',
+          './main/public/css/font-awesome.min.css',
+          './main/public/css/ferropoly.css'
+        ],
+        dest: './main/public/css/ferropoly.min.css'
       }
     },
     uglify: {
@@ -151,7 +169,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-bump');
   grunt.registerTask('default', ['uglify:js']);
-  grunt.registerTask('minify', ['concat','uglify:js']);
+  grunt.registerTask('minify', ['concat', 'uglify:js']);
   grunt.registerTask('v:patch', ['bump-only:patch']);
   grunt.registerTask('v:minor', ['bump-only:minor']);
   grunt.registerTask('v:major', ['bump-only:major']);

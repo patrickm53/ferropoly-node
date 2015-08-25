@@ -44,6 +44,9 @@ module.exports = {
         // Add all teams to the result
         result.teams = {};
         for (var i = 0; i < teams.length; i++) {
+          delete teams[i]._id;
+          delete teams[i].gameId;
+          delete teams[i].__v;
           result.teams[teams[i].uuid] = teams[i];
         }
 

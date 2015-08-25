@@ -3,9 +3,10 @@
 extends layout
 
 block head
-  script(src='/moment/moment.min.js')
-  script(src='/lodash/lodash.min.js')
   script(src='/socket.io/socket.io.js')
+  if !minifedjs
+    script(src='/moment/moment.min.js')
+    script(src='/lodash/lodash.min.js')
   script
     | var google = undefined;
     | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats', '#panel-chance', '#panel-properties' ];
@@ -29,7 +30,6 @@ block head
     = err2
     | "};
     | console.log(ferropoly.teams);
-  script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU&sensor=TRUE')
   - var gameId = currentGameId
 
   if minifedjs
@@ -47,8 +47,9 @@ block head
     script(src='/js/reception/ferrostatsCtrl.js')
     script(src='/js/reception/chanceCtrl.js')
     script(src='/js/reception/propertiesCtrl.js')
+
   link(rel='stylesheet', href='/css/reception.css', type='text/css')
-  link(rel='stylesheet', href='/font-awesome/css/font-awesome.min.css', type='text/css')
+  script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU&sensor=TRUE')
 
 block navbar
   li
@@ -89,3 +90,4 @@ block content
       include reception-chance
     #panel-properties
       include reception-properties
+

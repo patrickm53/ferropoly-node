@@ -20,10 +20,22 @@ var gamecache = require('../lib/gameCache');
 router.get('/:gameId', function (req, res) {
   var gameId = req.params.gameId;
 
-  gameplayModel.getGameplay(gameId, req.session.passport.user, function (err, gp) {
-    if (err || !gp) {
+  gamecache.getGameData(gameId, function (err, gamedata) {
+    if (err) {
       return res.status(404).send('Error 404: Game not found');
     }
+    var gp = gamedata.gameplay;
+    var teams = gamedata.teams;
+
+    if (!gp || !gamedata) {
+      return res.status(404).send('Error 404: Game not found');
+    }
+
+    // As we use the gamecache, we have to check the user manually
+    if (!gp || gp.owner.organisatorEmail !== req.session.passport.user) {
+      return res.status(403).send('Error 403: Access denied');
+    }
+
     var errMsg1 = '';
 
     pricelist.getPricelist(gameId, function (err2, pl) {
@@ -41,28 +53,20 @@ router.get('/:gameId', function (req, res) {
         }
         req.session.ferropolyToken = token;
 
-        // Refresh the game cache now
-        gamecache.refreshCache(function (err) {
-          if (err) {
-            logger.error('Gamecache error', err.message);
-          }
-          teamModel.getTeams(gameId, function (err3, foundTeams) {
-            res.render('reception', {
-              title: 'Ferropoly',
-              minifedjs: settings.minifedjs,
-              ngFile: '/js/infoctrl.js',
-              hideLogout: true,
-              authToken: token,
-              user: req.session.passport.user,
-              err: errMsg1,
-              err2: errMsg2,
-              socketUrl: 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
-              gameplay: JSON.stringify(gp),
-              pricelist: JSON.stringify(pl),
-              teams: JSON.stringify(foundTeams),
-              currentGameId: gameId
-            });
-          });
+        res.render('reception', {
+          title: 'Ferropoly',
+          minifedjs: settings.minifedjs,
+          ngFile: '/js/infoctrl.js',
+          hideLogout: true,
+          authToken: token,
+          user: req.session.passport.user,
+          err: errMsg1,
+          err2: errMsg2,
+          socketUrl: 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
+          gameplay: JSON.stringify(gp),
+          pricelist: JSON.stringify(pl),
+          teams: JSON.stringify(_.values(teams)),
+          currentGameId: gameId
         });
       });
     });
