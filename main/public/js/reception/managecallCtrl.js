@@ -123,9 +123,9 @@ function managecallCtrl($scope, $http) {
         success(function (data) {
           console.log(data);
           if (data.status === 'ok') {
-            var infoClass = 'alert-success';
+            var infoClass = 'list-group-item-success';
             if (data.result.amount < 0) {
-              infoClass = 'alert-danger';
+              infoClass = 'list-group-item-danger';
             }
             $scope.callLog.push({
               class: infoClass,
@@ -187,10 +187,10 @@ function managecallCtrl($scope, $http) {
             msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
           }
         }
-        $scope.callLog.push({class: 'alert-success', title: 'Hausbau', message: msg, ts: new Date()});
+        $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
       }).
       error(function (data, status) {
-        $scope.callLog.push({class: 'alert-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
+        $scope.callLog.push({class: 'list-group-item-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
         console.log(data);
       })
   };
@@ -207,9 +207,9 @@ function managecallCtrl($scope, $http) {
       success(function (data) {
         console.log(data);
         if (data.status === 'ok') {
-          var infoClass = 'alert-success';
+          var infoClass = 'list-group-item-success';
           if (data.result.amount < 0) {
-            infoClass = 'alert-danger';
+            infoClass = 'list-group-item-danger';
           }
           $scope.callLog.push({
             class: infoClass,
@@ -221,7 +221,7 @@ function managecallCtrl($scope, $http) {
         }
       }).
       error(function (data, status) {
-        $scope.callLog.push({class: 'alert-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
+        $scope.callLog.push({class: 'list-group-item-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
         console.log(data);
         $scope.$apply();
       })
@@ -301,17 +301,17 @@ function managecallCtrl($scope, $http) {
         if (data.status === 'ok') {
           console.log(data);
           var res = data.result;
-          var infoClass = 'alert-success';
+          var infoClass = 'list-group-item-success';
           var title = 'Kauf ' + res.property.location.name;
           var msg;
           if (res.owner) {
             // belongs another team
-            infoClass = 'alert-danger';
+            infoClass = 'list-group-item-danger';
             msg = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount;
           }
           else if (res.amount === 0) {
             // our own
-            infoClass = 'alert-info';
+            infoClass = 'list-group-item-info';
             msg = 'Das Grundstück gehört der anrufenden Gruppe';
           }
           else {
@@ -325,7 +325,7 @@ function managecallCtrl($scope, $http) {
         console.log('ERROR');
         console.log(data);
         console.log(status);
-        $scope.callLog.push({class: 'alert-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
+        $scope.callLog.push({class: 'list-group-item-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
 
       });
   };
