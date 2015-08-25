@@ -83,10 +83,13 @@ util.inherits(Marketplace, EventEmitter);
 /**
  * Determines whether the marketplace is open or not
  * @param gameplay
+ * @param additionalMinutes give a tolerance at the end of the game (as we have to pay final rents)
  */
-Marketplace.prototype.isOpen = function(gameplay) {
+Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
+  additionalMinutes = additionalMinutes || 0;
+
   var start = moment(gameplay.scheduling.gameStartTs);
-  var end = moment(gameplay.scheduling.gameEndTs);
+  var end = moment(gameplay.scheduling.gameEndTs).add({minutes: additionalMinutes});
   if (moment().isAfter(end)) {
     logger.info('Game over');
     return false;
@@ -318,7 +321,8 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       return callback(null);
     }
 
-    if (!self.isOpen(gp)) {
+    // give a tolerance of a few minutes for closing the market place
+    if (!self.isOpen(gp, 3)) {
       return callback(new Error('Marketplace is closed'));
     }
 
