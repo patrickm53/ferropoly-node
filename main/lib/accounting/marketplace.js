@@ -408,8 +408,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
       callback(err);
     });
   });
-
-}
+};
 
 /**
  * Pays the rents (each hour) for a team

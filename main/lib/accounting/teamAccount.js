@@ -257,7 +257,7 @@ function getBalance(gameId, teamId, p1, p2) {
 }
 
 /**
- * Handles a negative balance at the end of a round: pay an interest
+ * Handles a negative balance at the end of a round: pay an interest.
  * @param gameId
  * @param teamId
  * @param rate : the rate of interest, a percentage between 0 and 100
@@ -271,7 +271,9 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
     if (info.balance < 0) {
       var interest = Math.floor(Math.abs(info.balance * rate / 100));
       logger.info('Negative balance, pay interest ' + interest + ' from ' + info.balance);
-      chargeToChancellery(teamId, gameId, interest, 'Strafzins (negatives Guthaben)', callback);
+      // Do not book here! The teamAccount does not have a connection to the chancellery, it's the
+      // chancellerys job to book, we just make the calculation here.
+      callback(null, {amount: interest});
     }
     else {
       callback();

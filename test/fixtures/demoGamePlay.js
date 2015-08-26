@@ -24,7 +24,7 @@ module.exports = {
     demo.on('close', function (code) {
       console.log('child process exited with code ' + code);
       var gameParams = {
-        gameId: 'play-a-demo-game'
+        gameId: 'local-demo-game'
       };
       callback(null, gameParams);
     });

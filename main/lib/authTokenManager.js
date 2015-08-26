@@ -71,6 +71,9 @@ module.exports = {
       if (err) {
         return callback(err);
       }
+      if (!token) {
+        return callback(new Error('No token retrieved in verifyToken!'));
+      }
       if (userToken === token.id) {
         tokens[user] = token;
         return callback(null);

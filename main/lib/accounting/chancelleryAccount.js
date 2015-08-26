@@ -146,7 +146,7 @@ function gamble(gameplay, team, amount, callback) {
  */
 function payToChancellery(gameplay, team, amount, text, callback) {
   var retVal = {
-    amount: amount,
+    amount: Math.abs(amount) * (-1),
     infoText: text
   };
   bookChancelleryEvent(gameplay, team, retVal, function (err) {
