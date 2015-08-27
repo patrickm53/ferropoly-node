@@ -46,6 +46,16 @@ function Marketplace(scheduler) {
       });
     });
     /**
+     * This is the 'prestart' event launched by the gameScheduler. Game is going to start soon, refresh cache
+     */
+    this.scheduler.on('prestart', function (event) {
+      logger.info('Marketplace: onPrestart');
+      gameCache.refreshCache(function(err) {
+        logger.info('Cache refreshed', err);
+        event.callback(null, event);
+      });
+    });
+    /**
      * This is the 'start' event launched by the gameScheduler. Pay interests once.
      */
     this.scheduler.on('start', function (event) {

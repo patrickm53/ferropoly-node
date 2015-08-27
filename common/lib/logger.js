@@ -6,6 +6,8 @@
 'use strict';
 var winston = require('winston');
 var moment = require('moment');
+var util = require('util');
+var _ = require('lodash');
 
 var loggerSettings = {
   levels: {
@@ -21,12 +23,13 @@ var loggerSettings = {
     info: 'green',
     warn: 'yellow',
     debug: 'grey'
-  }};
+  }
+};
 
 var logger = new winston.Logger();
 winston.setLevels(loggerSettings.levels);
 winston.addColors(loggerSettings.colors);
-logger.add(winston.transports.Console, {level: 'debug', colorize:true});
+logger.add(winston.transports.Console, {level: 'debug', colorize: true});
 
 /**
  * Core logging function
@@ -36,9 +39,15 @@ logger.add(winston.transports.Console, {level: 'debug', colorize:true});
  * @param metadata
  */
 var log = function (module, level, message, metadata) {
-  var info = moment().format() + ' ' + module + ': ' + message;
+  var info = moment().format() + ' ' + module + ': ';
+  if (_.isObject(message)) {
+    info += util.inspect(message);
+  }
+  else {
+    info += message;
+  }
   if (metadata) {
-    info += ' ' + JSON.stringify(metadata);
+    info += ' ' + util.inspect(metadata);
   }
   logger.log(level, info);
 };

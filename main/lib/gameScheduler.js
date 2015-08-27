@@ -103,6 +103,8 @@ Scheduler.prototype.update = function (callback) {
       return callback(err);
     }
 
+    logger.info('Events read: '  + events.length);
+
     // Cancel all existing jobs
     for (i = 0; i < self.jobs.length; i++) {
       self.jobs[i].cancel();

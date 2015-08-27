@@ -21,6 +21,7 @@ var logger = require('../lib/logger').getLogger('gameplayModel');
  * The mongoose schema for an user
  */
 var gameplaySchema = mongoose.Schema({
+  _id: String,
   gamename: String, // name of the game
   owner: {
     organisatorName: String,
@@ -106,6 +107,7 @@ var createGameplay = function (gpOptions, callback) {
   gp.scheduling.gameEnd = gpOptions.gameEnd;
   gp.gamename = gpOptions.name;
   gp.internal.gameId = gpOptions.gameId || Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]).choose();
+  gp._id = gp.internal.gameId;
 
   checkIfGameIdExists(gp.internal.gameId, function (err, isExisting) {
     if (err) {

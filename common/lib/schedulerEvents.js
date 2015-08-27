@@ -16,6 +16,13 @@ var moment = require('moment');
 function createEvents(gameplay, callback) {
   var events = [];
 
+  // Pre-Start
+  var prestart = new eventModel.Model();
+  prestart.gameId = gameplay.internal.gameId;
+  prestart.timestamp = moment(gameplay.scheduling.gameStartTs).subtract({minutes: 5}).toDate();
+  prestart.type = 'prestart';
+  events.push(prestart);
+
   // Start
   var start = new eventModel.Model();
   start.gameId = gameplay.internal.gameId;

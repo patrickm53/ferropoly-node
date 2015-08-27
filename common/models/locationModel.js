@@ -20,7 +20,8 @@ var locationSchema = mongoose.Schema({
   accessibility: String, // How do we access it?
   maps: {
     zvv: Boolean,
-    sbb: Boolean
+    sbb: Boolean,
+    ostwind: {type: Boolean, default: false}
   }
 }, {autoIndex: false});
 locationSchema.index({uuid: 1, type: -1}); // schema level
@@ -51,16 +52,19 @@ var getAllLocations = function (callback) {
 
 /**
  * Returns all locations in ferropoly style (no mongoose overhead, by using lean)
- * @param map : map ('zvv' or 'sbb')
+ * @param map : map ('zvv', 'sbb' or 'ostwind')
  * @param callback
  */
 var getAllLocationsForMap = function (map, callback) {
   var query = {};
   if (map === 'zvv') {
-    query = {'maps.zvv' : true};
+    query = {'maps.zvv': true};
+  }
+  else if (map === 'ostwind') {
+    query = {'maps.ostwind': true};
   }
   else {
-    query = {'maps.sbb' : true};
+    query = {'maps.sbb': true};
   }
   Location.find(query).lean().exec(function (err, docs) {
     if (err) {
@@ -120,7 +124,15 @@ var countLocations = function (callback) {
         else {
           retVal.sbb = nb;
         }
-        callback(null, retVal);
+        Location.count({'maps.ostwind':true}, function(err, nb) {
+          if (err) {
+            retVal.ostwind = -1;
+          }
+          else {
+            retVal.ostwind = nb;
+          }
+          callback(null, retVal);
+        });
       });
     });
   });
@@ -181,5 +193,5 @@ module.exports = {
   /**
    * Count locations
    */
-  countLocations:countLocations
+  countLocations: countLocations
 };
