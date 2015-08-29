@@ -166,6 +166,12 @@ ferropolyDb.init(settings, function (err) {
 
     logger.info('Ferropoly Main server listening on port ' + app.get('port'));
 
+
+    // temporary, for deployment debugging only
+    var util = require('util');
+    logger.debug('Settings', util.inspect(settings));
+    logger.debug('Environment', util.inspect(process.env));
+
     autopilot.init(settings);
   });
 
