@@ -1,6 +1,6 @@
 /**
- * Settings for the contabo server, its IP is 5.189.159.156
- * Created by kc on 15.08.15.
+ * Release candidate instance
+ * Created by kc on 30.08.15.
  */
 'use strict';
 
@@ -23,13 +23,19 @@ module.exports = function (settings) {
   //**** RELEASE SETTINGS ****
   settings.socketIoServer = {
     port: 80, // using proxy!
-    host: 'spiel.ferropoly.ch'
+    host: 'spiel-rc.ferropoly.ch'
   };
 
-  // This is the highest priorized scheduler: the contabo main instance
+  // This is the highest priorized scheduler: the contabo main rc instance
   settings.scheduler = {
     delay: 0
   };
+
+  settings.autopilot = {
+    interval: 263445,
+    active: true
+  };
+
 
   return settings;
 };

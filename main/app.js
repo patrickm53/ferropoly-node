@@ -169,8 +169,7 @@ ferropolyDb.init(settings, function (err) {
 
     // temporary, for deployment debugging only
     var util = require('util');
-    logger.debug('Settings', util.inspect(settings));
-    logger.debug('Environment', util.inspect(process.env));
+    logger.debug(util.inspect(settings));
 
     autopilot.init(settings);
   });
