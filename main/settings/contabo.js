@@ -7,9 +7,9 @@
 module.exports = function (settings) {
 
   settings.server = {
-    port: process.env.FERROPOLY_MAIN_PORT,
+    port: 3004,
     host: 'app.ferropoly.ch',
-    serverId: 'app.ferropoly.ch-v' + settings.version
+    serverId: 'spiel.ferropoly.ch-v' + settings.version
   };
 
   settings.locationDbSettings = {

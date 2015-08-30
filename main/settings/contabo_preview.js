@@ -7,13 +7,13 @@
 module.exports = function (settings) {
 
   settings.server = {
-    port: process.env.FERROPOLY_MAIN_PORT,
+    port: 3104,
     host: 'app.ferropoly.ch',
-    serverId: 'app.ferropoly.ch-v' + settings.version
+    serverId: 'spiel.ferropoly.ch-v' + settings.version
   };
 
   settings.locationDbSettings = {
-    mongoDbUrl: process.env.FERROPOLY_CONNECTION_STRING
+    mongoDbUrl: 'mongodb://localhost/ferropoly_preview'
   };
 
   settings.cron = {
