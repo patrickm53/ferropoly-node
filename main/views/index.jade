@@ -11,14 +11,14 @@ block navbar-right
     a(href='/about') Hilfe / Info
 
 block content
-  div(ng-app='indexApp' ng-controller='indexCtrl')
+  div(ng-app='indexApp' ng-controller='indexCtrl' ng-cloak)
     h1 Willkommen beim Ferropoly!
 
     h2 Meine Spiele
-    div(ng-show='gameplays.length === 0')
+    div(ng-show='gameplays.length === 0' ng-cloak)
       | Du hast noch keine Spiele.&nbsp;
       a(href='http://editor-ferropoly.rhcloud.com') Im Ferropoly Editor ein neues Spiel anlegen.
-    div(ng-show='gameplays.length > 0')
+    div(ng-show='gameplays.length > 0' ng-cloak)
       .row
         div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in gameplays')
             .panel.panel-default
