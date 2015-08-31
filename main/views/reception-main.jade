@@ -1,6 +1,6 @@
 //
    Created by kc on 28.05.15.
-div(ng-controller='dashboardCtrl' ng-cloak)
+div(ng-controller='dashboardCtrl')
   h1 Übersicht
 
   .row
@@ -13,9 +13,9 @@ div(ng-controller='dashboardCtrl' ng-cloak)
         .panel-body
           div(ng-hide='rankingListLoaded')
             p Einen Moment bitte, die Rangliste wird geladen...
-          div(ng-show='(rankingList.length === 0) && rankingListLoaded')
+          div(ng-show='(rankingList.length === 0) && rankingListLoaded' ng-cloak)
             p Es gibt noch keine Buchungen, deshalb kann die Rangliste nicht dargestellt werden.
-          table.table(ng-show='rankingList.length')
+          table.table(ng-show='rankingList.length' ng-cloak)
             tr(ng-repeat='t in rankingList | orderBy:"rank"')
               td {{t.rank}}
               td {{t.teamName}}
