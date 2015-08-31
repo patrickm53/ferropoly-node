@@ -11,7 +11,9 @@ div(ng-controller='dashboardCtrl' ng-cloak)
             a.fa.fa-download.button-right-1(href='/download/rankinglist/#{gameId}')
             i.fa.fa-refresh.button-right-0(ng-click='refreshRankingList()')
         .panel-body
-          div(ng-show='rankingList.length === 0')
+          div(ng-hide='rankingListLoaded')
+            p Einen Moment bitte, die Rangliste wird geladen...
+          div(ng-show='(rankingList.length === 0) && rankingListLoaded')
             p Es gibt noch keine Buchungen, deshalb kann die Rangliste nicht dargestellt werden.
           table.table(ng-show='rankingList.length')
             tr(ng-repeat='t in rankingList | orderBy:"rank"')

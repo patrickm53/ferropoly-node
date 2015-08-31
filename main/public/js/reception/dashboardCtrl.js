@@ -8,6 +8,7 @@ ferropolyApp.controller('dashboardCtrl', dashboardCtrl);
 function dashboardCtrl($scope, $http) {
   $scope.rankingList = [];
   $scope.teamIdToTeamName = dataStore.teamIdToTeamName;
+  $scope.rankingListLoaded = false;
 
   $scope.refreshRankingList = function() {
     dataStore.getRankingList(function(err, list) {
@@ -18,6 +19,7 @@ function dashboardCtrl($scope, $http) {
       else {
         $scope.rankingList = list;
       }
+      $scope.rankingListLoaded = true;
       $scope.$apply();
       console.log('Ranking list received');
       console.log($scope.rankingList);
