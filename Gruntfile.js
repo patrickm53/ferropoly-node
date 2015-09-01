@@ -40,7 +40,8 @@ module.exports = function (grunt) {
           './main/public/js/reception/mapCtrl.js',
           './main/public/js/reception/ferrostatsCtrl.js',
           './main/public/js/reception/chanceCtrl.js',
-          './main/public/js/reception/propertiesCtrl.js'
+          './main/public/js/reception/propertiesCtrl.js',
+          './main/public/js/reception/trafficCtrl.js'
         ],
         dest: './main/public/js/reception.js'
       },

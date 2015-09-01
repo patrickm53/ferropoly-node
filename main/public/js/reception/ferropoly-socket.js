@@ -31,7 +31,7 @@ ferropolySocket.on('welcome', function(data) {
 
 // Now the initialized connection in set up
 ferropolySocket.on('initialized', function() {
-  console.log('initialized');
+  console.log('initialized: SOCKET.IO is online');
 
   // Now we are really online
   $('#online').show();

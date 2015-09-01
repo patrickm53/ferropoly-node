@@ -9,7 +9,7 @@ block head
     script(src='/lodash/lodash.min.js')
   script
     | var google = undefined;
-    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats', '#panel-chance', '#panel-properties' ];
+    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats', '#panel-chance', '#panel-properties', '#panel-traffic' ];
     | var socketUrl = "
     != socketUrl
     | ";
@@ -47,6 +47,7 @@ block head
     script(src='/js/reception/ferrostatsCtrl.js')
     script(src='/js/reception/chanceCtrl.js')
     script(src='/js/reception/propertiesCtrl.js')
+    script(src='/js/reception/trafficCtrl.js')
 
   link(rel='stylesheet', href='/css/reception.css', type='text/css')
   script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU&sensor=TRUE')
@@ -64,6 +65,8 @@ block navbar
     a(href='#' onclick="showPanel('#panel-teamaccounts');") Kontobuch
   li
     a(href='#' onclick="showPanel('#panel-chance');") Chance / Kanzlei
+  li
+    a(href='#' onclick="showPanel('#panel-traffic');") Verkehrsinfo
   li
     a(href='#' onclick="showPanel('#panel-properties');") Preisliste
 
@@ -90,4 +93,6 @@ block content
       include reception-chance
     #panel-properties
       include reception-properties
+    #panel-traffic
+      include reception-traffic
 
