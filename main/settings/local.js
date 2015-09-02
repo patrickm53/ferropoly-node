@@ -34,5 +34,9 @@ module.exports = function(settings) {
     active: false
   };
 
+  settings.traffic = {
+    simulation: true
+  };
+
   return settings;
 };

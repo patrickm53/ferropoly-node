@@ -1,5 +1,10 @@
 /**
- * Fetchs the SBB traffic situation
+ * Fetchs the SBB traffic situation and wraps it into a ferropoly compatible JSON format.
+ *
+ * This conversion is not free of pain: if they decide to change the format of the XML or the RSS URL changes, I won't
+ * be noticed then and this functionality fails. Therefore it is implemented to be as fail resistant as possible:
+ * returning nothing is better than crashing.
+ *
  * Created by kc on 01.09.15.
  */
 'use strict';
@@ -10,6 +15,12 @@ var _ = require('lodash');
 var logger = require('../../common/lib/logger').getLogger('traffic');
 var path = require('path');
 var fs = require('fs');
+var settings = require('../settings');
+
+// Set default settings
+settings.traffic = settings.traffic || {};
+settings.traffic.refreshInterval = settings.traffic.refreshInterval || 1;
+settings.traffic.simulation = settings.traffic.simulation || false;
 
 var sampleTrafficInfo = path.join(__dirname, '..', '..', 'test', 'fixtures', 'sampleTrafficInfo.xml');
 
@@ -56,7 +67,7 @@ function getCategory(entry) {
     case '3':
       return 'delay';
   }
-  return 'unkown';
+  return 'unknown';
 }
 /**
  * Transforms data where neded
@@ -101,8 +112,11 @@ function transformData(data) {
  * @param callback
  */
 function getRssFeed(url, callback) {
-  // fs.readFile(sampleTrafficInfo, {}, callback);
-  // return;
+
+  if (settings.traffic.simulation) {
+    fs.readFile(sampleTrafficInfo, {}, callback);
+    return;
+  }
 
   needle.get(url, function (error, response) {
     if (!error && response.statusCode == 200) {
@@ -121,8 +135,10 @@ function getRssFeed(url, callback) {
  */
 function updateTrafficInfo(url, callback) {
   getRssFeed(url, function (err, data) {
-    var parsedData = pixlXml.parse(data);
-    callback(null, transformData(parsedData));
+    if (err) {
+      return callback(err);
+    }
+    callback(null, transformData(pixlXml.parse(data)));
   });
 }
 
@@ -138,6 +154,7 @@ function getTrafficInfo(map, callback) {
       if (!err) {
         cachedData[map] = {};
         cachedData[map].data = data;
+        // I don't want to fetch the RSS Feed with every request, cache it for some time
         cachedData[map].nextUpdateTime = moment().add({minutes: 1});
         callback(null, cachedData[map]);
       }

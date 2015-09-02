@@ -2,4 +2,13 @@
    Created by kc on 01.09.15.
 
 div(ng-controller='trafficCtrl' ng-cloak)
-   h3 Verkehrsinfo {{test}}
+   h3 Verkehrsinfo
+   table.table.table-striped
+     thead
+       th Zeit
+       th Info
+     tbody
+       tr(ng-repeat='e in trafficInfo.data.item | orderBy:"publishDate.toDate()":reverse=true')
+         td {{e.publishDate.toDate() | date:'dd.MM. HH:mm:ss'}}
+         td {{e.title}}
+

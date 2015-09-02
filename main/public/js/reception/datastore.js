@@ -15,6 +15,7 @@
  * - rankingList:            changing, the ranking list of the game
  * - incomeList:             changing (stats), income of all teams
  * - travelLog:              changing, the log where the team was
+ * - trafficInfo:            changing, information about the traffic situation
  *
  * The data is alway held in this store, updating is triggered by the application.
  *
@@ -574,5 +575,37 @@ DataStore.prototype.getIncomeList = function (callback) {
       callback(error);
     });
 };
+
+
+/**
+ * Get the current traffic situation
+ * @param callback
+ */
+DataStore.prototype.getTrafficInfo = function (callback) {
+  var self = this;
+
+  $.get('/traffic/' + this.getGameplay().internal.gameId, function (data) {
+    if (data.status === 'ok') {
+      // Convert times
+      for (var i = 0; i < data.trafficInfo.data.item.length; i++) {
+        data.trafficInfo.data.item[i].publishDate = moment(data.trafficInfo.data.item[i].publishDate);
+        data.trafficInfo.data.item[i].duration.from = moment(data.trafficInfo.data.item[i].duration.from);
+        data.trafficInfo.data.item[i].duration.to = moment(data.trafficInfo.data.item[i].duration.to);
+      }
+      self.data.trafficInfo = data.trafficInfo;
+      if (callback) {
+        callback(null, self.data.trafficInfo);
+      }
+    }
+    else {
+      self.data.trafficInfo = [];
+      return callback(new Error(data.message));
+    }
+  })
+    .fail(function (error) {
+      callback(error);
+    });
+};
+
 
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view
