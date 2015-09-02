@@ -6,17 +6,23 @@
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
 var moment = require('moment');
+var util = require('util');
 var _ = require('lodash');
 var logger = require('../lib/logger').getLogger('locationModel');
+var settings = {
+  server: {
+    serverId: 'notSet'
+  }
+};
 
 /**
  * The mongoose schema for a property
  */
 var logSchema = mongoose.Schema({
   timestamp: {type: Date, default: Date.now},
-  gameId: String,
-  category: String,
-  text: String
+  text: String,
+  obj: String,
+  instance: String
 }, {autoIndex: false});
 
 /**
@@ -26,72 +32,39 @@ var Log = mongoose.model('Log', logSchema);
 
 /**
  * Creates a new log entry and saves it
- * @param gameId
- * @param category
  * @param text
+ * @param obj optional parameter, a object to push
  * @param callback
  * @returns {*}
  */
-var addEntry = function (gameId, category, text, callback) {
-  if (!gameId || !category || !text) {
+var addEntry = function (text, obj, callback) {
+  if (_.isFunction(obj)) {
+    callback = obj;
+    obj = undefined;
+  }
+  if (!text) {
     return callback(new Error('all params in createEntry must be set'));
   }
-  if (!_.isString(gameId) || !_.isString(category) || !_.isString(text)) {
-    return callback(new Error('all params in createEntry must be strings'));
+  if (!_.isString(text)) {
+    return callback(new Error('text in createEntry must be a string'));
   }
   var logEntry = new Log();
-  logEntry.gameId = gameId;
-  logEntry.category = category;
   logEntry.text = text;
+  if (_.isString(obj)) {
+    logEntry.obj = obj;
+  }
+  else if (_.isObject(obj)) {
+    logEntry.obj = util.inspect(obj);
+  }
+  logEntry.instance = settings.server.serverId;
   logEntry.save(callback);
 };
 
-/**
- * Deletes all entries for a gameplay
- * @param gameId
- * @param callback
- */
-var deleteAllEntries = function (gameId, callback) {
-  logger.info('Removing all entries in the log');
-  Log.find({gameId: gameId}).remove().exec(callback);
-};
-
-/**
- * Get all log entries for a gameplay
- * @param gameId
- * @param callback
- * @returns {*}
- */
-var getLogEntries = function (gameId, tsStart, tsEnd, callback) {
-  if (!gameId) {
-    return callback(new Error('No gameId supplied'));
-  }
-  if (!tsStart) {
-    tsStart = moment('2015-01-01');
-  }
-  if (!tsEnd) {
-    tsEnd = moment();
-  }
-  return Log.find({gameId: gameId})
-    .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-    .sort('timestamp')
-    .lean()
-    .exec(callback);
-};
-
-/**
- * Just a convenicence function
- * @param gameId
- * @param callback
- */
-var getAllLogEntries = function (gameId, callback) {
-  getLogEntries(gameId, undefined, undefined, callback);
-};
 
 module.exports = {
   Model: Log,
-  addEntry: addEntry,
-  deleteAllEntries: deleteAllEntries,
-  getLogEntries: getLogEntries,
-  getAllLogEntries: getAllLogEntries
+  add: addEntry,
+  init: function(_settings) {
+    settings = _settings;
+  }
 };

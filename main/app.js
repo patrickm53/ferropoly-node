@@ -45,6 +45,7 @@ var app = express();
 var ferroSocket = require('./lib/ferroSocket');
 var autopilot = require('./lib/autopilot');
 var logger = require('../common/lib/logger').getLogger('main:app');
+var logs = require('../common/models/logModel');
 
 logger.info('Ferropoly Copyright (C) 2015 Christian Kuster, CH-8342 Wernetshausen');
 logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
@@ -60,6 +61,8 @@ ferropolyDb.init(settings, function (err) {
     logger.error(err);
     return;
   }
+
+  logs.init(settings);
 
   var server = require('http').Server(app);
 
