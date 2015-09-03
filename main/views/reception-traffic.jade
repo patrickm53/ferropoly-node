@@ -10,5 +10,11 @@ div(ng-controller='trafficCtrl' ng-cloak)
      tbody
        tr(ng-repeat='e in trafficInfo.data.item | orderBy:"publishDate.toDate()":reverse=true')
          td {{e.publishDate.toDate() | date:'dd.MM. HH:mm:ss'}}
-         td {{e.title}}
+         td
+           details
+             summary {{e.title}}
+             p
+               div(ng-repeat='info in e.info')
+                 | {{info}}
+                 br
 
