@@ -3,18 +3,37 @@
 
 div(ng-controller='trafficCtrl' ng-cloak)
    h3 Verkehrsinfo
-   table.table.table-striped
-     thead
-       th Zeit
-       th Info
-     tbody
-       tr(ng-repeat='e in trafficInfo.data.item | orderBy:"publishDate.toDate()":reverse=true')
-         td {{e.publishDate.toDate() | date:'dd.MM. HH:mm:ss'}}
-         td
-           details
-             summary {{e.title}}
-             p
-               div(ng-repeat='info in e.info')
-                 | {{info}}
-                 br
+   .row
+     .col-md-12
+       label
+         input(type='checkbox' ng-model='showDelay' ng-click='updateTrafficInfo()')
+         |Verspätungen&nbsp;&nbsp;
+       label
+         input(type='checkbox' ng-model='showRestriction' ng-click='updateTrafficInfo()')
+         |Einschränkungen&nbsp;&nbsp;
+       label
+         input(type='checkbox' ng-model='showConstruction' ng-click='updateTrafficInfo()')
+         |Baustellen&nbsp;&nbsp;
+       label
+         input(type='checkbox' ng-model='showOnlyCurrent' ng-click='updateTrafficInfo()')
+         |nur aktuelle Meldungen
 
+   .row
+     .col-md-12
+       table.table.table-striped
+         thead
+           th Dauer
+           th Info
+           th
+         tbody
+           tr(ng-repeat='e in trafficInfo | orderBy:"publishDate.toDate()":reverse=true')
+             td(width="20%") {{e.duration.from.toDate() | date:'dd.MM. HH:mm:ss'}} - {{e.duration.to.toDate() | date:'dd.MM. HH:mm:ss'}}
+             td(width="70%")
+               details
+                 summary {{e.title}}
+                 p
+                   div(ng-repeat='info in e.info')
+                     | {{info}}
+                     br
+             td(width="10%")
+               a.btn.btn-default.btn-xs(href='{{e.link}}' target='blank' role='button') mehr...

@@ -8,19 +8,31 @@ ferropolyApp.controller('trafficCtrl', trafficCtrl);
 function trafficCtrl($scope) {
 
   $scope.trafficInfo = {};
+  $scope.showDelay = true;
+  $scope.showRestriction = true;
+  $scope.showConstruction = true;
+  $scope.showOnlyCurrent = false;
 
-  $scope.updateTrafficInfo = function() {
-    dataStore.getTrafficInfo(function(err, trafficInfo) {
+  $scope.updateTrafficInfo = function (callback) {
+    dataStore.getTrafficInfo({
+      delay: $scope.showDelay,
+      restriction: $scope.showRestriction,
+      construction: $scope.showConstruction,
+      onlyCurrent: $scope.showOnlyCurrent
+    }, function (err, trafficInfo) {
       $scope.trafficInfo = trafficInfo;
-      console.log('Traffic info update');
       console.log(trafficInfo);
-      $scope.$apply();
+      if (callback) {
+        callback();
+      }
     });
   };
-  $scope.test = 'ABC';
 
-  $(document).ready(function() {
-    $scope.updateTrafficInfo();
+
+  $(document).ready(function () {
+    $scope.updateTrafficInfo(function() {
+      $scope.$apply();
+    });
   });
 
 }

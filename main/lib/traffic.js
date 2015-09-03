@@ -155,7 +155,7 @@ function getTrafficInfo(map, callback) {
         cachedData[map] = {};
         cachedData[map].data = data;
         // I don't want to fetch the RSS Feed with every request, cache it for some time
-        cachedData[map].nextUpdateTime = moment().add({minutes: 1});
+        cachedData[map].nextUpdateTime = moment().add({minutes: 5});
         callback(null, cachedData[map]);
       }
     });

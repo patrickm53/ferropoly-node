@@ -581,7 +581,7 @@ DataStore.prototype.getIncomeList = function (callback) {
  * Get the current traffic situation
  * @param callback
  */
-DataStore.prototype.getTrafficInfo = function (callback) {
+DataStore.prototype.updateTrafficInfo = function (callback) {
   var self = this;
 
   $.get('/traffic/' + this.getGameplay().internal.gameId, function (data) {
@@ -605,6 +605,49 @@ DataStore.prototype.getTrafficInfo = function (callback) {
     .fail(function (error) {
       callback(error);
     });
+};
+
+/**
+ * Get the traffic info
+ * @param options
+ * @param callback
+ */
+DataStore.prototype.getTrafficInfo = function(options, callback) {
+  function prepareData() {
+    var retVal = self.data.trafficInfo.data.item;
+    if (!options.delay) {
+      retVal = _.filter(retVal, function(n) {
+        return (n.reason !== 'delay');
+      });
+    }
+    if (!options.restriction) {
+      retVal = _.filter(retVal, function(n) {
+        return (n.reason !== 'restriction');
+      });
+    }
+    if (!options.construction) {
+      retVal = _.filter(retVal, function(n) {
+        return (n.reason !== 'construction');
+      });
+    }
+    if (options.onlyCurrent) {
+      retVal = _.filter(retVal, function(n) {
+        return (moment().isAfter(n.duration.from) && moment().isBefore(n.duration.to));
+      });
+    }
+
+    callback(null, retVal);
+  }
+
+  var self = this;
+  if (!self.data.trafficInfo || moment().isAfter(self.data.trafficInfo.nextUpdateTime)) {
+    self.updateTrafficInfo(function() {
+      prepareData();
+    });
+  }
+  else {
+    prepareData();
+  }
 };
 
 
