@@ -27,10 +27,10 @@ div(ng-controller='dashboardCtrl')
           h3.panel-title Verkehrsinfo
             i.fa.fa-refresh.button-right-0(ng-click='updateTrafficInfo()')
         .panel-body(ng-cloak)
-          div(ng-hide='trafficInfoLoaded')
+          div(ng-show='trafficInfoLoaded')
             table.table
               tr(ng-repeat='t in trafficInfo')
                 td {{t.title}}
             a.btn.btn-default.btn-xs(role='button' href='#' onclick="showPanel('#panel-traffic');") Alle Infos
-          div(ng-show='trafficInfoLoaded')
+          div(ng-hide='trafficInfoLoaded')
             p Die Verkehrsmeldungen werden geladen...

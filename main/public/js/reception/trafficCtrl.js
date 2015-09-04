@@ -34,7 +34,6 @@ function trafficCtrl($scope) {
       $scope.$apply();
     });
   });
-
 }
 
 trafficCtrl.$inject = ['$scope'];

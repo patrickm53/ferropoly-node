@@ -45,6 +45,7 @@ function dashboardCtrl($scope, $http) {
     }, function (err, trafficInfo) {
       $scope.trafficInfo = trafficInfo;
       $scope.trafficInfoLoaded = true;
+      console.log(trafficInfo);
       if (callback) {
         callback();
       }
