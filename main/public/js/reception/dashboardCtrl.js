@@ -6,6 +6,7 @@
 
 ferropolyApp.controller('dashboardCtrl', dashboardCtrl);
 function dashboardCtrl($scope, $http) {
+  ///// RANKING LIST
   $scope.rankingList = [];
   $scope.teamIdToTeamName = dataStore.teamIdToTeamName;
   $scope.rankingListLoaded = false;
@@ -28,6 +29,35 @@ function dashboardCtrl($scope, $http) {
 
   // Init state
   $scope.refreshRankingList();
+
+
+  ///// TRAFFIC
+  $scope.trafficInfo = {};
+  $scope.trafficInfoLoaded = false;
+
+  $scope.updateTrafficInfo = function (callback) {
+    dataStore.getTrafficInfo({
+      delay: true,
+      construction: true,
+      restriction: true,
+      limit: 8,
+      onlyCurrent: false
+    }, function (err, trafficInfo) {
+      $scope.trafficInfo = trafficInfo;
+      $scope.trafficInfoLoaded = true;
+      if (callback) {
+        callback();
+      }
+    });
+  };
+
+
+  $(document).ready(function () {
+    $scope.refreshRankingList();
+    $scope.updateTrafficInfo(function() {
+      $scope.$apply();
+    });
+  });
 }
 
 dashboardCtrl.$inject = ['$scope', '$http'];

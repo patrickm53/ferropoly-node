@@ -636,6 +636,10 @@ DataStore.prototype.getTrafficInfo = function(options, callback) {
       });
     }
 
+    //_.sortBy(retVal, {''})
+    if (options.limit) {
+      retVal = _.slice(retVal, 0, options.limit);
+    }
     callback(null, retVal);
   }
 
