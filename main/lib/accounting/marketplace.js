@@ -50,7 +50,7 @@ function Marketplace(scheduler) {
      */
     this.scheduler.on('prestart', function (event) {
       logger.info('Marketplace: onPrestart');
-      gameCache.refreshCache(function(err) {
+      gameCache.refreshCache(function (err) {
         logger.info('Cache refreshed', err);
         event.callback(null, event);
       });
@@ -324,31 +324,31 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       return callback(err);
     }
     var gp = res.gameplay;
-    var paid = 0;
-    var error = null;
+    var tolerance = 10; // in minutes
+    var count = 0;
+
     if (gp.gameParams.interestCyclesAtEndOfGame < 1) {
       // No cycles, no interests, return
       return callback(null);
     }
 
     // give a tolerance of a few minutes for closing the market place
-    if (!self.isOpen(gp, 3)) {
+    if (!self.isOpen(gp, tolerance)) {
       return callback(new Error('Marketplace is closed'));
     }
 
-    var payRentsCallback = function (err) {
-      if (err) {
-        error = err;
+    async.whilst(
+      function () {
+        return count < gp.gameParams.interestCyclesAtEndOfGame;
+      },
+      function (cb) {
+        count++;
+        self.payRents(gameId, tolerance, cb);
+      },
+      function (err) {
+        callback(err);
       }
-      paid++;
-      if (paid === gp.gameParams.interestCyclesAtEndOfGame) {
-        callback(error);
-      }
-    };
-
-    for (var i = 0; i < gp.gameParams.interestCyclesAtEndOfGame; i++) {
-      self.payRents(gameId, payRentsCallback);
-    }
+    );
   });
 };
 
@@ -463,10 +463,15 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, callback) {
  *
  * Money: bank->propertIES->team
  * @param gameId
+ * @param tolerance  tolerance in minutes for market open
  * @param callback
  */
-Marketplace.prototype.payRents = function (gameId, callback) {
+Marketplace.prototype.payRents = function (gameId, tolerance, callback) {
   var self = this;
+  if (_.isFunction(tolerance)) {
+    callback = tolerance;
+    tolerance = 0;
+  }
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
@@ -480,7 +485,7 @@ Marketplace.prototype.payRents = function (gameId, callback) {
       return callback(new Error('Gameplay with id ' + gameId + ' not found (payRents)'));
     }
 
-    if (!self.isOpen(gp)) {
+    if (!self.isOpen(gp, tolerance)) {
       return callback(new Error('Marketplace is closed'));
     }
 
