@@ -21,7 +21,7 @@ block content
         div(ng-show='gameplays.length === 0' ng-cloak)
           | Du hast noch keine Spiele.&nbsp;
           a(href='http://editor-ferropoly.rhcloud.com') Im Ferropoly Editor ein neues Spiel anlegen.
-          
+
         div(ng-show='gameplays.length > 0' ng-cloak)
           .row
             div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in gameplays')

@@ -72,8 +72,10 @@ block navbar
 
 
 block navbar-right
-  li#online online
-  li#offline offline
+  li#online
+    i.fa.fa-cloud &nbsp;online
+  li#offline
+    i.fa.fa-cloud &nbsp;offline
 
 block content
   #active-call.alert.alert-danger(role="alert" onclick="showPanel('#panel-managecall');") Anruf ist aktiv. Bitte unter "Anruf behandeln" beenden.
