@@ -15,6 +15,7 @@ var logger = require('../lib/logger').getLogger('schedulerEventModel');
  * The mongoose schema for a scheduleEvent
  */
 var scheduleEventSchema = mongoose.Schema({
+  _id: String,
   gameId: String, // Gameplay this team plays with
   timestamp: Date, // When it is going to happen
   type: String, // What it is about
@@ -30,6 +31,17 @@ var scheduleEventSchema = mongoose.Schema({
  */
 var scheduleEventModel = mongoose.model('schedulerEvent', scheduleEventSchema);
 
+/**
+ * Creates an event
+ */
+function createEvent(gameId, timestamp, type) {
+  var event = new scheduleEventModel();
+  event.gameId = gameId;
+  event.timestamp = timestamp;
+  event.type = type;
+  event._id = gameId + '-'+ moment(timestamp).format('YYMMDD-HHmm') + '-' + type;
+  return event;
+}
 /**
  * Save all events. Dumps them all before adding new ones
  * @param events
@@ -190,6 +202,7 @@ function saveAfterHandling(event, callback) {
 
 module.exports = {
   Model: scheduleEventModel,
+  createEvent: createEvent,
   saveEvents: saveEvents,
   dumpEvents: dumpEvents,
   getUpcomingEvents: getUpcomingEvents,

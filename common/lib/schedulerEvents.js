@@ -17,36 +17,34 @@ function createEvents(gameplay, callback) {
   var events = [];
 
   // Pre-Start
-  var prestart = new eventModel.Model();
-  prestart.gameId = gameplay.internal.gameId;
-  prestart.timestamp = moment(gameplay.scheduling.gameStartTs).subtract({minutes: 5}).toDate();
-  prestart.type = 'prestart';
+  var prestart = eventModel.createEvent(gameplay.internal.gameId,
+    moment(gameplay.scheduling.gameStartTs).subtract({minutes: 5}).toDate(),
+    'prestart');
   events.push(prestart);
 
   // Start
-  var start = new eventModel.Model();
-  start.gameId = gameplay.internal.gameId;
-  start.timestamp = gameplay.scheduling.gameStartTs;
-  start.type = 'start';
+  var start = eventModel.createEvent(gameplay.internal.gameId,
+    gameplay.scheduling.gameStartTs,
+    'start'
+  );
   events.push(start);
 
   // Interests
   var m = moment(gameplay.scheduling.gameStartTs);
   while (m < gameplay.scheduling.gameEndTs) {
-    var interest = new eventModel.Model();
-    interest.gameId = gameplay.internal.gameId;
-    interest.timestamp = new Date(m.toDate());
-    interest.type = 'interest';
+    var interest = eventModel.createEvent(gameplay.internal.gameId,
+      new Date(m.toDate()),
+      'interest');
     events.push(interest);
 
     m.add(gameplay.gameParams.interestInterval, 'm');
   }
 
   // End
-  var end = new eventModel.Model();
-  end.gameId = gameplay.internal.gameId;
-  end.timestamp = gameplay.scheduling.gameEndTs;
-  end.type = 'end';
+  var end = eventModel.createEvent(gameplay.internal.gameId,
+    gameplay.scheduling.gameEndTs,
+    'end'
+  );
   events.push(end);
 
   eventModel.saveEvents(events, function (err) {

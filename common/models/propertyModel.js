@@ -9,11 +9,12 @@
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
 var logger = require('../lib/logger').getLogger('propertyModel');
-
+var _ = require('lodash');
 /**
  * The mongoose schema for a property
  */
 var propertySchema = mongoose.Schema({
+  _id: String,
   gameId: String, // Gameplay this property belongs to
   uuid: {type: String, index: {unique: true}},     // UUID of this property (index)
   location: {
@@ -51,6 +52,10 @@ var propertySchema = mongoose.Schema({
  */
 var Property = mongoose.model('Property', propertySchema);
 
+var createPropertyId = function(gameId, location) {
+  return gameId + '-' + _.kebabCase(_.deburr(location.name)) + '-' + _.random(10000000, 99999999);
+};
+
 /**
  * Creates a new property from a location (if not already in DB) and stores it for the gameplay
  * @param gameId
@@ -60,6 +65,7 @@ var Property = mongoose.model('Property', propertySchema);
 var createPropertyFromLocation = function (gameId, location, callback) {
   var newProperty = new Property();
   newProperty.location = location;
+  newProperty._id = createPropertyId(gameId, location);
   return updateProperty(gameId, newProperty, callback);
 };
 
@@ -134,6 +140,7 @@ var updateProperty = function (gameId, property, callback) {
         prop.location = property.location;
         prop.gamedata = property.gamedata;
         prop.pricelist = property.pricelist;
+        prop._id = createPropertyId(gameId, property.location);
         return prop.save(function (err, savedProp) {
           return callback(err, savedProp);
         })
