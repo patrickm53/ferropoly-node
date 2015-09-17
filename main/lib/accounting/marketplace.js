@@ -106,12 +106,14 @@ util.inherits(Marketplace, EventEmitter);
  * @param additionalMinutes give a tolerance at the end of the game (as we have to pay final rents)
  */
 Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
-  additionalMinutes = additionalMinutes || 0;
+  if (_.isUndefined(additionalMinutes)) {
+    additionalMinutes = 0;
+  }
 
   var start = moment(gameplay.scheduling.gameStartTs);
   var end = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
   if (moment().isAfter(end)) {
-    marketLog(gameplay.internal.gameId, 'Game over', {start: start, end: end, additionalMinutes: additionalMinutes});
+    marketLog(gameplay.internal.gameId, 'Game over', {start: start.toDate(), end: end.toDate(), additionalMinutes: additionalMinutes});
     return false;
   }
   if (moment().isBefore(start)) {
@@ -247,7 +249,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
       }
 
       if (!self.isOpen(gp)) {
-        return callback(new Error('Marketplace is closed'));
+        return callback(new Error('BuildHouses: Marketplace is closed'));
       }
 
       var log = [];
@@ -344,7 +346,8 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
 
     // give a tolerance of a few minutes for closing the market place
     if (!self.isOpen(gp, tolerance)) {
-      return callback(new Error('Marketplace is closed'));
+      marketLog(gp.internal.gameId, 'Tolerance: ' + tolerance);
+      return callback(new Error('FinalRents: Marketplace is closed'));
     }
 
     async.whilst(
@@ -367,8 +370,12 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
  * Money: bank->team
  * @param callback
  */
-Marketplace.prototype.payInterests = function (gameId, callback) {
+Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
   var self = this;
+  if (_.isFunction(tolerance)) {
+    callback = tolerance;
+    tolerance = 0;
+  }
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
@@ -378,7 +385,7 @@ Marketplace.prototype.payInterests = function (gameId, callback) {
     var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
-    if (!self.isOpen(gp)) {
+    if (!self.isOpen(gp, tolerance)) {
       return callback(new Error('Marketplace is closed'));
     }
 
@@ -397,8 +404,12 @@ Marketplace.prototype.payInterests = function (gameId, callback) {
  * @param gameId
  * @param callback
  */
-Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
+Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback) {
   var self = this;
+  if (_.isFunction(tolerance)) {
+    callback = tolerance;
+    tolerance = 0;
+  }
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
@@ -408,8 +419,8 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
     var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
-    if (!self.isOpen(gp)) {
-      return callback(new Error('Marketplace is closed'));
+    if (!self.isOpen(gp, tolerance)) {
+      return callback(new Error('CheckNegativeAsset: Marketplace is closed'));
     }
 
     async.each(teams, function (team, cb) {
@@ -436,10 +447,14 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
  * @param team
  * @param callback
  */
-Marketplace.prototype.payRentsForTeam = function (gp, team, callback) {
+Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback) {
+  if (_.isFunction(tolerance)) {
+    callback = tolerance;
+    tolerance = 0;
+  }
 
-  if (!this.isOpen(gp)) {
-    return callback(new Error('Marketplace is closed'));
+  if (!this.isOpen(gp, tolerance)) {
+    return callback(new Error('PayRentsForTeam: Marketplace is closed'));
   }
 
   propertyAccount.getRentRegister(gp, team, function (err, info) {
@@ -496,16 +511,16 @@ Marketplace.prototype.payRents = function (gameId, tolerance, callback) {
     }
 
     if (!self.isOpen(gp, tolerance)) {
-      return callback(new Error('Marketplace is closed'));
+      return callback(new Error('PayRents: Marketplace is closed'));
     }
 
     // check negative asset and pay rent
-    self.checkNegativeAsset(gameId, function (err) {
+    self.checkNegativeAsset(gameId, tolerance, function (err) {
       if (err) {
         return callback(err);
       }
 
-      self.payInterests(gameId, function (err) {
+      self.payInterests(gameId, tolerance, function (err) {
         if (err) {
           return callback(err);
         }
@@ -517,7 +532,7 @@ Marketplace.prototype.payRents = function (gameId, tolerance, callback) {
           marketLog(gameId, 'Building allowed again for ' + nbAffected.toString() + ' buildings');
 
           async.each(teams, function (team, callback) {
-              self.payRentsForTeam(gp, team, callback);
+              self.payRentsForTeam(gp, team, tolerance, callback);
             },
             function (err) {
               callback(err);
