@@ -57,28 +57,29 @@ function Marketplace(scheduler) {
     });
     /**
      * This is the 'prestart' event launched by the gameScheduler. Game is going to start soon, refresh cache
+     * Pay start capital
      */
     this.scheduler.on('prestart', function (event) {
       marketLog(event.gameId, 'Marketplace: onPrestart');
       gameCache.refreshCache(function (err) {
         marketLog(event.gameId, 'Cache refreshed', err);
-        event.callback(null, event);
+        self.payInitialAsset(event.gameId, function (err) {
+          if (err) {
+            marketLog(event.gameId, 'ERROR, initial assets not paid! Message: ' + err.message);
+            event.callback(err);
+            return;
+          }
+          marketLog(event.gameId, 'Initial assets paid');
+          event.callback(null, event);
+        });
       });
     });
     /**
-     * This is the 'start' event launched by the gameScheduler. Pay interests once.
+     * This is the 'start' event launched by the gameScheduler. Nothing is done currently.
      */
     this.scheduler.on('start', function (event) {
       marketLog(event.gameId, 'Marketplace: onStart');
-      self.payInitialAsset(event.gameId, function (err) {
-        if (err) {
-          marketLog(event.gameId, 'ERROR, initial assets not paid! Message: ' + err.message);
-          event.callback(err);
-          return;
-        }
-        marketLog(event.gameId, 'Initial assets paid');
-        event.callback(null, event);
-      });
+      event.callback(null, event);
     });
     /**
      * This is the 'end' event launched by the gameScheduler. Pay the final rents & interests
