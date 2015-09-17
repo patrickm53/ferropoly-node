@@ -19,6 +19,16 @@ var moment = require('moment');
 var marketplace;
 
 /**
+ * Just a logger helper
+ * @param gameId
+ * @param text
+ * @param obj
+ */
+function marketLog(gameId, text, obj) {
+  logger.info(gameId + ': ' + text, obj);
+}
+
+/**
  * Constructor
  * @param scheduler the instance of the gameScheduler, must be defined for the game, can be null for the integration tests
  * @constructor
@@ -34,14 +44,14 @@ function Marketplace(scheduler) {
      * This is the 'interest' event launched by the gameScheduler
      */
     this.scheduler.on('interest', function (event) {
-      logger.info('Marketplace: onInterest');
+      marketLog(event.gameId, 'Marketplace: onInterest');
       self.payRents(event.gameId, function (err) {
         if (err) {
-          logger.info('ERROR, interests not paid! Message: ' + err.message);
+          marketLog(event.gameId, 'ERROR, interests not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        logger.info('Timed interests paid');
+        marketLog(event.gameId, 'Timed interests paid');
         event.callback(null, event);
       });
     });
@@ -49,9 +59,9 @@ function Marketplace(scheduler) {
      * This is the 'prestart' event launched by the gameScheduler. Game is going to start soon, refresh cache
      */
     this.scheduler.on('prestart', function (event) {
-      logger.info('Marketplace: onPrestart');
+      marketLog(event.gameId, 'Marketplace: onPrestart');
       gameCache.refreshCache(function (err) {
-        logger.info('Cache refreshed', err);
+        marketLog(event.gameId, 'Cache refreshed', err);
         event.callback(null, event);
       });
     });
@@ -59,14 +69,14 @@ function Marketplace(scheduler) {
      * This is the 'start' event launched by the gameScheduler. Pay interests once.
      */
     this.scheduler.on('start', function (event) {
-      logger.info('Marketplace: onStart');
+      marketLog(event.gameId, 'Marketplace: onStart');
       self.payInitialAsset(event.gameId, function (err) {
         if (err) {
-          logger.info('ERROR, initial assets not paid! Message: ' + err.message);
+          marketLog(event.gameId, 'ERROR, initial assets not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        logger.info('Initial assets paid');
+        marketLog(event.gameId, 'Initial assets paid');
         event.callback(null, event);
       });
     });
@@ -74,14 +84,14 @@ function Marketplace(scheduler) {
      * This is the 'end' event launched by the gameScheduler. Pay the final rents & interests
      */
     this.scheduler.on('end', function (event) {
-      logger.info('Marketplace: onEnd');
+      marketLog(event.gameId, 'Marketplace: onEnd');
       self.payFinalRents(event.gameId, function (err) {
         if (err) {
-          logger.info('ERROR, final interests not paid! Message: ' + err.message);
+          marketLog(event.gameId, 'ERROR, final interests not paid! Message: ' + err.message);
           event.callback(err);
           return;
         }
-        logger.info('Timed interests paid');
+        marketLog(event.gameId, 'Timed interests paid');
         event.callback(null, event);
       });
     });
@@ -101,11 +111,11 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
   var start = moment(gameplay.scheduling.gameStartTs);
   var end = moment(gameplay.scheduling.gameEndTs).add({minutes: additionalMinutes});
   if (moment().isAfter(end)) {
-    logger.info('Game over');
+    marketLog(gameplay.internal.gameId, 'Game over');
     return false;
   }
   if (moment().isBefore(start)) {
-    logger.info('Game not started yet');
+    marketLog(gameplay.internal.gameId, 'Game not started yet');
     return false;
   }
   return true;
@@ -133,7 +143,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
     // we do not care about this return, it's asynchronous and that's ok
   });
 
-  logger.info('buyProperty :' + gameId + ' team: ' + teamId + ' property:' + propertyId);
+  marketLog(gameId, 'buyProperty, team: ' + teamId + ' property:' + propertyId);
 
   propWrap.getProperty(gameId, propertyId, function (err, property) {
     if (err) {
@@ -162,7 +172,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       // Now check if the property is still available or sold. There are 3 cases to handle
       if (!property.gamedata || !property.gamedata.owner || property.gamedata.owner.length === 0) {
         // CASE 1: property is available, the team is going to buy it
-        logger.info(property.location.name + ' is available');
+        marketLog(gameId, property.location.name + ' is available');
         propertyAccount.buyProperty(gp, property, team, function (err, info) {
           if (err) {
             logger.error(err);
@@ -180,7 +190,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       //------------------------------------------------------------------------------------------------------------------
       else if (property.gamedata.owner === teamId) {
         // CASE 2: property belongs to the team which wants to buy it, do nothing
-        logger.info(property.location.name + ' already belongs the team');
+        marketLog(gameId, property.location.name + ' already belongs the team');
         return callback(null, {property: property, amount: 0});
       }
       //------------------------------------------------------------------------------------------------------------------
@@ -191,7 +201,7 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
             return callback(err);
           }
           teamAccount.chargeToAnotherTeam(gameId, teamId, property.gamedata.owner, val.amount, 'Miete ' + property.location.name, function (err, info) {
-            logger.info(property.location.name + ' is already sold to another team');
+            marketLog(gameId, property.location.name + ' is already sold to another team');
             if (err) {
               logger.error(err);
               return callback(err);
@@ -220,7 +230,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
     }
 
     if (properties.length === 0) {
-      logger.info('nothing to build');
+      marketLog(gameId, 'nothing to build');
       return callback(null, {amount: 0, log: []});
     }
 
@@ -246,7 +256,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
       // Callback when buying building
       var buyBuildingCallback = function (err, info) {
         if (err) {
-          logger.info(err);
+          marketLog(gameId, err);
         }
         else {
           log.push(info);
@@ -404,7 +414,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, callback) {
 
     async.each(teams, function (team, cb) {
       teamAccount.negativeBalanceHandling(gameId, team.uuid, gp.gameParams.debtInterest, function (err, info) {
-        logger.info('negativeBalanceHandlingResult', info);
+        marketLog(gameId, 'negativeBalanceHandlingResult', info);
         if (err) {
           return cb(err);
         }
@@ -434,12 +444,12 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, callback) {
 
   propertyAccount.getRentRegister(gp, team, function (err, info) {
     if (err) {
-      logger.info(err);
+      marketLog(gameId, 'error in getRentRegister', err);
       return callback(err);
     }
     propertyAccount.payInterest(gp, info.register, function (err) {
       if (err) {
-        logger.info(err);
+        marketLog(gameId, 'error in payInterest', err);
         return callback(err);
       }
       if (info.totalAmount > 0) {
@@ -504,7 +514,7 @@ Marketplace.prototype.payRents = function (gameId, tolerance, callback) {
           if (err) {
             return callback(err);
           }
-          logger.info('Building allowed again for ' + nbAffected.toString() + ' buildings');
+          marketLog(gameId, 'Building allowed again for ' + nbAffected.toString() + ' buildings');
 
           async.each(teams, function (team, callback) {
               self.payRentsForTeam(gp, team, callback);
