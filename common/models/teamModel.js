@@ -44,7 +44,7 @@ var createTeam = function (newTeam, gameId, callback) {
   team.uuid = uuid.v4();
   team.gameId = gameId;
   team.data = newTeam.data;
-  team._id = team.uuid;
+  team._id = gameId + '-' + team.uuid;
   team.save(function (err, savedTeam) {
     callback(err, savedTeam);
   })
