@@ -53,6 +53,11 @@ function dashboardCtrl($scope, $http) {
   };
 
 
+  //// Gameplay info
+  $scope.gp = dataStore.getGameplay();
+
+
+
   $(document).ready(function () {
     $scope.refreshRankingList();
     $scope.updateTrafficInfo(function() {

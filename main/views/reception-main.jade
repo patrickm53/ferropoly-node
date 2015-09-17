@@ -34,3 +34,35 @@ div(ng-controller='dashboardCtrl')
             a.btn.btn-default.btn-xs(role='button' href='#' onclick="showPanel('#panel-traffic');") Alle Infos
           div(ng-hide='trafficInfoLoaded')
             p Die Verkehrsmeldungen werden geladen...
+
+    .col-md-4
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Spielinfo
+        .panel-body
+          table.table
+            tr
+              td Spieldatum
+              td {{gp.scheduling.gameDate | date:'d.M.yyyy'}}
+            tr
+              td Spielstart
+              td {{gp.scheduling.gameStart}}
+            tr
+              td Spielende
+              td {{gp.scheduling.gameEnd}}
+            tr
+              td Dauer einer Spielrunde
+              td {{gp.gameParams.interestInterval}} min
+            tr
+              td Startgeld pro Runde
+              td {{gp.gameParams.interest}}
+            tr
+              td Guthaben zu Spielbeginn
+              td {{gp.gameParams.startCapital}}
+            tr
+              td Zinsrunden bei Spielende
+              td {{gp.gameParams.interestCyclesAtEndOfGame}}
+            tr
+              td Strafzins bei negativem Vermögen
+              td {{gp.gameParams.debtInterest}} %
+
