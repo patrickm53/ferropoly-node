@@ -109,9 +109,9 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
   additionalMinutes = additionalMinutes || 0;
 
   var start = moment(gameplay.scheduling.gameStartTs);
-  var end = moment(gameplay.scheduling.gameEndTs).add({minutes: additionalMinutes});
+  var end = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
   if (moment().isAfter(end)) {
-    marketLog(gameplay.internal.gameId, 'Game over');
+    marketLog(gameplay.internal.gameId, 'Game over', {start: start, end: end, additionalMinutes: additionalMinutes});
     return false;
   }
   if (moment().isBefore(start)) {
