@@ -2,27 +2,28 @@
    Created by kc on 15.06.15.
 div(ng-controller='propertiesCtrl' ng-cloak)
   .col-md-6
-    table.tab.e.table-striped.table-condensed
-      thead
-        th
-          a(href='' ng-click="listPredicate='pricelist.position';reverse=!reverse") #
-        th
-          a(href='' ng-click="listPredicate='location.name';reverse=!reverse") Ort
-        th.pricelist Gruppe
-        th.pricelist Kaufpreis
-        th.pricelist
-          a(href='' ng-click="listPredicate='gamedata.owner';reverse=!reverse") Besitzer
-        th.pricelist
-          a(href='' ng-click="listPredicate='gamedata.buildings';reverse=!reverse") Anzahl Häuser
-      tbody
-        tr(data-ng-repeat='p in properties | orderBy:listPredicate:reverse' )
-          td {{p.pricelist.position + 1}}
-          td
-            a(href='' ng-click='setCurrentProperty(p)') {{p.location.name}}
-          td.pricelist {{p.pricelist.propertyGroup}}
-          td.pricelist {{p.pricelist.price}}
-          td.pricelist {{getTeamName(p.gamedata.owner)}}
-          td.pricelist {{p.gamedata.buildings}}
+    #property-list
+      table.tab.e.table-striped.table-condensed
+        thead
+          th
+            a(href='' ng-click="listPredicate='pricelist.position';reverse=!reverse") #
+          th
+            a(href='' ng-click="listPredicate='location.name';reverse=!reverse") Ort
+          th.pricelist Gruppe
+          th.pricelist Kaufpreis
+          th.pricelist
+            a(href='' ng-click="listPredicate='gamedata.owner';reverse=!reverse") Besitzer
+          th.pricelist
+            a(href='' ng-click="listPredicate='gamedata.buildings';reverse=!reverse") Anzahl Häuser
+        tbody
+          tr(data-ng-repeat='p in properties | orderBy:listPredicate:reverse' )
+            td {{p.pricelist.position + 1}}
+            td
+              a(href='' ng-click='setCurrentProperty(p)') {{p.location.name}}
+            td.pricelist {{p.pricelist.propertyGroup}}
+            td.pricelist {{p.pricelist.price}}
+            td.pricelist {{getTeamName(p.gamedata.owner)}}
+            td.pricelist {{p.gamedata.buildings}}
   .col-md-6
     .panel.panel-default
       .panel-heading

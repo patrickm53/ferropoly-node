@@ -64,3 +64,8 @@
     margin-bottom: 0px;
     padding-left: 0px;
 }
+
+#property-list {
+    overflow: auto;
+    height: 200px;
+}

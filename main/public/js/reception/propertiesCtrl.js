@@ -1,5 +1,5 @@
 /**
- *
+ * Properties and pricelist
  * Created by kc on 15.06.15.
  */
 'use strict';
@@ -47,5 +47,13 @@ function propertiesCtrl($scope, $http) {
   registerPanelUpdateHandler('#panel-properties', $scope.updateProperties);
 }
 
+function resizePropertyList() {
+  var dh = $(window).height();
+  var propList = document.querySelector('#property-list');
+  var h = dh - $('#ferropoly-navbar').height();
+  propList.style.height = h.toString() + 'px';
+}
+$(window).resize(resizePropertyList);
+$(document).ready(resizePropertyList);
 
 propertiesCtrl.$inject = ['$scope', '$http'];
