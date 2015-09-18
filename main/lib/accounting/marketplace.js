@@ -111,7 +111,7 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
     additionalMinutes = 0;
   }
 
-  var start = moment(gameplay.scheduling.gameStartTs);
+  var start = moment(gameplay.scheduling.gameStartTs).subtract(additionalMinutes, 'minutes');
   var end = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
   if (moment().isAfter(end)) {
     marketLog(gameplay.internal.gameId, 'Game over', {start: start.toDate(), end: end.toDate(), additionalMinutes: additionalMinutes});
@@ -294,7 +294,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
 };
 
 /**
- * Pays the initial assets of a game
+ * Pays the initial assets of a game. This is usually done before the market opens
  * @param gameId
  * @param callback
  */
@@ -309,7 +309,7 @@ Marketplace.prototype.payInitialAsset = function (gameId, callback) {
     var gp = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
-    if (!self.isOpen(gp)) {
+    if (!self.isOpen(gp, 15)) {
       return callback(new Error('Marketplace is closed'));
     }
 
