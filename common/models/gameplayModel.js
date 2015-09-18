@@ -105,6 +105,7 @@ var createGameplay = function (gpOptions, callback) {
   gp.scheduling.gameDate = gpOptions.gameDate;
   gp.scheduling.gameStart = gpOptions.gameStart;
   gp.scheduling.gameEnd = gpOptions.gameEnd;
+  gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
   gp.gamename = gpOptions.name;
   gp.internal.gameId = gpOptions.gameId || Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]).choose();
   gp._id = gp.internal.gameId;

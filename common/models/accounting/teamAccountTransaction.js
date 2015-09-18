@@ -8,7 +8,7 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
 var logger = require('../../lib/logger').getLogger('teamAccountTransaction');
-
+var _ = require('lodash');
 /**
  * The mongoose schema for a team account
  */
@@ -49,6 +49,9 @@ var TeamAccountTransaction = mongoose.model('TeamAccountTransactions', teamAccou
  * @param callback
  */
 function book(transaction, callback) {
+  if (transaction.transaction.parts) {
+    transaction.transaction.parts = _.sortBy(transaction.transaction.parts, 'propertyName');
+  }
   transaction.save(function (err) {
     callback(err);
   });

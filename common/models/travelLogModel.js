@@ -44,7 +44,7 @@ var addEntry = function (gameId, teamId, propertyId, callback) {
   logEntry.gameId = gameId;
   logEntry.teamId = teamId;
   logEntry.propertyId = propertyId;
-  logEntry._id = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + teamId + '-' + _.random(1000, 9999);
+  logEntry._id = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS')  + '-' + _.random(100000, 999999);
   logEntry.save(callback);
 };
 
