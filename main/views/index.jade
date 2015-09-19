@@ -29,7 +29,7 @@ block content
                   .panel-heading
                     h3.panel-title {{gameplay.gamename}}
                   .panel-body
-                    p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}
+                    p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}, {{gameplay.scheduling.gameStart}} - {{gameplay.scheduling.gameEnd}}
                     p Karte: {{gameplay.internal.map.toUpperCase()}}
                     p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
                     p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
