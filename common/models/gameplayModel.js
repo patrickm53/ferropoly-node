@@ -72,7 +72,8 @@ var gameplaySchema = mongoose.Schema({
     gameId: {type: String, index: true}, // Identifier of the game
     owner: String,  // Owner of the game
     map: String,     // map to use
-    finalized: {type: Boolean, default: false} // finalized means no edits anymore
+    finalized: {type: Boolean, default: false}, // finalized means no edits anymore,
+    creatingInstance: String // Instance creating this gameplay
   },
   log: {
     created: {type: Date, default: Date.now},
@@ -108,6 +109,7 @@ var createGameplay = function (gpOptions, callback) {
   gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
   gp.gamename = gpOptions.name;
   gp.internal.gameId = gpOptions.gameId || Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]).choose();
+  gp.internal.creatingInstance = gpOptions.instance;
   gp._id = gp.internal.gameId;
 
   checkIfGameIdExists(gp.internal.gameId, function (err, isExisting) {
