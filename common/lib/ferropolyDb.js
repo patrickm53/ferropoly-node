@@ -42,6 +42,13 @@ module.exports = {
 
     db.on('error', function (err) {
       logger.error('MongoDb Connection Error:', err);
+      logger.info('Killing myself, since I got an error from the repo... (did you start mongodb?)');
+      /*eslint no-process-exit:0*/
+      process.exit(1);
+    });
+
+   db.on('disconnected', function (err) {
+      logger.error('MongoDb Connection disconnected');
       logger.info('Killing myself, since I got a disconnect from the repo... (did you start mongodb?)');
       /*eslint no-process-exit:0*/
       process.exit(1);
