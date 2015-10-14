@@ -10,6 +10,7 @@ var router = express.Router();
 var teamAccount = require('../lib/accounting/teamAccount');
 var _ = require('lodash');
 var accessor = require('../lib/accessor');
+var moment = require('moment');
 
 router.get('/get/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
@@ -23,8 +24,11 @@ router.get('/get/:gameId/:teamId', function (req, res) {
       return res.send({status: 'error', message: err.message});
     }
     var teamBalance = {};
+    var query = req.query || {};
+    var tsStart = query.start ? moment(query.start) : undefined;
+    var tsEnd = query.end ? moment(query.end) : undefined;
 
-    teamAccount.getAccountStatement(req.params.gameId, req.params.teamId, function (err, data) {
+    teamAccount.getAccountStatement(req.params.gameId, req.params.teamId, tsStart, tsEnd, function (err, data) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }

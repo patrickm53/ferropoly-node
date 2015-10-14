@@ -327,9 +327,9 @@ function getRankingList(gameId, callback) {
  *
  * @param gameId
  * @param teamId
- * @param p1
- * @param p2
- * @param p3
+ * @param p1  Timestamp for start (moment, optional)
+ * @param p2  Timestamp for end (moment, optional)
+ * @param p3  Callback
  */
 function getAccountStatement(gameId, teamId, p1, p2, p3) {
   var tsStart = p1;

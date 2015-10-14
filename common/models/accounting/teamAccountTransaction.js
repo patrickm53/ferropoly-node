@@ -78,7 +78,7 @@ function bookTransfer(debitor, creditor, callback) {
  * Get the entries of the account
  * @param gameId
  * @param teamId, if undefined, then all entries of all teams are returned
- * @param tsStart moment() to start, if undefined all
+ * @param tsStart moment() to start, if undefined all. NOT INCLUDING the entry with exactly this timestamp.
  * @param tsEnd   moment() to end, if undefined now()
  * @param callback
  * @returns {*}
@@ -98,7 +98,7 @@ function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
     // Only of one team
     TeamAccountTransaction.find({gameId: gameId})
       .where('teamId').equals(teamId)
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
       .sort('timestamp')
       .lean()
       .exec(function (err, data) {
@@ -108,7 +108,7 @@ function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
   else {
     // all teams
     TeamAccountTransaction.find({gameId: gameId})
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
       .sort('timestamp')
       .lean()
       .exec(function (err, data) {

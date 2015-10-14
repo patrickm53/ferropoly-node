@@ -17,7 +17,7 @@
  * - travelLog:              changing, the log where the team was
  * - trafficInfo:            changing, information about the traffic situation
  *
- * The data is alway held in this store, updating is triggered by the application.
+ * The data is always held in this store, updating is triggered by the application.
  *
  * Created by kc on 14.05.15.
  */
@@ -41,10 +41,11 @@ var DataStore = function (initData, socket) {
     switch (resp.cmd) {
       case 'onTransaction':
         if (!self.data.teamAccountEntries) {
-          self.data.teamAccountEntries = [];
+          self.data.teamAccountEntries = {};
         }
-        self.data.teamAccountEntries.push(resp.data);
-        console.log('received new team transaction');
+        // we do not know whether we have really all entries or missed some indications: get all newer entries
+        // since the last known one.
+        self.updateTeamAccountEntries(resp.data.teamId);
         break;
       default:
         console.log('UNHANDLED: ' + resp.cmd);
@@ -200,7 +201,7 @@ DataStore.prototype.getTravelLog = function (teamId) {
  * Returns the trave log for a property (who was there when)
  * @param propertyId
  */
-DataStore.prototype.getTravelLogForProperty = function(propertyId) {
+DataStore.prototype.getTravelLogForProperty = function (propertyId) {
   console.log('getTravelLogForProperty for: ' + propertyId);
   if (!this.data.travelLog) {
     this.data.travelLog = [];
@@ -224,7 +225,7 @@ DataStore.prototype.getGameplay = function () {
  * Checks whether a game is active or not
  * @returns {boolean}
  */
-DataStore.prototype.isGameActive = function() {
+DataStore.prototype.isGameActive = function () {
   var start = moment(this.data.gameplay.scheduling.gameStartTs);
   var end = moment(this.data.gameplay.scheduling.gameEndTs);
   if (moment().isAfter(end)) {
@@ -245,30 +246,36 @@ DataStore.prototype.isGameActive = function() {
 DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   console.log('update team account for ' + teamId);
   var self = this;
+  var i = 0;
+  var query = '';
+  if (teamId) {
+    if (this.data.teamAccountEntries[teamId] && this.data.teamAccountEntries[teamId].length > 0) {
+      query = '?start=' + _.last(this.data.teamAccountEntries[teamId]).timestamp;
+    }
+  }
   // see https://api.jquery.com/jquery.get/
-  $.get('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId, function (data) {
+  $.get('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId + query, function (data) {
     if (data.status === 'ok') {
-      console.log('/teamAccount ok');
+      console.log('/teamAccount ok, entries: ' + data.accountData.length);
       if (!teamId) {
         // All entries were retrieved, replace them completely
-        self.data.teamAccountEntries = data.accountData;
+        self.data.teamAccountEntries = {};
+        for (i = 0; i < data.accountData.length; i++) {
+          var entry = data.accountData[i];
+          if (!self.data.teamAccountEntries[entry.teamId]) {
+            self.data.teamAccountEntries[entry.teamId] = [];
+          }
+          self.data.teamAccountEntries[entry.teamId].push(entry);
+        }
       }
       else {
-        if (!self.data.teamAccountEntries) {
-          self.data.teamAccountEntries = [];
-        }
+        self.data.teamAccountEntries = self.data.teamAccountEntries || {};
+        self.data.teamAccountEntries[teamId] = self.data.teamAccountEntries[teamId] || [];
         // replace all entries for this team with the received one
-        _.remove(self.data.teamAccountEntries, function (e) {
-          return e.teamId === teamId;
-        });
-        for (var i = 0; i < data.accountData.length; i++) {
-          self.data.teamAccountEntries.push(data.accountData[i]);
+        for (i = 0; i < data.accountData.length; i++) {
+          self.data.teamAccountEntries[teamId].push(data.accountData[i]);
         }
       }
-      // Sort entries, independently how we got them
-      _.sortBy(self.data.teamAccountEntries, function (e) {
-        return e.timestamp;
-      });
     }
     else {
       console.error('ERROR when getting accountData:');
@@ -294,15 +301,19 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
 DataStore.prototype.getTeamAccountEntries = function (teamId) {
   console.log('getTeamAccountEntries for: ' + teamId);
   if (!this.data.teamAccountEntries) {
-    this.data.teamAccountEntries = [];
+    this.data.teamAccountEntries = {};
   }
 
   if (!teamId) {
-    return this.data.teamAccountEntries;
+    var retVal = [];
+    _.forIn(this.data.teamAccountEntries, function(value, key) {
+      console.log(key);
+      retVal = retVal.concat(value);
+    });
+    retVal = _.sortBy(retVal, 'timestamp');
+    return retVal;
   }
-  return _.filter(this.data.teamAccountEntries, function (n) {
-    return n.teamId === teamId;
-  });
+  return  this.data.teamAccountEntries[teamId];
 };
 /**
  * Get the balance of the team
@@ -383,7 +394,7 @@ DataStore.prototype.getChancelleryEntries = function (teamId) {
   });
 };
 
-DataStore.prototype.getChancelleryAsset = function() {
+DataStore.prototype.getChancelleryAsset = function () {
   return _.sum(this.data.chancelleryEntries, 'transaction.amount');
 };
 /**
@@ -612,26 +623,26 @@ DataStore.prototype.updateTrafficInfo = function (callback) {
  * @param options
  * @param callback
  */
-DataStore.prototype.getTrafficInfo = function(options, callback) {
+DataStore.prototype.getTrafficInfo = function (options, callback) {
   function prepareData() {
     var retVal = self.data.trafficInfo.data.item;
     if (!options.delay) {
-      retVal = _.filter(retVal, function(n) {
+      retVal = _.filter(retVal, function (n) {
         return (n.reason !== 'delay');
       });
     }
     if (!options.restriction) {
-      retVal = _.filter(retVal, function(n) {
+      retVal = _.filter(retVal, function (n) {
         return (n.reason !== 'restriction');
       });
     }
     if (!options.construction) {
-      retVal = _.filter(retVal, function(n) {
+      retVal = _.filter(retVal, function (n) {
         return (n.reason !== 'construction');
       });
     }
     if (options.onlyCurrent) {
-      retVal = _.filter(retVal, function(n) {
+      retVal = _.filter(retVal, function (n) {
         return (moment().isAfter(n.duration.from) && moment().isBefore(n.duration.to));
       });
     }
@@ -645,7 +656,7 @@ DataStore.prototype.getTrafficInfo = function(options, callback) {
 
   var self = this;
   if (!self.data.trafficInfo || moment().isAfter(self.data.trafficInfo.nextUpdateTime)) {
-    self.updateTrafficInfo(function() {
+    self.updateTrafficInfo(function () {
       prepareData();
     });
   }
