@@ -27,7 +27,7 @@ function managecallCtrl($scope, $http) {
   };
   $scope.propertyInvestCandidate = undefined;
 
-  $scope.isGameActive = function() {
+  $scope.isGameActive = function () {
     return dataStore.isGameActive();
   }
 
@@ -39,10 +39,10 @@ function managecallCtrl($scope, $http) {
     dataStore.pushEvent(activeCall.getCurrentTeam().uuid, text);
   }
 
-  $scope.getTeamColor = function(teamId) {
+  $scope.getTeamColor = function (teamId) {
     return dataStore.getTeamColor(teamId);
   };
-  $scope.getPropertyName = function(propertyId) {
+  $scope.getPropertyName = function (propertyId) {
     return dataStore.getPropertyById(propertyId).location.name;
   };
   /**
@@ -86,7 +86,7 @@ function managecallCtrl($scope, $http) {
     }
     dataStore.updateProperties(team.uuid, function () {
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
-      dataStore.updateTravelLog(team.uuid, function() {
+      dataStore.updateTravelLog(team.uuid, function () {
         $scope.teamInfo.travelLog = dataStore.getTravelLog(team.uuid);
         $scope.$apply();
       });
@@ -190,7 +190,12 @@ function managecallCtrl($scope, $http) {
         $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
       }).
       error(function (data, status) {
-        $scope.callLog.push({class: 'list-group-item-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
+        $scope.callLog.push({
+          class: 'list-group-item-danger',
+          title: 'Hausbau',
+          message: 'Fehler: ' + status,
+          ts: new Date()
+        });
         console.log(data);
       })
   };
@@ -221,7 +226,12 @@ function managecallCtrl($scope, $http) {
         }
       }).
       error(function (data, status) {
-        $scope.callLog.push({class: 'list-group-item-danger', title: 'Hausbau', message: 'Fehler: ' + status, ts: new Date()});
+        $scope.callLog.push({
+          class: 'list-group-item-danger',
+          title: 'Hausbau',
+          message: 'Fehler: ' + status,
+          ts: new Date()
+        });
         console.log(data);
         $scope.$apply();
       })
@@ -330,26 +340,31 @@ function managecallCtrl($scope, $http) {
       });
   };
 
+  var newTransactionHandler = function () {
+    // Just update the entries
+    if ($scope.selectedTeam) {
+      $scope.teamInfo.balance = dataStore.getTeamAccountBalance($scope.selectedTeam.uuid);
+      $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries($scope.selectedTeam.uuid);
+      $scope.setPage(9999);
+      $scope.$apply();
+    }
+  };
+
+  // Register the handler for Team account transaction changes
+  dataStore.registerTeamAccountUpdateHandler(newTransactionHandler);
 
   /***********************
    * SOCKET EVENT HANDLERS
    */
   ferropolySocket.on('marketplace', function (resp) {
     switch (resp.cmd) {
-
       case 'buyHouses':
         console.log('Houses built');
         console.log(resp);
         break;
     }
   });
-  ferropolySocket.on('teamAccount', function (resp) {
-    if ($scope.selectedTeam) {
-      $scope.teamInfo.balance = dataStore.getTeamAccountBalance($scope.selectedTeam.uuid);
-      $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries($scope.selectedTeam.uuid);
-      $scope.$apply();
-    }
-  });
+
   ferropolySocket.on('propertyAccount', function (ind) {
     switch (ind.cmd) {
       case 'propertyBought':

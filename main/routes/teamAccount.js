@@ -34,11 +34,16 @@ router.get('/get/:gameId/:teamId', function (req, res) {
       }
 
       for (var i = 0; i < data.length; i++) {
-        if (_.isUndefined(teamBalance[data[i].teamId])) {
-          teamBalance[data[i].teamId] = 0;
+
+        if (!(tsStart || tsEnd)) {
+          // The balance is only available if ALL data is requested. Otherwise it does not make sense!
+          if (_.isUndefined(teamBalance[data[i].teamId])) {
+            teamBalance[data[i].teamId] = 0;
+          }
+          teamBalance[data[i].teamId] += data[i].transaction.amount;
+          data[i].balance = teamBalance[data[i].teamId];
         }
-        teamBalance[data[i].teamId] += data[i].transaction.amount;
-        data[i].balance = teamBalance[data[i].teamId];
+
         //  data[i].transaction = _.omit(data[i].transaction, 'origin');
         data[i] = _.omit(data[i], ['_id', 'gameId', '__v']);
       }

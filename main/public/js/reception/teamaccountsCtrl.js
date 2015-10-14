@@ -42,15 +42,6 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
     return  dataStore.getGameplay().internal.gameId + '/' + $scope.currentTeamId;
   };
 
-  /**
-   * Socket.io handler, updating the values
-   */
-  ferropolySocket.on('teamAccount', function () {
-    // Update scope variable
-    $scope.entries = dataStore.getTeamAccountEntries();
-    $scope.$apply();
-  });
-
   $scope.getTransactionInfoText = function(entry) {
     var retVal = entry.transaction.info;
     if (entry.transaction.origin.category === 'team') {
@@ -58,6 +49,16 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
     }
     return retVal;
   };
+
+  var newTransactionHandler = function() {
+    // Just update the entries
+    $scope.entries = dataStore.getTeamAccountEntries($scope.currentTeamId);
+    $scope.$apply();
+  };
+
+  // Register the handler for Team account transaction changes
+  dataStore.registerTeamAccountUpdateHandler(newTransactionHandler);
+
   /**
    * Refresh view, needed when entering it
    */

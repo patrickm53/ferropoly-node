@@ -28,6 +28,8 @@ var DataStore = function (initData, socket) {
   this.data = initData;
   this.data.events = {};
   this.socket = socket;
+  this.teamAccountUpdateHandlers = [];
+
   var self = this;
 
   this.teamColors = [
@@ -100,6 +102,7 @@ var DataStore = function (initData, socket) {
     }
   });
 };
+
 /**
  * Get all teams
  * @returns {teams|*|gameData.teams|$scope.teams|result.teams|Array}
@@ -238,6 +241,15 @@ DataStore.prototype.isGameActive = function () {
   }
   return true;
 };
+
+/**
+ * Adds a handler which is called when the team account of any team was updated
+ * @param handler
+ */
+DataStore.prototype.registerTeamAccountUpdateHandler = function(handler) {
+  this.teamAccountUpdateHandlers.push(handler);
+};
+
 /**
  * Updates the team account entries.
  * @param teamId  ID of the team, undefined updates for all
@@ -271,9 +283,13 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
       else {
         self.data.teamAccountEntries = self.data.teamAccountEntries || {};
         self.data.teamAccountEntries[teamId] = self.data.teamAccountEntries[teamId] || [];
-        // replace all entries for this team with the received one
+        // add all received entries for this team, add saldo information (as not provided when getting only the last entries)
+        var balance = self.data.teamAccountEntries[teamId].length > 0 ? _.last(self.data.teamAccountEntries[teamId]).balance : 0;
         for (i = 0; i < data.accountData.length; i++) {
-          self.data.teamAccountEntries[teamId].push(data.accountData[i]);
+          var newEntry = data.accountData[i];
+          balance += newEntry.transaction.amount;
+          newEntry.balance = newEntry.balance || balance;
+          self.data.teamAccountEntries[teamId].push(newEntry);
         }
       }
     }
@@ -288,6 +304,9 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
     })
     .always(function () {
       console.log('updateTeamAccountEntries.always()');
+      for (i = 0; i < self.teamAccountUpdateHandlers.length; i++) {
+        self.teamAccountUpdateHandlers[i]();
+      }
       if (callback) {
         callback();
       }
