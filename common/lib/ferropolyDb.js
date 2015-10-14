@@ -53,13 +53,14 @@ module.exports = {
 
     db.on('disconnected', function (err) {
       logger.error('MongoDb Connection disconnected');
-      logger.info('Killing myself, since I got a disconnect from the repo... (did you start mongodb?), starting kill timer...');
-      /*eslint no-process-exit:0*/
-      setTimeout(function () {
-        logger.info('Killing instance now');
-        process.exit(1);
-      }, 2400);
-
+      if (!process.env.INTEGRATION_TEST) {
+        logger.info('Killing myself, since I got a disconnect from the repo... (did you start mongodb?), starting kill timer...');
+        /*eslint no-process-exit:0*/
+        setTimeout(function () {
+          logger.info('Killing instance now');
+          process.exit(1);
+        }, 2400);
+      }
     });
 
 
