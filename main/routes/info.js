@@ -13,26 +13,26 @@ var _ = require('lodash');
 var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
+var errorHandler = require('../lib/errorHandler');
 
 /* GET home page. */
-router.get('*', function (req, res) {
-  var gameId = _.trimLeft(req.url, '/');
+router.get('/:gameId', function (req, res) {
+  var gameId = req.params.gameId;
 
   gameplayModel.getGameplay(gameId, null, function (err, gp) {
-    if (!gp) {
-      gp = {};
-    }
-    var errMsg1 = '';
     if (err) {
-      errMsg1 = err.message;
+      return errorHandler(res, 'Interner Fehler', err, 500);
     }
+    if (!gp) {
+      return errorHandler(res, 'Interner Fehler: gp ist null.', new Error('gp is undefined'), 500);
+    }
+
     pricelist.getPricelist(gameId, function (err2, pl) {
-      if (!pl) {
-        pl = {};
-      }
-      var errMsg2 = '';
       if (err2) {
-        errMsg2 = err2.message;
+        return errorHandler(res, 'Interner Fehler', err2, 500);
+      }
+      if (!pl) {
+        return errorHandler(res, 'Interner Fehler: pl ist null.', new Error('pl is undefined'), 500);
       }
 
       teamModel.getTeams(gameId, function (err3, foundTeams) {
@@ -50,8 +50,6 @@ router.get('*', function (req, res) {
           title: 'Ferropoly',
           ngFile: '/js/infoctrl.js',
           hideLogout: true,
-          err: errMsg1,
-          err2: errMsg2,
           gameplay: JSON.stringify(gp),
           pricelist: JSON.stringify(pl),
           teams: JSON.stringify(teams)

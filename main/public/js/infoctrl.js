@@ -146,13 +146,8 @@ infoControl.controller('infoCtrl', ['$scope', '$http', function ($scope, $http) 
    * Document ready
    */
   $(document).ready(function () {
-    if (err.length > 0 || err2.length > 0) {
-      showPanel('#p0');
-      console.log('ERROR!');
-    }
-    else {
-      showPanel('#p1');
-    }
+    showPanel('#p1');
+
     $scope.gp = gp;
     $scope.pl = pl;
     $scope.teams = teams;

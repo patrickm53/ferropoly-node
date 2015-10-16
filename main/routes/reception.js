@@ -15,6 +15,7 @@ var teamModel = require('../../common/models/teamModel');
 var authTokenManager = require('../lib/authTokenManager');
 var logger = require('../../common/lib/logger').getLogger('routes:reception');
 var gamecache = require('../lib/gameCache');
+var errorHandler = require('../lib/errorHandler');
 
 /* GET the reception of all games */
 router.get('/:gameId', function (req, res) {
@@ -22,20 +23,20 @@ router.get('/:gameId', function (req, res) {
 
   gamecache.getGameData(gameId, function (err, gamedata) {
     if (err) {
-      return res.status(404).send('Error 404: Game not found');
+      return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
     }
     var gp = gamedata.gameplay;
     var teams = gamedata.teams;
 
     if (!gp || !gamedata) {
-      return res.status(404).send('Error 404: Game not found');
+      return errorHandler(res, 'Spiel nicht gefunden.', new Error('gp or gamedata is undefined'), 500);
     }
 
     // As we use the gamecache, we have to check the user manually
     if (gp.internal.owner !== req.session.passport.user) {
       // Check if declared as additional admin
       if (gp.admins && gp.admins.logins && !_.find(gp.admins.logins, function(n) { return n === req.session.passport.user})) {
-        return res.status(403).send('Error 403: Access denied');
+        return errorHandler(res, 'Keine Berechtigung für dieses Spiel vorhanden.', new Error('Access denied'), 403);
       }
     }
 
@@ -52,7 +53,7 @@ router.get('/:gameId', function (req, res) {
 
       authTokenManager.getNewToken(req.session.passport.user, function (err, token) {
         if (err) {
-          logger.error(err);
+          return errorHandler(res, 'Interner Fehler beim Erstellen des Tokens.', err, 500);
         }
         req.session.ferropolyToken = token;
 

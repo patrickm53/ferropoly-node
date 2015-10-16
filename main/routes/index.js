@@ -11,6 +11,7 @@ var settings = require('../settings');
 var gameplayModel = require('../../common/models/gameplayModel');
 var users = require('../../common/models/userModel');
 var logger = require('../../common/lib/logger').getLogger('routes:index');
+var errorHandler = require('../lib/errorHandler');
 
 var ngFile = '/js/indexctrl.js';
 if (settings.minifedjs) {
@@ -21,8 +22,7 @@ if (settings.minifedjs) {
 router.get('/', function (req, res) {
   users.getUserByMailAddress(req.session.passport.user, function (err, user) {
     if (err) {
-      logger.error('error while getting user by email', err);
-      user = {};
+      return errorHandler(res, 'Interner Fehler beim Laden des Users.', err, 500);
     }
     res.render('index', {
       title: 'Ferropoly Spielauswertung',
