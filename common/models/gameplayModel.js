@@ -29,6 +29,9 @@ var gameplaySchema = mongoose.Schema({
     organisatorEmail: String,
     organisatorPhone: String
   },
+  admins: {
+    logins: {type: Array, default: []}
+  },
   scheduling: {
     gameDate: Date,
     gameStart: String, // hh:mm
@@ -64,8 +67,8 @@ var gameplaySchema = mongoose.Schema({
       minGambling: {type: Number, default: 1000}, // amount to bet in the individual games
       maxGambling: {type: Number, default: 50000},
       maxJackpotSize: {type: Number, default: 500000}, // max jackpot size
-      probabilityWin: {type:Number, default: 0.45},
-      probabilityLoose: {type:Number, default: 0.45}
+      probabilityWin: {type: Number, default: 0.45},
+      probabilityLoose: {type: Number, default: 0.45}
     }
   },
   internal: {
@@ -371,6 +374,26 @@ var updateGameplay = function (gp, callback) {
 };
 
 /**
+ * Sets the admins of a gameplay. This has to work even when the gameplay was finalized before, that's why it is a
+ * specific function and not done in updateGameplay()
+ * @param gameId
+ * @param ownerEmail
+ * @param logins is an array with the entries to write
+ * @param callback
+ */
+var setAdmins = function(gameId, ownerEmail, logins, callback) {
+  getGameplay(gameId, ownerEmail, function(err, gameplay) {
+    if (err) {
+      return callback(err);
+    }
+    gameplay.log.lastEdited = new Date();
+    gameplay.admins = gameplay.admins || {};
+    gameplay.admins.logins = logins || [];
+    gameplay.save(callback);
+  });
+};
+
+/**
  * Just updates the gamplay 'last saved' field
  * @param ownerEmail
  * @param gameId
@@ -433,6 +456,7 @@ module.exports = {
   getGameplaysForUser: getGameplaysForUser,
   removeGameplay: removeGameplay,
   updateGameplay: updateGameplay,
+  setAdmins: setAdmins,
   getGameplay: getGameplay,
   updateGameplayLastChangedField: updateGameplayLastChangedField,
   saveNewPriceListRevision: saveNewPriceListRevision,

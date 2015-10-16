@@ -19,6 +19,7 @@ var logger = require('../lib/logger').getLogger('userModel');
  * The mongoose schema for an user
  */
 var userSchema = mongoose.Schema({
+  _id: String,
   personalData: {
     forename: String,
     surname: String,
@@ -133,6 +134,7 @@ var updateUser = function (user, password, callback) {
         }
         generatePasswordHash(user, password);
         user.info.registrationDate = new Date();
+        user._id = user.personalData.email;
         return user.save(function (err, savedUser) {
           if (err) {
             return callback(err);
