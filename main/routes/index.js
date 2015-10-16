@@ -19,17 +19,24 @@ if (settings.minifedjs) {
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  users.getUserByMailAddress(req.session.passport.user, function(err, user) {
+  users.getUserByMailAddress(req.session.passport.user, function (err, user) {
     if (err) {
       logger.error('error while getting user by email', err);
       user = {};
     }
-    res.render('index', {title: 'Ferropoly Spielauswertung', ngController: 'indexCtrl', ngApp: 'indexApp', ngFile: ngFile, user:user});
+    res.render('index', {
+      title: 'Ferropoly Spielauswertung',
+      ngController: 'indexCtrl',
+      ngApp: 'indexApp',
+      ngFile: ngFile,
+      user: user,
+      userJson: JSON.stringify(user)
+    });
 
   });
 });
 
-router.get('/gameplays', function(req, res) {
+router.get('/gameplays', function (req, res) {
   gameplayModel.getGameplaysForUser(req.session.passport.user, function (err, gameplays) {
     if (err) {
       logger.error('can not get gameplays for a user', err);

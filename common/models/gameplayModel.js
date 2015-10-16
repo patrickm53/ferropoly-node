@@ -140,7 +140,7 @@ var createGameplay = function (gpOptions, callback) {
  * @param callback
  */
 var getGameplaysForUser = function (ownerEmail, callback) {
-  Gameplay.find({'internal.owner': ownerEmail}, function (err, docs) {
+  Gameplay.find({$or: [{'internal.owner': ownerEmail}, {'admins.logins': ownerEmail}]}, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -199,7 +199,8 @@ var countGameplays = function (callback) {
  * @param callback
  */
 var getGameplay = function (gameId, ownerEmail, callback) {
-  var params = {'internal.owner': ownerEmail, 'internal.gameId': gameId};
+  var params = {$or: [{'internal.owner': ownerEmail}, {'admins.logins': ownerEmail}], 'internal.gameId': gameId};
+  //  var params = {'internal.owner': ownerEmail, 'internal.gameId': gameId};
   if (ownerEmail === null) {
     params = {'internal.gameId': gameId};
   }
@@ -381,8 +382,8 @@ var updateGameplay = function (gp, callback) {
  * @param logins is an array with the entries to write
  * @param callback
  */
-var setAdmins = function(gameId, ownerEmail, logins, callback) {
-  getGameplay(gameId, ownerEmail, function(err, gameplay) {
+var setAdmins = function (gameId, ownerEmail, logins, callback) {
+  getGameplay(gameId, ownerEmail, function (err, gameplay) {
     if (err) {
       return callback(err);
     }

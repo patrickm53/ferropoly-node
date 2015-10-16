@@ -3,9 +3,13 @@ extends layout
 block head
   script(src='/moment/moment.min.js')
   script(src='/moment/de.js')
-  script(src='/js/indexmctrl.js')
   link(rel='stylesheet', href='/css/index.css',  type='text/css')
-
+  script
+    | var user =
+    != userJson
+    | ;
+    | console.log(user);
+  script(src='/js/indexmctrl.js')
 block navbar-right
   li
     a(href='/about') Hilfe / Info
@@ -28,10 +32,12 @@ block content
                 .panel.panel-default
                   .panel-heading
                     h3.panel-title {{gameplay.gamename}}
+                      span(ng-hide='userIsAdmin(gameplay)') &nbsp; (Spielleiter)
                   .panel-body
                     p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}, {{gameplay.scheduling.gameStart}} - {{gameplay.scheduling.gameEnd}}
                     p Karte: {{gameplay.internal.map.toUpperCase()}}
                     p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
+                    p(ng-hide='userIsAdmin(gameplay)') Organisator: {{createOrganisatorInfo(gameplay)}}
                     p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
                       div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
                     div(ng-hide='gameplay.internal.finalized')

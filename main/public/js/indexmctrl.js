@@ -8,6 +8,7 @@ moment.locale('de');
 var indexControl = angular.module('indexApp', []);
 indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http) {
 
+  $scope.user = user;
   $scope.gameplays = [];
   var authToken;
   $scope.gameplayToDelete;
@@ -30,7 +31,7 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
       });
   };
 
-  $scope.isGameRunning = function(gp) {
+  $scope.isGameRunning = function (gp) {
     if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
       return -1;
     }
@@ -40,6 +41,7 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     // Is running
     return 0;
   };
+  // Get Info about Game timings
   $scope.getGpInfo = function (gp) {
     if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
       return 'Spiel ist ' + moment(gp.scheduling.gameEndTs).fromNow(false) + ' zu Ende gegangen.';
@@ -53,6 +55,25 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     return ('');
   };
 
+  /**
+   * Returns true when the user is the admin. Otherwise he was just added as secondary admin
+   * @param gp
+   */
+  $scope.userIsAdmin = function (gp) {
+    return (gp.internal.owner === $scope.user.personalData.email);
+  };
+  /**
+   * Creates organisator information
+   */
+  $scope.createOrganisatorInfo = function(gp) {
+    var retVal = '';
+
+    if(gp.owner && gp.owner.organisatorName) {
+      retVal += gp.owner.organisatorName + ' ';
+    }
+    retVal += gp.internal.owner;
+    return retVal;
+  };
   // When document ready, load gameplays
   $(document).ready(function () {
     $http.get('/gameplays').

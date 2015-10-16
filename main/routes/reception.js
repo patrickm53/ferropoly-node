@@ -32,8 +32,11 @@ router.get('/:gameId', function (req, res) {
     }
 
     // As we use the gamecache, we have to check the user manually
-    if (!gp || gp.owner.organisatorEmail !== req.session.passport.user) {
-      return res.status(403).send('Error 403: Access denied');
+    if (gp.owner.organisatorEmail !== req.session.passport.user) {
+      // Check if declared as additional admin
+      if (gp.admins && gp.admins.logins && !_.find(gp.admins.logins, function(n) { return n === req.session.passport.user})) {
+        return res.status(403).send('Error 403: Access denied');
+      }
     }
 
     var errMsg1 = '';
