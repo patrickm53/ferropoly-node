@@ -55,7 +55,12 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
   }
   else {
     // Negative amount: team is charged, amount goes to chancellery
-    return teamAccount.chargeToChancellery(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
+    return teamAccount.chargeToChancellery({
+      teamId: team.uuid,
+      gameId: gameplay.internal.gameId,
+      amount: info.amount,
+      info: info.infoText
+    }, function (err) {
       if (err) {
         return callback(err);
       }

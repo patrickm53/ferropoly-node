@@ -81,7 +81,7 @@ function playRound(gameId, teamId, travelLog, properties, callback) {
   mp.chancellery(gameId, teamId, function () {
     mp.buildHouses(gameId, teamId, function () {
       var propertyId = selectClosestsProperty(travelLog, properties);
-      mp.buyProperty(gameId, teamId, propertyId, function () {
+      mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, function () {
         callback();
       });
     });

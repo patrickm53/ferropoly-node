@@ -64,7 +64,11 @@ describe('Marketplace propertyGroup tests', function () {
       gameData.teams[teamIndex].expectedMoney -= propertyPrice;
       gameData.teams[teamIndex].expectedEntries = 1;
 
-      marketplace.buyProperty(gameId, gameData.teams[teamIndex].uuid, pricelist[propertyIndex].uuid, function (err, info) {
+      marketplace.buyProperty({
+        gameId: gameId,
+        teamId: gameData.teams[teamIndex].uuid,
+        propertyId: pricelist[propertyIndex].uuid
+      }, function (err, info) {
         expect(err).to.be(null);
         expect(info.property.gameId).to.be(gameId);
         expect(info.property.pricelist.price).to.be(propertyPrice);
@@ -96,7 +100,7 @@ describe('Marketplace propertyGroup tests', function () {
         gameData.teams[teamIndex].expectedEntries++;
       }
 
-      marketplace.payRents(gameId, function (err) {
+      marketplace.payRents({gameId: gameId}, function (err) {
 
         gameData.teams[teamIndex].expectedMoney += expectedIncome;
         gameData.teams[teamIndex].expectedEntries += 2;
@@ -128,7 +132,11 @@ describe('Marketplace propertyGroup tests', function () {
       gameData.teams[teamIndex].expectedMoney -= propertyPrice;
       gameData.teams[teamIndex].expectedEntries++;
 
-      marketplace.buyProperty(gameId, gameData.teams[teamIndex].uuid, pricelist[propertyIndex].uuid, function (err, info) {
+      marketplace.buyProperty({
+        gameId: gameId,
+        teamId: gameData.teams[teamIndex].uuid,
+        propertyId: pricelist[propertyIndex].uuid
+      }, function (err, info) {
         expect(err).to.be(null);
         expect(info.property.gameId).to.be(gameId);
         expect(info.property.pricelist.price).to.be(propertyPrice);
@@ -182,7 +190,7 @@ describe('Marketplace propertyGroup tests', function () {
         gameData.teams[teamIndex].expectedEntries++;
       }
 
-      marketplace.payRents(gameId, function (err) {
+      marketplace.payRents({gameId: gameId}, function (err) {
         gameData.teams[teamIndex].expectedMoney += expectedIncome;
         gameData.teams[teamIndex].expectedEntries += 2;
 

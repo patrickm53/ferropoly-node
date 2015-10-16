@@ -55,8 +55,8 @@ describe('Marketplace integration tests', function () {
     )
   });
 
-  after(function(done) {
-    db.close(function(err) {
+  after(function (done) {
+    db.close(function (err) {
       done(err);
     })
   });
@@ -130,7 +130,11 @@ describe('Marketplace integration tests', function () {
 
   describe('Buying some properties', function () {
     it('should buy the cheapest place for team 0', function (done) {
-      marketplace.buyProperty(gameId, gameData.teams[0].uuid, pricelist[0].uuid, function (err, info) {
+      marketplace.buyProperty({
+        gameId: gameId,
+        teamId: gameData.teams[0].uuid,
+        propertyId: pricelist[0].uuid
+      }, function (err, info) {
         expect(err).to.be(null);
         expect(info.property.gameId).to.be(gameId);
         expect(info.property.pricelist.price).to.be(1000);
@@ -155,7 +159,11 @@ describe('Marketplace integration tests', function () {
       var index = 79;
       var price = 8000;
       var teamIndex = 0;
-      marketplace.buyProperty(gameId, gameData.teams[teamIndex].uuid, pricelist[index].uuid, function (err, info) {
+      marketplace.buyProperty({
+        gameId: gameId,
+        teamId: gameData.teams[teamIndex].uuid,
+        propertyId: pricelist[index].uuid
+      }, function (err, info) {
         expect(err).to.be(null);
         expect(info.property.gameId).to.be(gameId);
         expect(info.property.pricelist.price).to.be(price);
@@ -196,7 +204,10 @@ describe('Marketplace integration tests', function () {
       var expectedRent = 1120;
       var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-      marketplace.payRents(gameId, function (err) {
+      marketplace.payRents({gameId:gameId}, function (err) {
+        if (err) {
+          return done(err);
+        }
         gameData.teams[0].expectedMoney += expectedIncome;
         gameData.teams[0].expectedEntries += 2;
 
@@ -270,7 +281,7 @@ describe('Marketplace integration tests', function () {
         var expectedRent = 4500;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function (err) {
+        marketplace.payRents({gameId:gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -325,7 +336,7 @@ describe('Marketplace integration tests', function () {
         var expectedRent = 18000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function (err) {
+        marketplace.payRents({gameId:gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -382,7 +393,7 @@ describe('Marketplace integration tests', function () {
         var expectedRent = 27000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function (err) {
+        marketplace.payRents({gameId:gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -438,7 +449,7 @@ describe('Marketplace integration tests', function () {
         var expectedRent = 36000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function (err) {
+        marketplace.payRents({gameId:gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -511,7 +522,7 @@ describe('Marketplace integration tests', function () {
         var expectedRent = 45000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents(gameId, function (err) {
+        marketplace.payRents({gameId:gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
@@ -581,10 +592,10 @@ describe('Marketplace integration tests', function () {
         })
       });
     });
-    describe('Reset the property bought by group 0', function() {
-      it('should make the property available again', function(done) {
-        marketplace.resetProperty(gameId, pricelist[0].uuid, 'TEST', function(err) {
-          propertyAccount.getBalance(gameId, pricelist[0].uuid, function(err, info) {
+    describe('Reset the property bought by group 0', function () {
+      it('should make the property available again', function (done) {
+        marketplace.resetProperty(gameId, pricelist[0].uuid, 'TEST', function (err) {
+          propertyAccount.getBalance(gameId, pricelist[0].uuid, function (err, info) {
             expect(info.balance).to.be(0);
             done(err);
           });

@@ -16,6 +16,7 @@ var teamAccountTransactionSchema = mongoose.Schema({
   gameId: String, // Game the transaction belongs to
   timestamp: {type: Date, default: Date.now}, // Timestamp of the transaction
   teamId: String, // This is the uuid of the team the account belongs to
+  user: String, // The user (one of the admins) which was initiating the transaction
 
   transaction: {
     /*

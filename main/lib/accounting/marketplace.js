@@ -45,7 +45,7 @@ function Marketplace(scheduler) {
      */
     this.scheduler.on('interest', function (event) {
       marketLog(event.gameId, 'Marketplace: onInterest');
-      self.payRents(event.gameId, function (err) {
+      self.payRents({gameId: event.gameId}, function (err) {
         if (err) {
           marketLog(event.gameId, 'ERROR, interests not paid! Message: ' + err.message);
           event.callback(err);
@@ -114,7 +114,11 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
   var start = moment(gameplay.scheduling.gameStartTs).subtract(additionalMinutes, 'minutes');
   var end = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
   if (moment().isAfter(end)) {
-    marketLog(gameplay.internal.gameId, 'Game over', {start: start.toDate(), end: end.toDate(), additionalMinutes: additionalMinutes});
+    marketLog(gameplay.internal.gameId, 'Game over', {
+      start: start.toDate(),
+      end: end.toDate(),
+      additionalMinutes: additionalMinutes
+    });
     return false;
   }
   if (moment().isBefore(start)) {
@@ -131,37 +135,38 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
  * 2) Already sold: pay taxes, Money:
  *    team->property->owner
  *
- * @param gameId
- * @param teamId
- * @param propertyId
+ * @param options is the object with the information what to do. At least with gameId, teamId and propertyId
  * @param callback
  */
-Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callback) {
+Marketplace.prototype.buyProperty = function (options, callback) {
   var self = this;
+  if (!options.gameId || !options.teamId || !options.propertyId) {
+    return callback(new Error('At least gameId, teamId and property Id must be supplied'));
+  }
 
-  travelLog.addEntry(gameId, teamId, propertyId, function (err) {
+  travelLog.addEntry(options.gameId, options.teamId, options.propertyId, function (err) {
     if (err) {
       logger.error(err);
     }
     // we do not care about this return, it's asynchronous and that's ok
   });
 
-  marketLog(gameId, 'buyProperty, team: ' + teamId + ' property:' + propertyId);
+  marketLog(options.gameId, 'buyProperty, team: ' + options.teamId + ' property:' + options.propertyId + ' user:' + options.user);
 
-  propWrap.getProperty(gameId, propertyId, function (err, property) {
+  propWrap.getProperty(options.gameId, options.propertyId, function (err, property) {
     if (err) {
       return callback(err);
     }
     if (!property) {
       return callback(new Error('No property for this location'), {message: 'Dieses Ort kann nicht gekauft werden'});
     }
-    gameCache.getGameData(gameId, function (err, res) {
+    gameCache.getGameData(options.gameId, function (err, res) {
       if (err) {
         logger.error(err);
         return callback(err);
       }
       var gp = res.gameplay;
-      var team = res.teams[teamId];
+      var team = res.teams[options.teamId];
 
       if (!gp || !team) {
         return callback(new Error('Gameplay error or team invalid'));
@@ -175,13 +180,15 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
       // Now check if the property is still available or sold. There are 3 cases to handle
       if (!property.gamedata || !property.gamedata.owner || property.gamedata.owner.length === 0) {
         // CASE 1: property is available, the team is going to buy it
-        marketLog(gameId, property.location.name + ' is available');
+        marketLog(options.gameId, property.location.name + ' is available');
         propertyAccount.buyProperty(gp, property, team, function (err, info) {
           if (err) {
             logger.error(err);
             return callback(err);
           }
-          teamAccount.chargeToBank(teamId, gameId, info.amount, 'Kauf ' + property.location.name, function (err) {
+          options.amount = info.amount;
+          options.info = 'Kauf ' + property.location.name;
+          teamAccount.chargeToBank(options, function (err) {
             if (err) {
               return callback(err, {message: 'Fehler beim Grundstückkauf'});
             }
@@ -191,9 +198,9 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
         });
       }
       //------------------------------------------------------------------------------------------------------------------
-      else if (property.gamedata.owner === teamId) {
+      else if (property.gamedata.owner === options.teamId) {
         // CASE 2: property belongs to the team which wants to buy it, do nothing
-        marketLog(gameId, property.location.name + ' already belongs the team');
+        marketLog(options.gameId, property.location.name + ' already belongs the team');
         return callback(null, {property: property, amount: 0});
       }
       //------------------------------------------------------------------------------------------------------------------
@@ -203,8 +210,12 @@ Marketplace.prototype.buyProperty = function (gameId, teamId, propertyId, callba
           if (err) {
             return callback(err);
           }
-          teamAccount.chargeToAnotherTeam(gameId, teamId, property.gamedata.owner, val.amount, 'Miete ' + property.location.name, function (err, info) {
-            marketLog(gameId, property.location.name + ' is already sold to another team');
+          options.amount = val.amount;
+          options.info = 'Miete ' + property.location.name;
+          options.debitorTeamId = options.teamId;
+          options.creditorTeamId = property.gamedata.owner;
+          teamAccount.chargeToAnotherTeam(options, function (err, info) {
+            marketLog(options.gameId, property.location.name + ' is already sold to another team');
             if (err) {
               logger.error(err);
               return callback(err);
@@ -275,7 +286,12 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
             return callback(null, {amount: 0});
           }
           else {
-            teamAccount.chargeToBank(teamId, gameId, totalAmount, {info: 'Hausbau', parts: log}, function (err) {
+            teamAccount.chargeToBank({
+              teamId: teamId,
+              gameId: gameId,
+              amount: totalAmount,
+              info: {info: 'Hausbau', parts: log}
+            }, function (err) {
               if (err) {
                 logger.error(err);
                 return callback(err);
@@ -357,7 +373,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       },
       function (cb) {
         count++;
-        self.payRents(gameId, tolerance, cb);
+        self.payRents({gameId: gameId, tolerance: tolerance}, cb);
       },
       function (err) {
         callback(err);
@@ -488,16 +504,18 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback)
  * If the team has debts, a percentage of it will be payed too.
  *
  * Money: bank->propertIES->team
- * @param gameId
- * @param tolerance  tolerance in minutes for market open
+ * @param options is an object with at least the gameId and a tolerance (in minutes for market open), if given
  * @param callback
  */
-Marketplace.prototype.payRents = function (gameId, tolerance, callback) {
-  var self = this;
-  if (_.isFunction(tolerance)) {
-    callback = tolerance;
-    tolerance = 0;
+Marketplace.prototype.payRents = function (options, callback) {
+  var gameId = options.gameId;
+  var tolerance = options.tolerance || 0;
+
+  if (!gameId) {
+    return callback(new Error('no gameId supplied in payRents'));
   }
+
+  var self = this;
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
@@ -634,7 +652,12 @@ Marketplace.prototype.manipulateTeamAccount = function (gameId, teamId, amount, 
     });
   }
   else {
-    teamAccount.chargeToBank(teamId, gameId, amount, 'Manuelle Lastschrift: ' + reason, function (err) {
+    teamAccount.chargeToBank({
+      teamId: teamId,
+      gameId: gameId,
+      amount: amount,
+      info: 'Manuelle Lastschrift: ' + reason
+    }, function (err) {
       callback(err);
     });
 

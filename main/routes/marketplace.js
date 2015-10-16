@@ -47,7 +47,12 @@ router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    marketplace.buyProperty(req.params.gameId, req.params.teamId, req.params.propertyId, function (err, result) {
+    marketplace.buyProperty({
+      gameId: req.params.gameId,
+      teamId: req.params.teamId,
+      propertyId: req.params.propertyId,
+      user: req.session.passport.user
+    }, function (err, result) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }
@@ -59,13 +64,13 @@ router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
 /**
  * Pay the rents and interests. This should not be called except an urgent case (or during development)
  */
-router.get('/payRents/:gameId', function(req, res) {
+router.get('/payRents/:gameId', function (req, res) {
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
     var marketplace = marketplaceApi.getMarketplace();
-    marketplace.payRents(req.params.gameId, function (err) {
+    marketplace.payRents({gameId: req.params.gameId, user: req.session.passport.user}, function (err) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }

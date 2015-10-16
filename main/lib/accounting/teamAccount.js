@@ -38,69 +38,76 @@ function payInterest(teamId, gameId, amount, callback) {
 
 /**
  * Internal function, charging to bank or chancellery
- * @param teamId
- * @param gameId
- * @param amount
- * @param info
- * @param category
+ * @param options with at least:
+ *  - teamId
+ *  - gameId
+ *  - amount   amount to pay (will be always turned to a negative value)
+ *  - info     optional text to be supplied with the transaction or object
+ *  - user     optional: user which initiated transaction
+ *  - category
  * @param callback
  * @returns {*}
  */
-function chargeToBankOrChancellery(teamId, gameId, amount, info, category, callback) {
-  if (!teamId || !gameId || !_.isNumber(amount)) {
+function chargeToBankOrChancellery(options, callback) {
+  if (!options.teamId || !options.gameId || !_.isNumber(options.amount)) {
     callback(new Error('Parameter error in chargeToBank'));
     return;
   }
 
-  if (amount === 0) {
+  if (options.amount === 0) {
     return callback(new Error('Value must not be 0'));
   }
 
   // Amount has to be negative, not concerning of the parameter value!
-  var chargedAmount = (-1) * Math.abs(amount);
+  var chargedAmount = (-1) * Math.abs(options.amount);
 
   var entry = new teamAccountTransaction.Model();
-  entry.gameId = gameId;
-  entry.teamId = teamId;
+  entry.gameId = options.gameId;
+  entry.teamId = options.teamId;
   entry.transaction.amount = chargedAmount;
-  entry.transaction.origin = {category: category};
-  if (_.isString(info)) {
-    entry.transaction.info = info;
+  entry.transaction.origin = {category: options.category};
+  entry.user = options.user;
+  if (_.isString(options.info)) {
+    entry.transaction.info = options.info;
   }
-  else if (_.isObject(info)) {
-    entry.transaction.info = info.info;
-    entry.transaction.parts = info.parts;
+  else if (_.isObject(options.info)) {
+    entry.transaction.info = options.info.info;
+    entry.transaction.parts = options.info.parts;
   }
 
   teamAccountTransaction.book(entry, function (err) {
     if (ferroSocket) {
-      ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: entry});
+      ferroSocket.emitToClients(options.gameId, 'teamAccount', {cmd: 'onTransaction', data: entry});
     }
     callback(err, {amount: chargedAmount});
   });
 }
 /**
  * Charging a teams account to the bank
- * @param teamId
- * @param gameId
- * @param amount   amount to pay (will be always turned to a negative value)
- * @param info     optional text to be supplied with the transaction or object
+ * @param options with at least:
+ *  - teamId
+ *  - gameId
+ *  - amount   amount to pay (will be always turned to a negative value)
+ *  - info     optional text to be supplied with the transaction or object
  * @param callback
  */
-function chargeToBank(teamId, gameId, amount, info, callback) {
-  chargeToBankOrChancellery(teamId, gameId, amount, info, 'bank', callback);
+function chargeToBank(options, callback) {
+  options.category = 'bank';
+  chargeToBankOrChancellery(options, callback);
 }
 
 /**
  * Charging a teams account to the chancellery
- * @param teamId
- * @param gameId
- * @param amount   amount to pay (will be always turned to a negative value)
- * @param info     optional text to be supplied with the transaction or object
+ * @param options with at least:
+ *  - teamId
+ *  - gameId
+ *  - amount   amount to pay (will be always turned to a negative value)
+ *  - info     optional text to be supplied with the transaction or object
  * @param callback
  */
-function chargeToChancellery(teamId, gameId, amount, info, callback) {
-  chargeToBankOrChancellery(teamId, gameId, amount, info, 'chancellery', callback);
+function chargeToChancellery(options, callback) {
+  options.category = 'chancellery';
+  chargeToBankOrChancellery(options, callback);
 }
 
 /**
@@ -179,52 +186,50 @@ function receiveFromChancellery(teamId, gameId, amount, info, callback) {
 }
 /**
  * One team pays another one
- * @param gameId
- * @param debitorTeamId
- * @param creditorTeamId
- * @param amount  amount to pay, always positive!
- * @param info
+ * @param options
  * @param callback
  */
-function chargeToAnotherTeam(gameId, debitorTeamId, creditorTeamId, amount, info, callback) {
-  if (!debitorTeamId || !creditorTeamId || !info || !gameId || !_.isNumber(amount)) {
+function chargeToAnotherTeam(options, callback) {
+  if (!options.debitorTeamId || !options.creditorTeamId || !options.info || !options.gameId || !_.isNumber(options.amount)) {
     callback(new Error('Parameter error in chargeToAnotherTeam'));
     return;
   }
 
-  if (amount === 0) {
+  if (options.amount === 0) {
     return callback(new Error('Value must not be 0'));
   }
 
   // Amount has to be positive for us, not concerning of the parameter value!
-  var chargedAmount = Math.abs(amount);
+  var chargedAmount = Math.abs(options.amount);
 
   var chargingEntry = new teamAccountTransaction.Model();
-  chargingEntry.gameId = gameId;
-  chargingEntry.teamId = debitorTeamId;
+  chargingEntry.gameId = options.gameId;
+  chargingEntry.teamId = options.debitorTeamId;
+  chargingEntry.user = options.user;
   chargingEntry.transaction.amount = chargedAmount * (-1);
   chargingEntry.transaction.origin = {
-    uuid: creditorTeamId,
+    uuid: options.creditorTeamId,
     category: 'team'
   };
-  chargingEntry.transaction.info = info;
+  chargingEntry.transaction.info = options.info;
 
   var receivingEntry = new teamAccountTransaction.Model();
-  receivingEntry.gameId = gameId;
-  receivingEntry.teamId = creditorTeamId;
+  receivingEntry.gameId = options.gameId;
+  receivingEntry.teamId = options.creditorTeamId;
+  receivingEntry.user = options.user;
   receivingEntry.transaction.amount = chargedAmount;
-  receivingEntry.transaction.origin = {uuid: debitorTeamId, category: 'team'};
-  receivingEntry.transaction.info = info;
+  receivingEntry.transaction.origin = {uuid: options.debitorTeamId, category: 'team'};
+  receivingEntry.transaction.info = options.info;
 
   teamAccountTransaction.bookTransfer(chargingEntry, receivingEntry, function (err) {
     if (err) {
       return callback(err);
     }
     if (ferroSocket) {
-      ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: chargingEntry});
-      ferroSocket.emitToClients(gameId, 'teamAccount', {cmd: 'onTransaction', data: receivingEntry});
+      ferroSocket.emitToClients(options.gameId, 'teamAccount', {cmd: 'onTransaction', data: chargingEntry});
+      ferroSocket.emitToClients(options.gameId, 'teamAccount', {cmd: 'onTransaction', data: receivingEntry});
     }
-    callback(null, {amount: amount});
+    callback(null, {amount: options.amount});
   });
 }
 
