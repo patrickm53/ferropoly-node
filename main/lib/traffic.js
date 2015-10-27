@@ -75,6 +75,10 @@ function getCategory(entry) {
  * @returns {*}
  */
 function transformData(data) {
+  if (!data.channel || !data.channel.item) {
+    // Can happen if there is no data, but this happens not often (most likely a server bug)
+    return {};
+  }
 
   for (var i = 0; i < data.channel.item.length; i++) {
     try {
