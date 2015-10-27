@@ -161,7 +161,7 @@ function buyBuilding(gameplay, property, team, callback) {
     pt.propertyId = property.uuid;
     pt.transaction = {
       origin: {
-        uuid: team,
+        uuid: team.uuid,
         type: 'team'
       },
       amount: retVal.amount, // building buildings is negative earning on the property
@@ -222,7 +222,7 @@ function payInterest(gameplay, register, callback) {
         type: 'bank'
       },
       amount: Math.abs(register[i].amount), // interest is positive earning on the property
-      info: 'Zinsen ' + register[i].name
+      info: 'Zinsen ' + register[i].location.name
     };
 
     propertyTransaction.book(pt, transactionCallback);
