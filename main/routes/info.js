@@ -13,6 +13,7 @@ var _ = require('lodash');
 var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
+var logger = require('../../common/lib/logger').getLogger('routes:info');
 
 /* GET home page. */
 router.get('*', function (req, res) {
@@ -24,6 +25,7 @@ router.get('*', function (req, res) {
     }
     var errMsg1 = '';
     if (err) {
+      logger.err(err);
       errMsg1 = err.message;
     }
     pricelist.getPricelist(gameId, function (err2, pl) {
@@ -32,10 +34,15 @@ router.get('*', function (req, res) {
       }
       var errMsg2 = '';
       if (err2) {
+        logger.err(err);
         errMsg2 = err2.message;
       }
 
       teamModel.getTeams(gameId, function (err3, foundTeams) {
+        if (err3) {
+          logger.err(err);
+          foundTeams = [];
+        }
         // Filter some info
         var teams = [];
         for (var i = 0; i < foundTeams.length; i++) {
