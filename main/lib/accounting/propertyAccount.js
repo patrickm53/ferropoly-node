@@ -222,7 +222,7 @@ function payInterest(gameplay, register, callback) {
         type: 'bank'
       },
       amount: Math.abs(register[i].amount), // interest is positive earning on the property
-      info: 'Zinsen ' + register[i].location.name
+      info: 'Zinsen ' + register[i].propertyName
     };
 
     propertyTransaction.book(pt, transactionCallback);

@@ -13,7 +13,9 @@ var _ = require('lodash');
 var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
-var errorHandler = require('../lib/errorHandler');
+var errorHandler = require('../lib/errorHandler')
+var logger = require('../../common/lib/logger').getLogger('routes:info');
+
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
@@ -21,6 +23,7 @@ router.get('/:gameId', function (req, res) {
 
   gameplayModel.getGameplay(gameId, null, function (err, gp) {
     if (err) {
+      logger.err(err);
       return errorHandler(res, 'Interner Fehler', err, 500);
     }
     if (!gp) {
@@ -29,6 +32,7 @@ router.get('/:gameId', function (req, res) {
 
     pricelist.getPricelist(gameId, function (err2, pl) {
       if (err2) {
+        logger.err(err2);
         return errorHandler(res, 'Interner Fehler', err2, 500);
       }
       if (!pl) {
@@ -36,6 +40,10 @@ router.get('/:gameId', function (req, res) {
       }
 
       teamModel.getTeams(gameId, function (err3, foundTeams) {
+        if (err3) {
+          logger.err(err3);
+          return errorHandler(res, 'Interner Fehler', err3, 500);
+        }
         // Filter some info
         var teams = [];
         for (var i = 0; i < foundTeams.length; i++) {
