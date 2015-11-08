@@ -24,7 +24,7 @@ router.get('/:gameId/:teamId', function (req, res) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    logger.debug('Request for ' + req.params.teamId + ' @ ' + req.params.gameId);
+    logger.info('Request for ' + req.params.teamId + ' @ ' + req.params.gameId);
     var teamId = req.params.teamId;
     if (req.params.teamId === 'undefined') {
       teamId = undefined;
