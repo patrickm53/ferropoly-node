@@ -69,3 +69,7 @@
     overflow: auto;
     height: 200px;
 }
+
+.chart-area {
+    width : 100%;
+}
