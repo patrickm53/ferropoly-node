@@ -30,19 +30,17 @@ FerroStats.prototype.drawRankingChart = function (data, chartId) {
       json: data,
       keys: {
         x: 'teamName',
-        value: ['asset'],
-        axes: {
-          asset: 'y'
-        },
-        names: {
-          asset: 'Vermoegen'
-        }
+        value: ['asset']
+      },
+      axes: {
+        asset: 'y'
+      },
+      names: {
+        asset: 'Vermögen'
       },
       type: 'bar',
       color: function (color, d) {
         // d will be 'id' when called for legends
-        console.log('color', color);
-        console.log('d', d);
         if (_.isNumber(d.x)) {
           return dataStore.getTeamColor(data[d.x].teamId)
         }
@@ -60,7 +58,7 @@ FerroStats.prototype.drawRankingChart = function (data, chartId) {
       }
     },
     legend: {
-      show: true
+      show: false
     }
   });
 };
