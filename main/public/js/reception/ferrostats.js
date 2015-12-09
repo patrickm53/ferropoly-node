@@ -116,21 +116,27 @@ FerroStats.prototype.drawIncomeChart = function (data, chartId) {
  * @param chartId
  */
 FerroStats.prototype.drawIncomeDetailChart = function (register, chartId) {
-  return;
-  var dataArray = [['Ort', 'Einkommen']];
-  register = _.sortBy(register, function (n) {
-    return n.amount * (-1);
-  });
+
+  // Transform data first for pie charts
+  var data = [];
   for (var i = 0; i < register.length; i++) {
-    dataArray.push([register[i].propertyName, register[i].amount]);
+    data.push([register[i].propertyName, register[i].amount]);
   }
-  var data = google.visualization.arrayToDataTable(dataArray);
-  var options = {
-    title: 'Einkommensquellen',
-    height: 600,
-    backgroundColor: {fill: 'transparent'}
-  };
-  var chart = new google.visualization.PieChart(document.getElementById(chartId));
-  chart.draw(data, options);
+
+  c3.generate({
+    bindto: '#stats-income-chart',
+    size: {
+      height: 400
+    },
+    data: {
+      columns: data,
+      type: 'pie'
+    },
+    legend: {
+      show: true,
+      position: 'inset'
+    }
+  });
+
 };
 var ferroStats = new FerroStats();
