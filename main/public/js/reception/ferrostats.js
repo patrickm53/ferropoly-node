@@ -19,8 +19,6 @@ var FerroStats = function () {
  */
 FerroStats.prototype.drawRankingChart = function (data, chartId) {
 
-  console.log(data);
-
   c3.generate({
     bindto: '#stats-possessions-chart',
     size: {
@@ -69,38 +67,47 @@ FerroStats.prototype.drawRankingChart = function (data, chartId) {
  * @param chartId
  */
 FerroStats.prototype.drawIncomeChart = function (data, chartId) {
-  return;
-  if (!this.graphApiAvailable) {
-    console.warn('graphApi not available');
-    return;
-  }
-
-  var chartData = new google.visualization.DataTable();
-  chartData.addColumn('string', 'Team');
-  chartData.addColumn('number', 'Einkommen');
-  chartData.addColumn({type: 'string', role: 'style'});
-
-  var maxValue = 0;
-  for (var i = 0; i < data.length; i++) {
-    chartData.addRow([data[i].teamName, data[i].totalAmount, dataStore.getTeamColor(data[i].teamId)]);
-    if (data[i].totalAmount > maxValue) {
-      maxValue = data[i].totalAmount;
+  console.log(data);
+  c3.generate({
+    bindto: '#stats-income-chart',
+    size: {
+      height: 400
+    },
+    data: {
+      json: data,
+      keys: {
+        x: 'teamName',
+        value: ['totalAmount']
+      },
+      axes: {
+        asset: 'y'
+      },
+      names: {
+        totalAmount: 'Einkommen'
+      },
+      type: 'bar',
+      color: function (color, d) {
+        // d will be 'id' when called for legends
+        if (_.isNumber(d.x)) {
+          return dataStore.getTeamColor(data[d.x].teamId)
+        }
+        return 'blue';
+      }
+    },
+    axis: {
+      x: {
+        type: 'category'
+      }
+    },
+    grid: {
+      y: {
+        show: true
+      }
+    },
+    legend: {
+      show: false
     }
-  }
-
-  maxValue *= 1.1;
-
-  var options = {
-    title: 'Einkommen (Miete)',
-    curveType: 'function',
-    legend: {position: 'none'},
-    height: 600,
-    backgroundColor: {fill: 'transparent'}, // undocumented google feature...
-    vAxis: {minValue: 0, maxValue: maxValue, gridlines: {count: 10}}
-  };
-
-  var chart = new google.visualization.ColumnChart(document.getElementById(chartId));
-  chart.draw(chartData, options);
+  });
 };
 
 /**
