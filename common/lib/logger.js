@@ -47,7 +47,7 @@ var log = function (module, level, message, metadata) {
     info += message;
   }
   if (metadata) {
-    info += ' ' + util.inspect(metadata);
+    info += '\n' + util.inspect(metadata);
   }
   logger.log(level, info);
 };
@@ -76,7 +76,7 @@ module.exports = {
         log(moduleName, 'warn', message, metadata);
       },
       debug: function (message, metadata) {
-        log(moduleName, 'debug', message, metadata);
+        log(moduleName, 'info', message, metadata); // using info as otherwise on stderr
       }
     };
   }
