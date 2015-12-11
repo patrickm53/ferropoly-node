@@ -17,6 +17,7 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var compression = require('compression');
 var MongoStore = require('connect-mongo')(session);
+var moment = require('moment');
 // Model includes
 var users = require('../common/models/userModel');
 //var gameplays = require('../common/models/gameplayModel');
@@ -59,10 +60,13 @@ ferropolyDb.init(settings, function (err) {
 
   // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-  app.use(morgan('combined'));
+  morgan.token('prefix', function getId(req) {
+    return 'http: ' + moment().format();
+  });
+  app.use(morgan(':prefix :method :status :remote-addr :url'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
- // app.use(cookieParser());
+  // app.use(cookieParser());
 
   // Using compression speeds up the connection (and uses much less data for mobile)
   app.use(compression());
@@ -79,7 +83,7 @@ ferropolyDb.init(settings, function (err) {
     resave: false,
     saveUninitialized: true,
     cookie: {secure: false}, // This is important! secure works only for https, with http no cookie is set!!!!
-    store: new MongoStore({ mongooseConnection: ferropolyDb.getDb() })
+    store: new MongoStore({mongooseConnection: ferropolyDb.getDb()})
   })); // session secret
   app.use(passport.initialize());
   app.use(passport.session()); // persistent login sessions
@@ -113,7 +117,7 @@ ferropolyDb.init(settings, function (err) {
   // Now it is time to start the scheduler (after initializing ferroSocket, is required by marketplace)
   var gameScheduler = require('./lib/gameScheduler');
   var marketplace = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
-  gameScheduler.update(function(err) {
+  gameScheduler.update(function (err) {
     if (err) {
       logger.info('Error while updating scheduler');
     }
