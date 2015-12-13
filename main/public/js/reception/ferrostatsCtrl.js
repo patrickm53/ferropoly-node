@@ -39,6 +39,12 @@ function ferrostatsCtrl($scope, $http) {
   $scope.teamIdToTeamName = dataStore.teamIdToTeamName;
 
   /**
+   * This is the chart with the timeline
+   */
+  $scope.showStatsPossessionTimeline = function() {
+    ferroStats.drawPossessionTimelineChart(dataStore.getTeamAccountEntries(), dataStore.getTeams());
+  };
+  /**
    * Show stats income
    */
   $scope.showStatsIncome = function () {
@@ -79,6 +85,10 @@ function ferrostatsCtrl($scope, $http) {
     {
       id: 'stats-income',
       handler: $scope.showStatsIncome
+    },
+    {
+      id: 'stats-possession-timeline',
+      handler: $scope.showStatsPossessionTimeline
     }];
 
   /**

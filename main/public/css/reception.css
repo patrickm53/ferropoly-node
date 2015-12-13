@@ -73,3 +73,10 @@
 .chart-area {
     width : 100%;
 }
+
+
+/* Avoiding the flickering of the chart when loading */
+svg {
+    width : 100%;
+}
+

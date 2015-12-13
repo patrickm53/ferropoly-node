@@ -7,6 +7,8 @@
       ul.nav.nav-tabs(role='tablist')
         li#tab-buy.active(role='presentation')
           a(href='#' aria-controls='stats-possessions' role='tab' data-toggle='tab' ng-click='showStatsPanel("stats-possessions")') Vermögen
+        li#tab-possession-timeline(role='presentation')
+          a(href='#' aria-controls='stats-possession-timeline' role='tab' data-toggle='tab' ng-click='showStatsPanel("stats-possession-timeline")') Vermögensverlauf
         li#tab-possessions(role='presentation')
           a(href='#' aria-controls='stats-income' role='tab' data-toggle='tab' ng-click='showStatsPanel("stats-income")') Einkommen
       p
@@ -14,6 +16,9 @@
       .tab-content
         #stats-income.tab-pane.active(role='tabpanel')
           include reception-stats-income
+
+        #stats-possession-timeline.tab-pane(role='tabpanel')
+          include reception-stats-possession-timeline
 
         #stats-possessions.tap-pane(role='tabpanel')
           include reception-stats-possessions

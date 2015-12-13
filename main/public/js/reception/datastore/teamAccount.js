@@ -15,6 +15,7 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   var query = '';
   if (teamId) {
     if (this.data.teamAccountEntries[teamId] && this.data.teamAccountEntries[teamId].length > 0) {
+      // Get only the account entries we do not already have!
       query = '?start=' + _.last(this.data.teamAccountEntries[teamId]).timestamp;
     }
   }

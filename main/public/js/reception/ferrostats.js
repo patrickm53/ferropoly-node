@@ -110,6 +110,83 @@ FerroStats.prototype.drawIncomeChart = function (data, chartId) {
   });
 };
 
+
+/**
+ * Draw the chart for possession over the time
+ * @param data all accounts data
+ * @param teams the teams data
+ */
+FerroStats.prototype.drawPossessionTimelineChart = function (data, teams) {
+  console.log(data);
+  var chartData = {};
+  // This special chart can't be created as the other ones (at least I haven't find out how): create the datasets as
+  // required for c3/d3
+  // See: http://c3js.org/samples/simple_xy_multiple.html
+
+  // Prepare the objects
+  for (var i = 0; i < teams.length; i++) {
+    chartData[teams[i].uuid] = {};
+    chartData[teams[i].uuid].ts = [teams[i].uuid + ':x'];
+    chartData[teams[i].uuid].values = [teams[i].uuid];
+  }
+
+  // Now iterate through the data
+  for (i = 0; i < data.length; i++) {
+    chartData[data[i].teamId].ts.push(new Date(data[i].timestamp));
+    chartData[data[i].teamId].values.push(data[i].balance);
+  }
+
+  // Create the data object expected by c3
+  var c3Data = {
+    xs: {},
+    columns: [],
+    names: {},
+    color: function (color, d) {
+      if (d.id) {
+        return dataStore.getTeamColor(d.id)
+      }
+      return (dataStore.getTeamColor(d));
+    },
+    type: 'step'
+  };
+  for (i = 0; i < teams.length; i++) {
+    c3Data.xs[teams[i].uuid] = teams[i].uuid + ':x';
+    c3Data.columns.push(chartData[data[i].teamId].ts);
+    c3Data.columns.push(chartData[data[i].teamId].values);
+    c3Data.names[teams[i].uuid] = dataStore.teamIdToTeamName(teams[i].uuid);
+  }
+
+  console.log(c3Data);
+
+  c3.generate({
+    bindto: '#stats-possession-timeline-chart',
+    size: {
+      height: 500
+    },
+    data: c3Data,
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%H:%M'
+        }
+      }
+    },
+    grid: {
+      y: {
+        show: true
+      }
+    },
+    zoom: {
+      enabled: true
+    },
+    subchart: {
+      show: true
+    }
+  });
+};
+
+
 /**
  * Draw the income detail chart for one team (pie chart)
  * @param register
