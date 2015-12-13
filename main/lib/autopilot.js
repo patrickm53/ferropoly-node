@@ -169,7 +169,7 @@ module.exports = {
     }
     settings = options.autopilot;
     settings.interval = options.autopilot.interval || (5 * 60 * 1000);
-    settings.gameId = 'play-a-demo-game';
+    settings.gameId = options.autopilot.gameId || 'play-a-demo-game';
     logger.info('autopilot ACTIVE');
     startTimer();
   }

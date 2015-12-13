@@ -30,8 +30,9 @@ module.exports = function(settings) {
   };
 
   settings.autopilot = {
-    interval: 2000,
-    active: false
+    interval: 60000,
+    gameId: 'local-demo-game',
+    active: true
   };
 
   settings.traffic = {
