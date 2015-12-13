@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var ferropolySocket = io.connect(socketUrl);
+var ferropolySocket = io.connect();
 
 
 $('#offline').show();
