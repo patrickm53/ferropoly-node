@@ -13,6 +13,11 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   var self = this;
   var i = 0;
   var query = '';
+  if (_.isFunction(teamId)) {
+    callback = teamId;
+    teamId = undefined;
+  }
+
   if (teamId) {
     if (this.data.teamAccountEntries[teamId] && this.data.teamAccountEntries[teamId].length > 0) {
       // Get only the account entries we do not already have!

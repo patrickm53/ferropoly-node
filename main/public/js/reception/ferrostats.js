@@ -117,7 +117,6 @@ FerroStats.prototype.drawIncomeChart = function (data, chartId) {
  * @param teams the teams data
  */
 FerroStats.prototype.drawPossessionTimelineChart = function (data, teams) {
-  console.log(data);
   var chartData = {};
   // This special chart can't be created as the other ones (at least I haven't find out how): create the datasets as
   // required for c3/d3
@@ -156,8 +155,6 @@ FerroStats.prototype.drawPossessionTimelineChart = function (data, teams) {
     c3Data.names[teams[i].uuid] = dataStore.teamIdToTeamName(teams[i].uuid);
   }
 
-  console.log(c3Data);
-
   c3.generate({
     bindto: '#stats-possession-timeline-chart',
     size: {
@@ -168,7 +165,7 @@ FerroStats.prototype.drawPossessionTimelineChart = function (data, teams) {
       x: {
         type: 'timeseries',
         tick: {
-          format: '%H:%M'
+          format: '%H:%M:%S'
         }
       }
     },
