@@ -1,5 +1,6 @@
 /**
- * Route for all files to download
+ * Route for all files to download (respectively the files which are not downloadable from another place
+ * due to logical reasons)
  *
  * Created by kc on 06.07.15.
  */
@@ -10,7 +11,7 @@ var router = express.Router();
 var _ = require('lodash');
 var teamAccount = require('../lib/accounting/teamAccount');
 var teamModel = require('../../common/models/teamModel');
-
+var xlsx = require('node-xlsx');
 var accessor = require('../lib/accessor');
 var rankingList = require('../lib/reports/rankingList');
 var teamAccountReport = require('../lib/reports/teamAccountReport');
@@ -25,17 +26,17 @@ router.get('/rankingList/:gameId', function (req, res) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    rankingList.createCsv(req.params.gameId, function(err, report) {
+    rankingList.createXlsx(req.params.gameId, function(err, report) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }
       res.set({
-        'Content-Type': 'application/csv; charset=utf-8',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Description': 'File Transfer',
-        'Content-Disposition': 'attachment; filename=' + report.filename,
-        'Content-Length': report.csv.length
+        'Content-Disposition': 'attachment; filename=' + report.name,
+        'Content-Length': report.data.length
       });
-      res.send(report.csv);
+      res.send(report.data);
     });
   });
 });
