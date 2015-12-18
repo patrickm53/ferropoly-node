@@ -1,0 +1,47 @@
+{
+  "version": "1.1.0",
+  "maps": [
+    {
+      "map" :"sbb",
+      "name":"Ganze Schweiz",
+      "description": "Die grösste Karte des Ferropoly: das ganze Schweizer ÖV-Netz",
+      "enabled": true
+    },
+    {
+      "map" :"zvv",
+      "name":"Zürcher Verkehrsverbund",
+      "description": "Für ein kürzeres Spiel im preiswerten Zürcher Verkehrsverbund",
+      "enabled": true
+    },
+    {
+      "map" :"ostwind",
+      "name":"Ostwind",
+      "description": "Ein Ferropoly in der Ostschweiz",
+      "enabled": false
+    },
+    {
+      "map" :"libero",
+      "name":"Libero",
+      "description": "Ferropoly Karte für die Region Bern - Solothurn - Biel",
+      "enabled": false
+    },
+    {
+      "map" :"tva",
+      "name":"A-Welle",
+      "description": "Tarifverbund des Kantons Aargau",
+      "enabled": false
+    },
+    {
+      "map" :"tvlu",
+      "name":"Passepartout",
+      "description": "Tarifverbund der Kantone Luzern, Obwalden und Nidwalden",
+      "enabled": false
+    },
+    {
+      "map" :"tnw",
+      "name":"Tarifverbund Nordostschwez",
+      "description": "Rund um Basel",
+      "enabled": false
+    }
+  ]
+}

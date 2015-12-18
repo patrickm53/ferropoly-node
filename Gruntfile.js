@@ -97,7 +97,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '../ferropoly-editor/common/lib',
-            src: '*.js',
+            src: '*.js*',
             dest: 'common/lib/',
             flatten: true,
             filter: 'isFile',
