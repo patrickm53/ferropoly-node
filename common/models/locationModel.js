@@ -9,7 +9,9 @@
 
 var mongoose = require('mongoose');
 var logger = require('../lib/logger').getLogger('locationModel');
-
+var mapinfo = require('../lib/maps.json');
+var _ = require('lodash');
+var async = require('async');
 /**
  * The mongoose schema for a location
  */
@@ -21,7 +23,11 @@ var locationSchema = mongoose.Schema({
   maps: {
     zvv: Boolean,
     sbb: Boolean,
-    ostwind: {type: Boolean, default: false}
+    ostwind: {type: Boolean, default: false},
+    libero: {type: Boolean, default: false},
+    tva: {type: Boolean, default: false},
+    tvlu: {type: Boolean, default: false},
+    tnw: {type: Boolean, default: false}
   }
 }, {autoIndex: false});
 locationSchema.index({uuid: 1, type: -1}); // schema level
@@ -56,16 +62,11 @@ var getAllLocations = function (callback) {
  * @param callback
  */
 var getAllLocationsForMap = function (map, callback) {
+  // This creates a query in this format: {'maps.zvv': true}
+  var index = 'maps.' + map;
   var query = {};
-  if (map === 'zvv') {
-    query = {'maps.zvv': true};
-  }
-  else if (map === 'ostwind') {
-    query = {'maps.ostwind': true};
-  }
-  else {
-    query = {'maps.sbb': true};
-  }
+  query[index] = true;
+
   Location.find(query).lean().exec(function (err, docs) {
     if (err) {
       logger.error('LocationFind failed', err);
@@ -101,40 +102,32 @@ var getLocationByUuid = function (uuid, callback) {
  * @param callback
  */
 var countLocations = function (callback) {
-  var retVal = {};
+  var retVal = _.clone(mapinfo, true);
 
   Location.count({}, function (err, nb) {
     if (err) {
-      retVal.all = nb;
+      retVal.all = 0;
     }
     else {
       retVal.all = nb;
     }
-    Location.count({'maps.zvv': true}, function (err, nb) {
-      if (err) {
-        retVal.zvv = -1;
-      }
-      else {
-        retVal.zvv = nb;
-      }
-      Location.count({'maps.sbb': true}, function (err, nb) {
-        if (err) {
-          retVal.sbb = -1;
-        }
-        else {
-          retVal.sbb = nb;
-        }
-        Location.count({'maps.ostwind':true}, function(err, nb) {
-          if (err) {
-            retVal.ostwind = -1;
-          }
-          else {
-            retVal.ostwind = nb;
-          }
-          callback(null, retVal);
+
+    async.each(retVal.maps,
+      function (m, cb) {
+        // This creates a query in this format: {'maps.zvv': true}
+        var index = 'maps.' + m.map;
+        var query = {};
+        query[index] = true;
+
+        Location.count(query, function (err, nb) {
+          m.locationNb = nb;
+          cb(err);
         });
-      });
-    });
+      },
+      function (err) {
+        callback(err, retVal);
+      }
+    );
   });
 };
 

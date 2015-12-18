@@ -43,6 +43,7 @@
     "needle": "0.10.0",
     "node-schedule": "0.2.9",
     "node-uuid": "1.4.3",
+    "node-xlsx": "0.6.0",
     "nodemailer": "1.8.0",
     "nodemailer-smtp-transport": "1.0.3",
     "passport": "0.2.1",

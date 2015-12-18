@@ -1,18 +1,19 @@
 /**
- * Generates a CSV file
- *
- * This module is obsolete, being replaced by a version in the 'common' area.
- *
+ * Generates a CSV file. This is the COMMON LIB VERSION, replacing the one from the main module
  * Created by kc on 17.07.15.
  */
 'use strict';
 var _ = require('lodash');
 var moment = require('moment-timezone');
-var logger = require('../../../common/lib/logger').getLogger('csvGenerator');
 
 module.exports = {
-  create: function(columns, data) {
-    logger.info('CALL TO OBSOLETE FUNCTION create in csvGenerator');
+  /**
+   * Creates a csv out from a FLAT data structure, no nested properties
+   * @param columns
+   * @param data
+   * @returns {string}
+   */
+  create: function (columns, data) {
     var i = 0;
     var retVal = '';
     var keys = _.keys(columns);
@@ -37,7 +38,7 @@ module.exports = {
       retVal += row + '\n';
     }
 
-    retVal += '\n\nStand:;' + moment.tz(moment(), 'Europe/Zurich').format('D.M.YYYY HH:mm:ss');
+    retVal += '\n\nStand:' + moment.tz(moment(), 'Europe/Zurich').format('D.M.YYYY HH:mm:ss');
     return retVal;
   }
 };

@@ -67,9 +67,7 @@ router.get('/teamAccount/:gameId/:teamId', function (req, res) {
         'Content-Length': report.csv.length
       });
       res.send(report.csv);
-
     });
-
   });
 });
 
