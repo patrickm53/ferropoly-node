@@ -39,7 +39,7 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
    * @returns {string}
    */
   $scope.downloadUrl = function() {
-    return  dataStore.getGameplay().internal.gameId + '/' + $scope.currentTeamId;
+    return  dataStore.getGameplay().internal.gameId;
   };
 
   $scope.getTransactionInfoText = function(entry) {

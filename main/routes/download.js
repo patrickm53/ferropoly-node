@@ -43,31 +43,29 @@ router.get('/rankingList/:gameId', function (req, res) {
 
 
 /**
- * Returns the account info as CSV
+ * Returns the account info as Excel sheet (all teams only)
  */
-router.get('/teamAccount/:gameId/:teamId', function (req, res) {
+router.get('/teamAccount/:gameId', function (req, res) {
   var filename;
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-  if (req.params.teamId === 'undefined') {
-    req.params.teamId = undefined;
-  }
+
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    teamAccountReport.createCsv(req.params.gameId, req.params.teamId, function (err, report) {
+    teamAccountReport.createXlsx(req.params.gameId, function (err, report) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }
       res.set({
-        'Content-Type': 'application/csv; charset=utf-8',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Description': 'File Transfer',
-        'Content-Disposition': 'attachment; filename=' + report.filename,
-        'Content-Length': report.csv.length
+        'Content-Disposition': 'attachment; filename=' + report.name,
+        'Content-Length': report.data.length
       });
-      res.send(report.csv);
+      res.send(report.data);
     });
   });
 });
