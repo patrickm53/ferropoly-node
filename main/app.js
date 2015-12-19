@@ -71,6 +71,9 @@ ferropolyDb.init(settings, function (err) {
   // Using compression speeds up the connection (and uses much less data for mobile)
   app.use(compression());
 
+  // Non authenticated pages
+  app.use('/info', require('./routes/info'));
+
   // Define Strategy, login
   passport.use(authStrategy.strategy);
   // Session serializing of the user
@@ -94,7 +97,6 @@ ferropolyDb.init(settings, function (err) {
   app.use('/appinfo', require('../common/routes/info'));
   login.init(app, settings);
   app.use('/', require('./routes/index'));
-  app.use('/info', require('./routes/info'));
   app.use('/test', require('./routes/test'));
   app.use('/reception', require('./routes/reception'));
   app.use('/marketplace', require('./routes/marketplace'));

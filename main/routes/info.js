@@ -15,7 +15,7 @@ var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
 var errorHandler = require('../lib/errorHandler')
 var logger = require('../../common/lib/logger').getLogger('routes:info');
-
+var priceListDownload = require('../../common/routes/downloadPricelist');
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
@@ -67,5 +67,6 @@ router.get('/:gameId', function (req, res) {
   });
 });
 
+router.get('/:gameId/download', priceListDownload.handler);
 
 module.exports = router;
