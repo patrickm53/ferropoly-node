@@ -7,13 +7,9 @@
 var express = require('express');
 var router = express.Router();
 var _ = require('lodash');
-
 var settings = require('../settings');
-var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
-var teamModel = require('../../common/models/teamModel');
 var authTokenManager = require('../lib/authTokenManager');
-var logger = require('../../common/lib/logger').getLogger('routes:reception');
 var gamecache = require('../lib/gameCache');
 var errorHandler = require('../lib/errorHandler');
 
@@ -21,7 +17,7 @@ var errorHandler = require('../lib/errorHandler');
 router.get('/:gameId', function (req, res) {
   var gameId = req.params.gameId;
 
-  gamecache.refreshCache(function(err) {
+  gamecache.refreshCache(function (err) {
     if (err) {
       return errorHandler(res, 'Interner Fehler bei der Aktualisierung des Caches.', err, 404);
     }
@@ -40,7 +36,9 @@ router.get('/:gameId', function (req, res) {
       // As we use the gamecache, we have to check the user manually
       if (gp.internal.owner !== req.session.passport.user) {
         // Check if declared as additional admin
-        if (gp.admins && gp.admins.logins && !_.find(gp.admins.logins, function(n) { return n === req.session.passport.user})) {
+        if (gp.admins && gp.admins.logins && !_.find(gp.admins.logins, function (n) {
+            return n === req.session.passport.user;
+          })) {
           return errorHandler(res, 'Keine Berechtigung für dieses Spiel vorhanden.', new Error('Access denied'), 403);
         }
       }

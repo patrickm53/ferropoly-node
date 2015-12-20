@@ -29,6 +29,9 @@ router.get('/:gameId', function (req, res) {
         return res.send({status:'error', message:'Gameplay not found'});
       }
       trafficLib.getTrafficInfo(gameData.gameplay.internal.map, function (err, data) {
+        if (err) {
+          return res.send({status: 'error', message: err.message});
+        }
         res.send({status: 'ok', trafficInfo: data});
       });
     });

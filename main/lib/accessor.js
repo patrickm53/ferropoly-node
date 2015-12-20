@@ -35,7 +35,7 @@ function userHasAdminRights(email, gameplay) {
   }
   if (gameplay.admins && gameplay.admins.logins) {
     return _.find(gameplay.admins.logins, function (n) {
-      return n === email
+      return n === email;
     });
   }
   return false;
@@ -77,6 +77,6 @@ module.exports = {
       // Todo: handle player rights for future features
       logger.debug('No access rights granted for ' + userId);
       return callback(new Error('No access rights granted'));
-    })
+    });
   }
 };

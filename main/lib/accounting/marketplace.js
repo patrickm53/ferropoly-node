@@ -451,7 +451,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback
           return;
         }
         cb();
-      })
+      });
     }, function (err) {
       callback(err);
     });
@@ -476,12 +476,12 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback)
 
   propertyAccount.getRentRegister(gp, team, function (err, info) {
     if (err) {
-      marketLog(gameId, 'error in getRentRegister', err);
+      marketLog(gp.internal.gameId, 'error in getRentRegister', err);
       return callback(err);
     }
     propertyAccount.payInterest(gp, info.register, function (err) {
       if (err) {
-        marketLog(gameId, 'error in payInterest', err);
+        marketLog(gp.internal.gameId, 'error in payInterest', err);
         return callback(err);
       }
       if (info.totalAmount > 0) {

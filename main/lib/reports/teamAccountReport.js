@@ -5,7 +5,6 @@
 'use strict';
 var teamAccount = require('../../lib/accounting/teamAccount');
 var teamModel = require('../../../common/models/teamModel');
-var csvGenerator = require('./csvGenerator');
 var moment = require('moment-timezone');
 var _ = require('lodash');
 var xlsx = require('node-xlsx');

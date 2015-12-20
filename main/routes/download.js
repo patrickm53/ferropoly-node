@@ -8,10 +8,6 @@
 
 var express = require('express');
 var router = express.Router();
-var _ = require('lodash');
-var teamAccount = require('../lib/accounting/teamAccount');
-var teamModel = require('../../common/models/teamModel');
-var xlsx = require('node-xlsx');
 var accessor = require('../lib/accessor');
 var rankingList = require('../lib/reports/rankingList');
 var teamAccountReport = require('../lib/reports/teamAccountReport');
@@ -46,7 +42,6 @@ router.get('/rankingList/:gameId', function (req, res) {
  * Returns the account info as Excel sheet (all teams only)
  */
 router.get('/teamAccount/:gameId', function (req, res) {
-  var filename;
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
