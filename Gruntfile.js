@@ -56,19 +56,20 @@ module.exports = function (grunt) {
       },
       framework: {
         src: [
-          './main/public/jquery/jquery-2.1.3.min.js',
-          './main/public/bootstrap/js/bootstrap.min.js',
-          './main/public/angular/angular.min.js',
-          './main/public/moment/moment.min.js',
-          './main/public/lodash/lodash.min.js'
+          './main/public/modules/jquery/dist/jquery.min.js',
+          './main/public/modules/bootstrap/dist/js/bootstrap.min.js',
+          './main/public/modules/angular/angular.min.js',
+          './main/public/modules/moment/min/moment.min.js',
+          './main/public/modules/lodash/lodash.min.js',
+          './main/public/modules/d3/d3.min.js',
+          './main/public/modules/c3/c3.min.js'
         ],
         dest: './main/public/js/framework.min.js'
       },
       css: {
         src: [
-          './main/public/bootstrap/css/bootstrap.min.css',
-          './main/public/bootstrap/css/bootstrap-theme.min.css',
-          './main/public/css/font-awesome.min.css',
+          './main/public/modules/bootstrap/dist/css/bootstrap.min.css',
+          './main/public/modules/bootstrap/dist/css/bootstrap-theme.min.css',
           './main/public/css/ferropoly.css'
         ],
         dest: './main/public/css/ferropoly.min.css'

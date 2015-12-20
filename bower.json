@@ -1,0 +1,34 @@
+{
+  "name": "Ferropoly-Spiel",
+  "description": "Spiel Teil des Ferropoly",
+  "main": "server.js",
+  "authors": [
+    "Christian Kuster"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Ferropoly"
+  ],
+  "homepage": "https://github.com/ancasicolica/ferropoly-main",
+  "moduleType": [
+    "node"
+  ],
+  "dependencies": {
+    "angular": "1.4.8",
+    "jquery": "2.1.4",
+    "lodash": "3.10.1",
+    "c3": "0.4.10",
+    "components-font-awesome": "4.5.0",
+    "bootstrap": "3.3.6",
+    "moment": "2.10.6"
+  },
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "./main/public/modules",
+    "test",
+    "tests"
+  ]
+}

@@ -5,10 +5,10 @@ extends layout
 block head
   script(src='/socket.io/socket.io.js')
   if !minifedjs
-    script(src='/moment/moment.min.js')
-    script(src='/lodash/lodash.min.js')
-    script(src='/charts/d3.min.js')
-    script(src='/charts/c3.min.js')
+    script(src='/modules/moment/min/moment.min.js')
+    script(src='/modules/lodash/lodash.min.js')
+    script(src='/modules/d3/d3.min.js')
+    script(src='/modules/c3/c3.min.js')
   script
     | var google = undefined;
     | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats', '#panel-chance', '#panel-properties', '#panel-traffic' ];
@@ -60,7 +60,7 @@ block head
     script(src='/js/reception/propertiesCtrl.js')
     script(src='/js/reception/trafficCtrl.js')
 
-  link(rel='stylesheet', href='/charts/c3.min.css', type='text/css')
+  link(rel='stylesheet', href='/modules/c3/c3.min.css', type='text/css')
   link(rel='stylesheet', href='/css/reception.css', type='text/css')
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU')
 

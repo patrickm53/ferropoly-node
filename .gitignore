@@ -34,6 +34,9 @@ node_modules
 # Webstorm
 .idea
 
+# Bower modules
+main/public/modules
+
 # Generated HTML
 main/views/*.html
 main/views/info/*.html

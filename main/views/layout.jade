@@ -26,17 +26,18 @@ html(lang='de')
     meta(name='author' content='Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch')
     meta(name='viewport' content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Open+Sans',  type='text/css')
+    link(rel='stylesheet', href='/modules/components-font-awesome/css/font-awesome.min.css', type='text/css')
     if minifedjs
       link(rel='stylesheet', href='/css/ferropoly.min.css',  type='text/css' )
       script(src='/js/framework.min.js')
     else
-      link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css',  type='text/css' )
-      link(rel='stylesheet', href='/bootstrap/css/bootstrap-theme.min.css',  type='text/css')
+      link(rel='stylesheet', href='/modules/bootstrap/dist/css/bootstrap.min.css',  type='text/css' )
+      link(rel='stylesheet', href='/modules/bootstrap/dist/css/bootstrap-theme.min.css',  type='text/css')
       link(rel='stylesheet', href='/css/ferropoly.css',  type='text/css')
-      link(rel='stylesheet', href='/css/font-awesome.min.css', type='text/css')
-      script(src='/jquery/jquery-2.1.3.min.js')
-      script(src='/bootstrap/js/bootstrap.min.js')
-      script(src='/angular/angular.js')
+      link(rel='stylesheet', href='/modules/components-font-awesome/css/font-awesome.min.css', type='text/css')
+      script(src='/modules/jquery/dist/jquery.min.js')
+      script(src='/modules/bootstrap/dist/js/bootstrap.min.js')
+      script(src='/modules/angular/angular.min.js')
     block head
     // Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent
     script.
