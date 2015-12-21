@@ -32,7 +32,12 @@
         .panel-heading
           h3.panel-title Häuserbau
         .panel-body
-          button.btn.btn-default(type="button"  ng-click="buyHouses()" ng-disabled='!isGameActive()') Häuser bauen
+          button.btn.btn-default(type="button"  ng-click="buyHouses()" ng-disabled='!isGameActive()') Überall Häuser bauen
+          p &nbsp;
+          p
+            a(href='#' ng-click='showCallPanel("possessions")' ng-disabled='!isGameActive()') Zur Besitzliste
+            | &nbsp;um einzelne Häuser zu bauen
+
     .col-md-6
       .panel.panel-default
         .panel-heading

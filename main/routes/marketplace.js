@@ -33,6 +33,31 @@ router.post('/buildHouses/:gameId/:teamId', function (req, res) {
 });
 
 /**
+ * Build a house on a specific property
+ */
+router.post('/buildHouse/:gameId/:teamId/:propertyId', function (req, res) {
+  var marketplace = marketplaceApi.getMarketplace();
+  if (!req.body.authToken) {
+    return res.send({status: 'error', message: 'Permission denied (1)'});
+  }
+  if (req.body.authToken !== req.session.ferropolyToken) {
+    return res.send({status: 'error', message: 'Permission denied (2)'});
+  }
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+    if (err) {
+      return res.send({status: 'error', message: err.message});
+    }
+    marketplace.buildHouse(req.params.gameId, req.params.teamId, req.params.propertyId, function (err, result) {
+      if (err) {
+        return res.send({status: 'error', message: err.message});
+      }
+      res.send({status: 'ok', result: result});
+    });
+  });
+});
+
+
+/**
  * Buy Property
  */
 router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {

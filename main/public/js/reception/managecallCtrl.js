@@ -86,6 +86,7 @@ function managecallCtrl($scope, $http) {
     }
     dataStore.updateProperties(team.uuid, function () {
       $scope.teamInfo.properties = dataStore.getProperties(team.uuid);
+      console.log('Properties', $scope.teamInfo.properties);
       dataStore.updateTravelLog(team.uuid, function () {
         $scope.teamInfo.travelLog = dataStore.getTravelLog(team.uuid);
         $scope.$apply();
@@ -120,28 +121,28 @@ function managecallCtrl($scope, $http) {
     if (playChancellery) {
       // Play chancellery in every standard call
       $http.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid).
-        success(function (data) {
-          console.log(data);
-          if (data.status === 'ok') {
-            var infoClass = 'list-group-item-success';
-            if (data.result.amount < 0) {
-              infoClass = 'list-group-item-danger';
-            }
-            $scope.callLog.push({
-              class: infoClass,
-              title: data.result.infoText,
-              message: data.result.amount,
-              ts: new Date()
-            });
+      success(function (data) {
+        console.log(data);
+        if (data.status === 'ok') {
+          var infoClass = 'list-group-item-success';
+          if (data.result.amount < 0) {
+            infoClass = 'list-group-item-danger';
           }
-          $scope.callPanel = 2;
-          $scope.showCallPanel('buy');
-        }).
-        error(function (data, status) {
-          console.log(data);
-          $scope.callPanel = 2;
-          $scope.showCallPanel('buy');
-        });
+          $scope.callLog.push({
+            class: infoClass,
+            title: data.result.infoText,
+            message: data.result.amount,
+            ts: new Date()
+          });
+        }
+        $scope.callPanel = 2;
+        $scope.showCallPanel('buy');
+      }).
+      error(function (data, status) {
+        console.log(data);
+        $scope.callPanel = 2;
+        $scope.showCallPanel('buy');
+      });
     }
     else {
       $scope.callPanel = 2;
@@ -175,30 +176,65 @@ function managecallCtrl($scope, $http) {
     $http.post('/marketplace/buildHouses/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
       authToken: dataStore.getAuthToken()
     }).
-      success(function (data) {
-        console.log(data);
-        var msg;
-        if (data.result.amount === 0) {
-          msg = 'Es konnten keine Häuser gebaut werden';
+    success(function (data) {
+      console.log(data);
+      var msg;
+      if (data.result.amount === 0) {
+        msg = 'Es konnten keine Häuser gebaut werden';
+      }
+      else {
+        msg = 'Belastung: ' + data.result.amount + ', Gebaute Häuser: ';
+        for (var i = 0; i < data.result.log.length; i++) {
+          msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
         }
-        else {
-          msg = 'Belastung: ' + data.result.amount + ', Gebaute Häuser: ';
-          for (var i = 0; i < data.result.log.length; i++) {
-            msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
-          }
-        }
-        $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
-      }).
-      error(function (data, status) {
-        $scope.callLog.push({
-          class: 'list-group-item-danger',
-          title: 'Hausbau',
-          message: 'Fehler: ' + status,
-          ts: new Date()
-        });
-        console.log(data);
-      })
+      }
+      $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
+    }).
+    error(function (data, status) {
+      $scope.callLog.push({
+        class: 'list-group-item-danger',
+        title: 'Hausbau',
+        message: 'Fehler: ' + status,
+        ts: new Date()
+      });
+      console.log(data);
+    });
   };
+  /**
+   * Buy a house for a specific property
+   */
+  $scope.buyHouse = function (property) {
+    $http.post('/marketplace/buildHouse/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
+      authToken: dataStore.getAuthToken()
+    }).
+    success(function (data) {
+      console.log(data);
+      var msg;
+      if (data.result.amount === 0) {
+        msg = 'Es konnten keine Häuser gebaut werden';
+      }
+      else {
+        msg = 'Belastung: ' + data.result.amount + ', Gebaute Häuser: ';
+        for (var i = 0; i < data.result.log.length; i++) {
+          msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
+        }
+      }
+      $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
+    }).
+    error(function (data, status) {
+      $scope.callLog.push({
+        class: 'list-group-item-danger',
+        title: 'Hausbau',
+        message: 'Fehler: ' + status,
+        ts: new Date()
+      });
+      console.log(data);
+    })
+  };
+  /**
+   * Gambling
+   * @type {number}
+   */
   $scope.gambleAmount = 0;
   $scope.gamble = function (factor) {
     if (!_.isNumber($scope.gambleAmount)) {
@@ -209,32 +245,32 @@ function managecallCtrl($scope, $http) {
       authToken: dataStore.getAuthToken(),
       amount: Math.abs($scope.gambleAmount) * factor
     }).
-      success(function (data) {
-        console.log(data);
-        if (data.status === 'ok') {
-          var infoClass = 'list-group-item-success';
-          if (data.result.amount < 0) {
-            infoClass = 'list-group-item-danger';
-          }
-          $scope.callLog.push({
-            class: infoClass,
-            title: data.result.infoText,
-            message: data.result.amount,
-            ts: new Date()
-          });
-          $scope.$apply();
+    success(function (data) {
+      console.log(data);
+      if (data.status === 'ok') {
+        var infoClass = 'list-group-item-success';
+        if (data.result.amount < 0) {
+          infoClass = 'list-group-item-danger';
         }
-      }).
-      error(function (data, status) {
         $scope.callLog.push({
-          class: 'list-group-item-danger',
-          title: 'Hausbau',
-          message: 'Fehler: ' + status,
+          class: infoClass,
+          title: data.result.infoText,
+          message: data.result.amount,
           ts: new Date()
         });
-        console.log(data);
         $scope.$apply();
-      })
+      }
+    }).
+    error(function (data, status) {
+      $scope.callLog.push({
+        class: 'list-group-item-danger',
+        title: 'Hausbau',
+        message: 'Fehler: ' + status,
+        ts: new Date()
+      });
+      console.log(data);
+      $scope.$apply();
+    })
   };
 
   /**
@@ -307,37 +343,37 @@ function managecallCtrl($scope, $http) {
     $http.post('/marketplace/buyProperty/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
       authToken: dataStore.getAuthToken()
     }).
-      success(function (data) {
-        if (data.status === 'ok') {
-          console.log(data);
-          var res = data.result;
-          var infoClass = 'list-group-item-success';
-          var title = 'Kauf ' + res.property.location.name;
-          var msg;
-          if (res.owner) {
-            // belongs another team
-            infoClass = 'list-group-item-danger';
-            msg = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount;
-          }
-          else if (res.amount === 0) {
-            // our own
-            infoClass = 'list-group-item-info';
-            msg = 'Das Grundstück gehört der anrufenden Gruppe';
-          }
-          else {
-            // we buy now
-            msg = 'Grundstück gekauft. Preis: ' + res.amount;
-          }
-          $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
-        }
-      }).
-      error(function (data, status) {
-        console.log('ERROR');
+    success(function (data) {
+      if (data.status === 'ok') {
         console.log(data);
-        console.log(status);
-        $scope.callLog.push({class: 'list-group-item-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
+        var res = data.result;
+        var infoClass = 'list-group-item-success';
+        var title = 'Kauf ' + res.property.location.name;
+        var msg;
+        if (res.owner) {
+          // belongs another team
+          infoClass = 'list-group-item-danger';
+          msg = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount;
+        }
+        else if (res.amount === 0) {
+          // our own
+          infoClass = 'list-group-item-info';
+          msg = 'Das Grundstück gehört der anrufenden Gruppe';
+        }
+        else {
+          // we buy now
+          msg = 'Grundstück gekauft. Preis: ' + res.amount;
+        }
+        $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
+      }
+    }).
+    error(function (data, status) {
+      console.log('ERROR');
+      console.log(data);
+      console.log(status);
+      $scope.callLog.push({class: 'list-group-item-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
 
-      });
+    });
   };
 
   var newTransactionHandler = function () {

@@ -302,9 +302,71 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         }
       };
 
+      // Todo: use async instead of for loop
       for (var i = 0; i < properties.length; i++) {
         propertyAccount.buyBuilding(gp, properties[i], team, buyBuildingCallback);
       }
+    });
+  });
+};
+
+
+/**
+ * Build a house for a single property
+ * Same money flow as buildHouse
+ * @param gameId
+ * @param teamId
+ * @param propertyId
+ * @param callback
+ */
+Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callback) {
+  var self = this;
+
+  propWrap.getProperty(gameId, propertyId, function (err, property) {
+    if (err) {
+      return callback(err);
+    }
+
+    if (property.gamedata.owner !== teamId) {
+      marketLog(gameId, 'Property ' + property.location.name + ' does not belong this team, building not allowed');
+      return callback(new Error('Team does not possess this property'));
+    }
+
+    gameCache.getGameData(gameId, function (err, res) {
+      if (err) {
+        logger.error(err);
+        return callback(err);
+      }
+      var gp = res.gameplay;
+      var team = res.teams[teamId];
+
+      if (!gp || !team) {
+        return callback(new Error('Gameplay error or team invalid'));
+      }
+
+      if (!self.isOpen(gp)) {
+        return callback(new Error('BuildHouses: Marketplace is closed'));
+      }
+
+      propertyAccount.buyBuilding(gp, property, team, function (err, info) {
+        if (err) {
+          marketLog(gameId, err);
+          return callback(err);
+        }
+
+        teamAccount.chargeToBank({
+          teamId: teamId,
+          gameId: gameId,
+          amount: info.amount,
+          info: {info: 'Hausbau ' + property.location.name}
+        }, function (err) {
+          if (err) {
+            logger.error(err);
+            return callback(err);
+          }
+          return callback(null, {amount: info.amount});
+        });
+      });
     });
   });
 };
