@@ -20,7 +20,7 @@ div#team-accounts-ctrl(ng-controller='teamAccountsCtrl' ng-cloak)
       th Saldo
       th Teiltransaktionen
     tbody
-      tr(ng-repeat='e in entries | orderBy:"timestamp"')
+      tr(ng-repeat='e in entries | filter: accountFilter | orderBy:"timestamp"')
         td {{$index + 1}}
         td {{e.timestamp | date:'HH:mm:ss'}}
         td {{teamNames[e.teamId]}}
