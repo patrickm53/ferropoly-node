@@ -37,5 +37,9 @@ module.exports = function (settings) {
   };
 
 
+  // Facebook settings
+  settings.oAuth.facebook.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/facebook/callback';
+
+
   return settings;
 };
