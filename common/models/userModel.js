@@ -9,42 +9,45 @@
  * 17.1.15 KC
  *
  */
-var mongoose = require('mongoose');
-var crypto = require('crypto');
-var uuid = require('node-uuid');
-var pbkdf2 = require('pbkdf2-sha256');
-var logger = require('../lib/logger').getLogger('userModel');
-
+var mongoose   = require('mongoose');
+var crypto     = require('crypto');
+var uuid       = require('node-uuid');
+var pbkdf2     = require('pbkdf2-sha256');
+var logger     = require('../lib/logger').getLogger('userModel');
+var _          = require('lodash');
 /**
  * The mongoose schema for an user
  */
 var userSchema = mongoose.Schema({
-  _id: String,
+  id          : String,
   personalData: {
     forename: String,
-    surname: String,
-    email: String
+    surname : String,
+    email   : String,
+    avatar  : String
   },
-  roles: {
-    admin: Boolean,
-    editor: Boolean,
-    player: Boolean
+  roles       : {
+    admin : {type: Boolean, default: false},
+    editor: {type: Boolean, default: true},
+    player: {type: Boolean, default: true}
   },
-  login: {
-    passwordSalt: String,
-    passwordHash: String,
-    verifiedEmail: {type: Boolean, default: false},
-    verificationText: String
+  login       : {
+    passwordSalt     : String,
+    passwordHash     : String,
+    verifiedEmail    : {type: Boolean, default: false},
+    verificationText : String,
+    facebookProfileId: String
   },
-  info: {
+  info        : {
     registrationDate: Date,
-    lastLogin: Date
+    lastLogin       : Date,
+    facebook        : Object
   }
 }, {autoIndex: false});
 
 
 /**
- * The Location model
+ * The User model
  */
 var User = mongoose.model('User', userSchema);
 
@@ -54,10 +57,11 @@ var User = mongoose.model('User', userSchema);
  * @param target
  */
 var copyUser = function (source, target) {
-  target.personalData = source.personalData;
-  target.roles = source.roles;
-  target.info = source.info;
-  target.login = source.login;
+  target.personalData = _.clone(source.personalData);
+  target.roles        = _.clone(source.roles);
+  target.info         = _.clone(source.info);
+  target.login        = _.clone(source.login);
+  target.id           = source.id;
 };
 
 /**
@@ -67,8 +71,8 @@ var copyUser = function (source, target) {
  */
 var generatePasswordHash = function (user, password) {
   var saltHash = crypto.createHash('sha256');
-  var ts = new Date().getTime();
-  var uid = uuid.v4();
+  var ts       = new Date().getTime();
+  var uid      = uuid.v4();
   saltHash.update(ts + user.email + uid);
   var salt = saltHash.digest('hex');
 
@@ -114,7 +118,7 @@ var removeUser = function (emailAddress, callback) {
  * @param callback
  */
 var updateUser = function (user, password, callback) {
-  User.find({_id: user._id}, function (err, docs) {
+  User.find({id: user.id}, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -134,7 +138,7 @@ var updateUser = function (user, password, callback) {
         }
         generatePasswordHash(user, password);
         user.info.registrationDate = new Date();
-        user._id = user.personalData.email;
+        user.id                    = user.personalData.email;
         return user.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -175,6 +179,54 @@ var getUserByMailAddress = function (emailAddress, callback) {
     if (docs.length === 0) {
       return callback();
     }
+
+    // Verify if this user already has an ID or not. If not, upgrade to new model
+    var foundUser = docs[0];
+    if (!foundUser.id) {
+      foundUser.id = foundUser.personalData.email;
+      foundUser.save(function (err) {
+        if (err) {
+          return callback(err);
+        }
+        logger.info('Updated user with email ' + foundUser.personalData.email);
+        callback(null, foundUser);
+      });
+    } else {
+      callback(null, foundUser);
+    }
+  });
+};
+
+/**
+ * Get a user by its ID
+ * @param id
+ * @param callback, providing the complete user information when found
+ */
+var getUser = function (id, callback) {
+  User.find({'id': id}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback();
+    }
+    callback(null, docs[0]);
+  });
+};
+
+/**
+ * Returns a user by its facebook profile
+ * @param profileId
+ * @param callback
+ */
+var getFacebookUser = function (profileId, callback) {
+  User.find({'login.facebookProfileId': profileId}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback();
+    }
     callback(null, docs[0]);
   });
 };
@@ -208,15 +260,117 @@ var countUsers = function (callback) {
   });
 };
 
+/**
+ * Gets a user signing in with facebook. If the user does not exist, it will be created
+ * @param profile
+ * @param callback
+ * @returns {*}
+ */
+function findOrCreateFacebookUser(profile, callback) {
+
+  /** Just for documentation purposes, the object returned by facebook after logging in
+   var i = {
+    id         : '1071........521',
+    username   : undefined,
+    displayName: undefined,
+    name       : {
+      familyName: 'Kuster',
+      givenName : 'Christian',
+      middleName: undefined
+    },
+    gender     : 'male',
+    profileUrl : undefined,
+    emails     : [{value: 'fa.......@gmail.com'}],
+    photos     : [{value: 'https://scontent.xx.fbcdn.net/hprofile-ash2/v/t1.0-1/c41.41.517.517/s50x50/941512_57......353_77382703_n.jpg?oh=05e73500041d5a1af44......5&oe=572....29'}],
+    provider   : 'facebook'
+  };
+   */
+  if (!_.isObject(profile) || !_.isString(profile.id)) {
+    return callback(new Error('invalid facebook object supplied'));
+  }
+
+
+  // Try to get the user
+  getFacebookUser(profile.id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      // The user is not here, try to find him with the email-address
+      var emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
+
+      function createNewFacebookUser() {
+        newUser                         = new User();
+        newUser.id                      = emailAddress || profile.id;
+        newUser.login.facebookProfileId = profile.id;
+        newUser.info.facebook           = profile;
+        newUser.info.registrationDate   = new Date();
+        newUser.login.verifiedEmail     = true; // Facebook does not need verification
+        newUser.personalData.forename = profile.name.givenName;
+        newUser.personalData.surname  = profile.name.familyName;
+        newUser.personalData.email    = emailAddress ? emailAddress : profile.id; // using facebook profile id as email alternative
+        newUser.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.save(function (err, savedUser) {
+          if (err) {
+            return callback(err);
+          }
+          logger.info('Created facebook user', savedUser);
+          // Recursive call, now we'll find this user
+          return findOrCreateFacebookUser(profile, callback);
+        });
+      }
+
+      if (emailAddress) {
+        getUserByMailAddress(emailAddress, function (err, user) {
+          if (err) {
+            return callback(err);
+          }
+          if (user) {
+            // Ok, we know this user. Update profile for facebook access
+            user.info.facebook         = profile;
+            user.info.registrationDate = new Date();
+            user.login.verifiedEmail   = true; // Facebook does not need verification
+            user.personalData.forename = profile.name.givenName;
+            user.personalData.surname  = profile.name.familyName;
+            user.login.facebookProfileId = profile.id;
+            user.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.save(function (err) {
+              if (err) {
+                return callback(err);
+              }
+              logger.info('Upgraded user ' + emailAddress + ' for facebook access');
+              // Recursive call, now we'll find this user
+              return findOrCreateFacebookUser(profile, callback);
+            });
+            return;
+          }
+
+          // We do not know this user. Add him/her to the list.
+          createNewFacebookUser();
+        });
+        return;
+      }
+      // No email address (somehow an annonymous facebook user). Add as new User
+      return createNewFacebookUser();
+    }
+
+    // User found, update
+    updateUser(user, null, callback);
+  });
+}
+
+
 module.exports = {
   Model: User,
 
-  updateUser: updateUser,
-  generatePasswordHash: generatePasswordHash,
-  verifyPassword: verifyPassword,
-  getUserByMailAddress: getUserByMailAddress,
-  removeUser: removeUser,
-  getAllUsers: getAllUsers,
-  countUsers: countUsers
+  updateUser              : updateUser,
+  generatePasswordHash    : generatePasswordHash,
+  verifyPassword          : verifyPassword,
+  getUserByMailAddress    : getUserByMailAddress,
+  removeUser              : removeUser,
+  getAllUsers             : getAllUsers,
+  getUser                 : getUser,
+  countUsers              : countUsers,
+  findOrCreateFacebookUser: findOrCreateFacebookUser
 
 };

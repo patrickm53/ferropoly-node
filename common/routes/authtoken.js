@@ -14,7 +14,7 @@ router.get('/', function (req, res) {
   if (!req.session.authToken) {
     req.session.authToken = uuid.v4();
   }
-  logger.info(req.session.AuthToken);
+  logger.info(req.session.authToken);
 
   res.send({authToken: req.session.authToken, user: req.session.passport.user});
 });

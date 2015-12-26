@@ -39,5 +39,9 @@ module.exports = function(settings) {
     simulation: true
   };
 
+  // Facebook settings
+  settings.oAuth.facebook.callbackURL = 'http://localhost:3004/auth/facebook/callback';
+
+
   return settings;
 };
