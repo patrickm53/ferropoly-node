@@ -47,6 +47,7 @@
     "nodemailer": "1.8.0",
     "nodemailer-smtp-transport": "1.0.3",
     "passport": "0.2.1",
+    "passport-facebook": "^2.0.0",
     "passport-local": "1.0.0",
     "pbkdf2-sha256": "1.1.1",
     "pixl-xml": "1.0.4",
