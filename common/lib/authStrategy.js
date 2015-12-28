@@ -8,9 +8,10 @@
 
 var LocalStrategy    = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 var crypto           = require('crypto');
 var logger           = require('./logger').getLogger('authStrategy');
-var util = require('util');
+var util             = require('util');
 
 module.exports = function (settings, users) {
 
@@ -86,9 +87,30 @@ module.exports = function (settings, users) {
     }
   );
 
+  /**
+   * Google Strategy
+   */
+  var googleStrategy = new GoogleStrategy({
+      clientID      : settings.oAuth.google.clientId,
+      clientSecret   : settings.oAuth.google.clientSecret,
+      callbackURL      : settings.oAuth.google.callbackURL,
+      passReqToCallback: true
+    },
+    function (accessToken, refreshToken, donotknow, profile, done) {
+      console.log('accessToken', accessToken);
+      console.log('refreshToken', refreshToken);
+      console.log('profile', profile);
+
+      users.findOrCreateGoogleUser(profile, function (err, foundUser) {
+        return done(err, foundUser);
+      });
+    }
+  );
+
   return {
     localStrategy   : localStrategy,
     facebookStrategy: facebookStrategy,
+    googleStrategy  : googleStrategy,
     deserializeUser : deserializeUser,
     serializeUser   : serializeUser
   }

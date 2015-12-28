@@ -5,24 +5,33 @@
  */
 'use strict';
 
-var express = require('express');
+var express  = require('express');
 var passport = require('passport');
-var url = require('url');
-var router = express.Router();
+var url      = require('url');
+var router   = express.Router();
 var settings;
-var _ = require('lodash');
-var logger = require('../lib/logger').getLogger('login');
+var _        = require('lodash');
+var logger   = require('../lib/logger').getLogger('login');
+
 
 /**
  * Get the login page
  */
 router.get('/', function (req, res) {
+  var loginController = '/js/loginctrl.js';
+  if (settings.minifedjs) {
+    loginController = '/js/loginctrl.min.js';
+  }
+
   res.render('login', {
-    title: settings.appName + ' Login',
-    hideLogout: true,
-    showSignUp: true,
-    versionInfo: settings.version,
-    preview: settings.preview
+    title       : settings.appName + ' Login',
+    hideLogout  : true,
+    showSignUp  : true,
+    versionInfo : settings.version,
+    preview     : settings.preview,
+    ngController: 'loginCtrl',
+    ngApp       : 'loginApp',
+    ngFile      : loginController
   });
 });
 
@@ -34,7 +43,7 @@ router.post('/', function (req, res) {
   passport.authenticate('local', {
     successRedirect: redirectUri,
     failureRedirect: '/login',
-    failureFlash: true
+    failureFlash   : true
   })(req, res);
 });
 

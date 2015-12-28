@@ -5,11 +5,11 @@
 'use strict';
 
 
-module.exports = function(settings) {
+module.exports = function (settings) {
 
   settings.server = {
-    port: process.env.FERROPOLY_MAIN_PORT,
-    host: '0.0.0.0',
+    port    : process.env.FERROPOLY_MAIN_PORT,
+    host    : '0.0.0.0',
     serverId: 'localhost-main'
   };
 
@@ -22,8 +22,7 @@ module.exports = function(settings) {
     mongoDbUrl: process.env.FERROPOLY_CONNECTION_STRING
   };
 
-  settings.cron = {
-  };
+  settings.cron = {};
 
   settings.scheduler = {
     delay: 5
@@ -31,8 +30,8 @@ module.exports = function(settings) {
 
   settings.autopilot = {
     interval: 60000,
-    gameId: 'local-demo-game',
-    active: true
+    gameId  : 'local-demo-game',
+    active  : true
   };
 
   settings.traffic = {
@@ -41,6 +40,8 @@ module.exports = function(settings) {
 
   // Facebook settings
   settings.oAuth.facebook.callbackURL = 'http://localhost:3004/auth/facebook/callback';
+  // Google Settings
+  settings.oAuth.google.callbackURL = 'http://localhost:3004/auth/google/callback';
 
 
   return settings;

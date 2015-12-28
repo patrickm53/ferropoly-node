@@ -36,12 +36,14 @@ var userSchema = mongoose.Schema({
     passwordHash     : String,
     verifiedEmail    : {type: Boolean, default: false},
     verificationText : String,
-    facebookProfileId: String
+    facebookProfileId: String,
+    googleProfileId  : String
   },
   info        : {
     registrationDate: Date,
     lastLogin       : Date,
-    facebook        : Object
+    facebook        : Object,
+    google          : Object
   }
 }, {autoIndex: false});
 
@@ -232,6 +234,23 @@ var getFacebookUser = function (profileId, callback) {
 };
 
 /**
+ * Returns a user by its google profile
+ * @param profileId
+ * @param callback
+ */
+var getGoogleUser = function (profileId, callback) {
+  User.find({'login.googleProfileId': profileId}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback();
+    }
+    callback(null, docs[0]);
+  });
+};
+
+/**
  * Gets all users
  * @param callback
  */
@@ -330,10 +349,10 @@ function findOrCreateFacebookUser(profile, callback) {
             user.info.facebook         = profile;
             user.info.registrationDate = new Date();
             user.login.verifiedEmail   = true; // Facebook does not need verification
-            user.personalData.forename = profile.name.givenName;
-            user.personalData.surname  = profile.name.familyName;
+            user.personalData.forename   = profile.name.givenName;
+            user.personalData.surname    = profile.name.familyName;
             user.login.facebookProfileId = profile.id;
-            user.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.personalData.avatar     = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
             user.save(function (err) {
               if (err) {
                 return callback(err);
@@ -359,6 +378,87 @@ function findOrCreateFacebookUser(profile, callback) {
   });
 }
 
+/**
+ * Find or create a user logging in with Google
+ * @param profile
+ * @param callback
+ * @returns {*}
+ */
+function findOrCreateGoogleUser(profile, callback) {
+
+  if (!_.isObject(profile) || !_.isString(profile.id)) {
+    return callback(new Error('invalid facebook object supplied'));
+  }
+
+
+  // Try to get the user
+  getGoogleUser(profile.id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      // The user is not here, try to find him with the email-address
+      var emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
+
+      function findOrCreateGoogleUser() {
+        newUser                       = new User();
+        newUser.id                    = emailAddress || profile.id;
+        newUser.login.googleProfileId = profile.id;
+        newUser.info.google           = profile;
+        newUser.info.registrationDate = new Date();
+        newUser.login.verifiedEmail   = true; // Google does not need verification
+        newUser.personalData.forename = profile.name.givenName;
+        newUser.personalData.surname  = profile.name.familyName;
+        newUser.personalData.email    = emailAddress ? emailAddress : profile.id; // using google profile id as email alternative
+        newUser.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.save(function (err, savedUser) {
+          if (err) {
+            return callback(err);
+          }
+          logger.info('Created google user', savedUser);
+          // Recursive call, now we'll find this user
+          return findOrCreateFacebookUser(profile, callback);
+        });
+      }
+
+      if (emailAddress) {
+        getUserByMailAddress(emailAddress, function (err, user) {
+          if (err) {
+            return callback(err);
+          }
+          if (user) {
+            // Ok, we know this user. Update profile for google access
+            user.info.google           = profile;
+            user.info.registrationDate = new Date();
+            user.login.verifiedEmail   = true; // Facebook does not need verification
+            user.personalData.forename = profile.name.givenName;
+            user.personalData.surname  = profile.name.familyName;
+            user.login.googleProfileId = profile.id;
+            user.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.save(function (err) {
+              if (err) {
+                return callback(err);
+              }
+              logger.info('Upgraded user ' + emailAddress + ' for google access');
+              // Recursive call, now we'll find this user
+              return findOrCreateFacebookUser(profile, callback);
+            });
+            return;
+          }
+
+          // We do not know this user. Add him/her to the list.
+          findOrCreateGoogleUser();
+        });
+        return;
+      }
+      // No email address (somehow an annonymous google user). Add as new User
+      return findOrCreateGoogleUser();
+    }
+
+    // User found, update
+    updateUser(user, null, callback);
+  });
+}
 
 module.exports = {
   Model: User,
@@ -371,6 +471,6 @@ module.exports = {
   getAllUsers             : getAllUsers,
   getUser                 : getUser,
   countUsers              : countUsers,
-  findOrCreateFacebookUser: findOrCreateFacebookUser
-
+  findOrCreateFacebookUser: findOrCreateFacebookUser,
+  findOrCreateGoogleUser  : findOrCreateGoogleUser
 };

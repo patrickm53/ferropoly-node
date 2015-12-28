@@ -78,7 +78,8 @@ module.exports = function (grunt) {
     uglify: {
       js: {
         files: {
-          './main/public/js/reception.min.js': ['./main/public/js/reception.js']
+          './main/public/js/reception.min.js': ['./main/public/js/reception.js'],
+          './main/public/js/loginctrl.min.js': ['./main/public/js/loginctrl.js']
         }
       },
       options: {
