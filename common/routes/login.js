@@ -59,7 +59,7 @@ module.exports = {
 
     // Logging out
     app.get('/logout', function (req, res) {
-      req.session.targetUrl = '';
+      req.session.targetUrl = undefined;
       req.logout();
       res.redirect('/login');
     });

@@ -20,8 +20,8 @@ module.exports = function (app) {
     passport.authenticate('facebook', {failureRedirect: '/login'}),
     function (req, res) {
       // Successful authentication, redirect home.
-      console.log('SUCCESSFUL LOGGED IN ------------------------------------');
-      res.redirect('/');
+      console.log('SUCCESSFUL LOGGED IN WITH FACEBOOK ------------------------------------');
+      res.redirect(req.session.targetUrl || '/');
     });
 
   /**
@@ -42,8 +42,8 @@ module.exports = function (app) {
     passport.authenticate('google', {failureRedirect: '/login'}),
     function (req, res) {
       // Successful authentication, redirect home.
-      console.log('SUCCESSFUL LOGGED IN ------------------------------------');
-      res.redirect('/');
+      console.log('SUCCESSFUL LOGGED IN WITH GOOGLE ------------------------------------');
+      res.redirect(req.session.targetUrl || '/');
     });
 };
 
