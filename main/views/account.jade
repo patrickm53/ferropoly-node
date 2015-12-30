@@ -1,0 +1,67 @@
+// This is the account view of the user logged in
+   Created by kc on 29.12.15.
+
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/account.css')
+  script(src='/modules/moment/min/moment.min.js')
+  script(src='/js/accountCtrl.js')
+
+
+block content
+  div(ng-controller='accountCtrl' ng-app='accountApp')
+    h1 Account Daten von {{data.personalData.forename}} {{data.personalData.surname}}
+
+    .row
+      .col-md-4
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title Allgemein
+          .panel-body
+            h4 Benutzername
+            | {{data.personalData.email}}
+            p Teile diesen Benutzernamen einem Spielleiter mit, damit Du mit Deinem Login auf sein Spiel zugreifen kannst.
+            h4 Zugang mit Benutzername / Passwort
+            div(ng-show='data.login.passwordSalt')
+              | Aktiv. Gegenwärtig kann das Passwort leider nicht geändert werden.
+            div(ng-hide='data.login.passwordSalt')
+              | Inaktiv, Login über soziale Netzwerke aktiv.
+            h4 Registrierungsdatum
+            | {{getRegistrationDate()}}
+            div
+              h4 Avatar
+              img(ng-src='{{getAvatarUrl(0)}}')
+              p Als Avatar wird entweder Dein Facebook- oder Google-Profilbild verwendet. Wenn dies nicht vorhanden ist, dann wird der Service von&nbsp;
+                a(href='https://de.gravatar.com/' target='_blank') Gravatar
+                | &nbsp;verwendet. Melde Dich dort an und hinterlege dort Dein Profilbild falls gewünscht.
+
+      .col-md-4
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title Facebook
+          .panel-body
+            div(ng-show='isFacebookActive()')
+              h4 Facebook Profile ID
+              | {{data.login.facebookProfileId}}
+              h4 Email-Adresse
+              | {{data.info.facebook.emails[0].value}}
+              h4 Avatar
+              img(ng-src='{{getAvatarUrl(1)}}')
+            div(ng-hide='isFacebookActive()')
+              | Dein Zugang mit Facebook wurde noch nicht aktiviert. Die bei Facebook hinterlegte Email-Adresse muss identisch mit dem Benutzernamen sein, sonst kann das Konto nicht zusammengeführt werden.
+      .col-md-4
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title Google
+          .panel-body
+            div(ng-show='isGoogleActive()')
+              h4 Google Profile ID
+              | {{data.login.googleProfileId}}
+              h4 Email-Adresse
+              | {{data.info.google.emails[0].value}}
+              h4 Avatar
+              img(ng-src='{{getAvatarUrl(2)}}')
+            div(ng-hide='isGoogleActive()')
+              | Dein Zugang mit Google wurde noch nicht aktiviert. Die bei Google hinterlegte Email-Adresse muss identisch mit dem Benutzernamen sein, sonst kann das Konto nicht zusammengeführt werden.
+

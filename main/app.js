@@ -112,6 +112,8 @@ ferropolyDb.init(settings, function (err) {
   app.use('/chancellery', require('./routes/chancellery'));
   app.use('/travellog', require('./routes/travellog'));
   app.use('/traffic', require('./routes/traffic'));
+  app.use('/userinfo', require('./routes/userInfo'));
+  app.use('/account', require('./routes/account'));
   authtoken.init(app);
 
   app.set('port', settings.server.port);
