@@ -13,7 +13,7 @@ block content
   div(ng-controller='accountCtrl' ng-app='accountApp')
     h1 Account Daten von {{data.personalData.forename}} {{data.personalData.surname}}
 
-    .row
+    .row(ng-cloak)
       .col-md-4
         .panel.panel-default
           .panel-heading
