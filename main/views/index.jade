@@ -23,7 +23,7 @@ block content
         h1 Hallo
           = ' ' + user.personalData.forename + ' ' + user.personalData.surname
         p In dieser App kannst Du deine im Editor erstellten Spiele anschauen und in das Geschehen eines Deiner aktuellen Spiele eingreifen.
-        h2 Meine Spiele
+        h2 Meine Spiele (Administrator)
         div(ng-show='gameplays.length === 0' ng-cloak)
           | Du hast noch keine Spiele.&nbsp;
           a(href='http://editor-ferropoly.rhcloud.com') Im Ferropoly Editor ein neues Spiel anlegen.
@@ -54,5 +54,31 @@ block content
                   .panel-footer
                     p {{getGpInfo(gameplay)}}
 
+        h2 Meine Spiele (Spieler)
+        div(ng-show='games.length === 0' ng-cloak)
+          | Du wurdest noch keinem Spiel zugewiesen.
 
+        div(ng-show='games.length > 0' ng-cloak)
+          .row
+            div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in games')
+              .panel.panel-default
+                .panel-heading
+                  h3.panel-title {{gameplay.gamename}}
+                .panel-body
+                  p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}, {{gameplay.scheduling.gameStart}} - {{gameplay.scheduling.gameEnd}}
+                  p Karte: {{gameplay.internal.map.toUpperCase()}}
+                  p(ng-hide='userIsAdmin(gameplay)') Organisator: {{createOrganisatorInfo(gameplay)}}
+                  p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
+                    div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
+                  div(ng-hide='gameplay.internal.finalized')
+                    .alert.alert-warning Die Preisliste wurde noch nicht finalisiert, es sind noch Änderungen möglich.
+                  div(ng-show='gameplay.internal.finalized')
+                    p
+                      a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
+                      | &nbsp;
+                      a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel administrieren
+                      a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-hide='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel ansehen
+                  p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
+                .panel-footer
+                  p {{getGpInfo(gameplay)}}
 
