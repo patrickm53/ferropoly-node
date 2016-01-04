@@ -17,6 +17,10 @@ var finalizedGameplays = [];
 var moment             = require('moment-timezone');
 var logger             = require('../lib/logger').getLogger('gameplayModel');
 
+const MOBILE_NONE  = 0;
+const MOBILE_BASIC = 5;
+const MOBILE_FULL  = 10;
+
 /**
  * The mongoose schema for an user
  */
@@ -36,15 +40,15 @@ var gameplaySchema = mongoose.Schema({
     gameDate   : Date,
     gameStart  : String, // hh:mm
     gameEnd    : String, // hh:mm
-    gameStartTs: Date, // Is set during finalization
-    gameEndTs  : Date // Is set during finalization
+    gameStartTs: Date,   // Is set during finalization
+    gameEndTs  : Date    // Is set during finalization
   },
   gameParams: {
-    interestInterval         : {type: Number, default: 60}, // Interval in minutes of the interests
+    interestInterval         : {type: Number, default: 60},   // Interval in minutes of the interests
     interest                 : {type: Number, default: 4000}, // "Startgeld"
-    interestCyclesAtEndOfGame: {type: Number, default: 2}, // number of interests at end of game
+    interestCyclesAtEndOfGame: {type: Number, default: 2},    // number of interests at end of game
     startCapital             : {type: Number, default: 4000}, // "Startkapital"
-    debtInterest             : {type: Number, default: 20},    // fee on debts
+    debtInterest             : {type: Number, default: 20},   // fee on debts
     housePrices              : {type: Number, default: .5},
     properties               : {
       lowestPrice               : {type: Number, default: 1000},
@@ -62,21 +66,24 @@ var gameplaySchema = mongoose.Schema({
       allPropertiesOfGroup: {type: Number, default: 2}
     },
     chancellery              : {
-      minLottery      : {type: Number, default: 1000},  // amount to loose or win each call
+      minLottery      : {type: Number, default: 1000},   // amount to loose or win each call
       maxLottery      : {type: Number, default: 5000},
-      minGambling     : {type: Number, default: 1000}, // amount to bet in the individual games
+      minGambling     : {type: Number, default: 1000},   // amount to bet in the individual games
       maxGambling     : {type: Number, default: 50000},
       maxJackpotSize  : {type: Number, default: 500000}, // max jackpot size
       probabilityWin  : {type: Number, default: 0.45},
       probabilityLoose: {type: Number, default: 0.45}
     }
   },
+  mobile    : {
+    level: {type: Number, default: MOBILE_NONE}
+  },
   internal  : {
-    gameId          : {type: String, index: true}, // Identifier of the game
-    owner           : String,  // Owner of the game. This is the ID of the user!
-    map             : String,     // map to use
+    gameId          : {type: String, index: true},     // Identifier of the game
+    owner           : String,                          // Owner of the game. This is the ID of the user!
+    map             : String,                          // map to use
     finalized       : {type: Boolean, default: false}, // finalized means no edits anymore,
-    creatingInstance: String // Instance creating this gameplay
+    creatingInstance: String                           // Instance creating this gameplay
   },
   log       : {
     created         : {type: Date, default: Date.now},
@@ -98,7 +105,7 @@ var Gameplay = mongoose.model('Gameplay', gameplaySchema);
  */
 var createGameplay      = function (gpOptions, callback) {
   var gp = new Gameplay();
-  if (!gpOptions.map || !gpOptions.ownerEmail  || !gpOptions.name) {
+  if (!gpOptions.map || !gpOptions.ownerEmail || !gpOptions.name) {
     return callback(new Error('Missing parameter'));
   }
 
@@ -355,6 +362,7 @@ var updateGameplay = function (gp, callback) {
       loadedGp.gameParams = gp.gameParams;
       loadedGp.log        = gp.log;
       loadedGp.pricelist  = gp.pricelist;
+      loadedGp.mobile     = gp.mobile;
       // we do not copy internal as this does not change (must not change!)
 
       // Call update again (this is recursive)
@@ -469,5 +477,10 @@ module.exports = {
   countGameplays                : countGameplays,
   checkIfGameIdExists           : checkIfGameIdExists,
   finalize                      : finalize,
-  getAllGameplays               : getAllGameplays
+  getAllGameplays               : getAllGameplays,
+  // Constants
+  MOBILE_NONE                   : MOBILE_NONE,
+  MOBILE_BASIC                  : MOBILE_BASIC,
+  MOBILE_FULL                   : MOBILE_FULL
+
 };
