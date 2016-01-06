@@ -8,10 +8,11 @@ moment.locale('de');
 var indexControl = angular.module('indexApp', []);
 indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http) {
 
-  $scope.user      = user;
-  $scope.gameplays = [];
+  $scope.user             = user;
+  $scope.gameplays        = [];
+  $scope.games            = [];
+  $scope.gameplayToDelete = undefined;
   var authToken;
-  $scope.gameplayToDelete;
 
   /**
    * Get the auttoken (async!)
@@ -72,12 +73,33 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     retVal += gp.internal.owner;
     return retVal;
   };
+
+  // Functions to get the state about gameplays and games for an user
+  $scope.hasNoGamesAtAll      = function () {
+    return ($scope.games.length === 0 && $scope.gameplays.length === 0);
+  };
+  $scope.hasOnlyGameplays     = function () {
+    return ($scope.games.length === 0 && $scope.gameplays.length > 0);
+  };
+  $scope.hasOnlyGames         = function () {
+    return ($scope.games.length > 0 && $scope.gameplays.length === 0);
+  };
+  $scope.hasGamesAndGameplays = function () {
+    return ($scope.games.length > 0 && $scope.gameplays.length > 0);
+  };
+  $scope.hasGameplays         = function () {
+    return ($scope.gameplays.length > 0);
+  };
+  $scope.hasGames         = function () {
+    return ($scope.games.length > 0);
+  };
+
   // When document ready, load gameplays
   $(document).ready(function () {
     console.log('READY');
     $http.get('/gameplays').success(function (data) {
-      $scope.gameplays = data.gameplays;
-      $scope.games = data.games;
+      $scope.gameplays = data.gameplays || [];
+      $scope.games     = data.games || [];
       console.log(data);
       console.log('Gameplays loaded, nb:' + $scope.gameplays.length);
 
