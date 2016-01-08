@@ -114,6 +114,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/traffic', require('./routes/traffic'));
   app.use('/userinfo', require('./routes/userInfo'));
   app.use('/account', require('./routes/account'));
+  app.use('/checkin', require('./routes/checkin'));
   authtoken.init(app);
 
   app.set('port', settings.server.port);

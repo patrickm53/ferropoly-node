@@ -58,7 +58,7 @@ block content
 
         div(ng-hide='hasOnlyGameplays()')
           // Games section is hidden when an admin without such games logs in
-          h2 Meine Spiele (Spieler)
+          h2 Meine Spiele
           div(ng-hide='hasGames()' ng-cloak)
             | Du wurdest noch keinem Spiel zugewiesen.
 
@@ -71,7 +71,9 @@ block content
                   .panel-body
                     p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}, {{gameplay.scheduling.gameStart}} - {{gameplay.scheduling.gameEnd}}
                     p Karte: {{gameplay.internal.map.toUpperCase()}}
-                    p(ng-hide='userIsAdmin(gameplay)') Organisator: {{createOrganisatorInfo(gameplay)}}
+                    p(ng-hide='userIsAdmin(gameplay)') Organisator:&nbsp;
+                      a(href='mailto:{{createOrganisatorInfo(gameplay)}}') {{createOrganisatorInfo(gameplay)}}
+
                     p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
                       div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
                     div(ng-hide='gameplay.internal.finalized')
@@ -80,8 +82,8 @@ block content
                       p
                         a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
                         | &nbsp;
-                        a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel administrieren
-                        a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-hide='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel ansehen
+                        a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spielen
+                        a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-hide='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel ansehen
                     p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
                   .panel-footer
                     p {{getGpInfo(gameplay)}}

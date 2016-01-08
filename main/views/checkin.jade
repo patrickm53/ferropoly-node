@@ -1,0 +1,13 @@
+extends layout
+
+block head
+  script(src='/modules/moment/min/moment.min.js')
+  script(src='/modules/moment/locale/de.js')
+  link(rel='stylesheet', href='/css/index.css',  type='text/css')
+
+block navbar-right
+  li
+    a(href='/account') Mein Account
+
+block content
+  h1 Hallo!
