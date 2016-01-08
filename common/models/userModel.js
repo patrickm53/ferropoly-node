@@ -19,6 +19,7 @@ var _          = require('lodash');
  * The mongoose schema for an user
  */
 var userSchema = mongoose.Schema({
+  _id         : String,
   id          : String,
   personalData: {
     forename: String,
@@ -63,7 +64,6 @@ var copyUser = function (source, target) {
   target.roles        = _.clone(source.roles);
   target.info         = _.clone(source.info);
   target.login        = _.clone(source.login);
-  target.id           = source.id;
 };
 
 /**
@@ -120,7 +120,7 @@ var removeUser = function (emailAddress, callback) {
  * @param callback
  */
 var updateUser = function (user, password, callback) {
-  User.find({id: user.id}, function (err, docs) {
+  User.find({_id: user._id}, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -132,7 +132,7 @@ var updateUser = function (user, password, callback) {
           return callback(err);
         }
         if (foundUser) {
-          return callback(new Error('User with this email-address already exists, retrieve first!'));
+          return callback(new Error('User with this email-address already exists, remove first!'));
         }
         logger.info('New user:' + user.personalData.email);
         if (!password) {
@@ -140,7 +140,7 @@ var updateUser = function (user, password, callback) {
         }
         generatePasswordHash(user, password);
         user.info.registrationDate = new Date();
-        user.id                    = user.personalData.email;
+        user._id                   = user.personalData.email;
         return user.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -184,8 +184,8 @@ var getUserByMailAddress = function (emailAddress, callback) {
 
     // Verify if this user already has an ID or not. If not, upgrade to new model
     var foundUser = docs[0];
-    if (!foundUser.id) {
-      foundUser.id = foundUser.personalData.email;
+    if (!_.isString(foundUser._id)) {
+      foundUser._id = foundUser.personalData.email;
       foundUser.save(function (err) {
         if (err) {
           return callback(err);
@@ -320,7 +320,7 @@ function findOrCreateFacebookUser(profile, callback) {
 
       function createNewFacebookUser() {
         newUser                         = new User();
-        newUser.id                      = emailAddress || profile.id;
+        newUser._id                     = emailAddress || profile.id;
         newUser.login.facebookProfileId = profile.id;
         newUser.info.facebook           = profile;
         newUser.info.registrationDate   = new Date();
@@ -402,7 +402,7 @@ function findOrCreateGoogleUser(profile, callback) {
 
       function findOrCreateGoogleUser() {
         newUser                       = new User();
-        newUser.id                    = emailAddress || profile.id;
+        newUser._id                   = emailAddress || profile.id;
         newUser.login.googleProfileId = profile.id;
         newUser.info.google           = profile;
         newUser.info.registrationDate = new Date();
