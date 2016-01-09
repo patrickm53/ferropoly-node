@@ -286,7 +286,7 @@ var countUsers = function (callback) {
  * @returns {*}
  */
 function findOrCreateFacebookUser(profile, callback) {
-
+  logger.info('findOrCreateFacebookUser', profile);
   /** Just for documentation purposes, the object returned by facebook after logging in
    var i = {
     id         : '1071........521',
@@ -306,6 +306,11 @@ function findOrCreateFacebookUser(profile, callback) {
    */
   if (!_.isObject(profile) || !_.isString(profile.id)) {
     return callback(new Error('invalid facebook object supplied'));
+  }
+
+  if (profile.provider !== 'facebook') {
+    logger.info('This is not a facebook account: ' + profile.provider);
+    callback(new Error('not a facebook account: ' + profile.provider));
   }
 
 
@@ -385,11 +390,16 @@ function findOrCreateFacebookUser(profile, callback) {
  * @returns {*}
  */
 function findOrCreateGoogleUser(profile, callback) {
-
+  logger.info('findOrCreateGoogleUser', profile);
   if (!_.isObject(profile) || !_.isString(profile.id)) {
-    return callback(new Error('invalid facebook object supplied'));
+    return callback(new Error('invalid profile supplied'));
   }
 
+
+  if (profile.provider !== 'google') {
+    logger.info('This is not a google account: ' + profile.provider);
+    callback(new Error('not a google account: ' + profile.provider));
+  }
 
   // Try to get the user
   getGoogleUser(profile.id, function (err, user) {
@@ -400,7 +410,7 @@ function findOrCreateGoogleUser(profile, callback) {
       // The user is not here, try to find him with the email-address
       var emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
 
-      function findOrCreateGoogleUser() {
+      function saveNewGoogleUser() {
         newUser                       = new User();
         newUser._id                   = emailAddress || profile.id;
         newUser.login.googleProfileId = profile.id;
@@ -417,7 +427,7 @@ function findOrCreateGoogleUser(profile, callback) {
           }
           logger.info('Created google user', savedUser);
           // Recursive call, now we'll find this user
-          return findOrCreateFacebookUser(profile, callback);
+          return findOrCreateGoogleUser(profile, callback);
         });
       }
 
@@ -441,18 +451,18 @@ function findOrCreateGoogleUser(profile, callback) {
               }
               logger.info('Upgraded user ' + emailAddress + ' for google access');
               // Recursive call, now we'll find this user
-              return findOrCreateFacebookUser(profile, callback);
+              return findOrCreateGoogleUser(profile, callback);
             });
             return;
           }
 
           // We do not know this user. Add him/her to the list.
-          findOrCreateGoogleUser();
+          saveNewGoogleUser();
         });
         return;
       }
       // No email address (somehow an annonymous google user). Add as new User
-      return findOrCreateGoogleUser();
+      return saveNewGoogleUser();
     }
 
     // User found, update

@@ -86,7 +86,7 @@ module.exports = {
       if (_.startsWith(uri, '/info')) {
         return next();
       }
-      if (!req.session.passport.user) {
+      if (!req.session.passport || !req.session.passport.user) {
         // valid user in session
         logger.info(uri + " redirected in login.js to login");
         req.session.targetUrl = req.url;

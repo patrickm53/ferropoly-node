@@ -71,16 +71,16 @@ module.exports = function (settings, users) {
    * Facebook strategy for users using their facebook account
    */
   var facebookStrategy = new FacebookStrategy({
-      clientID     : settings.oAuth.facebook.appId,
-      clientSecret : settings.oAuth.facebook.secret,
-      callbackURL  : settings.oAuth.facebook.callbackURL,
-      enableProof  : false,
-      profileFields: ['id', 'about', 'website', 'cover', 'picture', 'birthday', 'email', 'gender', 'location', 'name']
+      clientID         : settings.oAuth.facebook.appId,
+      clientSecret     : settings.oAuth.facebook.secret,
+      callbackURL      : settings.oAuth.facebook.callbackURL,
+      enableProof      : false,
+      profileFields    : ['id', 'about', 'website', 'cover', 'picture', 'email', 'gender', 'name']
     },
     function (accessToken, refreshToken, profile, done) {
       //console.log('ACCESS-TOKEN  ' + util.inspect(accessToken));
       //console.log('REFRESH-TOKEN ' + util.inspect(refreshToken));
-      //console.log('PROFILE       ' + util.inspect(profile));
+      console.log('FACEBOOK Profile:' + util.inspect(profile));
       users.findOrCreateFacebookUser(profile, function (err, user) {
         return done(err, user);
       });
@@ -91,15 +91,15 @@ module.exports = function (settings, users) {
    * Google Strategy
    */
   var googleStrategy = new GoogleStrategy({
-      clientID      : settings.oAuth.google.clientId,
-      clientSecret   : settings.oAuth.google.clientSecret,
+      clientID         : settings.oAuth.google.clientId,
+      clientSecret     : settings.oAuth.google.clientSecret,
       callbackURL      : settings.oAuth.google.callbackURL,
       passReqToCallback: true
     },
     function (accessToken, refreshToken, donotknow, profile, done) {
-      console.log('accessToken', accessToken);
-      console.log('refreshToken', refreshToken);
-      console.log('profile', profile);
+      //console.log('accessToken', accessToken);
+      //console.log('refreshToken', refreshToken);
+      console.log('GOOGLE Profile:', profile);
 
       users.findOrCreateGoogleUser(profile, function (err, foundUser) {
         return done(err, foundUser);
