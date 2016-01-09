@@ -4,10 +4,10 @@
  * Created by kc on 19.04.15.
  */
 'use strict';
-var _ = require('lodash');
+var _                      = require('lodash');
 var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
-var moment = require('moment');
-var logger = require('../../../common/lib/logger').getLogger('accounting:teamAccount');
+var moment                 = require('moment');
+var logger                 = require('../../../common/lib/logger').getLogger('accounting:teamAccount');
 
 var ferroSocket;
 /**
@@ -22,12 +22,12 @@ function payInterest(teamId, gameId, amount, callback) {
     callback(new Error('Parameter error in payInterest'));
     return;
   }
-  var entry = new teamAccountTransaction.Model();
-  entry.gameId = gameId;
-  entry.teamId = teamId;
+  var entry                = new teamAccountTransaction.Model();
+  entry.gameId             = gameId;
+  entry.teamId             = teamId;
   entry.transaction.amount = amount;
   entry.transaction.origin = {category: 'bank'};
-  entry.transaction.info = 'Startgeld';
+  entry.transaction.info   = 'Startgeld';
   teamAccountTransaction.book(entry, function (err) {
     callback(err);
     if (ferroSocket) {
@@ -61,17 +61,17 @@ function chargeToBankOrChancellery(options, callback) {
   // Amount has to be negative, not concerning of the parameter value!
   var chargedAmount = (-1) * Math.abs(options.amount);
 
-  var entry = new teamAccountTransaction.Model();
-  entry.gameId = options.gameId;
-  entry.teamId = options.teamId;
+  var entry                = new teamAccountTransaction.Model();
+  entry.gameId             = options.gameId;
+  entry.teamId             = options.teamId;
   entry.transaction.amount = chargedAmount;
   entry.transaction.origin = {category: options.category};
-  entry.user = options.user;
+  entry.user               = options.user;
   if (_.isString(options.info)) {
     entry.transaction.info = options.info;
   }
   else if (_.isObject(options.info)) {
-    entry.transaction.info = options.info.info;
+    entry.transaction.info  = options.info.info;
     entry.transaction.parts = options.info.parts;
   }
 
@@ -131,16 +131,16 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
       return callback(new Error('Value must not be 0'));
     }
 
-    var entry = new teamAccountTransaction.Model();
-    entry.gameId = gameId;
-    entry.teamId = teamId;
+    var entry                = new teamAccountTransaction.Model();
+    entry.gameId             = gameId;
+    entry.teamId             = teamId;
     entry.transaction.amount = Math.abs(amount);
     entry.transaction.origin = {category: category};
     if (_.isString(info)) {
       entry.transaction.info = info;
     }
     else if (_.isObject(info)) {
-      entry.transaction.info = info.info;
+      entry.transaction.info  = info.info;
       entry.transaction.parts = info.parts;
     }
 
@@ -202,24 +202,24 @@ function chargeToAnotherTeam(options, callback) {
   // Amount has to be positive for us, not concerning of the parameter value!
   var chargedAmount = Math.abs(options.amount);
 
-  var chargingEntry = new teamAccountTransaction.Model();
-  chargingEntry.gameId = options.gameId;
-  chargingEntry.teamId = options.debitorTeamId;
-  chargingEntry.user = options.user;
+  var chargingEntry                = new teamAccountTransaction.Model();
+  chargingEntry.gameId             = options.gameId;
+  chargingEntry.teamId             = options.debitorTeamId;
+  chargingEntry.user               = options.user;
   chargingEntry.transaction.amount = chargedAmount * (-1);
   chargingEntry.transaction.origin = {
-    uuid: options.creditorTeamId,
+    uuid    : options.creditorTeamId,
     category: 'team'
   };
-  chargingEntry.transaction.info = options.info;
+  chargingEntry.transaction.info   = options.info;
 
-  var receivingEntry = new teamAccountTransaction.Model();
-  receivingEntry.gameId = options.gameId;
-  receivingEntry.teamId = options.creditorTeamId;
-  receivingEntry.user = options.user;
+  var receivingEntry                = new teamAccountTransaction.Model();
+  receivingEntry.gameId             = options.gameId;
+  receivingEntry.teamId             = options.creditorTeamId;
+  receivingEntry.user               = options.user;
   receivingEntry.transaction.amount = chargedAmount;
   receivingEntry.transaction.origin = {uuid: options.debitorTeamId, category: 'team'};
-  receivingEntry.transaction.info = options.info;
+  receivingEntry.transaction.info   = options.info;
 
   teamAccountTransaction.bookTransfer(chargingEntry, receivingEntry, function (err) {
     if (err) {
@@ -242,10 +242,10 @@ function chargeToAnotherTeam(options, callback) {
  */
 function getBalance(gameId, teamId, p1, p2) {
   var callback = p2;
-  var ts = p1;
+  var ts       = p1;
   if (_.isFunction(p1)) {
     callback = p1;
-    ts = moment();
+    ts       = moment();
   }
 
   teamAccountTransaction.getEntries(gameId, teamId, undefined, ts, function (err, data) {
@@ -291,28 +291,16 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
  * @param callback
  */
 function getRankingList(gameId, callback) {
-  // Get all entries, could be better done but I don't know how
-  teamAccountTransaction.getEntries(gameId, undefined, undefined, undefined, function (err, data) {
+  teamAccountTransaction.getRankingList(gameId, function (err, data) {
     if (err) {
       return callback(err);
     }
-    var retVal = {};
-    var i;
-    for (i = 0; i < data.length; i++) {
-      if (!retVal[data[i].teamId]) {
-        retVal[data[i].teamId] = {
-          teamId: data[i].teamId,
-          asset: 0
-        };
-      }
-      retVal[data[i].teamId].asset += data[i].transaction.amount;
-    }
-    // Convert to array, sort and add rank
-    var sorted = _.sortBy(_.values(retVal), function (n) {
-      return n.asset * (-1);
+    var sorted = _.sortBy(_.values(data), function (n) {
+      return n.balance * (-1);
     });
-    for (i = 0; i < sorted.length; i++) {
-      if (sorted[i - 1] && (sorted[i - 1].asset === sorted[i].asset)) {
+    for (var i = 0; i < sorted.length; i++) {
+      sorted[i].teamId = sorted[i]._id;
+      if (sorted[i - 1] && (sorted[i - 1].balance === sorted[i].balance)) {
         // Same asset, same rank
         sorted[i].rank = sorted[i - 1].rank;
       }
@@ -337,18 +325,18 @@ function getRankingList(gameId, callback) {
  * @param p3  Callback
  */
 function getAccountStatement(gameId, teamId, p1, p2, p3) {
-  var tsStart = p1;
-  var tsEnd = p2;
+  var tsStart  = p1;
+  var tsEnd    = p2;
   var callback = p3;
   if (_.isFunction(p1)) {
     callback = p1;
-    tsStart = undefined;
-    tsEnd = moment();
+    tsStart  = undefined;
+    tsEnd    = moment();
   }
   else if (_.isFunction(p2)) {
     callback = p2;
-    tsStart = p2;
-    tsEnd = moment();
+    tsStart  = p2;
+    tsEnd    = moment();
   }
   if (!tsEnd) {
     tsEnd = moment();
@@ -360,16 +348,16 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
 }
 
 module.exports = {
-  payInterest: payInterest,
-  chargeToBank: chargeToBank,
-  chargeToChancellery: chargeToChancellery,
-  receiveFromBank: receiveFromBank,
-  receiveFromChancellery: receiveFromChancellery,
-  chargeToAnotherTeam: chargeToAnotherTeam,
-  getBalance: getBalance,
+  payInterest            : payInterest,
+  chargeToBank           : chargeToBank,
+  chargeToChancellery    : chargeToChancellery,
+  receiveFromBank        : receiveFromBank,
+  receiveFromChancellery : receiveFromChancellery,
+  chargeToAnotherTeam    : chargeToAnotherTeam,
+  getBalance             : getBalance,
   negativeBalanceHandling: negativeBalanceHandling,
-  getAccountStatement: getAccountStatement,
-  getRankingList: getRankingList,
+  getAccountStatement    : getAccountStatement,
+  getRankingList         : getRankingList,
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();

@@ -5,18 +5,18 @@
  */
 'use strict';
 
-var mongoose = require('mongoose');
-var moment = require('moment');
-var logger = require('../../lib/logger').getLogger('teamAccountTransaction');
-var _ = require('lodash');
+var mongoose                     = require('mongoose');
+var moment                       = require('moment');
+var logger                       = require('../../lib/logger').getLogger('teamAccountTransaction');
+var _                            = require('lodash');
 /**
  * The mongoose schema for a team account
  */
 var teamAccountTransactionSchema = mongoose.Schema({
-  gameId: String, // Game the transaction belongs to
+  gameId   : String, // Game the transaction belongs to
   timestamp: {type: Date, default: Date.now}, // Timestamp of the transaction
-  teamId: String, // This is the uuid of the team the account belongs to
-  user: String, // The user (one of the admins) which was initiating the transaction
+  teamId   : String, // This is the uuid of the team the account belongs to
+  user     : String, // The user (one of the admins) which was initiating the transaction
 
   transaction: {
     /*
@@ -24,17 +24,17 @@ var teamAccountTransactionSchema = mongoose.Schema({
      by the amount, which is either positive or negative.
      */
     origin: {
-      uuid: {type: String, default: 'fff'}, // uuid of the origin, can be a property or a team
+      uuid    : {type: String, default: 'fff'}, // uuid of the origin, can be a property or a team
       category: {type: String, default: 'undefined'}  // either "team", "property", "bank", "chancellery"
     },
     amount: {type: Number, default: 0}, // value to be transferred, positive or negative
-    info: String, // Info about the transaction
+    info  : String, // Info about the transaction
     /*
      If the transaction consists of several other transactions (interests every hour), we do not create
      a specific TeamAccountTransaction for every property. Instead there is an array having the same
      data as this transaction (except this array)
      */
-    parts: Array
+    parts : Array
   }
 
 }, {autoIndex: true});
@@ -133,10 +133,29 @@ function dumpAccounts(gameId, callback) {
   })
 }
 
+/**
+ * Returns the sum of all accounts of a game
+ * @param gameId
+ * @param callback
+ */
+function getRankingList(gameId, callback) {
+  TeamAccountTransaction.aggregate({
+    $match: {
+      gameId: gameId
+    }
+  }, {
+    $group: {
+      _id    : '$teamId',
+      balance: {$sum: "$transaction.amount"}
+    }
+  }, callback);
+}
+
 module.exports = {
-  Model: TeamAccountTransaction,
-  book: book,
-  bookTransfer: bookTransfer,
-  getEntries: getEntries,
-  dumpAccounts: dumpAccounts
+  Model         : TeamAccountTransaction,
+  book          : book,
+  bookTransfer  : bookTransfer,
+  getEntries    : getEntries,
+  getRankingList: getRankingList,
+  dumpAccounts  : dumpAccounts
 };
