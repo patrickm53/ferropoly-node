@@ -3,11 +3,28 @@ extends layout
 block head
   script(src='/modules/moment/min/moment.min.js')
   script(src='/modules/moment/locale/de.js')
-  link(rel='stylesheet', href='/css/index.css',  type='text/css')
+  script(src='/modules/react/react.js')
+  script(src='/modules/react/react-dom.js')
+  script(src='/modules/babel/browser.min.js')
+  script(src='/js/checkin/index.js')
+
+  link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
 
 block navbar-right
+  li
+    a(href='#' onclick='activateView("#view-dashboard")') Dashboard
+  li
+    a(href='#' onclick='activateView("#view-map")') Karte
+  li
+    a(href='#' onclick='activateView("#view-teamaccount")') Kontobuch
   li
     a(href='/account') Mein Account
 
 block content
-  h1 Hallo!
+
+  #view-dashboard
+    include checkin/checkin-dashboard
+  #view-map
+    include checkin/checkin-map
+  #view-teamaccount
+    include checkin/checkin-teamaccount
