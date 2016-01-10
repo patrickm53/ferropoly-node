@@ -146,7 +146,7 @@ function getRankingList(gameId, callback) {
   }, {
     $group: {
       _id    : '$teamId',
-      balance: {$sum: "$transaction.amount"}
+      asset: {$sum: "$transaction.amount"}
     }
   }, callback);
 }
