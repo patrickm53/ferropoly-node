@@ -6,42 +6,42 @@
  */
 'use strict';
 
-var mongoose = require('mongoose');
-var uuid = require('node-uuid');
-var logger = require('../lib/logger').getLogger('propertyModel');
-var _ = require('lodash');
+var mongoose       = require('mongoose');
+var uuid           = require('node-uuid');
+var logger         = require('../lib/logger').getLogger('propertyModel');
+var _              = require('lodash');
 /**
  * The mongoose schema for a property
  */
 var propertySchema = mongoose.Schema({
-  _id: String,
-  gameId: String, // Gameplay this property belongs to
-  uuid: {type: String, index: {unique: true}},     // UUID of this property (index)
-  location: {
-    name: String, // Name of the property
-    uuid: String, // UUID of the location (referencing key)
-    position: {lat: String, lng: String}, // position of the location
+  _id      : String,
+  gameId   : String, // Gameplay this property belongs to
+  uuid     : {type: String, index: {unique: true}},     // UUID of this property (index)
+  location : {
+    name         : String, // Name of the property
+    uuid         : String, // UUID of the location (referencing key)
+    position     : {lat: String, lng: String}, // position of the location
     accessibility: String // How do we access it?
   },
-  gamedata: {
-    owner: String, // Reference to the owner, undefined or empty is 'no owner'
-    buildings: Number,
+  gamedata : {
+    owner          : String, // Reference to the owner, undefined or empty is 'no owner'
+    buildings      : Number,
     buildingEnabled: {type: Boolean, default: false}
   },
   pricelist: {
-    priceRange: {type: Number, default: -1},
+    priceRange          : {type: Number, default: -1},
     positionInPriceRange: {type: Number, default: -1},
-    position: {type: Number, default: -1},// Position inside complete price list
-    propertyGroup: Number,
-    price: Number,
-    pricePerHouse: Number,
-    rents: {
-      noHouse: Number,
-      oneHouse: Number,
-      twoHouses: Number,
+    position            : {type: Number, default: -1},// Position inside complete price list
+    propertyGroup       : Number,
+    price               : Number,
+    pricePerHouse       : Number,
+    rents               : {
+      noHouse    : Number,
+      oneHouse   : Number,
+      twoHouses  : Number,
       threeHouses: Number,
-      fourHouses: Number,
-      hotel: Number
+      fourHouses : Number,
+      hotel      : Number
     }
   }
 
@@ -52,7 +52,7 @@ var propertySchema = mongoose.Schema({
  */
 var Property = mongoose.model('Property', propertySchema);
 
-var createPropertyId = function(gameId, location) {
+var createPropertyId = function (gameId, location) {
   return gameId + '-' + _.kebabCase(_.deburr(location.name)) + '-' + _.random(10000000, 99999999);
 };
 
@@ -63,9 +63,9 @@ var createPropertyId = function(gameId, location) {
  * @param callback
  */
 var createPropertyFromLocation = function (gameId, location, callback) {
-  var newProperty = new Property();
+  var newProperty      = new Property();
   newProperty.location = location;
-  newProperty._id = createPropertyId(gameId, location);
+  newProperty._id      = createPropertyId(gameId, location);
   return updateProperty(gameId, newProperty, callback);
 };
 
@@ -74,7 +74,7 @@ var createPropertyFromLocation = function (gameId, location, callback) {
  * @param properties
  * @param callback
  */
-var updateProperties = function (properties, callback) {
+var updateProperties          = function (properties, callback) {
   for (var i = 0; i < properties.length; i++) {
     if (!(properties[i] instanceof Property)) {
       return callback(new Error('not real properties'));
@@ -99,7 +99,7 @@ var updateProperties = function (properties, callback) {
  * @param property
  * @param callback
  */
-var updateProperty = function (gameId, property, callback) {
+var updateProperty            = function (gameId, property, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -110,10 +110,10 @@ var updateProperty = function (gameId, property, callback) {
 
   if (!(property instanceof Property)) {
     // This is not an instance of a property, create a new one
-    var newProperty = new Property();
-    newProperty.gamedata = property.gamedata;
+    var newProperty       = new Property();
+    newProperty.gamedata  = property.gamedata;
     newProperty.pricelist = property.pricelist;
-    newProperty.location = property.location;
+    newProperty.location  = property.location;
     // recursive call
     return updateProperty(gameId, newProperty, function (err, prop) {
       return callback(err, prop);
@@ -134,20 +134,20 @@ var updateProperty = function (gameId, property, callback) {
       }
       if (!foundProperty) {
         // this is a new one!
-        var prop = new Property();
-        prop.gameId = gameId;
-        prop.uuid = uuid.v4();
-        prop.location = property.location;
-        prop.gamedata = property.gamedata;
+        var prop       = new Property();
+        prop.gameId    = gameId;
+        prop.uuid      = uuid.v4();
+        prop.location  = property.location;
+        prop.gamedata  = property.gamedata;
         prop.pricelist = property.pricelist;
-        prop._id = createPropertyId(gameId, property.location);
+        prop._id       = createPropertyId(gameId, property.location);
         return prop.save(function (err, savedProp) {
           return callback(err, savedProp);
         })
       }
       else {
         // we found the property and do not touch gameId and location data
-        foundProperty.gamedata = property.gamedata;
+        foundProperty.gamedata  = property.gamedata;
         foundProperty.pricelist = property.pricelist;
         return foundProperty.save(function (err, savedProp) {
           return callback(err, savedProp);
@@ -217,7 +217,7 @@ var getPropertyByLocationId = function (gameId, locationId, callback) {
  * @param callback
  * @returns {*}
  */
-var getPropertyById = function (gameId, propertyId, callback) {
+var getPropertyById          = function (gameId, propertyId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -278,7 +278,7 @@ var getPropertiesForGameplay = function (gameId, options, callback) {
  * @param callback
  * @returns {*}
  */
-var getPropertiesForTeam = function (gameId, teamId, callback) {
+var getPropertiesForTeam     = function (gameId, teamId, callback) {
   if (!gameId || !teamId) {
     return callback(new Error('Parameter error'));
   }
@@ -289,6 +289,27 @@ var getPropertiesForTeam = function (gameId, teamId, callback) {
       callback(err, data);
     });
 };
+
+/**
+ * Get the propertyIds for a team. Reduces the amount of data transferred
+ * @param gameId
+ * @param teamId
+ * @param callback
+ * @returns {*}
+ */
+var getPropertiesIdsForTeam = function (gameId, teamId, callback) {
+  if (!gameId || !teamId) {
+    return callback(new Error('Parameter error'));
+  }
+  Property.find()
+    .where('gamedata.owner').equals(teamId)
+    .where('gameId').equals(gameId)
+    .select('uuid')
+    .exec(function (err, data) {
+      callback(err, data);
+    });
+};
+
 /**
  * Removes one property from the gameplay (deletes them in the DB)
  * @param gameId
@@ -311,7 +332,7 @@ var removePropertyFromGameplay = function (gameId, locationId, callback) {
  * @param callback
  * @returns {*}
  */
-var finalizeProperties = function (gameId, callback) {
+var finalizeProperties              = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -345,7 +366,7 @@ var allowBuilding = function (gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   Property.update({
-    gameId: gameId,
+    gameId          : gameId,
     'gamedata.owner': {'$exists': true, '$ne': ''}
   }, {'gamedata.buildingEnabled': true}, {multi: true}, function (err, numAffected) {
     callback(err, numAffected);
@@ -357,17 +378,18 @@ var allowBuilding = function (gameId, callback) {
  * @type {{Model: (*|Model)}}
  */
 module.exports = {
-  Model: Property,
+  Model                          : Property,
   removeAllPropertiesFromGameplay: removeAllPropertiesFromGameplay,
-  removePropertyFromGameplay: removePropertyFromGameplay,
-  getPropertiesForGameplay: getPropertiesForGameplay,
-  getPropertiesForTeam: getPropertiesForTeam,
-  getPropertyByLocationId: getPropertyByLocationId,
-  getPropertyById: getPropertyById,
-  updateProperty: updateProperty,
-  createPropertyFromLocation: createPropertyFromLocation,
-  updatePositionInPriceList: updatePositionInPriceList,
-  updateProperties: updateProperties,
-  finalizeProperties: finalizeProperties,
-  allowBuilding: allowBuilding
+  removePropertyFromGameplay     : removePropertyFromGameplay,
+  getPropertiesForGameplay       : getPropertiesForGameplay,
+  getPropertiesForTeam           : getPropertiesForTeam,
+  getPropertyByLocationId        : getPropertyByLocationId,
+  getPropertyById                : getPropertyById,
+  updateProperty                 : updateProperty,
+  createPropertyFromLocation     : createPropertyFromLocation,
+  updatePositionInPriceList      : updatePositionInPriceList,
+  updateProperties               : updateProperties,
+  finalizeProperties             : finalizeProperties,
+  allowBuilding                  : allowBuilding,
+  getPropertiesIdsForTeam        : getPropertiesIdsForTeam
 };

@@ -8,6 +8,7 @@
 var mongoose = require('mongoose');
 var moment   = require('moment');
 var logger   = require('../../lib/logger').getLogger('propertyTransaction');
+var _        = require('lodash');
 
 /**
  * The mongoose schema for a team account
@@ -107,13 +108,23 @@ function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
 /**
  * Returns the sum of all account transactions sorted per property
  * @param gameId
+ * @param propertyId optional
  * @param callback
  */
 function getSummary(gameId, propertyId, callback) {
+  if (_.isFunction(propertyId)) {
+    callback = propertyId;
+    propertyId = undefined;
+  }
+
+  var match = {};
+  match['gameId'] = gameId;
+  if (propertyId) {
+    match['propertyId'] = propertyId;
+  }
+
   PropertyAccountTransaction.aggregate({
-    $match: {
-      gameId: gameId
-    }
+    $match: match
   }, {
     $group: {
       _id    : '$propertyId',

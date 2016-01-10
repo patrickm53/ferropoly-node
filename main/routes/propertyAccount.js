@@ -5,12 +5,14 @@
 'use strict';
 
 
-var express = require('express');
-var router = express.Router();
+var express         = require('express');
+var router          = express.Router();
 var propertyAccount = require('../lib/accounting/propertyAccount');
-var gameCache = require('../lib/gameCache');
-var logger = require('../../common/lib/logger').getLogger('routes:propertyAccount');
-var accessor = require('../lib/accessor');
+var gameCache       = require('../lib/gameCache');
+var logger          = require('../../common/lib/logger').getLogger('routes:propertyAccount');
+var accessor        = require('../lib/accessor');
+var async           = require('async');
+var propertyModel   = require('../../common/models/propertyModel');
 
 /**
  * Get all acount Info for a team
@@ -28,7 +30,7 @@ router.get('/getRentRegister/:gameId/:teamId', function (req, res) {
         logger.error(err);
         return res.send({status: 'error', message: err.message});
       }
-      var gp = data.gameplay;
+      var gp   = data.gameplay;
       var team = data.teams[req.params.teamId];
 
       if (!gp || !team) {
@@ -69,11 +71,10 @@ router.get('/getAccountStatement/:gameId/:propertyId', function (req, res) {
   });
 });
 
-
 /**
- * Get profitability of all properties of a game
+ * Get profitability of all properties
  */
-router.get('/propertyProfitability/:gameId', function (req, res) {
+router.get('/propertyProfitability/:gameId/', function (req, res) {
 
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
@@ -85,6 +86,45 @@ router.get('/propertyProfitability/:gameId', function (req, res) {
         return res.status(500).send({message: err.message});
       }
       res.send({status: 'ok', info: info});
+    });
+  });
+});
+
+
+/**
+ * Get profitability of a teams property
+ */
+router.get('/propertyProfitability/:gameId/:teamId', function (req, res) {
+
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+    if (err) {
+      return res.send({status: 'error', message: err.message});
+    }
+
+    // Get all properties for a team
+    propertyModel.getPropertiesIdsForTeam(req.params.gameId, req.params.teamId, function (err, properties) {
+      console.log(properties);
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+
+      var info = [];
+      async.each(properties,
+        function (prop, cb) {
+          propertyAccount.getPropertyProfitability(req.params.gameId, prop.uuid, function (err, profit) {
+            if (err) {
+              return cb(err);
+            }
+            info.push(profit);
+            cb();
+          });
+        },
+        function (err) {
+          if (err) {
+            return res.status(500).send({message: err.message});
+          }
+          res.send({status: 'ok', info: info});
+        });
     });
   });
 });
