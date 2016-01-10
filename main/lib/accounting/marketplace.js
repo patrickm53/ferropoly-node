@@ -206,23 +206,8 @@ Marketplace.prototype.buyProperty = function (options, callback) {
       //------------------------------------------------------------------------------------------------------------------
       else {
         // CASE 3: property belongs to another team, pay the rent
-        propertyAccount.getPropertyValue(gp, property, function (err, val) {
-          if (err) {
-            return callback(err);
-          }
-          options.amount = val.amount;
-          options.info = 'Miete ' + property.location.name;
-          options.debitorTeamId = options.teamId;
-          options.creditorTeamId = property.gamedata.owner;
-          teamAccount.chargeToAnotherTeam(options, function (err, info) {
-            marketLog(options.gameId, property.location.name + ' is already sold to another team');
-            if (err) {
-              logger.error(err);
-              return callback(err);
-            }
-            return callback(null, {property: property, owner: property.gamedata.owner, amount: info.amount});
-          });
-        });
+        marketLog(options.gameId, property.location.name + ' is already sold to another team');
+        propertyAccount.chargeRent(gp, property, options.teamId, callback);
       }
     });
   });

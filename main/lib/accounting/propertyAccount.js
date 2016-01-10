@@ -13,6 +13,7 @@
 'use strict';
 var propWrap            = require('../propertyWrapper');
 var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
+var teamAccount         = require('./teamAccount');
 var logger              = require('../../../common/lib/logger').getLogger('propertyAccount');
 var async               = require('async');
 var _                   = require('lodash');
@@ -75,6 +76,56 @@ function buyProperty(gameplay, property, team, callback) {
         });
       }
       callback(err, retVal);
+    });
+  });
+}
+
+/**
+ * Charges rent for a property:
+ *   Visitor pays to Owner, same value also added to the property Account
+ *
+ * @param gp
+ * @param property
+ * @param teamId
+ * @param callback
+ */
+function chargeRent(gp, property, teamId, callback) {
+  getPropertyValue(gp, property, function (err, val) {
+    if (err) {
+      return callback(err);
+    }
+    var options = {
+      gameId        : gp.internal.gameId,
+      amount        : val.amount,
+      info          : 'Miete ' + property.location.name,
+      debitorTeamId : teamId,
+      creditorTeamId: property.gamedata.owner
+    };
+
+    // Charge value to the other team
+    teamAccount.chargeToAnotherTeam(options, function (err, info) {
+      if (err) {
+        return callback(err);
+      }
+      // Add entry for property (income)
+      var pt         = new propertyTransaction.Model();
+      pt.gameId      = options.gameId;
+      pt.propertyId  = property.uuid;
+      pt.transaction = {
+        origin: {
+          category: 'team'
+        },
+        amount: info.amount,
+        info  : 'Miete'
+      };
+
+      propertyTransaction.book(pt, function (err) {
+        if (err) {
+          logger.error(err);
+          return callback(err);
+        }
+        return callback(null, {property: property, owner: property.gamedata.owner, amount: info.amount});
+      });
     });
   });
 }
@@ -433,6 +484,7 @@ module.exports = {
   resetProperty           : resetProperty,
   getPropertyProfitability: getPropertyProfitability,
   getAccountStatement     : getAccountStatement,
+  chargeRent              : chargeRent,
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
