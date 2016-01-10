@@ -10,9 +10,9 @@
 'use strict';
 
 var chancelleryTransaction = require('../../../common/models/accounting/chancelleryTransaction');
-var teamAccount = require('./teamAccount');
-var _ = require('lodash');
-var moment = require('moment');
+var teamAccount            = require('./teamAccount');
+var _                      = require('lodash');
+var moment                 = require('moment');
 
 /**
  * Internal function: Books the chancellery event in the chancellery and the teams account
@@ -32,14 +32,14 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         if (err) {
           return callback(err);
         }
-        var entry = new chancelleryTransaction.Model();
-        entry.gameId = gameplay.internal.gameId;
+        var entry         = new chancelleryTransaction.Model();
+        entry.gameId      = gameplay.internal.gameId;
         entry.transaction = {
           origin: {
             uuid: team.uuid
           },
           amount: Math.abs(info.amount) * (-1),
-          info: info.infoText
+          info  : info.infoText
         };
 
         chancelleryTransaction.book(entry, function (err) {
@@ -59,19 +59,19 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
       teamId: team.uuid,
       gameId: gameplay.internal.gameId,
       amount: info.amount,
-      info: info.infoText
+      info  : info.infoText
     }, function (err) {
       if (err) {
         return callback(err);
       }
-      var entry = new chancelleryTransaction.Model();
-      entry.gameId = gameplay.internal.gameId;
+      var entry         = new chancelleryTransaction.Model();
+      entry.gameId      = gameplay.internal.gameId;
       entry.transaction = {
         origin: {
           uuid: team.uuid
         },
         amount: Math.abs(info.amount),
-        info: info.infoText
+        info  : info.infoText
       };
 
       chancelleryTransaction.book(entry, function (err) {
@@ -91,16 +91,16 @@ function playChancellery(gameplay, team, callback) {
   if (!gameplay || !team) {
     return callback(new Error('invalid params in playChancellery'));
   }
-  var min = gameplay.gameParams.chancellery.minLottery || 1000;
-  var max = gameplay.gameParams.chancellery.maxLottery || 5000;
-  var retVal = {};
-  retVal.amount = Math.floor((Math.random() * (max - min + 1) + min) / 1000) * 1000;
+  var min         = gameplay.gameParams.chancellery.minLottery || 1000;
+  var max         = gameplay.gameParams.chancellery.maxLottery || 5000;
+  var retVal      = {};
+  retVal.amount   = Math.floor((Math.random() * (max - min + 1) + min) / 1000) * 1000;
   retVal.infoText = 'Chance/Kanzlei: ';
 
   var actionRand = Math.random();
   if (actionRand > (gameplay.gameParams.chancellery.probabilityWin + gameplay.gameParams.chancellery.probabilityLoose)) {
     retVal.infoText = 'Parkplatzgewinn';
-    retVal.jackpot = true;
+    retVal.jackpot  = true;
     getBalance(gameplay.internal.gameId, function (err, info) {
       if (err) {
         return callback(err);
@@ -133,7 +133,7 @@ function playChancellery(gameplay, team, callback) {
 // loosing it goes to the chancellery
 function gamble(gameplay, team, amount, callback) {
   var retVal = {
-    amount: amount,
+    amount  : amount,
     infoText: 'Chance/Kanzlei (Gambling)'
   };
   bookChancelleryEvent(gameplay, team, retVal, function (err) {
@@ -151,7 +151,7 @@ function gamble(gameplay, team, amount, callback) {
  */
 function payToChancellery(gameplay, team, amount, text, callback) {
   var retVal = {
-    amount: Math.abs(amount) * (-1),
+    amount  : Math.abs(amount) * (-1),
     infoText: text
   };
   bookChancelleryEvent(gameplay, team, retVal, function (err) {
@@ -160,29 +160,19 @@ function payToChancellery(gameplay, team, amount, text, callback) {
 }
 
 /**
- * Gets the balance, at a given time or now. This is the same as the "Jackpot"
+ * Gets the balance
  * @param gameId
- * @param p1 timestamp until when the balance shall be gotten (optional, default: now)
- * @param p2 callback
+ * @param callback callback
  */
-function getBalance(gameId, p1, p2) {
-  var callback = p2;
-  var ts = p1;
-  var i;
-  if (_.isFunction(p1)) {
-    callback = p1;
-    ts = moment();
-  }
-
-  chancelleryTransaction.getEntries(gameId, undefined, ts, function (err, data) {
+function getBalance(gameId, callback) {
+  chancelleryTransaction.getBalance(gameId, function (err, info) {
     if (err) {
       return callback(err);
     }
-    var saldo = 0;
-    for (i = 0; i < data.length; i++) {
-      saldo += data[i].transaction.amount;
+    if (!_.isArray(info) || info.length === 0) {
+      return callback(null, {balance: 0});
     }
-    callback(err, {balance: saldo, entries: i});
+    callback(err, {balance: info[0].balance});
   });
 }
 
@@ -205,9 +195,9 @@ function getAccountStatement(gameId, callback) {
 
 
 module.exports = {
-  playChancellery: playChancellery,
+  playChancellery    : playChancellery,
   getAccountStatement: getAccountStatement,
-  getBalance: getBalance,
-  gamble: gamble,
-  payToChancellery: payToChancellery
+  getBalance         : getBalance,
+  gamble             : gamble,
+  payToChancellery   : payToChancellery
 };

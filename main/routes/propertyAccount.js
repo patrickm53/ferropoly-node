@@ -69,5 +69,25 @@ router.get('/getAccountStatement/:gameId/:propertyId', function (req, res) {
   });
 });
 
+
+/**
+ * Get profitability of all properties of a game
+ */
+router.get('/propertyProfitability/:gameId', function (req, res) {
+
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+    if (err) {
+      return res.send({status: 'error', message: err.message});
+    }
+
+    propertyAccount.getPropertyProfitability(req.params.gameId, undefined, function (err, info) {
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+      res.send({status: 'ok', info: info});
+    });
+  });
+});
+
 module.exports = router;
 

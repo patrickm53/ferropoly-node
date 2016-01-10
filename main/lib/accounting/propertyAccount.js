@@ -11,11 +11,12 @@
  * Created by kc on 20.04.15.
  */
 'use strict';
-var propWrap = require('../propertyWrapper');
+var propWrap            = require('../propertyWrapper');
 var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
-var _ = require('lodash');
-var moment = require('moment');
-var logger = require('../../../common/lib/logger').getLogger('propertyAccount');
+var logger              = require('../../../common/lib/logger').getLogger('propertyAccount');
+var async               = require('async');
+var _                   = require('lodash');
+var moment              = require('moment');
 
 var ferroSocket;
 
@@ -36,7 +37,7 @@ function buyProperty(gameplay, property, team, callback) {
 
   // Set the data
   property.gamedata = {
-    owner: team.uuid,
+    owner    : team.uuid,
     buildings: 0
   };
   propWrap.updateProperty(property, function (err) {
@@ -49,16 +50,16 @@ function buyProperty(gameplay, property, team, callback) {
       amount: property.pricelist.price
     };
 
-    var pt = new propertyTransaction.Model();
-    pt.gameId = gameplay.internal.gameId;
-    pt.propertyId = property.uuid;
+    var pt         = new propertyTransaction.Model();
+    pt.gameId      = gameplay.internal.gameId;
+    pt.propertyId  = property.uuid;
     pt.transaction = {
       origin: {
-        uuid: team.uuid,
+        uuid    : team.uuid,
         category: 'team'
       },
       amount: (-1) * retVal.amount, // buy is negative earning on the property
-      info: 'Kauf'
+      info  : 'Kauf'
     };
 
     propertyTransaction.book(pt, function (err) {
@@ -68,8 +69,8 @@ function buyProperty(gameplay, property, team, callback) {
 
       if (ferroSocket) {
         ferroSocket.emitToClients(gameplay.internal.gameId, 'propertyAccount', {
-          cmd: 'propertyBought',
-          property: property,
+          cmd        : 'propertyBought',
+          property   : property,
           transaction: pt
         });
       }
@@ -93,8 +94,8 @@ function resetProperty(gameId, property, reason, callback) {
       return callback(err);
     }
     property.gamedata.buildingEnabled = false;
-    property.gamedata.buildings = 0;
-    property.gamedata.owner = undefined;
+    property.gamedata.buildings       = 0;
+    property.gamedata.owner           = undefined;
 
     propWrap.updateProperty(property, function (err) {
       if (err) {
@@ -102,15 +103,15 @@ function resetProperty(gameId, property, reason, callback) {
         return callback(err);
       }
 
-      var pt = new propertyTransaction.Model();
-      pt.gameId = gameId;
-      pt.propertyId = property.uuid;
+      var pt         = new propertyTransaction.Model();
+      pt.gameId      = gameId;
+      pt.propertyId  = property.uuid;
       pt.transaction = {
         origin: {
           category: 'bank'
         },
         amount: (-1) * info.balance,
-        info: 'Manuell zurückgesetzt: ' + reason
+        info  : 'Manuell zurückgesetzt: ' + reason
       };
 
       propertyTransaction.book(pt, function (err) {
@@ -149,23 +150,23 @@ function buyBuilding(gameplay, property, team, callback) {
       return callback(err);
     }
     var retVal = {
-      amount: Math.abs(getBuildingPrice(property)) * (-1),
-      buildingNb: property.gamedata.buildings,
-      property: property.uuid,
+      amount      : Math.abs(getBuildingPrice(property)) * (-1),
+      buildingNb  : property.gamedata.buildings,
+      property    : property.uuid,
       propertyName: property.location.name
     };
 
     // Save a property transaction
-    var pt = new propertyTransaction.Model();
-    pt.gameId = gameplay.internal.gameId;
-    pt.propertyId = property.uuid;
+    var pt         = new propertyTransaction.Model();
+    pt.gameId      = gameplay.internal.gameId;
+    pt.propertyId  = property.uuid;
     pt.transaction = {
       origin: {
         uuid: team.uuid,
         type: 'team'
       },
       amount: retVal.amount, // building buildings is negative earning on the property
-      info: 'Hausbau'
+      info  : 'Hausbau'
     };
 
     propertyTransaction.book(pt, function (err) {
@@ -174,8 +175,8 @@ function buyBuilding(gameplay, property, team, callback) {
       }
       if (ferroSocket) {
         ferroSocket.emitToClients(gameplay.internal.gameId, 'propertyAccount', {
-          cmd: 'buildingBuilt',
-          property: property,
+          cmd        : 'buildingBuilt',
+          property   : property,
           transaction: pt
         });
       }
@@ -193,40 +194,31 @@ function buyBuilding(gameplay, property, team, callback) {
  * @param callback
  */
 function payInterest(gameplay, register, callback) {
-  var t = 0;
-  var error = null;
+
   if (register.length === 0) {
     // nothing to pay
     logger.info('nothing to pay');
     return callback(null);
   }
 
-  var transactionCallback = function (err) {
-    if (err) {
-      logger.error(err);
-      error = err;
-    }
-    t++;
-    if (t === register.length) {
-      callback(error);
-    }
-  };
+  async.each(register,
+    function (prop, cb) {
+      console.log('Book propertyAccount transaction for property', prop);
+      var pt         = new propertyTransaction.Model();
+      pt.gameId      = gameplay.internal.gameId;
+      pt.propertyId  = prop.uuid;
+      pt.transaction = {
+        origin: {
+          type: 'bank'
+        },
+        amount: Math.abs(prop.amount), // interest is positive earning on the property
+        info  : 'Zinsen ' + prop.propertyName
+      };
 
-  for (var i = 0; i < register.length; i++) {
-    // Save a property transaction
-    var pt = new propertyTransaction.Model();
-    pt.gameId = gameplay.internal.gameId;
-    pt.propertyId = register[i].uuid;
-    pt.transaction = {
-      origin: {
-        type: 'bank'
-      },
-      amount: Math.abs(register[i].amount), // interest is positive earning on the property
-      info: 'Zinsen ' + register[i].propertyName
-    };
-
-    propertyTransaction.book(pt, transactionCallback);
-  }
+      propertyTransaction.book(pt, cb);
+    },
+    callback
+  );
 }
 
 /**
@@ -243,30 +235,26 @@ function getRentRegister(gameplay, team, callback) {
     }
 
     var info = {
-      register: [],
+      register   : [],
       totalAmount: 0,
-      teamId: team.uuid
+      teamId     : team.uuid
     };
-    if (properties.length === 0) {
-      return callback(null, info);
-    }
 
-    function getPropertyValueCallback(err, propVal) {
-      if (err) {
-        info.register.push({err: err.message});
+    async.each(properties,
+      function (property, cb) {
+        getPropertyValue(gameplay, property, function (err, propVal) {
+          if (err) {
+            return cb(err);
+          }
+          info.register.push(propVal);
+          info.totalAmount += propVal.amount;
+          cb();
+        });
+      },
+      function (err) {
+        callback(err, info);
       }
-      else {
-        info.register.push(propVal);
-        info.totalAmount += propVal.amount;
-      }
-      if (info.register.length === properties.length) {
-        return callback(null, info);
-      }
-    }
-
-    for (var i = 0; i < properties.length; i++) {
-      getPropertyValue(gameplay, properties[i], getPropertyValueCallback);
-    }
+    );
   });
 }
 
@@ -283,18 +271,18 @@ function getRentRegister(gameplay, team, callback) {
  * @param p3
  */
 function getAccountStatement(gameId, propertyId, p1, p2, p3) {
-  var tsStart = p1;
-  var tsEnd = p2;
+  var tsStart  = p1;
+  var tsEnd    = p2;
   var callback = p3;
   if (_.isFunction(p1)) {
     callback = p1;
-    tsStart = undefined;
-    tsEnd = moment();
+    tsStart  = undefined;
+    tsEnd    = moment();
   }
   else if (_.isFunction(p2)) {
     callback = p2;
-    tsStart = p2;
-    tsEnd = moment();
+    tsStart  = p2;
+    tsEnd    = moment();
   }
   if (!tsEnd) {
     tsEnd = moment();
@@ -314,10 +302,10 @@ function getAccountStatement(gameId, propertyId, p1, p2, p3) {
  */
 function getBalance(gameId, propertyId, p1, p2) {
   var callback = p2;
-  var ts = p1;
+  var ts       = p1;
   if (_.isFunction(p1)) {
     callback = p1;
-    ts = moment();
+    ts       = moment();
   }
 
   propertyTransaction.getEntries(gameId, propertyId, undefined, ts, function (err, data) {
@@ -352,18 +340,18 @@ function getPropertyValue(gameplay, property, callback) {
 
     var retVal = {
       propertyName: property.location.name,
-      property: property.uuid
+      property    : property.uuid
     };
 
     var factor = 1;
     if ((properties.length > 1) && (sameGroup === properties.length)) {
       // all properties in a group belong the same team, pay more!
       logger.info('Properties in same group, paying more!');
-      factor = gameplay.gameParams.rentFactors.allPropertiesOfGroup || 2;
+      factor                      = gameplay.gameParams.rentFactors.allPropertiesOfGroup || 2;
       retVal.allPropertiesOfGroup = true;
     }
 
-    var rent = 0;
+    var rent       = 0;
     var buildingNb = property.gamedata.buildings || 0;
 
     switch (buildingNb) {
@@ -390,6 +378,7 @@ function getPropertyValue(gameplay, property, callback) {
     }
 
     retVal.amount = rent * factor;
+    retVal.uuid   = property.uuid;
     callback(null, retVal);
   });
 }
@@ -404,6 +393,16 @@ function getBuildingPrice(property) {
 }
 
 /**
+ * Returns the profitability of all or a specific property
+ * @param gameId
+ * @param propertyId (can be undefined if all are requested)
+ * @param callback
+ */
+function getPropertyProfitability(gameId, propertyId, callback) {
+  propertyTransaction.getSummary(gameId, propertyId, callback);
+}
+
+/**
  * Handles the commands received over the ferroSocket
  * @param req
  */
@@ -413,8 +412,8 @@ var socketCommandHandler = function (req) {
     case 'getAccountStatement':
       getAccountStatement(req.gameId, req.propertyId, req.start, req.end, function (err, data) {
         var resp = {
-          err: err,
-          cmd: 'accountStatement',
+          err : err,
+          cmd : 'accountStatement',
           data: data
         };
         req.response('propertyAccount', resp);
@@ -424,15 +423,16 @@ var socketCommandHandler = function (req) {
 
 
 module.exports = {
-  getBuildingPrice: getBuildingPrice,
-  getPropertyValue: getPropertyValue,
-  getRentRegister: getRentRegister,
-  payInterest: payInterest,
-  buyProperty: buyProperty,
-  buyBuilding: buyBuilding,
-  getBalance: getBalance,
-  resetProperty: resetProperty,
-  getAccountStatement: getAccountStatement,
+  getBuildingPrice        : getBuildingPrice,
+  getPropertyValue        : getPropertyValue,
+  getRentRegister         : getRentRegister,
+  payInterest             : payInterest,
+  buyProperty             : buyProperty,
+  buyBuilding             : buyBuilding,
+  getBalance              : getBalance,
+  resetProperty           : resetProperty,
+  getPropertyProfitability: getPropertyProfitability,
+  getAccountStatement     : getAccountStatement,
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
