@@ -69,7 +69,7 @@ function buyProperty(gameplay, property, team, callback) {
       }
 
       if (ferroSocket) {
-        ferroSocket.emitToClients(gameplay.internal.gameId, 'propertyAccount', {
+        ferroSocket.emitToClients(gameplay.internal.gameId, 'admin-propertyAccount', {
           cmd        : 'propertyBought',
           property   : property,
           transaction: pt
@@ -225,7 +225,7 @@ function buyBuilding(gameplay, property, team, callback) {
         logger.error(err);
       }
       if (ferroSocket) {
-        ferroSocket.emitToClients(gameplay.internal.gameId, 'propertyAccount', {
+        ferroSocket.emitToClients(gameplay.internal.gameId, 'admin-propertyAccount', {
           cmd        : 'buildingBuilt',
           property   : property,
           transaction: pt

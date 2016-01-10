@@ -10,7 +10,7 @@
 DataStore.prototype.updatePropertyAccountEntries = function (propertyId) {
   console.log('update property account for ' + propertyId);
   // So far we update all, optimize it later
-  this.socket.emit('propertyAccount', {cmd: 'getAccountStatement', propertyId: propertyId})
+  this.socket.emit('admin-propertyAccount', {cmd: 'getAccountStatement', propertyId: propertyId})
 };
 /**
  * Get the property account entries

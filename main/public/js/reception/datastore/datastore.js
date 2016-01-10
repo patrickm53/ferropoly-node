@@ -38,7 +38,7 @@ var DataStore = function (initData, socket) {
   ];
 
   // Incoming team account messages
-  this.socket.on('teamAccount', function (resp) {
+  this.socket.on('admin-teamAccount', function (resp) {
     console.log('onTeamAccount: ' + resp.cmd);
     switch (resp.cmd) {
       case 'onTransaction':
@@ -56,7 +56,7 @@ var DataStore = function (initData, socket) {
   });
 
   // Incoming Property Account Messages
-  this.socket.on('propertyAccount', function (ind) {
+  this.socket.on('admin-propertyAccount', function (ind) {
     switch (ind.cmd) {
       case 'propertyBought':
       case 'buildingBuilt':
@@ -73,12 +73,12 @@ var DataStore = function (initData, socket) {
   });
 
   // Incoming Chancellery Messages
-  this.socket.on('chancelleryAccount', function (resp) {
+  this.socket.on('admin-chancelleryAccount', function (resp) {
     console.log('UNHANDLED: ' + resp);
   });
 
   // Incoming Properties messages
-  this.socket.on('properties', function (resp) {
+  this.socket.on('admin-properties', function (resp) {
     console.log('onProperties');
     console.log(resp);
     switch (resp.cmd) {
@@ -90,7 +90,7 @@ var DataStore = function (initData, socket) {
   });
 
   // Incoming marketplace messages
-  this.socket.on('marketplace', function (info) {
+  this.socket.on('admin-marketplace', function (info) {
     console.log('onMarketplace: ' + info.cmd);
     console.log(info);
     switch (info.cmd) {

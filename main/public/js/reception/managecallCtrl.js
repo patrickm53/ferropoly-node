@@ -401,7 +401,7 @@ function managecallCtrl($scope, $http) {
     }
   });
 
-  ferropolySocket.on('propertyAccount', function (ind) {
+  ferropolySocket.on('admin-propertyAccount', function (ind) {
     switch (ind.cmd) {
       case 'propertyBought':
       case 'buildingBuilt':
