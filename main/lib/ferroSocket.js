@@ -189,6 +189,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
  * @param data
  */
 FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
+  logger.error(new Error('emitToClients is obsolete, refactor using the specific emitters'));
   logger.info('ferroSockets.emitToClients: ' + gameId + ' ' + channel);
   if (this.sockets[gameId]) {
     for (var i = 0; i < this.sockets[gameId].length; i++) {
@@ -202,6 +203,55 @@ FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
         this.sockets[gameId][i].emit(channel, data);
       }
     }
+  }
+};
+
+/**
+ * Emit data to all admins of a game
+ * @param gameId
+ * @param channel
+ * @param data
+ */
+FerroSocket.prototype.emitToAdmins = function (gameId, channel, data) {
+  logger.info('ferroSockets.emitToAdmins: ' + gameId + ' ' + channel);
+  if (this.sockets[gameId]) {
+    this.sockets[gameId].forEach(function (socket) {
+      if (socket.ferropoly.isAdmin) {
+        socket.emit(channel, data);
+      }
+    });
+  }
+};
+
+/**
+ * Emit data to a specific team of the game
+ * @param gameId
+ * @param channel
+ * @param data
+ */
+FerroSocket.prototype.emitToTeam = function (gameId, teamId, channel, data) {
+  logger.info('ferroSockets.emitToTeam: ' + gameId + ' ' + teamId + ' ' + channel);
+  if (this.sockets[gameId]) {
+    this.sockets[gameId].forEach(function (socket) {
+      if (socket.ferropoly.isPlayer && socket.ferropoly.teamId === teamId) {
+        socket.emit(channel, data);
+      }
+    });
+  }
+};
+
+/**
+ * Emit data to all participants of a game (admins and players)
+ * @param gameId
+ * @param channel
+ * @param data
+ */
+FerroSocket.prototype.emitToGame = function (gameId, channel, data) {
+  logger.info('ferroSockets.emitToGame: ' + gameId + ' ' + channel);
+  if (this.sockets[gameId]) {
+    this.sockets[gameId].forEach(function (socket) {
+      socket.emit(channel, data);
+    });
   }
 };
 
