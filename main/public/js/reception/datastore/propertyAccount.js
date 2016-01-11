@@ -10,6 +10,7 @@
 DataStore.prototype.updatePropertyAccountEntries = function (propertyId) {
   console.log('update property account for ' + propertyId);
   // So far we update all, optimize it later
+  console.warn('There is a todo in updatePropertyAccountEntries: use GET request');
   this.socket.emit('admin-propertyAccount', {cmd: 'getAccountStatement', propertyId: propertyId})
 };
 /**

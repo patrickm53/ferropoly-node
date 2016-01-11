@@ -233,7 +233,24 @@ FerroSocket.prototype.emitToTeam = function (gameId, teamId, channel, data) {
   logger.info('ferroSockets.emitToTeam: ' + gameId + ' ' + teamId + ' ' + channel);
   if (this.sockets[gameId]) {
     this.sockets[gameId].forEach(function (socket) {
-      if (socket.ferropoly.isPlayer && socket.ferropoly.teamId === teamId) {
+      if ((socket.ferropoly.isPlayer && socket.ferropoly.teamId === teamId)) {
+        socket.emit(channel, data);
+      }
+    });
+  }
+};
+
+/**
+ * Emit data to a specific team of the game with CC to admins
+ * @param gameId
+ * @param channel
+ * @param data
+ */
+FerroSocket.prototype.emitToTeamAndAdmin = function (gameId, teamId, channel, data) {
+  logger.info('ferroSockets.emitToTeam: ' + gameId + ' ' + teamId + ' ' + channel);
+  if (this.sockets[gameId]) {
+    this.sockets[gameId].forEach(function (socket) {
+      if ((socket.ferropoly.isPlayer && socket.ferropoly.teamId === teamId) || socket.ferropoly.isAdmin) {
         socket.emit(channel, data);
       }
     });

@@ -69,7 +69,7 @@ function buyProperty(gameplay, property, team, callback) {
       }
 
       if (ferroSocket) {
-        ferroSocket.emitToClients(gameplay.internal.gameId, 'admin-propertyAccount', {
+        ferroSocket.emitToAdmins(gameplay.internal.gameId, 'admin-propertyAccount', {
           cmd        : 'propertyBought',
           property   : property,
           transaction: pt
@@ -225,7 +225,7 @@ function buyBuilding(gameplay, property, team, callback) {
         logger.error(err);
       }
       if (ferroSocket) {
-        ferroSocket.emitToClients(gameplay.internal.gameId, 'admin-propertyAccount', {
+        ferroSocket.emitToAdmins(gameplay.internal.gameId, 'admin-propertyAccount', {
           cmd        : 'buildingBuilt',
           property   : property,
           transaction: pt
@@ -461,6 +461,7 @@ var socketCommandHandler = function (req) {
   logger.info('propertyAccount socket handler: ' + req.cmd);
   switch (req.cmd.name) {
     case 'getAccountStatement':
+      logger.error(new Error('OBSOLETE, replace socket.io getAccountStatement by GET request'));
       getAccountStatement(req.gameId, req.propertyId, req.start, req.end, function (err, data) {
         var resp = {
           err : err,

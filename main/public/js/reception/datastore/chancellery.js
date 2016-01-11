@@ -7,7 +7,6 @@
  * Updates the team account entries.
  */
 DataStore.prototype.updateChancellery = function (callback) {
-  // obsolete:  this.socket.emit('chancelleryAccount', {cmd: 'getAccountStatement'})
   var self = this;
   console.log('update chancellery');
 
