@@ -20,9 +20,7 @@
     "c3": "0.4.10",
     "components-font-awesome": "4.5.0",
     "bootstrap": "3.3.6",
-    "moment": "2.10.6",
-    "react": "0.14.6",
-    "babel": "*"
+    "moment": "2.10.6"
   },
   "private": true,
   "ignore": [
