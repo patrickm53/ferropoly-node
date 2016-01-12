@@ -24,11 +24,11 @@
 'use strict';
 module.exports = function (grunt) {
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg   : grunt.file.readJSON('package.json'),
     concat: {
-      options: {},
-      dist: {
-        src: [
+      options  : {},
+      dist     : {
+        src : [
           './main/public/js/reception/reception-framework.js',
           './main/public/js/reception/ferropoly-socket.js',
           './main/public/js/reception/datastore/datastore.js',
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
         dest: './main/public/js/reception.js'
       },
       framework: {
-        src: [
+        src : [
           './main/public/modules/jquery/dist/jquery.min.js',
           './main/public/modules/bootstrap/dist/js/bootstrap.min.js',
           './main/public/modules/angular/angular.min.js',
@@ -66,8 +66,8 @@ module.exports = function (grunt) {
         ],
         dest: './main/public/js/framework.min.js'
       },
-      css: {
-        src: [
+      css      : {
+        src : [
           './main/public/modules/bootstrap/dist/css/bootstrap.min.css',
           './main/public/modules/bootstrap/dist/css/bootstrap-theme.min.css',
           './main/public/css/ferropoly.css'
@@ -76,63 +76,64 @@ module.exports = function (grunt) {
       }
     },
     uglify: {
-      js: {
+      js     : {
         files: {
-          './main/public/js/reception.min.js': ['./main/public/js/reception.js'],
-          './main/public/js/loginctrl.min.js': ['./main/public/js/loginctrl.js']
+          './main/public/js/reception.min.js'        : ['./main/public/js/reception.js'],
+          './main/public/js/loginctrl.min.js'        : ['./main/public/js/loginctrl.js'],
+          './main/public/js/checkin/datastore.min.js': ['./main/public/js/checkin/datastore.js']
         }
       },
       options: {
-        unused: false,
-        dead_code: true,
+        unused    : false,
+        dead_code : true,
         properties: false,
-        beautify: false,
-        compress: false,
-        mangle: false, // do not rename variables
-        banner: '/* <%= pkg.name %> V<%= pkg.version %>, <%= grunt.template.today("dd-mm-yyyy") %>, (c) Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch */\n'
+        beautify  : false,
+        compress  : false,
+        mangle    : false, // do not rename variables
+        banner    : '/* <%= pkg.name %> V<%= pkg.version %>, <%= grunt.template.today("dd-mm-yyyy") %>, (c) Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch */\n'
 
       }
     },
-    copy: {
+    copy  : {
       main: {
         files: [
           {
-            expand: true,
-            cwd: '../ferropoly-editor/common/lib',
-            src: '*.js*',
-            dest: 'common/lib/',
-            flatten: true,
-            filter: 'isFile',
+            expand   : true,
+            cwd      : '../ferropoly-editor/common/lib',
+            src      : '*.js*',
+            dest     : 'common/lib/',
+            flatten  : true,
+            filter   : 'isFile',
             timestamp: true
           },
 
           {
-            expand: true,
-            cwd: '../ferropoly-editor/common/models',
-            src: '*.js',
-            dest: 'common/models/',
-            flatten: true,
-            filter: 'isFile',
+            expand   : true,
+            cwd      : '../ferropoly-editor/common/models',
+            src      : '*.js',
+            dest     : 'common/models/',
+            flatten  : true,
+            filter   : 'isFile',
             timestamp: true
           },
 
           {
-            expand: true,
-            cwd: '../ferropoly-editor/common/models/accounting',
-            src: '*.js',
-            dest: 'common/models/accounting',
-            flatten: true,
-            filter: 'isFile',
+            expand   : true,
+            cwd      : '../ferropoly-editor/common/models/accounting',
+            src      : '*.js',
+            dest     : 'common/models/accounting',
+            flatten  : true,
+            filter   : 'isFile',
             timestamp: true
           },
 
           {
-            expand: true,
-            cwd: '../ferropoly-editor/common/routes',
-            src: '*.js',
-            dest: 'common/routes/',
-            flatten: true,
-            filter: 'isFile',
+            expand   : true,
+            cwd      : '../ferropoly-editor/common/routes',
+            src      : '*.js',
+            dest     : 'common/routes/',
+            flatten  : true,
+            filter   : 'isFile',
             timestamp: true
           }
         ]
@@ -140,7 +141,7 @@ module.exports = function (grunt) {
     },
 
     eslint: {
-      src: [
+      src    : [
         'server.js',
         'main/lib/**/*.js',
         'main/routes/**/*.js'
@@ -152,23 +153,34 @@ module.exports = function (grunt) {
 
     bump: {
       options: {
-        files: ['package.json'],
-        updateConfigs: [],
-        commit: true,
-        commitMessage: 'New version added v%VERSION%',
-        commitFiles: ['-a'],
-        tagName: 'v%VERSION%',
-        tagMessage: 'Version %VERSION%',
-        push: true,
-        pushTo: 'git@bitbucket.org:christian_kuster/ferropoly_main.git',
+        files             : ['package.json'],
+        updateConfigs     : [],
+        commit            : true,
+        commitMessage     : 'New version added v%VERSION%',
+        commitFiles       : ['-a'],
+        tagName           : 'v%VERSION%',
+        tagMessage        : 'Version %VERSION%',
+        push              : true,
+        pushTo            : 'git@bitbucket.org:christian_kuster/ferropoly_main.git',
         gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
-        globalReplace: false,
-        prereleaseName: false,
-        regExp: false
+        globalReplace     : false,
+        prereleaseName    : false,
+        regExp            : false
+      }
+    },
+
+    browserify: {
+      checkinstore: {
+        files: {
+          'main/public/js/checkin/datastore.js': ['main/components/checkin-datastore/index.js']
+        }
+      },
+      options     : {
+        browserifyOptions: {
+          standalone: 'checkinDatastore'
+        }
       }
     }
-
-
   });
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -179,8 +191,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-processhtml');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-bump');
-  grunt.registerTask('default', ['uglify:js']);
+  grunt.registerTask('default', ['browserify']);
   grunt.registerTask('minify', ['concat', 'uglify:js']);
   grunt.registerTask('v:patch', ['bump-only:patch']);
   grunt.registerTask('v:minor', ['bump-only:minor']);
