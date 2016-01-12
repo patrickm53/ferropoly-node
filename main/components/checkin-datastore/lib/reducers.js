@@ -4,5 +4,5 @@
  */
 
 module.exports = {
-  chancellery: require('./reducers/chancellery')
+  chancellery: require('./chancellery/reducer')
 };

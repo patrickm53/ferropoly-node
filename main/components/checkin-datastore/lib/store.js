@@ -34,13 +34,18 @@ DataStore.prototype.subscribe = function (dataset, fnct) {
  * @param action
  * @param data
  */
-DataStore.prototype.dispatch = function (action, data) {
-  if (!action || !(action instanceof String)) {
-    console.error('String expected as action');
+DataStore.prototype.dispatch = function (action) {
+  if (!action) {
+    console.error('need an action');
     return;
   }
-  console.log('Dispatch', action, data);
-  this.store.dispatch({type: action, data: data})
+  console.log('Dispatch', action.type, action.data);
+  this.store.dispatch(action)
+};
+
+DataStore.prototype.getChancellery = function() {
+  var state = this.store.getState();
+  return state.chancellery;
 };
 
 var store = new DataStore();

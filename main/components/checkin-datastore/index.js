@@ -3,6 +3,9 @@
  * Created by kc on 12.01.16.
  */
 
-var dataStore = require('./lib/store');
-
-module.exports = dataStore;
+var dataStore  = require('./lib/store');
+var actions    = require('./lib/actions');
+module.exports = {
+  dataStore: dataStore(),
+  actions  : actions
+};
