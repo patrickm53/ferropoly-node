@@ -12,7 +12,7 @@ var authTokenManager = require('../lib/authTokenManager');
 var gamecache        = require('../lib/gameCache');
 var errorHandler     = require('../lib/errorHandler');
 
-/* GET the reception of all games */
+/* GET the checkin of a game */
 router.get('/:gameId', function (req, res) {
   var gameId = req.params.gameId;
 
@@ -27,6 +27,12 @@ router.get('/:gameId', function (req, res) {
       }
       var gp    = gamedata.gameplay;
       var teams = gamedata.teams;
+
+      var team = _.find(_.values(teams), function(t) {
+        if (t.data.teamLeader.email === req.session.passport.user) {
+          return true;
+        }
+      });
 
       if (!gp || !gamedata) {
         return errorHandler(res, 'Spiel nicht gefunden.', new Error('gp or gamedata is undefined'), 500);
@@ -56,7 +62,7 @@ router.get('/:gameId', function (req, res) {
             user         : req.session.passport.user,
             gameplay     : JSON.stringify(gp),
             pricelist    : JSON.stringify(pl),
-            teams        : JSON.stringify(_.values(teams)),
+            team         : JSON.stringify(team),
             currentGameId: gameId
           });
         });

@@ -5,10 +5,10 @@
  */
 'use strict';
 
-var mongoose = require('mongoose');
-var moment   = require('moment');
-var logger   = require('../../lib/logger').getLogger('chancelleryTransaction');
-
+var mongoose                            = require('mongoose');
+var moment                              = require('moment');
+var logger                              = require('../../lib/logger').getLogger('chancelleryTransaction');
+var isArray                             = require('lodash/lang/isArray');
 /**
  * The mongoose schema for a team account
  */
@@ -101,7 +101,15 @@ function getBalance(gameId, callback) {
       _id    : 'balance',
       balance: {$sum: "$transaction.amount"}
     }
-  }, callback);
+  }, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    if (data && isArray(data) && data.length > 0) {
+      return callback(null, data[0]);
+    }
+    callback(null, data);
+  });
 }
 
 

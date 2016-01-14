@@ -31,3 +31,16 @@ Events server -> client
 Requests client -> server
 
 * getAccountStatement: returns all properties of a team. HAS TO BE MOVED TO A REST ROUTE
+
+
+## Channels for specific teams
+
+* checkinStore: actions for the checkin-store
+
+## Channels for specific team and Admin
+
+None so far
+
+## Channels for all participants
+
+* checkinStore: actions for the checkin-store

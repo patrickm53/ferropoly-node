@@ -1,9 +1,26 @@
 extends layout
 
 block head
+  script
+    | var ferropoly = { authToken:"
+    != authToken
+    | ", user :"
+    != user
+    | ", team:
+    != team
+    | , gameplay :
+    != gameplay
+    | , pricelist :
+    != pricelist
+    | };
+
+  script(src='/socket.io/socket.io.js')
   script(src='/modules/moment/min/moment.min.js')
   script(src='/modules/moment/locale/de.js')
   script(src='/js/checkin/index.js')
+  script(src='/js/checkin/datastore.js')
+  script(src='/js/checkin/checkinSocket.js')
+  script(src='/js/checkin/dashboardCtrl.js')
 
   link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
 
@@ -17,11 +34,19 @@ block navbar-right
   li
     a(href='/account') Mein Account
 
+  li#online
+    a(href='#')
+      i.fa.fa-cloud.online &nbsp;online
+  li#offline
+    a(href='#')
+      i.fa.fa-cloud.offline &nbsp;offline
+
 block content
 
-  #view-dashboard
-    include checkin/checkin-dashboard
-  #view-map
-    include checkin/checkin-map
-  #view-teamaccount
-    include checkin/checkin-teamaccount
+  div(ng-app='checkinApp')
+    #view-dashboard
+      include checkin/checkin-dashboard
+    #view-map
+      include checkin/checkin-map
+    #view-teamaccount
+      include checkin/checkin-teamaccount

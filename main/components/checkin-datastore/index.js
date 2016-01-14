@@ -5,6 +5,7 @@
 
 var dataStore  = require('./lib/store');
 var actions    = require('./lib/actions');
+
 module.exports = {
   dataStore: dataStore(),
   actions  : actions

@@ -6,4 +6,4 @@
 module.exports = {
   chancellery:  require('./chancellery/actions')
 
-}
+};

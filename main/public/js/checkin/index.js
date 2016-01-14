@@ -27,3 +27,10 @@ $(document).ready(function () {
   console.log('document ready');
   activateView('#view-dashboard');
 });
+
+
+/**
+ * The ferropoly app object for the angular controllers
+ * @type {*|module}
+ */
+var checkinApp = angular.module('checkinApp', []);

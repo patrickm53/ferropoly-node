@@ -13,7 +13,8 @@ var chancelleryTransaction = require('../../../common/models/accounting/chancell
 var teamAccount            = require('./teamAccount');
 var _                      = require('lodash');
 var moment                 = require('moment');
-
+var chancelleryActions     = require('../../components/checkin-datastore/lib/chancellery/actions');
+var ferroSocket;
 /**
  * Internal function: Books the chancellery event in the chancellery and the teams account
  * @param gameplay
@@ -25,6 +26,25 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
   if (!gameplay || !team || !info) {
     return callback(new Error('invalid params in bookChancelleryEvent'));
   }
+
+  /**
+   * The internal callbackhandler, sending the new balance to all teams of a game
+   * @param err
+   */
+  function bookCallback(err) {
+    if (!ferroSocket) {
+      // No socket, just return
+      callback(err);
+    }
+
+    chancelleryTransaction.getBalance(gameplay.internal.gameId, function (err, balance) {
+      if (!err) {
+        ferroSocket.emitToGame(gameplay.internal.gameId, 'checkinStore', chancelleryActions.setAsset(balance.balance));
+      }
+      callback();
+    })
+  }
+
   if (info.amount > 0) {
     // Positive amount: only bank is involved EXCEPT it is the jackpot
     if (info.jackpot) {
@@ -43,13 +63,13 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         };
 
         chancelleryTransaction.book(entry, function (err) {
-          return callback(err);
+          return bookCallback(err);
         });
       });
     }
     else {
       return teamAccount.receiveFromBank(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
-        return callback(err);
+        return bookCallback(err);
       });
     }
   }
@@ -75,7 +95,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
       };
 
       chancelleryTransaction.book(entry, function (err) {
-        return callback(err);
+        return bookCallback(err);
       });
     });
   }
@@ -199,5 +219,10 @@ module.exports = {
   getAccountStatement: getAccountStatement,
   getBalance         : getBalance,
   gamble             : gamble,
-  payToChancellery   : payToChancellery
+  payToChancellery   : payToChancellery,
+
+
+  init: function () {
+    ferroSocket = require('../ferroSocket').get();
+  }
 };

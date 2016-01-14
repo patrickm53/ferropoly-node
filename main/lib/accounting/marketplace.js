@@ -748,6 +748,7 @@ module.exports = {
     teamAccount.init();
     propertyAccount.init();
     propWrap.init();
+    chancelleryAccount.init();
 
     return marketplace;
   },

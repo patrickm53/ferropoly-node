@@ -1,0 +1,16 @@
+#online {
+    color   : #639a00;
+    display : none;
+}
+
+#offline {
+    color : red;
+}
+
+.online {
+    color   : #639a00;
+}
+
+.offline {
+    color : red;
+}

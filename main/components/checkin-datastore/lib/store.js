@@ -6,6 +6,10 @@
 var redux    = require('redux');
 var reducers = require('./reducers');
 
+/**
+ * Constructor of the DataStore
+ * @constructor
+ */
 function DataStore() {
   this.store = redux.createStore(redux.combineReducers(reducers));
 }
@@ -17,15 +21,16 @@ function DataStore() {
  */
 DataStore.prototype.subscribe = function (dataset, fnct) {
   var oldState = {};
-  store.subscribe(function () {
-    var newState = store.getState();
+  var self = this;
+  self.store.subscribe(function () {
+    var newState = self.store.getState();
     if (newState[dataset] === oldState) {
       console.log('nothing changed for ' + dataset);
       return;
     }
     console.log('new state for ' + dataset);
     oldState = newState[dataset];
-    fnct(newState);
+    fnct(oldState);
   });
 };
 
@@ -43,7 +48,26 @@ DataStore.prototype.dispatch = function (action) {
   this.store.dispatch(action)
 };
 
-DataStore.prototype.getChancellery = function() {
+/**
+ * Attaches a socket.io socket to the store
+ * @param socket
+ */
+DataStore.prototype.attachSocket = function (socket) {
+  var self    = this;
+  this.socket = socket;
+  console.log('DataStore: socket attached');
+
+  socket.on('checkinStore', function (data) {
+    console.log('Message on "checkinStore" received', data);
+    self.store.dispatch(data);
+  })
+};
+
+/**
+ * Returns the chancellery data
+ * @returns {*}
+ */
+DataStore.prototype.getChancellery = function () {
   var state = this.store.getState();
   return state.chancellery;
 };
