@@ -12,6 +12,18 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
   $scope.gameplays        = [];
   $scope.games            = [];
   $scope.gameplayToDelete = undefined;
+
+
+  // Be kind and say hello
+  if (moment().hour() < 4) {
+    $scope.intro = 'Hallo';
+  } else if (moment().hour() < 10) {
+    $scope.intro = 'Guten Morgen';
+  } else if (moment().hour < 17) {
+    $scope.intro = 'Hallo';
+  } else {
+    $scope.intro = 'Guten Abend';
+  }
   var authToken;
 
   /**
@@ -90,13 +102,16 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
   $scope.hasGameplays         = function () {
     return ($scope.gameplays.length > 0);
   };
-  $scope.hasGames         = function () {
+  $scope.hasGames             = function () {
     return ($scope.games.length > 0);
   };
 
   // When document ready, load gameplays
   $(document).ready(function () {
-    console.log('READY');
+
+    var index = moment().hours() % 6;
+    $('#info-header').css('background-image', 'url("/images/ferropoly_header_0' + index + '.jpg")');
+
     $http.get('/gameplays').success(function (data) {
       $scope.gameplays = data.gameplays || [];
       $scope.games     = data.games || [];
