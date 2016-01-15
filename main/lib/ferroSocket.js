@@ -92,6 +92,7 @@ var FerroSocket = function (server) {
               logger.info('Verified PLAYER socket added for ' + data.gameId + ' : ' + socket.id);
               self.addSocket(socket, data.user, data.gameId);
               self.registerChannels(socket);
+              self.emit('player-connected', {gameId: data.gameId, teamId: data.teamId, user: data.user});
             });
             return;
           }
@@ -103,6 +104,7 @@ var FerroSocket = function (server) {
           };
           logger.info('Verified ADMIN socket added for ' + data.gameId + ' : ' + socket.id);
           self.addSocket(socket, data.user, data.gameId);
+          self.emit('admin-connected', {gameId: data.gameId, user: data.user});
           self.registerChannels(socket);
 
         });

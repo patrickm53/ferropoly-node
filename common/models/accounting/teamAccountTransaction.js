@@ -141,15 +141,55 @@ function dumpAccounts(gameId, callback) {
 function getRankingList(gameId, callback) {
   TeamAccountTransaction.aggregate({
     $match: {
-      gameId: gameId
+      gameId: gameId,
     }
   }, {
     $group: {
-      _id    : '$teamId',
+      _id  : '$teamId',
       asset: {$sum: "$transaction.amount"}
     }
   }, callback);
 }
+
+
+/**
+ * Get the balance of a team
+ * @param gameId
+ * @param callback
+ */
+function getBalance(gameId, teamId, callback) {
+
+  var retVal = {};
+
+  TeamAccountTransaction.aggregate({
+    $match: {
+      gameId: gameId,
+      teamId: teamId
+    }
+  }, {
+    $group: {
+      _id    : 'balance',
+      asset: {$sum: "$transaction.amount"}
+    }
+  }, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    retVal.asset = data[0].asset;
+
+    TeamAccountTransaction.count({
+      gameId: gameId,
+      teamId: teamId
+    }, function (err, result) {
+      if (err) {
+        return callback(err);
+      }
+      retVal.count = result;
+      callback(null, retVal);
+    });
+  });
+}
+
 
 module.exports = {
   Model         : TeamAccountTransaction,
@@ -157,5 +197,6 @@ module.exports = {
   bookTransfer  : bookTransfer,
   getEntries    : getEntries,
   getRankingList: getRankingList,
-  dumpAccounts  : dumpAccounts
+  dumpAccounts  : dumpAccounts,
+  getBalance    : getBalance
 };

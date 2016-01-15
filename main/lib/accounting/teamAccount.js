@@ -8,6 +8,7 @@ var _                      = require('lodash');
 var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
 var moment                 = require('moment');
 var logger                 = require('../../../common/lib/logger').getLogger('accounting:teamAccount');
+var teamAccountActions     = require('../../components/checkin-datastore/lib/teamAccount/actions');
 
 var ferroSocket;
 /**
@@ -32,6 +33,7 @@ function payInterest(teamId, gameId, amount, callback) {
     callback(err);
     if (ferroSocket) {
       ferroSocket.emitToAdmins(gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: entry});
+      ferroSocket.emitToTeam(gameId, teamId, 'checkinStore', teamAccountActions.addTransaction(entry));
     }
   });
 }
@@ -78,6 +80,7 @@ function chargeToBankOrChancellery(options, callback) {
   teamAccountTransaction.book(entry, function (err) {
     if (ferroSocket) {
       ferroSocket.emitToAdmins(options.gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: entry});
+      ferroSocket.emitToTeam(options.gameId, options.teamId, 'checkinStore', teamAccountActions.addTransaction(entry));
     }
     callback(err, {amount: chargedAmount});
   });
@@ -147,6 +150,7 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
     teamAccountTransaction.book(entry, function (err) {
       if (ferroSocket) {
         ferroSocket.emitToAdmins(gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: entry});
+        ferroSocket.emitToTeam(gameId, teamId, 'checkinStore', teamAccountActions.addTransaction(entry));
       }
       callback(err);
     });
@@ -228,6 +232,8 @@ function chargeToAnotherTeam(options, callback) {
     if (ferroSocket) {
       ferroSocket.emitToAdmins(options.gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: chargingEntry});
       ferroSocket.emitToAdmins(options.gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: receivingEntry});
+      ferroSocket.emitToTeam(options.gameId, chargingEntry.teamId, 'checkinStore', teamAccountActions.addTransaction(chargingEntry));
+      ferroSocket.emitToTeam(options.gameId, receivingEntry.teamId, 'checkinStore', teamAccountActions.addTransaction(receivingEntry));
     }
     callback(null, {amount: options.amount});
   });
@@ -237,27 +243,14 @@ function chargeToAnotherTeam(options, callback) {
  * Gets the balance, at a given time or now
  * @param gameId
  * @param teamId
- * @param p1 timestamp until when the balance shall be gotten (optional, default: now)
- * @param p2 callback
+ * @param callback
  */
-function getBalance(gameId, teamId, p1, p2) {
-  var callback = p2;
-  var ts       = p1;
-  if (_.isFunction(p1)) {
-    callback = p1;
-    ts       = moment();
-  }
-
-  teamAccountTransaction.getEntries(gameId, teamId, undefined, ts, function (err, data) {
+function getBalance(gameId, teamId, callback) {
+  teamAccountTransaction.getBalance(gameId, teamId, function (err, value) {
     if (err) {
       return callback(err);
     }
-    var saldo = 0;
-    var i;
-    for (i = 0; i < data.length; i++) {
-      saldo += data[i].transaction.amount;
-    }
-    callback(err, {balance: saldo, entries: i});
+    callback(err, {asset: value.asset, count: value.count});
   });
 }
 
@@ -347,6 +340,7 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
   });
 }
 
+
 module.exports = {
   payInterest            : payInterest,
   chargeToBank           : chargeToBank,
@@ -361,5 +355,17 @@ module.exports = {
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
+
+    ferroSocket.on('player-connected', function (data) {
+      getBalance(data.gameId, data.teamId, function (err, info) {
+        if (err) {
+          logger.error(err);
+          return;
+        }
+        ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', teamAccountActions.setAsset(info.asset, info.count));
+
+        logger.info(info);
+      });
+    });
   }
 };

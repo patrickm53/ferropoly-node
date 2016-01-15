@@ -20,11 +20,17 @@ function dashboardCtrl($scope, $http) {
   $scope.chancelleryAsset = 0;
 
 
+  // Chancellery Updates
   checkinDatastore.dataStore.subscribe('chancellery', function (data) {
     console.log(data);
     $scope.chancelleryAsset = data.asset;
     $scope.$apply();
+  });
 
+  // teamAccount Updates
+  checkinDatastore.dataStore.subscribe('teamAccount', function(data) {
+    $scope.teamAccount = data;
+    $scope.$apply();
   });
 }
 

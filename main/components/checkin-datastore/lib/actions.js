@@ -4,6 +4,7 @@
  */
 
 module.exports = {
-  chancellery:  require('./chancellery/actions')
+  chancellery: require('./chancellery/actions'),
+  teamAccount: require('./teamAccount/actions')
 
 };
