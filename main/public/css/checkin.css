@@ -8,9 +8,48 @@
 }
 
 .online {
-    color   : #639a00;
+    color : #639a00;
 }
 
 .offline {
     color : red;
+}
+
+.dashboard-tile {
+    background-color : lightcyan;
+
+    padding          : 20px;
+    margin-bottom    : 20px;
+    border-radius    : 10px;
+}
+
+.tile-asset {
+    background-color : #00A000;
+    color            : white;
+}
+
+
+.tile-propertynb {
+    background-color : #705b06;
+    color            : white;
+}
+
+
+.tile-property-value {
+    background-color : #dbad3e;
+    color            : white;
+}
+
+.tile-chancellery {
+    background-color : #6873f7;
+    color            : white;
+}
+
+.dashboard-title {
+    font-weight : bold;
+    font-size   : large;
+}
+
+.dashboard-value {
+    font-size : larger;
 }

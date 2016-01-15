@@ -2,7 +2,26 @@
    Created by kc on 09.01.16.
 
 div(ng-controller='dashboardCtrl')
+  .container-fluid
+    h2 Dashboard
 
-  h2 Dashboard
+    .row
+      .col-md-3.col-sm-4.col-xs-6
+        .dashboard-tile.tile-asset
+          p.dashboard-title Vermögen
+          p.dashboard.value {{asset}}
 
-  p Parkplatz: {{chancelleryAsset}}
+      .col-md-3.col-sm-4.col-xs-6
+        .dashboard-tile.tile-propertynb
+          p.dashboard-title Anzahl Orte
+          p.dashboard.value {{propertyNb}}
+
+      .col-md-3.col-sm-4.col-xs-6
+        .dashboard-tile.tile-property-value
+          p.dashboard-title Wert aller Orte
+          p.dashboard.value {{propertyValue}}
+
+      .col-md-3.col-sm-4.col-xs-6
+        .dashboard-tile.tile-chancellery
+          p.dashboard-title Parkplatz
+          p.dashboard.value {{chancelleryAsset}}
