@@ -289,11 +289,11 @@ function getRankingList(gameId, callback) {
       return callback(err);
     }
     var sorted = _.sortBy(_.values(data), function (n) {
-      return n.balance * (-1);
+      return n.asset * (-1);
     });
     for (var i = 0; i < sorted.length; i++) {
       sorted[i].teamId = sorted[i]._id;
-      if (sorted[i - 1] && (sorted[i - 1].balance === sorted[i].balance)) {
+      if (sorted[i - 1] && (sorted[i - 1].asset === sorted[i].asset)) {
         // Same asset, same rank
         sorted[i].rank = sorted[i - 1].rank;
       }
