@@ -71,6 +71,14 @@ DataStore.prototype.getChancellery = function () {
   var state = this.store.getState();
   return state.chancellery;
 };
+/**
+ * Returns the teamAccount data
+ * @returns {*}
+ */
+DataStore.prototype.getTeamAccount = function () {
+  var state = this.store.getState();
+  return state.teamAccount;
+};
 
 var store = new DataStore();
 

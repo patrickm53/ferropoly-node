@@ -131,6 +131,14 @@ DataStore.prototype.getChancellery = function () {
   var state = this.store.getState();
   return state.chancellery;
 };
+/**
+ * Returns the teamAccount data
+ * @returns {*}
+ */
+DataStore.prototype.getTeamAccount = function () {
+  var state = this.store.getState();
+  return state.teamAccount;
+};
 
 var store = new DataStore();
 
@@ -165,14 +173,17 @@ module.exports = function (state, action) {
   console.log(state, action);
   switch (action.type) {
     case cst.ACTION_SET_ASSET:
+      // Set fix value
       return assign({}, state, {asset: action.asset, entryNb: action.entryNb});
 
     case cst.ACTION_RESET:
+      // Reset value
       return {transactions: [], asset: 0};
 
     case cst.ACTION_ADD_TRANSACTION:
+      // Add new transaction
       state.transactions.push(action.transaction);
-      return assign({}, state);
+      return assign({}, state, {asset: state.asset + action.transaction.transaction.amount});
 
     default:
       return state;
