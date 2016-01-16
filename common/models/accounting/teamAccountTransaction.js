@@ -168,12 +168,15 @@ function getBalance(gameId, teamId, callback) {
     }
   }, {
     $group: {
-      _id    : 'balance',
+      _id  : 'balance',
       asset: {$sum: "$transaction.amount"}
     }
   }, function (err, data) {
     if (err) {
       return callback(err);
+    }
+    if (!data || data.length === 0) {
+      return callback(null, {asset: 0, count: 0});
     }
     retVal.asset = data[0].asset;
 
