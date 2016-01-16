@@ -19,7 +19,7 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     $scope.intro = 'Hallo';
   } else if (moment().hour() < 10) {
     $scope.intro = 'Guten Morgen';
-  } else if (moment().hour < 17) {
+  } else if (moment().hour() < 17) {
     $scope.intro = 'Hallo';
   } else {
     $scope.intro = 'Guten Abend';
