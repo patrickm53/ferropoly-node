@@ -15,9 +15,9 @@
 html,
 body {
     font-size   : 14px;
-    font-family: 'Open Sans', sans-serif;
-    width  : 100%;
-    height : 100%;
+    font-family : 'Open Sans', sans-serif;
+    width       : 100%;
+    height      : 100%;
 }
 
 a {
@@ -25,5 +25,9 @@ a {
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-    display: none !important;
+    display : none !important;
+}
+
+.navbar-inverse {
+    border-radius : 0px;
 }
