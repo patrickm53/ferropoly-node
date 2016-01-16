@@ -14,7 +14,9 @@ var teamAccount            = require('./teamAccount');
 var _                      = require('lodash');
 var moment                 = require('moment');
 var chancelleryActions     = require('../../components/checkin-datastore/lib/chancellery/actions');
+var logger                 = require('../../../common/lib/logger').getLogger('chancelleryAccount');
 var ferroSocket;
+var jackpotFull            = {};
 /**
  * Internal function: Books the chancellery event in the chancellery and the teams account
  * @param gameplay
@@ -37,9 +39,16 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
       callback(err);
     }
 
-    chancelleryTransaction.getBalance(gameplay.internal.gameId, function (err, balance) {
+    chancelleryTransaction.getBalance(gameplay.internal.gameId, function (err, info) {
       if (!err) {
-        ferroSocket.emitToGame(gameplay.internal.gameId, 'checkinStore', chancelleryActions.setAsset(balance.balance));
+        if (info.balance > gameplay.gameParams.chancellery.maxJackpotSize) {
+          logger.info('Jackpot for ' + gameplay.internal.gameId + ' is to large, increased chance for winning!');
+          jackpotFull[gameplay.internal.gameId] = true;
+        }
+        else {
+          jackpotFull[gameplay.internal.gameId] = false;
+        }
+        ferroSocket.emitToGame(gameplay.internal.gameId, 'checkinStore', chancelleryActions.setAsset(info.balance));
       }
       callback();
     })
@@ -117,7 +126,7 @@ function playChancellery(gameplay, team, callback) {
   retVal.amount   = Math.floor((Math.random() * (max - min + 1) + min) / 1000) * 1000;
   retVal.infoText = 'Chance/Kanzlei: ';
 
-  var actionRand = Math.random();
+  var actionRand = _.random(0, jackpotFull[gameplay.internal.gameId] ? 1.2 : 1, true);
   if (actionRand > (gameplay.gameParams.chancellery.probabilityWin + gameplay.gameParams.chancellery.probabilityLoose)) {
     retVal.infoText = 'Parkplatzgewinn';
     retVal.jackpot  = true;
@@ -189,10 +198,10 @@ function getBalance(gameId, callback) {
     if (err) {
       return callback(err);
     }
-    if (!_.isArray(info) || info.length === 0) {
+    if (!info || !info.balance) {
       return callback(null, {balance: 0});
     }
-    callback(err, {balance: info[0].balance});
+    callback(err, {balance: info.balance});
   });
 }
 
