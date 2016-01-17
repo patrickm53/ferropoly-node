@@ -54,7 +54,8 @@ router.get('/gameplays', function (req, res) {
           internal  : gameplay.internal,
           gamename  : gameplay.gamename,
           scheduling: gameplay.scheduling,
-          log       : gameplay.log
+          log       : gameplay.log,
+          mobile    : gameplay.mobile
         });
       });
     }
@@ -81,6 +82,7 @@ router.get('/gameplays', function (req, res) {
               gamename  : gp.gamename,
               scheduling: gp.scheduling,
               log       : gp.log,
+              mobile    : gp.mobile,
               team      : team
             });
             cb();

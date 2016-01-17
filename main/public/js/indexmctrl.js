@@ -120,7 +120,7 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
 
       $scope.gameplays.forEach(function (gp) {
         var d = new Date(gp.log.lastEdited);
-        console.log(d);
+        console.log(gp);
         console.log(gp.log.lastEdited);
       });
       getAuthToken();
