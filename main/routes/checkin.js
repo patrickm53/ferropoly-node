@@ -38,6 +38,11 @@ router.get('/:gameId', function (req, res) {
         return errorHandler(res, 'Spiel nicht gefunden.', new Error('gp or gamedata is undefined'), 500);
       }
 
+      if (!gp.mobile.level) {
+        return errorHandler(res, 'Dieses Spiel wurde für die Spieler nicht freigegeben.', new Error('Game is not for players'), 500);
+
+      }
+
       pricelist.getPricelist(gameId, function (err2, pl) {
         if (err2) {
           return errorHandler(res, 'Die Preisliste konnte nicht geladen werden.', err2, 500);
