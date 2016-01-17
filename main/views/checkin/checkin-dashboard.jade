@@ -25,3 +25,7 @@ div(ng-controller='dashboardCtrl')
         .dashboard-tile.tile-chancellery
           p.dashboard-title Parkplatz
           p.dashboard.value {{chancelleryAsset}}
+    h3 Geolocalization
+    p Diese App benötigt die GPS Daten der Spieler, wir müssen wissen, wo der Spieler ist. Das ist bisher nur experimentiell, wird jedoch später mit der dazugehörigen Datenschutzerklärung vollständig implementiert.
+    p
+    p Standort: {{position.coords.latitude}} / {{position.coords.longitude}}
