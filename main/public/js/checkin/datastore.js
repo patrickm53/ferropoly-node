@@ -12,33 +12,21 @@ module.exports = {
 
 },{"./lib/store":5}],2:[function(require,module,exports){
 /**
- * Constants for the chancellery
- *
- * Created by kc on 15.01.16.
- */
-
-module.exports = {
-  ACTION_SET_ASSET : 'setAsset',
-  ACTION_RESET : 'reset',
-};
-
-},{}],3:[function(require,module,exports){
-/**
  *
  * Created by kc on 12.01.16.
  */
 
 var assign = require('lodash/object/assign');
-var cst    = require('./constants');
+var cst    = require('../constants');
 
 module.exports = function (state, action) {
   state = state || {};
 
   switch (action.type) {
-    case cst.ACTION_SET_ASSET:
+    case cst.SET_CHANCELLERY_ASSET:
       return assign({}, state, {asset: action.asset});
 
-    case cst.ACTION_RESET:
+    case cst.RESET_CHANCELLERY:
       return {asset: 0};
 
     default:
@@ -46,7 +34,24 @@ module.exports = function (state, action) {
   }
 };
 
-},{"./constants":2,"lodash/object/assign":23}],4:[function(require,module,exports){
+},{"../constants":3,"lodash/object/assign":22}],3:[function(require,module,exports){
+/**
+ * Constants for the chancellery
+ *
+ * Created by kc on 15.01.16.
+ */
+
+module.exports = {
+  SET_TEAM_ACCOUNT_ASSET      : 'setTeamAccountAsset',
+  RESET_TEAM_ACCOUNT          : 'resetTeamAccount',
+  ADD_TEAM_ACCOUNT_TRANSACTION: 'addTeamAccountTransaction',
+  SET_CHANCELLERY_ASSET       : 'setChancelleryAsset',
+  RESET_CHANCELLERY           : 'resetChancellery',
+  SET_PROPERTIES              : 'setProperties',
+  UPDATE_PROPERTY             : 'updateProperty'
+};
+
+},{}],4:[function(require,module,exports){
 /**
  * The known reducers of the datastore
  * Created by kc on 12.01.16.
@@ -57,7 +62,7 @@ module.exports = {
   teamAccount: require('./teamAccount/reducer')
 };
 
-},{"./chancellery/reducer":3,"./teamAccount/reducer":7}],5:[function(require,module,exports){
+},{"./chancellery/reducer":2,"./teamAccount/reducer":6}],5:[function(require,module,exports){
 /**
  *
  * Created by kc on 12.01.16.
@@ -146,41 +151,28 @@ module.exports = function () {
   return store;
 };
 
-},{"./reducers":4,"redux":30}],6:[function(require,module,exports){
-/**
- * Constants for the chancellery
- *
- * Created by kc on 15.01.16.
- */
-
-module.exports = {
-  ACTION_SET_ASSET : 'setTeamAccountAsset',
-  ACTION_RESET : 'resetTeamAccount',
-  ACTION_ADD_TRANSACTION: 'addTeamAccountTransaction'
-};
-
-},{}],7:[function(require,module,exports){
+},{"./reducers":4,"redux":29}],6:[function(require,module,exports){
 /**
  * Reducer for teamAccount
  * Created by kc on 15.01.16.
  */
 
 var assign = require('lodash/object/assign');
-var cst    = require('./constants');
+var cst    = require('../constants');
 
 module.exports = function (state, action) {
   state = state || {transactions: [], asset: 0};
   console.log(state, action);
   switch (action.type) {
-    case cst.ACTION_SET_ASSET:
+    case cst.SET_TEAM_ACCOUNT_ASSET:
       // Set fix value
       return assign({}, state, {asset: action.asset, entryNb: action.entryNb});
 
-    case cst.ACTION_RESET:
+    case cst.RESET_TEAM_ACCOUNT:
       // Reset value
       return {transactions: [], asset: 0};
 
-    case cst.ACTION_ADD_TRANSACTION:
+    case cst.ADD_TEAM_ACCOUNT_TRANSACTION:
       // Add new transaction
       state.transactions.push(action.transaction);
       return assign({}, state, {asset: state.asset + action.transaction.transaction.amount});
@@ -190,7 +182,7 @@ module.exports = function (state, action) {
   }
 };
 
-},{"./constants":6,"lodash/object/assign":23}],8:[function(require,module,exports){
+},{"../constants":3,"lodash/object/assign":22}],7:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -283,7 +275,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var baseCopy = require('./baseCopy'),
     keys = require('../object/keys');
 
@@ -320,7 +312,7 @@ function baseAssign(object, source, customizer) {
 
 module.exports = baseAssign;
 
-},{"../object/keys":24,"./baseCopy":10}],10:[function(require,module,exports){
+},{"../object/keys":23,"./baseCopy":9}],9:[function(require,module,exports){
 /**
  * Copies the properties of `source` to `object`.
  *
@@ -347,7 +339,7 @@ function baseCopy(source, object, props) {
 
 module.exports = baseCopy;
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /**
  * Converts `value` to a string if it is not one. An empty string is returned
  * for `null` or `undefined` values.
@@ -365,7 +357,7 @@ function baseToString(value) {
 
 module.exports = baseToString;
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var identity = require('../utility/identity');
 
 /**
@@ -406,7 +398,7 @@ function bindCallback(func, thisArg, argCount) {
 
 module.exports = bindCallback;
 
-},{"../utility/identity":28}],13:[function(require,module,exports){
+},{"../utility/identity":27}],12:[function(require,module,exports){
 var bindCallback = require('./bindCallback'),
     isIterateeCall = require('./isIterateeCall');
 
@@ -457,7 +449,7 @@ function createAssigner(assigner) {
 
 module.exports = createAssigner;
 
-},{"./bindCallback":12,"./isIterateeCall":15}],14:[function(require,module,exports){
+},{"./bindCallback":11,"./isIterateeCall":14}],13:[function(require,module,exports){
 /**
  * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
  * of an array-like value.
@@ -480,7 +472,7 @@ function isIndex(value, length) {
 
 module.exports = isIndex;
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var isIndex = require('./isIndex'),
     isLength = require('./isLength'),
     isObject = require('../lang/isObject');
@@ -514,7 +506,7 @@ function isIterateeCall(value, index, object) {
 
 module.exports = isIterateeCall;
 
-},{"../lang/isObject":22,"./isIndex":14,"./isLength":16}],16:[function(require,module,exports){
+},{"../lang/isObject":21,"./isIndex":13,"./isLength":15}],15:[function(require,module,exports){
 /**
  * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
  * of an array-like value.
@@ -536,7 +528,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -550,7 +542,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
     isIndex = require('./isIndex'),
@@ -594,7 +586,7 @@ function shimKeys(object) {
 
 module.exports = shimKeys;
 
-},{"../lang/isArguments":19,"../lang/isArray":20,"../object/keysIn":25,"../support":27,"./isIndex":14,"./isLength":16}],19:[function(require,module,exports){
+},{"../lang/isArguments":18,"../lang/isArray":19,"../object/keysIn":24,"../support":26,"./isIndex":13,"./isLength":15}],18:[function(require,module,exports){
 var isLength = require('../internal/isLength'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -633,7 +625,7 @@ function isArguments(value) {
 
 module.exports = isArguments;
 
-},{"../internal/isLength":16,"../internal/isObjectLike":17}],20:[function(require,module,exports){
+},{"../internal/isLength":15,"../internal/isObjectLike":16}],19:[function(require,module,exports){
 var isLength = require('../internal/isLength'),
     isNative = require('./isNative'),
     isObjectLike = require('../internal/isObjectLike');
@@ -675,7 +667,7 @@ var isArray = nativeIsArray || function(value) {
 
 module.exports = isArray;
 
-},{"../internal/isLength":16,"../internal/isObjectLike":17,"./isNative":21}],21:[function(require,module,exports){
+},{"../internal/isLength":15,"../internal/isObjectLike":16,"./isNative":20}],20:[function(require,module,exports){
 var escapeRegExp = require('../string/escapeRegExp'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -731,7 +723,7 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"../internal/isObjectLike":17,"../string/escapeRegExp":26}],22:[function(require,module,exports){
+},{"../internal/isObjectLike":16,"../string/escapeRegExp":25}],21:[function(require,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -761,7 +753,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],23:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var baseAssign = require('../internal/baseAssign'),
     createAssigner = require('../internal/createAssigner');
 
@@ -798,7 +790,7 @@ var assign = createAssigner(baseAssign);
 
 module.exports = assign;
 
-},{"../internal/baseAssign":9,"../internal/createAssigner":13}],24:[function(require,module,exports){
+},{"../internal/baseAssign":8,"../internal/createAssigner":12}],23:[function(require,module,exports){
 var isLength = require('../internal/isLength'),
     isNative = require('../lang/isNative'),
     isObject = require('../lang/isObject'),
@@ -848,7 +840,7 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"../internal/isLength":16,"../internal/shimKeys":18,"../lang/isNative":21,"../lang/isObject":22}],25:[function(require,module,exports){
+},{"../internal/isLength":15,"../internal/shimKeys":17,"../lang/isNative":20,"../lang/isObject":21}],24:[function(require,module,exports){
 var isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
     isIndex = require('../internal/isIndex'),
@@ -915,7 +907,7 @@ function keysIn(object) {
 
 module.exports = keysIn;
 
-},{"../internal/isIndex":14,"../internal/isLength":16,"../lang/isArguments":19,"../lang/isArray":20,"../lang/isObject":22,"../support":27}],26:[function(require,module,exports){
+},{"../internal/isIndex":13,"../internal/isLength":15,"../lang/isArguments":18,"../lang/isArray":19,"../lang/isObject":21,"../support":26}],25:[function(require,module,exports){
 var baseToString = require('../internal/baseToString');
 
 /**
@@ -949,7 +941,7 @@ function escapeRegExp(string) {
 
 module.exports = escapeRegExp;
 
-},{"../internal/baseToString":11}],27:[function(require,module,exports){
+},{"../internal/baseToString":10}],26:[function(require,module,exports){
 (function (global){
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -1023,7 +1015,7 @@ var support = {};
 module.exports = support;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
@@ -1045,7 +1037,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1209,7 +1201,7 @@ function createStore(reducer, initialState) {
     replaceReducer: replaceReducer
   };
 }
-},{"./utils/isPlainObject":35}],30:[function(require,module,exports){
+},{"./utils/isPlainObject":34}],29:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1241,7 +1233,7 @@ exports.combineReducers = _utilsCombineReducers2['default'];
 exports.bindActionCreators = _utilsBindActionCreators2['default'];
 exports.applyMiddleware = _utilsApplyMiddleware2['default'];
 exports.compose = _utilsCompose2['default'];
-},{"./createStore":29,"./utils/applyMiddleware":31,"./utils/bindActionCreators":32,"./utils/combineReducers":33,"./utils/compose":34}],31:[function(require,module,exports){
+},{"./createStore":28,"./utils/applyMiddleware":30,"./utils/bindActionCreators":31,"./utils/combineReducers":32,"./utils/compose":33}],30:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1303,7 +1295,7 @@ function applyMiddleware() {
 }
 
 module.exports = exports['default'];
-},{"./compose":34}],32:[function(require,module,exports){
+},{"./compose":33}],31:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1358,7 +1350,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 module.exports = exports['default'];
-},{"./mapValues":36}],33:[function(require,module,exports){
+},{"./mapValues":35}],32:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1492,7 +1484,7 @@ function combineReducers(reducers) {
 
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"../createStore":29,"./isPlainObject":35,"./mapValues":36,"./pick":37,"_process":8}],34:[function(require,module,exports){
+},{"../createStore":28,"./isPlainObject":34,"./mapValues":35,"./pick":36,"_process":7}],33:[function(require,module,exports){
 /**
  * Composes single-argument functions from right to left.
  *
@@ -1518,7 +1510,7 @@ function compose() {
 }
 
 module.exports = exports["default"];
-},{}],35:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1550,7 +1542,7 @@ function isPlainObject(obj) {
 }
 
 module.exports = exports['default'];
-},{}],36:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /**
  * Applies a function to every key-value pair inside an object.
  *
@@ -1571,7 +1563,7 @@ function mapValues(obj, fn) {
 }
 
 module.exports = exports["default"];
-},{}],37:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /**
  * Picks key-value pairs from an object where values satisfy a predicate.
  *
