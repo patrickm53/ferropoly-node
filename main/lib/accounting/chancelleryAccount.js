@@ -233,5 +233,17 @@ module.exports = {
 
   init: function () {
     ferroSocket = require('../ferroSocket').get();
+
+    ferroSocket.on('player-connected', function (data) {
+      getBalance(data.gameId, function (err, info) {
+        if (err) {
+          logger.error(err);
+          return;
+        }
+        ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', chancelleryActions.setAsset(info.balance));
+
+        logger.info(info);
+      });
+    });
   }
 };
