@@ -73,12 +73,12 @@ DataStore.prototype.getChancellery = function () {
 };
 
 /**
- * Returns the propertyAccount data
+ * Returns the properties data
  * @returns {*}
  */
-DataStore.prototype.getPropertyAccount = function () {
+DataStore.prototype.getProperties = function () {
   var state = this.store.getState();
-  return state.propertyAccount;
+  return state.properties;
 };
 
 /**

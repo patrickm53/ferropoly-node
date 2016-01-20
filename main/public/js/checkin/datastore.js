@@ -53,7 +53,7 @@ module.exports = {
 
 },{}],4:[function(require,module,exports){
 /**
- * Reducer for property Account
+ * Reducer for properties
  * Created by kc on 19.01.16.
  */
 
@@ -62,7 +62,7 @@ var cst    = require('../constants');
 var remove = require('lodash/array/remove');
 
 module.exports = function (state, action) {
-  state = state || {transactions: [], asset: 0};
+  state = state || {properties: []};
   console.log(state, action);
   switch (action.type) {
     case cst.SET_PROPERTIES:
@@ -89,11 +89,11 @@ module.exports = function (state, action) {
 
 module.exports = {
   chancellery: require('./chancellery/reducer'),
-  propertyAccount: require('./propertyAccount/reducer'),
+  properties: require('./properties/reducer'),
   teamAccount: require('./teamAccount/reducer')
 };
 
-},{"./chancellery/reducer":2,"./propertyAccount/reducer":4,"./teamAccount/reducer":7}],6:[function(require,module,exports){
+},{"./chancellery/reducer":2,"./properties/reducer":4,"./teamAccount/reducer":7}],6:[function(require,module,exports){
 /**
  *
  * Created by kc on 12.01.16.
@@ -169,12 +169,12 @@ DataStore.prototype.getChancellery = function () {
 };
 
 /**
- * Returns the propertyAccount data
+ * Returns the properties data
  * @returns {*}
  */
-DataStore.prototype.getPropertyAccount = function () {
+DataStore.prototype.getProperties = function () {
   var state = this.store.getState();
-  return state.propertyAccount;
+  return state.properties;
 };
 
 /**

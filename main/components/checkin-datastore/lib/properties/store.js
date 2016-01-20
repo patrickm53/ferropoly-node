@@ -6,5 +6,5 @@
 'use strict';
 
 module.exports = function(store) {
-  return store.getState().propertyAccount;
+  return store.getState().properties;
 };

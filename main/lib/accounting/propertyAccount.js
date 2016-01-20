@@ -18,6 +18,7 @@ var logger              = require('../../../common/lib/logger').getLogger('prope
 var async               = require('async');
 var _                   = require('lodash');
 var moment              = require('moment');
+var propertyActions     = require('../../components/checkin-datastore/lib/propertyAccount/actions');
 
 var ferroSocket;
 
@@ -491,6 +492,17 @@ module.exports = {
     ferroSocket = require('../ferroSocket').get();
     if (ferroSocket) {
       ferroSocket.on('propertyAccount', socketCommandHandler);
+
+      ferroSocket.on('player-connected', function (data) {
+        propWrap.getTeamProperties(data.gameId, data.teamId, function (err, props) {
+          if (err) {
+            logger.error(err);
+            return;
+          }
+          ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', propertyActions.setProperties(props));
+
+        });
+      });
     }
 
   }

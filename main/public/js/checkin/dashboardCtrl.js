@@ -18,6 +18,7 @@ $(document).ready(function () {
 
 function dashboardCtrl($scope, $http) {
   $scope.chancelleryAsset = 0;
+  $scope.properties = [];
 
   // Geo location, tests so far only
   function getLocation() {
@@ -44,6 +45,13 @@ function dashboardCtrl($scope, $http) {
   // teamAccount Updates
   checkinDatastore.dataStore.subscribe('teamAccount', function(data) {
     $scope.teamAccount = data;
+    $scope.$apply();
+  });
+
+  // properties Updates
+  checkinDatastore.dataStore.subscribe('properties', function(data) {
+    $scope.properties = data.properties;
+    console.log('properties',data);
     $scope.$apply();
   });
 }

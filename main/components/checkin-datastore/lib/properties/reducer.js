@@ -1,5 +1,5 @@
 /**
- * Reducer for property Account
+ * Reducer for properties
  * Created by kc on 19.01.16.
  */
 
@@ -8,7 +8,7 @@ var cst    = require('../constants');
 var remove = require('lodash/array/remove');
 
 module.exports = function (state, action) {
-  state = state || {transactions: [], asset: 0};
+  state = state || {properties: []};
   console.log(state, action);
   switch (action.type) {
     case cst.SET_PROPERTIES:

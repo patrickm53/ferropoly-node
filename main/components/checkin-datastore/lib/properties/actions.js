@@ -1,5 +1,5 @@
 /**
- * Actions for propertyAccount
+ * Actions for properties
  * Created by kc on 19.01.16.
  */
 
