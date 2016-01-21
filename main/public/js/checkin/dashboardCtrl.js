@@ -59,7 +59,7 @@ function dashboardCtrl($scope, $http) {
     $scope.teamAccount = data;
     if (data.transactions.length > 0) {
       var tr = data.transactions[data.transactions.length - 1];
-      addTicker('Kontobuchung: ' + tr.transaction.info + ' (' + tr.transaction.amount + ')');
+      addTicker('Kontobuchung ' + tr.transaction.info + ': ' + tr.transaction.amount);
     }
     $scope.$apply();
   });
