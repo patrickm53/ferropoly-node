@@ -18,7 +18,7 @@ var logger              = require('../../../common/lib/logger').getLogger('prope
 var async               = require('async');
 var _                   = require('lodash');
 var moment              = require('moment');
-var propertyActions     = require('../../components/checkin-datastore/lib/propertyAccount/actions');
+var propertyActions     = require('../../components/checkin-datastore/lib/properties/actions');
 
 var ferroSocket;
 
@@ -75,6 +75,8 @@ function buyProperty(gameplay, property, team, callback) {
           property   : property,
           transaction: pt
         });
+
+        ferroSocket.emitToTeam(gameplay.internal.gameId, team.uuid, 'checkinStore', propertyActions.updateProperty(property));
       }
       callback(err, retVal);
     });

@@ -25,6 +25,11 @@ div(ng-controller='dashboardCtrl')
         .dashboard-tile.tile-chancellery
           p.dashboard-title Parkplatz
           p.dashboard.value {{chancelleryAsset}}
+    .row
+      .col-md-12
+        h3 Live-Ticker
+        p(ng-repeat="t in liveTicker | orderBy: 'ts' :true | limitTo: 5") {{t.ts | date:'HH:mm:ss'}}: {{t.message}}
+
     h3 Geolocalization
     p Diese App benötigt die GPS Daten der Spieler, wir müssen wissen, wo der Spieler ist. Das ist bisher nur experimentiell, wird jedoch später mit der dazugehörigen Datenschutzerklärung vollständig implementiert.
     p
