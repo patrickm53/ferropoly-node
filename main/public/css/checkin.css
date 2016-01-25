@@ -28,12 +28,10 @@
     color            : white;
 }
 
-
 .tile-propertynb {
     background-color : #705b06;
     color            : white;
 }
-
 
 .tile-property-value {
     background-color : #dbad3e;
@@ -52,4 +50,9 @@
 
 .dashboard-value {
     font-size : larger;
+}
+
+#map {
+    height : 500px;
+    width  : 100%;
 }

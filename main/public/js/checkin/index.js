@@ -4,8 +4,19 @@
  */
 
 'use strict';
-
+var viewUpdateHandlers = {}; // Handlers being called when a view gets activated
 var views = ['#view-dashboard', '#view-map', '#view-teamaccount'];
+
+/**
+ * Registers an update handler
+ * @param panel
+ * @param handler
+ */
+function registerViewUpdateHandler(panel, handler) {
+  viewUpdateHandlers[panel] = handler;
+}
+
+
 
 /**
  * Activate a view
@@ -17,6 +28,9 @@ function activateView(v) {
     $(views[i]).hide();
   }
 
+  if (viewUpdateHandlers[v]) {
+    viewUpdateHandlers[v]();
+  }
   $(v).show();
 }
 
