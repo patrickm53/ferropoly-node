@@ -24,6 +24,7 @@ function dashboardCtrl($scope, $http) {
   $scope.chancelleryAsset = 0;
   $scope.properties       = [];
   $scope.liveTicker       = [];
+  $scope.team             = ferropoly.team; // Supplied in HEAD
 
   /**
    * The live ticker formatter

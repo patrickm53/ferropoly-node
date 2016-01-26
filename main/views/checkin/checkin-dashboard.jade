@@ -3,32 +3,35 @@
 
 div(ng-controller='dashboardCtrl')
   .container-fluid
-    h2 Dashboard
+    h2 {{team.data.name}}
 
     .row
       .col-md-3.col-sm-4.col-xs-6
         .dashboard-tile.tile-asset
           p.dashboard-title Vermögen
-          p.dashboard.value {{teamAccount.asset}}
+          p.dashboard-value {{teamAccount.asset}}
 
       .col-md-3.col-sm-4.col-xs-6
         .dashboard-tile.tile-propertynb
           p.dashboard-title Anzahl Orte
-          p.dashboard.value {{properties.length}}
+          p.dashboard-value {{properties.length}}
 
       .col-md-3.col-sm-4.col-xs-6
         .dashboard-tile.tile-property-value
           p.dashboard-title Wert aller Orte
-          p.dashboard.value {{propertyValue}}
+          p.dashboard-value {{propertyValue}}
 
       .col-md-3.col-sm-4.col-xs-6
         .dashboard-tile.tile-chancellery
           p.dashboard-title Parkplatz
-          p.dashboard.value {{chancelleryAsset}}
+          p.dashboard-value {{chancelleryAsset}}
     .row
       .col-md-12
         h3 Live-Ticker
-        p(ng-repeat="t in liveTicker | orderBy: 'ts' :true | limitTo: 5") {{t.ts | date:'HH:mm:ss'}}: {{t.message}}
+        table.table.table-condensed.table-striped
+          tr(ng-repeat="t in liveTicker | orderBy: 'ts' :true | limitTo: 5")
+            td {{t.ts | date:'HH:mm:ss'}}
+            td {{t.message}}
 
     h3 Geolocalization
     p Diese App benötigt die GPS Daten der Spieler, wir müssen wissen, wo der Spieler ist. Das ist bisher nur experimentiell, wird jedoch später mit der dazugehörigen Datenschutzerklärung vollständig implementiert.
