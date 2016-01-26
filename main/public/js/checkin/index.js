@@ -5,7 +5,7 @@
 
 'use strict';
 var viewUpdateHandlers = {}; // Handlers being called when a view gets activated
-var views = ['#view-dashboard', '#view-map', '#view-teamaccount'];
+var views = ['#view-dashboard', '#view-map', '#view-teamaccount', '#view-properties'];
 
 /**
  * Registers an update handler

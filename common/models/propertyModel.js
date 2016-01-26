@@ -25,6 +25,7 @@ var propertySchema = mongoose.Schema({
   },
   gamedata : {
     owner          : String, // Reference to the owner, undefined or empty is 'no owner'
+    boughtTs       : Date,
     buildings      : Number,
     buildingEnabled: {type: Boolean, default: false}
   },

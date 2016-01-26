@@ -120,6 +120,7 @@ var createGameplay      = function (gpOptions, callback) {
   gp.gamename                    = gpOptions.name;
   gp.internal.gameId             = gpOptions.gameId || Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]).choose();
   gp.internal.creatingInstance   = gpOptions.instance;
+  gp.mobile                      = gpOptions.mobile || {level: MOBILE_NONE};
   gp._id                         = gp.internal.gameId;
 
   checkIfGameIdExists(gp.internal.gameId, function (err, isExisting) {

@@ -99,6 +99,10 @@ var verifyPassword = function (user, enteredPassword) {
  * @returns {*}
  */
 var createPasswordHash = function (salt, password) {
+  if (!_.isString(salt) || !_.isString(password)) {
+    logger.error(new Error('Invalid params supplied', salt, password));
+    return 'not-a-valid-hash-' + _.random(0, 100000000);
+  }
   return pbkdf2(password, salt, 1, 64).toString('base64');
 };
 

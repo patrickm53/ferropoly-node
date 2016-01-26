@@ -25,6 +25,10 @@ function dashboardCtrl($scope, $http) {
   $scope.properties       = [];
   $scope.liveTicker       = [];
 
+  /**
+   * The live ticker formatter
+   * @param message
+   */
   function addTicker(message) {
     $scope.liveTicker.push({ts: new Date(), message: message});
   }

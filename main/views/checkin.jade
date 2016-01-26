@@ -22,6 +22,7 @@ block head
   script(src='/js/checkin/checkinSocket.js')
   script(src='/js/checkin/dashboardCtrl.js')
   script(src='/js/checkin/mapCtrl.js')
+  script(src='/js/checkin/propertiesCtrl.js')
 
   link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
 
@@ -30,6 +31,10 @@ block navbar-right
     a(href='#' onclick='activateView("#view-dashboard")') Dashboard
   li
     a(href='#' onclick='activateView("#view-map")') Karte
+  li
+    a(href='#' onclick='activateView("#view-pricelist")') Preisliste
+  li
+    a(href='#' onclick='activateView("#view-properties")') Besitz
   li
     a(href='#' onclick='activateView("#view-teamaccount")') Kontobuch
   li
@@ -51,3 +56,5 @@ block content
       include checkin/checkin-map
     #view-teamaccount
       include checkin/checkin-teamaccount
+    #view-properties
+      include checkin/checkin-properties

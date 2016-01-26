@@ -40,6 +40,7 @@ function buyProperty(gameplay, property, team, callback) {
   // Set the data
   property.gamedata = {
     owner    : team.uuid,
+    boughtTs : new Date(),
     buildings: 0
   };
   propWrap.updateProperty(property, function (err) {
