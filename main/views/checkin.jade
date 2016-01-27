@@ -23,6 +23,7 @@ block head
   script(src='/js/checkin/dashboardCtrl.js')
   script(src='/js/checkin/mapCtrl.js')
   script(src='/js/checkin/propertiesCtrl.js')
+  script(src='/js/checkin/pricelistCtrl.js')
 
   link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
 
@@ -50,11 +51,13 @@ block navbar-right
 block content
 
   div(ng-app='checkinApp')
-    #view-dashboard
+    #view-dashboard.ng-cloak
       include checkin/checkin-dashboard
-    #view-map
+    #view-map.ng-cloak
       include checkin/checkin-map
-    #view-teamaccount
+    #view-teamaccount.ng-cloak
       include checkin/checkin-teamaccount
-    #view-properties
+    #view-properties.ng-cloak
       include checkin/checkin-properties
+    #view-pricelist.ng-cloak
+      include checkin/checkin-pricelist

@@ -6,7 +6,7 @@ div(ng-controller='propertiesCtrl')
 
   div(ng-show='properties.length > 0')
     p Gekaufte Orte: {{properties.length}}
-    div(ng-repeat="p in properties | orderBy: 'location.name'")
+    div(ng-repeat="p in properties | orderBy: 'gamedata.boughtTs'")
       h3 {{p.location.name}}
       p Kaufzeit: {{p.gamedata.boughtTs | date:'HH:mm'}}
       p Anzahl Häuser: {{p.gamedata.buildings}}

@@ -5,7 +5,7 @@
 
 'use strict';
 var viewUpdateHandlers = {}; // Handlers being called when a view gets activated
-var views = ['#view-dashboard', '#view-map', '#view-teamaccount', '#view-properties'];
+var views = ['#view-dashboard', '#view-map', '#view-teamaccount', '#view-properties', '#view-pricelist'];
 
 /**
  * Registers an update handler
@@ -15,7 +15,6 @@ var views = ['#view-dashboard', '#view-map', '#view-teamaccount', '#view-propert
 function registerViewUpdateHandler(panel, handler) {
   viewUpdateHandlers[panel] = handler;
 }
-
 
 
 /**
@@ -39,6 +38,7 @@ function activateView(v) {
  */
 $(document).ready(function () {
   console.log('document ready');
+  //activateView('#view-pricelist');
   activateView('#view-dashboard');
 });
 

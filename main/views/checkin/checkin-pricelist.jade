@@ -1,3 +1,18 @@
-//
+// The pricelist
    Created by kc on 27.01.16.
 
+h1 Preisliste
+div(ng-controller='pricelistCtrl')
+  table.table.table-striped
+    thead
+      tr
+        th #
+        th Ort
+        th Gruppe
+        th Preis
+    tbody
+      tr(ng-repeat='p in pricelist')
+        td {{p.pricelist.position + 1}}
+        td {{p.location.name}}
+        td {{p.pricelist.propertyGroup}}
+        td {{p.pricelist.price}}
