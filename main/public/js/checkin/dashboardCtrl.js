@@ -35,21 +35,16 @@ function dashboardCtrl($scope, $http) {
   }
 
   // Geo location, tests so far only
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
-  }
-
-  function showPosition(position) {
+  geograph.onLocationChanged(function(position) {
     $scope.position = position;
     console.log(position);
     $scope.$apply();
-  }
+  });
 
-  getLocation();
+
+  if (!geograph.getLastLocation()) {
+    geograph.localize();
+  }
 
   // Chancellery Updates
   checkinDatastore.dataStore.subscribe('chancellery', function (data) {
