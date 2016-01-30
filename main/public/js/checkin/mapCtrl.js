@@ -13,6 +13,7 @@
  */
 function checkinMapController($scope, $http) {
   var map;
+  var positionCircle;
   var positionMarker;
 
   $scope.position = {coords: {latitude: 47.352275, longitude: 7.9066919}};
@@ -21,9 +22,11 @@ function checkinMapController($scope, $http) {
   geograph.onLocationChanged(function (pos) {
     $scope.position = pos;
     if (map) {
-      map.setCenter({lat: pos.coords.latitude, lng: pos.coords.longitude});
-      positionMarker.setPosition({lat: pos.coords.latitude, lng: pos.coords.longitude});
-
+      var latLng = {lat: pos.coords.latitude, lng: pos.coords.longitude};
+      map.setCenter(latLng);
+      positionCircle.setCenter(latLng);
+      positionCircle.setRadius(pos.coords.accuracy);
+      positionMarker.setPosition(latLng);
     }
     $scope.$apply();
   });
@@ -36,7 +39,7 @@ function checkinMapController($scope, $http) {
     var options = {
       dataType: "script",
       cache   : true,
-      url     : 'https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU&signed_in=true'
+      url     : 'https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU' /*&signed_in=true'*/
     };
     return jQuery.ajax(options);
   }
@@ -50,15 +53,26 @@ function checkinMapController($scope, $http) {
       loadGoogleMapsApi()
         .done(function (script, textStatus) {
           console.warn(textStatus);
-          map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: $scope.position.coords.latitude, lng: $scope.position.coords.longitude},
+          var latLng = {lat: $scope.position.coords.latitude, lng: $scope.position.coords.longitude};
+          map        = new google.maps.Map(document.getElementById('map'), {
+            center: latLng,
             zoom  : 10
           });
 
           positionMarker = new google.maps.Marker({
-            position: {lat: $scope.position.coords.latitude, lng: $scope.position.coords.longitude},
-            map: map,
-            title: 'Hello World!'
+            position: latLng,
+            map     : map
+          });
+
+          positionCircle = new google.maps.Circle({
+            strokeColor  : '#0000FF',
+            strokeOpacity: 0.8,
+            strokeWeight : 2,
+            fillColor    : '#0000FF',
+            fillOpacity  : 0.35,
+            map          : map,
+            center       : latLng,
+            radius       : 10000
           });
         })
         .fail(function (jqxhr, settings, exception) {
