@@ -5,8 +5,9 @@
 
 'use strict';
 function Geograph() {
-  this.position = null;
-  this.clients  = [];
+  this.position            = null;
+  this.clients             = [];
+  this.nextUpdateNotBefore = moment();
 }
 
 Geograph.prototype.localize = function () {
@@ -19,9 +20,21 @@ Geograph.prototype.localize = function () {
         for (var i = 0; i < self.clients.length; i++) {
           self.clients[i](pos);
         }
+        if (self.nextUpdateNotBefore.isBefore(moment())) {
+          ferropolySocket.emit('player-position', {
+            cmd     : 'positionUpdate',
+            position: {lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: pos.coords.accuracy}
+          });
+          self.nextUpdateNotBefore = moment().add(20, 's'); // will be (5, 'm')
+        }
+        else {
+          console.log('Sending position suppressed');
+        }
+
       },
       function (err) {
         // Handler in case of an error
+        ferropolySocket.emit('player-position', {cmd: 'positionError', err: err.code});
         switch (err.code) {
           case err.PERMISSION_DENIED:
             console.error("User denied the request for Geolocation.");

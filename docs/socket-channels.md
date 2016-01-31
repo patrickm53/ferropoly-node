@@ -36,6 +36,15 @@ Requests client -> server
 ## Channels for specific teams
 
 * checkinStore: actions for the checkin-store
+* player-position: position of a team player
+
+### Geolocation: player-position
+
+Events client -> server
+
+* positionUpdate: new position available
+* positionError: error while retrieving position
+
 
 ## Channels for specific team and Admin
 

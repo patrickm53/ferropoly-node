@@ -163,7 +163,8 @@ FerroSocket.prototype.registerChannels = function (socket) {
   function registerChannel(channelName) {
     socket.on(channelName, function (data) {
       logger.info(channelName + ' request received:' + data.cmd);
-      data.gameId   = socket.ferropoly.gameId;
+      data.gameId = socket.ferropoly.gameId;
+      data.teamId = socket.ferropoly.teamId; // not defined for admins
       data.response = function (channel, resp) {
         self.emitToClients(socket.gameId, channel, resp);
       };
@@ -172,13 +173,16 @@ FerroSocket.prototype.registerChannels = function (socket) {
   }
 
   // These channels are for admins only
-  if (socket.isAdmin) {
+  if (socket.ferropoly.isAdmin) {
     registerChannel('admin-propertyAccount');
     registerChannel('admin-chancelleryAccount');
     registerChannel('admin-properties');
     registerChannel('admin-marketplace');
   }
 
+  if (socket.ferropoly.isPlayer) {
+    registerChannel('player-position');
+  }
   // Say the socket that we are operative
   socket.emit('initialized', {result: true});
 };

@@ -5,24 +5,25 @@
  * Created by kc on 14.04.15.
  */
 'use strict';
-var express = require('express');
-var path    = require('path');
-var morgan  = require('morgan');
+var express      = require('express');
+var path         = require('path');
+var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser  = require('body-parser');
-var settings    = require('./settings');
-var passport    = require('passport');
-var flash       = require('connect-flash');
-var session     = require('express-session');
-var compression = require('compression');
-var MongoStore  = require('connect-mongo')(session);
-var moment      = require('moment');
+var bodyParser   = require('body-parser');
+var settings     = require('./settings');
+var passport     = require('passport');
+var flash        = require('connect-flash');
+var session      = require('express-session');
+var compression  = require('compression');
+var MongoStore   = require('connect-mongo')(session);
+var moment       = require('moment');
 // Model includes
 var users = require('../common/models/userModel');
 //var gameplays = require('../common/models/gameplayModel');
-var properties  = require('../common/models/propertyModel');
-var locations   = require('../common/models/locationModel');
-var ferropolyDb = require('../common/lib/ferropolyDb');
+var properties   = require('../common/models/propertyModel');
+var locations    = require('../common/models/locationModel');
+var ferropolyDb  = require('../common/lib/ferropolyDb');
+var teamPosition = require('./lib/teams/teamPosition');
 // Routes includes
 var login        = require('./routes/login');
 var authtoken    = require('./routes/authtoken');
@@ -171,6 +172,7 @@ ferropolyDb.init(settings, function (err) {
     var util = require('util');
     logger.debug(util.inspect(settings));
 
+    teamPosition.init();
     autopilot.init(settings);
   });
 
