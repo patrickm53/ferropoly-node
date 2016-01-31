@@ -121,11 +121,11 @@ function refreshMapPanel() {
 
 /**
  * Creates a travel log marker
- * @param property
+ * @param position
  * @param color
  * @returns {google.maps.Circle}
  */
-function createTravelLogMarker(property, color, radiusFactor) {
+function createTravelLogMarker(position, color, radiusFactor) {
   var markerOptions = {
     strokeColor: color,
     strokeOpacity: 0.8,
@@ -133,7 +133,7 @@ function createTravelLogMarker(property, color, radiusFactor) {
     fillColor: color,
     fillOpacity: 0.35,
     map: map,
-    center: new google.maps.LatLng(parseFloat(property.location.position.lat), parseFloat(property.location.position.lng)),
+    center: new google.maps.LatLng(position.lat, position.lng),
     radius: 4000 * radiusFactor
   };
   // Add the circle for this city to the map.
@@ -273,14 +273,15 @@ function mapCtrl($scope, $http) {
         var factor = 1 / log.length;
         var line = [];
         for (var t = 0; t < log.length; t++) {
-          var property = dataStore.getPropertyById(log[t].propertyId);
-          line.push(new google.maps.LatLng(parseFloat(property.location.position.lat), parseFloat(property.location.position.lng)));
-          $scope.travelLogMarkers.push({
-            teamId: log[t].teamId,
-            marker: createTravelLogMarker(property, dataStore.getTeamColor(log[t].teamId), factor * (t + 1))
-          });
+          if (log[t].position) {
+            line.push(new google.maps.LatLng(log[t].position.lat, log[t].position.lng));
+            $scope.travelLogMarkers.push({
+              teamId: log[t].teamId,
+              marker: createTravelLogMarker({lat:log[t].position.lat, lng:log[t].position.lng}, dataStore.getTeamColor(log[t].teamId), factor * (t + 1))
+            });
 
-          $scope.travelLines.push(drawTeamTravelLine(line, dataStore.getTeamColor(log[t].teamId)));
+            $scope.travelLines.push(drawTeamTravelLine(line, dataStore.getTeamColor(log[t].teamId)));
+          }
         }
 
       }
