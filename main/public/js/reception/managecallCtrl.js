@@ -9,21 +9,21 @@ function managecallCtrl($scope, $http) {
 
   // Pagination
   $scope.itemsPerPage = 6;
-  $scope.currentPage = 0;
+  $scope.currentPage  = 0;
   // Property Query
-  $scope.propertyQuery = '';
+  $scope.propertyQuery       = '';
   $scope.propertyQueryResult = [];
   // General
-  $scope.teams = dataStore.getTeams();
-  $scope.callPanel = 0;
-  $scope.preselectedTeam = undefined;
-  $scope.selectedTeam = activeCall.getCurrentTeam();
-  $scope.teamInfo = {
+  $scope.teams                   = dataStore.getTeams();
+  $scope.callPanel               = 0;
+  $scope.preselectedTeam         = undefined;
+  $scope.selectedTeam            = activeCall.getCurrentTeam();
+  $scope.teamInfo                = {
     numberOfProperties: 0,
-    balance: 0,
-    accountEntries: [],
-    properties: [],
-    callLog: []
+    balance           : 0,
+    accountEntries    : [],
+    properties        : [],
+    callLog           : []
   };
   $scope.propertyInvestCandidate = undefined;
 
@@ -39,11 +39,14 @@ function managecallCtrl($scope, $http) {
     dataStore.pushEvent(activeCall.getCurrentTeam().uuid, text);
   }
 
-  $scope.getTeamColor = function (teamId) {
+  $scope.getTeamColor    = function (teamId) {
     return dataStore.getTeamColor(teamId);
   };
-  $scope.getPropertyName = function (propertyId) {
-    return dataStore.getPropertyById(propertyId).location.name;
+  $scope.getPropertyName = function (log) {
+    if (log.propertyId) {
+      return dataStore.getPropertyById(log.propertyId).location.name;
+    }
+    else return log.position.lat + ' / ' + log.position.lng
   };
   /**
    * Show the correct panel for call management
@@ -74,13 +77,13 @@ function managecallCtrl($scope, $http) {
     }
     dataStore.updateTeamAccountEntries(team.uuid, function () {
       console.log('update received for teamAccount: ' + team.uuid);
-      $scope.teamInfo.balance = dataStore.getTeamAccountBalance(team.uuid);
+      $scope.teamInfo.balance        = dataStore.getTeamAccountBalance(team.uuid);
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries(team.uuid);
       $scope.setPage(5000); // last page
       $scope.$apply();
     });
   };
-  $scope.refreshProperties = function (team) {
+  $scope.refreshProperties  = function (team) {
     if (!team) {
       team = $scope.selectedTeam;
     }
@@ -100,8 +103,8 @@ function managecallCtrl($scope, $http) {
   $scope.preselectTeam = function (team) {
     console.log(team.data.name + ' / ' + team.uuid);
     $scope.preselectedTeam = team;
-    $scope.callLog = [];
-    $scope.gambleAmount = 0;
+    $scope.callLog         = [];
+    $scope.gambleAmount    = 0;
     // It's time to update the data!
     dataStore.updateChancellery();
     $scope.refreshProperties(team);
@@ -115,13 +118,12 @@ function managecallCtrl($scope, $http) {
   $scope.confirmTeam = function (playChancellery) {
     console.log('Chancellery: ' + playChancellery);
     activeCall.setCurrentTeam($scope.preselectedTeam);
-    $scope.selectedTeam = $scope.preselectedTeam;
+    $scope.selectedTeam    = $scope.preselectedTeam;
     $scope.preselectedTeam = undefined;
 
     if (playChancellery) {
       // Play chancellery in every standard call
-      $http.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid).
-      success(function (data) {
+      $http.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid).success(function (data) {
         console.log(data);
         if (data.status === 'ok') {
           var infoClass = 'list-group-item-success';
@@ -129,16 +131,15 @@ function managecallCtrl($scope, $http) {
             infoClass = 'list-group-item-danger';
           }
           $scope.callLog.push({
-            class: infoClass,
-            title: data.result.infoText,
+            class  : infoClass,
+            title  : data.result.infoText,
             message: data.result.amount,
-            ts: new Date()
+            ts     : new Date()
           });
         }
         $scope.callPanel = 2;
         $scope.showCallPanel('buy');
-      }).
-      error(function (data, status) {
+      }).error(function (data, status) {
         console.log(data);
         $scope.callPanel = 2;
         $scope.showCallPanel('buy');
@@ -157,15 +158,15 @@ function managecallCtrl($scope, $http) {
     $scope.callPanel = 0;
     // Reset info, avoid that another call displays the data during fetching it
     $scope.teamInfo.numberOfProperties = 0;
-    $scope.teamInfo.balance = 0;
-    $scope.teamInfo.accountEntries = [];
-    $scope.teamInfo.callLog = [];
-    $scope.teamInfo.travelLog = [];
-    $scope.currentPage = 0;
-    $scope.propertyQuery = '';
-    $scope.propertyQueryResult = [];
-    $scope.selectedTeam = undefined;
-    $scope.preselectedTeam = undefined;
+    $scope.teamInfo.balance            = 0;
+    $scope.teamInfo.accountEntries     = [];
+    $scope.teamInfo.callLog            = [];
+    $scope.teamInfo.travelLog          = [];
+    $scope.currentPage                 = 0;
+    $scope.propertyQuery               = '';
+    $scope.propertyQueryResult         = [];
+    $scope.selectedTeam                = undefined;
+    $scope.preselectedTeam             = undefined;
     activeCall.finish();
   };
 
@@ -175,8 +176,7 @@ function managecallCtrl($scope, $http) {
   $scope.buyHouses = function () {
     $http.post('/marketplace/buildHouses/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
       authToken: dataStore.getAuthToken()
-    }).
-    success(function (data) {
+    }).success(function (data) {
       console.log(data);
       var msg;
       if (data.result.amount === 0) {
@@ -189,13 +189,12 @@ function managecallCtrl($scope, $http) {
         }
       }
       $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
-    }).
-    error(function (data, status) {
+    }).error(function (data, status) {
       $scope.callLog.push({
-        class: 'list-group-item-danger',
-        title: 'Hausbau',
+        class  : 'list-group-item-danger',
+        title  : 'Hausbau',
         message: 'Fehler: ' + status,
-        ts: new Date()
+        ts     : new Date()
       });
       console.log(data);
     });
@@ -206,8 +205,7 @@ function managecallCtrl($scope, $http) {
   $scope.buyHouse = function (property) {
     $http.post('/marketplace/buildHouse/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
       authToken: dataStore.getAuthToken()
-    }).
-    success(function (data) {
+    }).success(function (data) {
       console.log(data);
       var msg;
       if (data.result.amount === 0) {
@@ -220,13 +218,12 @@ function managecallCtrl($scope, $http) {
         }
       }
       $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
-    }).
-    error(function (data, status) {
+    }).error(function (data, status) {
       $scope.callLog.push({
-        class: 'list-group-item-danger',
-        title: 'Hausbau',
+        class  : 'list-group-item-danger',
+        title  : 'Hausbau',
         message: 'Fehler: ' + status,
-        ts: new Date()
+        ts     : new Date()
       });
       console.log(data);
     })
@@ -243,9 +240,8 @@ function managecallCtrl($scope, $http) {
 
     $http.post('/chancellery/gamble/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
       authToken: dataStore.getAuthToken(),
-      amount: Math.abs($scope.gambleAmount) * factor
-    }).
-    success(function (data) {
+      amount   : Math.abs($scope.gambleAmount) * factor
+    }).success(function (data) {
       console.log(data);
       if (data.status === 'ok') {
         var infoClass = 'list-group-item-success';
@@ -253,20 +249,19 @@ function managecallCtrl($scope, $http) {
           infoClass = 'list-group-item-danger';
         }
         $scope.callLog.push({
-          class: infoClass,
-          title: data.result.infoText,
+          class  : infoClass,
+          title  : data.result.infoText,
           message: data.result.amount,
-          ts: new Date()
+          ts     : new Date()
         });
         $scope.$apply();
       }
-    }).
-    error(function (data, status) {
+    }).error(function (data, status) {
       $scope.callLog.push({
-        class: 'list-group-item-danger',
-        title: 'Hausbau',
+        class  : 'list-group-item-danger',
+        title  : 'Hausbau',
         message: 'Fehler: ' + status,
-        ts: new Date()
+        ts     : new Date()
       });
       console.log(data);
       $scope.$apply();
@@ -285,10 +280,10 @@ function managecallCtrl($scope, $http) {
   $scope.prevPageDisabled = function () {
     return $scope.currentPage === 0 ? "disabled" : "";
   };
-  $scope.pageCount = function () {
+  $scope.pageCount        = function () {
     return Math.ceil($scope.teamInfo.accountEntries.length / $scope.itemsPerPage);
   };
-  $scope.nextPage = function () {
+  $scope.nextPage         = function () {
     if ($scope.currentPage < $scope.pageCount()) {
       $scope.currentPage++;
     }
@@ -296,7 +291,7 @@ function managecallCtrl($scope, $http) {
   $scope.nextPageDisabled = function () {
     return $scope.currentPage === ($scope.pageCount() - 1) ? "disabled" : "";
   };
-  $scope.setPage = function (n) {
+  $scope.setPage          = function (n) {
     if (n < 0) {
       n = 0;
     }
@@ -305,9 +300,9 @@ function managecallCtrl($scope, $http) {
     }
     $scope.currentPage = n;
   };
-  $scope.range = function () {
+  $scope.range            = function () {
     var rangeSize = 8;
-    var ret = [];
+    var ret       = [];
     var start;
 
     start = $scope.currentPage;
@@ -342,23 +337,22 @@ function managecallCtrl($scope, $http) {
   $scope.buyProperty = function (property) {
     $http.post('/marketplace/buyProperty/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
       authToken: dataStore.getAuthToken()
-    }).
-    success(function (data) {
+    }).success(function (data) {
       if (data.status === 'ok') {
         console.log(data);
-        var res = data.result;
+        var res       = data.result;
         var infoClass = 'list-group-item-success';
-        var title = 'Kauf ' + res.property.location.name;
+        var title     = 'Kauf ' + res.property.location.name;
         var msg;
         if (res.owner) {
           // belongs another team
           infoClass = 'list-group-item-danger';
-          msg = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount;
+          msg       = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount;
         }
         else if (res.amount === 0) {
           // our own
           infoClass = 'list-group-item-info';
-          msg = 'Das Grundstück gehört der anrufenden Gruppe';
+          msg       = 'Das Grundstück gehört der anrufenden Gruppe';
         }
         else {
           // we buy now
@@ -366,8 +360,7 @@ function managecallCtrl($scope, $http) {
         }
         $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
       }
-    }).
-    error(function (data, status) {
+    }).error(function (data, status) {
       console.log('ERROR');
       console.log(data);
       console.log(status);
@@ -379,7 +372,7 @@ function managecallCtrl($scope, $http) {
   var newTransactionHandler = function () {
     // Just update the entries
     if ($scope.selectedTeam) {
-      $scope.teamInfo.balance = dataStore.getTeamAccountBalance($scope.selectedTeam.uuid);
+      $scope.teamInfo.balance        = dataStore.getTeamAccountBalance($scope.selectedTeam.uuid);
       $scope.teamInfo.accountEntries = dataStore.getTeamAccountEntries($scope.selectedTeam.uuid);
       $scope.setPage(9999);
       $scope.$apply();

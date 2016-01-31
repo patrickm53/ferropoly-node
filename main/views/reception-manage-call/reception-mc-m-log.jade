@@ -12,5 +12,5 @@
         tbody
           tr(ng-repeat='p in teamInfo.travelLog | orderBy:"timestamp"')
             td {{p.timestamp | date:'dd.MM. HH:mm:ss'}}
-            td {{getPropertyName(p.propertyId)}}
+            td {{getPropertyName(p)}}
 
