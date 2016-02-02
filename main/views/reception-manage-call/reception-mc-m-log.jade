@@ -12,5 +12,12 @@
         tbody
           tr(ng-repeat='p in teamInfo.travelLog | orderBy:"timestamp"')
             td {{p.timestamp | date:'dd.MM. HH:mm:ss'}}
-            td {{getPropertyName(p)}}
+            td
+              a(href='#' ng-click='focusLogPosition(p)') {{getPropertyName(p)}}
 
+.col-md-8(ng-show='mapApiLoaded()')
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title Standortverlauf
+    .panel-body
+      #map-log

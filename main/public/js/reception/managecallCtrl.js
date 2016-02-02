@@ -29,7 +29,7 @@ function managecallCtrl($scope, $http) {
 
   $scope.isGameActive = function () {
     return dataStore.isGameActive();
-  }
+  };
 
   /**
    * Local function for pushing an event
@@ -61,6 +61,10 @@ function managecallCtrl($scope, $http) {
     $('#tab-log').removeClass('active');
     $('#' + panel).show();
     $('#tab-' + panel).addClass('active');
+
+    if (panel === 'log') {
+      refreshMapPanel();
+    }
   };
 
   /**
@@ -92,6 +96,7 @@ function managecallCtrl($scope, $http) {
       console.log('Properties', $scope.teamInfo.properties);
       dataStore.updateTravelLog(team.uuid, function () {
         $scope.teamInfo.travelLog = dataStore.getTravelLog(team.uuid);
+        redrawMap();
         $scope.$apply();
       });
     });
@@ -405,6 +410,175 @@ function managecallCtrl($scope, $http) {
         break;
     }
   });
+
+
+  /**************************
+   * MAP HANDLERS (TRAVEL LOG
+   */
+
+  /**
+   * Is api loaded or not?
+   * @returns {*}
+   */
+  $scope.mapApiLoaded = function () {
+    return (google && google.maps);
+  };
+
+  /**
+   * Initialize the map
+   */
+  function initializeMap() {
+
+    // Create a map object, and include the MapTypeId to add
+    // to the map type control.
+    var mapOptions = {
+      zoom  : 10,
+      center: new google.maps.LatLng(47.29725, 8.867215),
+
+      mapTypeControlOptions: {
+        mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+      }
+    };
+
+    console.log(document.getElementById('map_canvas'));
+    $scope.map = new google.maps.Map(document.getElementById('map-log'),
+      mapOptions);
+  }
+
+  /**
+   * Redrawing the map
+   */
+  function redrawMap() {
+    if (!$scope.mapApiLoaded()) {
+      return;
+    }
+    // Force the update
+    google.maps.event.trigger($scope.map, 'resize');
+
+    var center;
+    if ($scope.teamInfo.travelLog.length > 0) {
+      center = _.last($scope.teamInfo.travelLog).position;
+    }
+    else {
+      center = dataStore.getMapCenter();
+    }
+    $scope.map.setCenter(new google.maps.LatLng(center.lat, center.lng));
+    // Draw the line with the travel route and set the current marker
+    drawTravelLog();
+    setCurrentMarker();
+  }
+
+  /**
+   * Refresh map panel when activating it (otherwise the map doesn't show up)
+   */
+  function refreshMapPanel() {
+    _.delay(redrawMap, 250);
+  }
+
+  /**
+   * Draw a line
+   * @param line
+   * @param color
+   * @returns {google.maps.Polyline}
+   */
+  function drawTeamTravelLine(line, color) {
+    var lineOptions = {
+      path         : line,
+      geodesic     : true,
+      strokeColor  : color,
+      strokeOpacity: 1.0,
+      strokeWeight : 2,
+      map          : $scope.map
+    };
+    return new google.maps.Polyline(lineOptions);
+  }
+
+  /**
+   * Draws the travel log of the team
+   */
+  function drawTravelLog() {
+    if (!$scope.mapApiLoaded()) {
+      return;
+    }
+
+    var line = [];
+    var log  = $scope.teamInfo.travelLog;
+
+    for (var t = 0; t < log.length; t++) {
+      if (log[t].position) {
+        line.push(new google.maps.LatLng(log[t].position.lat, log[t].position.lng));
+      }
+    }
+
+    var lineOptions = {
+      path         : line,
+      geodesic     : true,
+      strokeColor  : 'red',
+      strokeOpacity: 1.0,
+      strokeWeight : 2,
+      map          : $scope.map
+    };
+    if ($scope.teamTravelPolyline) {
+      $scope.teamTravelPolyline.setMap(null);
+    }
+    $scope.teamTravelPolyline = new google.maps.Polyline(lineOptions);
+  }
+
+  /**
+   * Set the current marker of the team
+   */
+  function setCurrentMarker() {
+    if (!$scope.mapApiLoaded() || $scope.teamInfo.travelLog.length === 0) {
+      return;
+    }
+
+    if ($scope.teamCurrentPositionMarker) {
+      $scope.teamCurrentPositionMarker.setMap(null);
+    }
+
+    $scope.teamCurrentPositionMarker = new google.maps.Marker({
+      position: _.last($scope.teamInfo.travelLog).position,
+      map     : $scope.map
+    });
+  }
+
+  /**
+   * Set the focus to the the position selected in the log
+   * @param logEntry
+   */
+  $scope.focusLogPosition = function (logEntry) {
+    if (!$scope.mapApiLoaded()) {
+      return;
+    }
+    $scope.map.setCenter(logEntry.position);
+
+    if ($scope.teamLogMarker) {
+      $scope.teamLogMarker.setMap(null);
+    }
+    if ($scope.teamLogAccuracyCircle) {
+      $scope.teamLogAccuracyCircle.setMap(null);
+    }
+
+    $scope.teamLogMarker = new google.maps.Marker({
+      position: logEntry.position,
+      map     : $scope.map
+    });
+
+    $scope.teamLogAccuracyCircle = new google.maps.Circle({
+      strokeColor  : '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight : 2,
+      fillColor    : '#0000FF',
+      fillOpacity  : 0.35,
+      map          : $scope.map,
+      center       : logEntry.position,
+      radius       : logEntry.position.accuracy
+    });
+  };
+
+
+  // Init the map when the document is ready
+  $(document).ready(initializeMap);
 }
 
 managecallCtrl.$inject = ['$scope', '$http'];

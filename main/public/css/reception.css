@@ -41,7 +41,7 @@
 }
 
 .download-accountinfo {
-    color     : black;
+    color : black;
 }
 
 #color-tag {
@@ -60,20 +60,24 @@
     height : 600px;
 }
 
+#map-log {
+    width  : 100%;
+    height : 60vh;
+}
+
 .log-ul {
-    margin-bottom: 0px;
-    padding-left: 0px;
+    margin-bottom : 0px;
+    padding-left  : 0px;
 }
 
 #property-list {
-    overflow: auto;
-    height: 200px;
+    overflow : auto;
+    height   : 200px;
 }
 
 .chart-area {
     width : 100%;
 }
-
 
 /* Avoiding the flickering of the chart when loading */
 svg {

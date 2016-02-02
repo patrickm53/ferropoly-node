@@ -9,6 +9,7 @@ var ferroSocket;
 var logger         = require('../../../common/lib/logger').getLogger('teams:teamPositions');
 var travelLogModel = require('../../../common/models/travelLogModel');
 var gameCache      = require('../gameCache');
+var moment         = require('moment');
 
 function addLog(data) {
   gameCache.getGameData(data.gameId, (err, gc) => {
