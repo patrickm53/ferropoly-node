@@ -1,0 +1,56 @@
+//
+   Created by kc on 05.02.16.
+.row
+  .col-md-6
+    h2 {{gameplay.gamename}}
+    h3(ng-show='gameplay.owner.organisation') {{gameplay.owner.organisation}}
+
+    h4 Spieldaten
+    .row
+      .col-md-4
+        | Datum
+      .col-md-8
+        | {{gameplay.scheduling.gameDate | date:'dd.mm.YY'}}
+    h4 Spielleiter
+    .row(ng-show='gameplay.owner.organisatorName')
+      .col-md-4
+        | Name
+      .col-md-8
+        | {{gameplay.owner.organisatorName}}
+    .row
+      .col-md-4
+        | Email
+      .col-md-8
+        | {{gameplay.owner.organisatorEmail}}
+    .row(ng-show='gameplay.owner.organisatorPhone')
+      .col-md-4
+        | Telefonnummer
+      .col-md-8
+        | {{gameplay.owner.organisatorPhone}}
+
+  .col-md-6
+    h2 Anmeldung
+    form
+      .form-group
+        label(for='teamName') Name Deines Teams
+        input.form-control#teamName(type='text' required ng-model='teamName')
+      .form-group
+        label(for='organization') Zu welchem Verein / welcher Organisation gehört ihr?
+        input.form-control#organization(type='text' ng-model='organization')
+
+      .form-group
+        label(for='teamLeaderName') Ansprechperson
+        input.form-control#teamLeaderName(type='text' ng-model='teamLeaderName')
+
+      .form-group
+        label(for='teamLeaderEmail') Email-Adresse
+        input.form-control#teamLeaderEmail(type='text' ng-model='teamLeaderEmail')
+
+      .form-group
+        label(for='teamLeaderPhone') Telefon-Nummer
+        input.form-control#teamLeaderPhone(type='text' ng-model='teamLeaderPhone')
+
+      .form-group
+        label(for='remarks') Bemerkungen
+        textarea.form-control#remarks(rows='4' ng-model='remarks')
+

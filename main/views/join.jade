@@ -1,0 +1,25 @@
+//
+   Created by kc on 05.02.16.
+
+extends layout
+
+block head
+  script(src='/modules/moment/min/moment.min.js')
+  script(src='/modules/moment/locale/de.js')
+  link(rel='stylesheet', href='/css/join.css',  type='text/css')
+  script
+    | var gameplay =
+    != gameplay
+    | ;
+    | console.log(gameplay);
+  script(src=ngFile)
+
+block content
+  .container(ng-app='joinApp' ng-controller='joinCtrl')
+    div(ng-cloak)
+      div(ng-show='showGameNotFoundPanel()')
+        include join/join-game-not-found
+      div(ng-show='showJoiningNotAllowedPanel()')
+        include join/join-not-possible
+      div(ng-show='showJoiningPanel()')
+        include join/join-game

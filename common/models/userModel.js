@@ -19,7 +19,7 @@ var _          = require('lodash');
  * The mongoose schema for an user
  */
 var userSchema = mongoose.Schema({
-  _id         : String,
+  _id         : {type: String, index: true},
   id          : String,
   personalData: {
     forename: String,
@@ -46,7 +46,7 @@ var userSchema = mongoose.Schema({
     facebook        : Object,
     google          : Object
   }
-}, {autoIndex: false});
+}, {autoIndex: true});
 
 
 /**
@@ -209,7 +209,7 @@ var getUserByMailAddress = function (emailAddress, callback) {
  * @param callback, providing the complete user information when found
  */
 var getUser = function (id, callback) {
-  User.find({'id': id}, function (err, docs) {
+  User.find({'_id': id}, function (err, docs) {
     if (err) {
       return callback(err);
     }

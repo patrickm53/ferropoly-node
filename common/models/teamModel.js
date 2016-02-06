@@ -13,7 +13,7 @@ var logger   = require('../lib/logger').getLogger('teamModel');
  * The mongoose schema for a property
  */
 var teamSchema = mongoose.Schema({
-  _id   : String,
+  _id   : {type: String, index: true},
   gameId: String, // Gameplay this team plays with
   uuid  : {type: String, index: {unique: true}},     // UUID of this team (index)
   data  : {
@@ -26,7 +26,7 @@ var teamSchema = mongoose.Schema({
     },
     remarks     : String
   }
-}, {_id: false});
+}, {autoIndex: true});
 
 /**
  * The Property model

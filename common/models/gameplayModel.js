@@ -25,7 +25,7 @@ const MOBILE_FULL  = 10;
  * The mongoose schema for an user
  */
 var gameplaySchema = mongoose.Schema({
-  _id       : String,
+  _id       : {type: String, index: true},
   gamename  : String, // name of the game
   owner     : {
     organisatorName : String,
@@ -85,6 +85,10 @@ var gameplaySchema = mongoose.Schema({
     finalized       : {type: Boolean, default: false}, // finalized means no edits anymore,
     creatingInstance: String                           // Instance creating this gameplay
   },
+  joining   : {
+    possibleUntil: {type: Date},
+    infotext     : String
+  },
   log       : {
     created         : {type: Date, default: Date.now},
     lastEdited      : {type: Date, default: Date.now},
@@ -117,6 +121,8 @@ var createGameplay      = function (gpOptions, callback) {
   gp.scheduling.gameStart        = gpOptions.gameStart;
   gp.scheduling.gameEnd          = gpOptions.gameEnd;
   gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
+  gp.joining.possibleUntil       = gpOptions.joiningUntilDate || moment(gp.scheduling.gameDate).subtract(5, 'days').set('hour', 20).set('minute', 0).set('second', 0).toDate();
+  gp.joining.infotext            = gpOptions.infoText;
   gp.gamename                    = gpOptions.name;
   gp.internal.gameId             = gpOptions.gameId || Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]).choose();
   gp.internal.creatingInstance   = gpOptions.instance;
@@ -361,6 +367,7 @@ var updateGameplay = function (gp, callback) {
       loadedGp.owner      = gp.owner;
       loadedGp.scheduling = gp.scheduling;
       loadedGp.gameParams = gp.gameParams;
+      loadedGp.joining    = gp.joining;
       loadedGp.log        = gp.log;
       loadedGp.pricelist  = gp.pricelist;
       loadedGp.mobile     = gp.mobile;

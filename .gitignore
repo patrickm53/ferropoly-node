@@ -43,6 +43,7 @@ main/views/info/*.html
 main/views/reception-manage-call/*.html
 main/views/reception-map/*.html
 main/views/reception-stats/*.html
+main/views/join/*.html
 /main/views/checkin/*.html
 
 main/public/js/reception.js
