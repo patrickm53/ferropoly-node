@@ -34,6 +34,9 @@ var logger       = require('../common/lib/logger').getLogger('main:app');
 var logs         = require('../common/models/logModel');
 var authStrategy = require('../common/lib/authStrategy')(settings, users);
 var joinRoute    = require('./routes/join');
+
+require('../common/lib/mailer').init(settings);
+
 logger.info('Ferropoly Copyright (C) 2015 Christian Kuster, CH-8342 Wernetshausen');
 logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
 logger.info('This is free software, and you are welcome to redistribute it');

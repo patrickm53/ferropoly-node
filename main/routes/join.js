@@ -12,6 +12,7 @@ var users     = require('../../common/models/userModel');
 var teams     = require('../../common/models/teamModel');
 var logger    = require('../../common/lib/logger').getLogger('routes:join');
 var async     = require('async');
+var mailer    = require('../../common/lib/mailer');
 var ngFile    = '/js/joinctrl.js';
 if (settings.minifedjs) {
   ngFile = '/js/joinctrl.min.js';
@@ -47,14 +48,14 @@ router.get('/:gameId', (req, res) => {
           }
           var teamInfo = {};
           if (team) {
-            teamInfo.name = team.data.name;
-            teamInfo.organization = team.data.organization;
-            teamInfo.phone = team.data.teamLeader.phone;
-            teamInfo.remarks = team.data.remarks;
-            teamInfo.confirmed = team.data.confirmed;
-            teamInfo.id = team.id;
+            teamInfo.name             = team.data.name;
+            teamInfo.organization     = team.data.organization;
+            teamInfo.phone            = team.data.teamLeader.phone;
+            teamInfo.remarks          = team.data.remarks;
+            teamInfo.confirmed        = team.data.confirmed;
+            teamInfo.id               = team.id;
             teamInfo.registrationDate = team.data.registrationDate;
-            teamInfo.changedDate = team.data.changedDate;
+            teamInfo.changedDate      = team.data.changedDate;
           }
           res.render('join', {
             title   : 'Ferropoly Spielauswertung',
@@ -131,7 +132,12 @@ router.post('/:gameId', (req, res) => {
                 return res.status(500).send(err.message);
               }
               logger.info(`Saved Team for ${req.params.gameId}: ${req.body.teamName} / ${newTeam.uuid}`);
-              res.status(200).send(newTeam);
+              sendInfoMail(gameData.gameplay, newTeam, {newTeam: true}, err => {
+                if (err) {
+                  logger.error(err);
+                }
+                res.status(200).send(newTeam);
+              });
             });
             return;
           }
@@ -142,12 +148,57 @@ router.post('/:gameId', (req, res) => {
               return res.status(500).send(err.message);
             }
             logger.info(`Saved Team for ${req.params.gameId}: ${req.body.teamName} / ${savedTeam.uuid}`);
-            res.status(200).send(savedTeam);
+            sendInfoMail(gameData.gameplay, savedTeam, {newTeam: false}, err => {
+              if (err) {
+                logger.error(err);
+              }
+              res.status(200).send(savedTeam);
+            });
           });
         });
       }
     );
   });
 });
+
+
+/**
+ * Sends the signup mail
+ * @param user
+ * @param callback
+ */
+function sendInfoMail(gameplay, team, options, callback) {
+
+  var html    = '';
+  var text    = '';
+  var subject = '';
+  if (options.newTeam) {
+    subject = 'Neue Ferropoly Anmeldung';
+    html += '<h1>Neue Ferropoly Anmeldung</h1>';
+    html += `<p>${team.data.teamLeader.name} meldet sich mit dem Team "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" an.</p>`;
+    html += `<p>Bite bestätige diese Anmeldung in der Ferropoly Editor App.</p>`;
+
+    text += `${team.data.teamLeader.name} meldet sich mit dem Team "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" an.\n`;
+    text += `Bite bestätige diese Anmeldung in der Ferropoly Editor App.\n`;
+  }
+  else {
+    subject = 'Bearbeitete Ferropoly Anmeldung';
+    html += '<h1>Bearbeitete Ferropoly Anmeldung</h1>';
+    html += `<p>${team.data.teamLeader.name} hat die Anmeldung des Teams "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" bearbeitet.</p>`;
+    html += `<p>Die Änderungen kannst Du in der Ferropoly Editor App anschauen.</p>`;
+
+    text += `${team.data.teamLeader.name} hat die Anmeldung des Teams "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" bearbeitet.\n`;
+    text += `Die Änderungen kannst Du in der Ferropoly Editor App anschauen.\n`;
+  }
+
+
+  html += '<p></p>';
+  html += '<p>Bitte auf dieses Mail nicht antworten, Mails an diese Adresse werden nicht gelesen. Infos und Kontakt zum Ferropoly:<a href="http://www.ferropoly.ch">www.ferropoly.ch</a></p>';
+  text += 'Bitte auf dieses Mail nicht antworten, Mails an diese Adresse werden nicht gelesen. Infos und Kontakt zum Ferropoly: www.ferropoly.ch\n';
+
+  logger.info('Mailtext created', text);
+  mailer.send({to: gameplay.owner.organisatorEmail, subject: subject, html: html, text: text}, callback);
+}
+
 
 module.exports = router;

@@ -58,6 +58,17 @@ var settings = {
   }
 };
 
+settings.mailer = {
+  senderAddress: process.env.MAILER_SENDER,
+  host         : process.env.MAILER_HOST,
+  port         : 465,
+  secure       : true,
+  auth         : {
+    pass: process.env.MAILER_PASS,
+    user: process.env.MAILER_USER
+  }
+};
+
 if (debug) {
   logger.debug('DEBUG Settings used');
   // Use minified javascript files wherever available
