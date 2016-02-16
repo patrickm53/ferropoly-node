@@ -17,18 +17,19 @@ var teamSchema = mongoose.Schema({
   gameId: String, // Gameplay this team plays with
   uuid  : {type: String, index: {unique: true}},     // UUID of this team (index)
   data  : {
-    name            : String, // Name of the team
-    organization    : String, // Organization the team belongs to
-    teamLeader      : {
+    name              : String, // Name of the team
+    organization      : String, // Organization the team belongs to
+    teamLeader        : {
       name : String,
       email: String,
       phone: String
     },
-    remarks         : String,
-    confirmed       : {type: Boolean, default: true},
-    registrationDate: {type: Date, default: Date.now},
-    changedDate     : {type: Date, default: Date.now},
-    confirmationDate: {type: Date}
+    remarks           : String,
+    confirmed         : {type: Boolean, default: true},
+    onlineRegistration: {type: Boolean},
+    registrationDate  : {type: Date, default: Date.now},
+    changedDate       : {type: Date, default: Date.now},
+    confirmationDate  : {type: Date}
   }
 }, {autoIndex: true});
 

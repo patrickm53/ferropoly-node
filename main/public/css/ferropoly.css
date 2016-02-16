@@ -19,3 +19,25 @@ a {
 .navbar-inverse {
     border-radius : 0px;
 }
+
+
+/* General wells for status information, to be used everywhere in the editor */
+.well-ok {
+    background-color : #adeaa9;
+    background-image : none;
+}
+
+.well-error {
+    background-color : #ffa4a5;
+    background-image : none;
+}
+
+.well-info {
+    background-color : #a4d3fd;
+    background-image : none;
+}
+
+.well-attention {
+    background-color : #dbad3e;
+    background-image : none;
+}

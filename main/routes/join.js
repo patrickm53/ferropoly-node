@@ -105,17 +105,18 @@ router.post('/:gameId', (req, res) => {
 
           // Sets the data according to the request
           function setTeamData(d) {
-            d.gameId            = req.params.gameId;
-            d.data              = d.data || {};
-            d.data.name         = req.body.teamName;
-            d.data.organization = req.body.organization;
-            d.data.teamLeader   = {
+            d.gameId                  = req.params.gameId;
+            d.data                    = d.data || {};
+            d.data.name               = req.body.teamName;
+            d.data.organization       = req.body.organization;
+            d.data.teamLeader         = {
               name : userInfo.personalData.forename + ' ' + userInfo.personalData.surname,
               email: userInfo.personalData.email,
               phone: req.body.phone
             };
-            d.data.remarks      = req.body.remarks;
-            d.data.changedDate  = new Date();
+            d.data.remarks            = req.body.remarks;
+            d.data.onlineRegistration = true; // Game owner can't change email address
+            d.data.changedDate = new Date();
             return d;
           }
 
@@ -197,7 +198,13 @@ function sendInfoMail(gameplay, team, options, callback) {
   text += 'Bitte auf dieses Mail nicht antworten, Mails an diese Adresse werden nicht gelesen. Infos und Kontakt zum Ferropoly: www.ferropoly.ch\n';
 
   logger.info('Mailtext created', text);
-  mailer.send({to: gameplay.owner.organisatorEmail, subject: subject, html: html, text: text}, callback);
+  mailer.send({
+    to     : gameplay.owner.organisatorEmail,
+    cc     : team.data.teamLeader.email,
+    subject: subject,
+    html   : html,
+    text   : text
+  }, callback);
 }
 
 

@@ -12,6 +12,7 @@ angular.module('joinApp', ['ngSanitize']).controller('joinCtrl', ['$scope', '$ht
   $scope.remarks         = team.remarks;
   $scope.teamInfo        = team;
   $scope.saved           = false;
+  $scope.requestPending = false;
 
   var authToken = '123';
 
@@ -53,6 +54,7 @@ angular.module('joinApp', ['ngSanitize']).controller('joinCtrl', ['$scope', '$ht
   };
 
   $scope.save = function () {
+    $scope.requestPending = true;
     $http({
       method: 'POST',
       url   : '/join/' + gameplay.internal.gameId,
@@ -66,9 +68,11 @@ angular.module('joinApp', ['ngSanitize']).controller('joinCtrl', ['$scope', '$ht
     }).then(
       function (resp) {
         $scope.saved = true;
+        $scope.requestPending = false;
         console.log(resp);
       },
       function (resp) {
+        $scope.requestPending = false;
         if (resp.data) {
           $scope.error = 'Fehler beim Speichern, Status: ' + resp.status + ' Meldung: ' + resp.data.message;
         }
