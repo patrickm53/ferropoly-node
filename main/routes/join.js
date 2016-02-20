@@ -14,7 +14,7 @@ var logger    = require('../../common/lib/logger').getLogger('routes:join');
 var async     = require('async');
 var mailer    = require('../../common/lib/mailer');
 var ngFile    = '/js/joinctrl.js';
-if (settings.minifedjs) {
+if (settings.minifiedjs) {
   ngFile = '/js/joinctrl.min.js';
 }
 

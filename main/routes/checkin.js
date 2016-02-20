@@ -28,7 +28,7 @@ router.get('/:gameId', function (req, res) {
       var gp    = gamedata.gameplay;
       var teams = gamedata.teams;
 
-      var team = _.find(_.values(teams), function(t) {
+      var team = _.find(_.values(teams), function (t) {
         if (t.data.teamLeader.email === req.session.passport.user) {
           return true;
         }
@@ -60,8 +60,7 @@ router.get('/:gameId', function (req, res) {
 
           res.render('checkin', {
             title        : 'Ferropoly',
-            minifedjs    : settings.minifedjs,
-            ngFile       : '/js/checkin.js',
+            minifiedjs   : settings.minifiedjs,
             hideLogout   : true,
             authToken    : token,
             user         : req.session.passport.user,

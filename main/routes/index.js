@@ -16,7 +16,7 @@ var teams         = require('../../common/models/teamModel');
 var async         = require('async');
 
 var ngFile = '/js/indexctrl.js';
-if (settings.minifedjs) {
+if (settings.minifiedjs) {
   ngFile = '/js/indexctrl.min.js';
 }
 

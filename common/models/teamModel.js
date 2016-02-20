@@ -135,6 +135,30 @@ var getTeams = function (gameId, callback) {
 };
 
 /**
+ * Get a specific team
+ * @param gameId
+ * @param teamId
+ * @param callback
+ * @returns {*}
+ */
+var getTeam = function (gameId, teamId, callback) {
+  Team.find({
+      'uuid'  : teamId,
+      'gameId': gameId
+    },
+    function (err, docs) {
+      if (err) {
+        return callback(err);
+      }
+      if (docs.length === 0) {
+        return callback(null, null);
+      }
+      callback(null, docs[0]);
+    }
+  );
+};
+
+/**
  * Count the teams of a given game
  * @param gameId
  * @param callback
@@ -219,5 +243,6 @@ module.exports = {
   getTeamsAsObject: getTeamsAsObject,
   countTeams      : countTeams,
   getMyTeams      : getMyTeams,
-  getMyTeam       : getMyTeam
+  getMyTeam       : getMyTeam,
+  getTeam         : getTeam
 };

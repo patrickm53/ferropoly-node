@@ -18,10 +18,9 @@ var logger   = require('../lib/logger').getLogger('login');
  * Get the login page
  */
 router.get('/', function (req, res) {
-  var loginController = '/js/loginctrl.js';
-  if (settings.minifedjs) {
-    loginController = '/js/loginctrl.min.js';
-  }
+  var loginController = 'loginctrl';
+  loginController = settings.minifiedjs ? '/js/min/' + loginController +'.min.js' : '/js/src/' + loginController +'.js';
+
 
   res.render('login', {
     title       : settings.appName + ' Login',

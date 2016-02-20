@@ -15,16 +15,18 @@ block head
     | };
 
   script(src='/socket.io/socket.io.js')
-  script(src='/modules/moment/min/moment.min.js')
-  script(src='/modules/moment/locale/de.js')
-  script(src='/js/checkin/index.js')
-  script(src='/js/checkin/geolocation.js')
-  script(src='/js/checkin/datastore.js')
-  script(src='/js/checkin/checkinSocket.js')
-  script(src='/js/checkin/dashboardCtrl.js')
-  script(src='/js/checkin/mapCtrl.js')
-  script(src='/js/checkin/propertiesCtrl.js')
-  script(src='/js/checkin/pricelistCtrl.js')
+
+  if minifiedjs
+    script(src='/js/min/checkin.min.js')
+  else
+    script(src='/js/checkin/index.js')
+    script(src='/js/checkin/geolocation.js')
+    script(src='/js/checkin/datastore.js')
+    script(src='/js/checkin/checkinsocket.js')
+    script(src='/js/checkin/dashboardctrl.js')
+    script(src='/js/checkin/mapctrl.js')
+    script(src='/js/checkin/propertiesctrl.js')
+    script(src='/js/checkin/pricelistctrl.js')
 
   link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
 

@@ -4,7 +4,7 @@ extends layout
 
 block head
   script(src='/socket.io/socket.io.js')
-  if !minifedjs
+  if !minifiedjs
     script(src='/modules/moment/min/moment.min.js')
     script(src='/modules/lodash/lodash.min.js')
     script(src='/modules/d3/d3.min.js')
@@ -34,8 +34,9 @@ block head
     | console.log(ferropoly.teams);
   - var gameId = currentGameId
 
-  if minifedjs
-    script(src='/js/reception.min.js')
+  if minifiedjs
+    script(src='/js/min/c3d3.min.js')
+    script(src='/js/min/reception.min.js')
   else
     script(src='/js/reception/reception-framework.js')
     script(src='/js/reception/ferropoly-socket.js')

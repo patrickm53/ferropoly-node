@@ -40,6 +40,7 @@ module.exports = {
     transporter.sendMail({
       from: options.mailer.senderAddress,
       to: mailContents.to,
+      cc: mailContents.cc,
       subject: mailContents.subject,
       text: mailContents.text,
       html: mailContents.html

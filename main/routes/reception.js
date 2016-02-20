@@ -62,7 +62,7 @@ router.get('/:gameId', function (req, res) {
 
           res.render('reception', {
             title: 'Ferropoly',
-            minifedjs: settings.minifedjs,
+            minifiedjs: settings.minifiedjs,
             ngFile: '/js/infoctrl.js',
             hideLogout: true,
             authToken: token,

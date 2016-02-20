@@ -47,3 +47,4 @@ main/views/join/*.html
 /main/views/checkin/*.html
 
 main/public/js/reception.js
+main/public/js/checkin.js

@@ -72,12 +72,12 @@ settings.mailer = {
 if (debug) {
   logger.debug('DEBUG Settings used');
   // Use minified javascript files wherever available
-  settings.minifedjs = false;
+  settings.minifiedjs = false;
 }
 else {
   logger.debug('DIST Settings with minified js files used');
   // Use minified javascript files wherever available
-  settings.minifedjs = true;
+  settings.minifiedjs = true;
 }
 
 logger.debug('DEPLOY_TYPE: ' + deployType);

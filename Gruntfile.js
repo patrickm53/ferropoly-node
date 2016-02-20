@@ -59,12 +59,19 @@ module.exports = function (grunt) {
           './main/public/modules/jquery/dist/jquery.min.js',
           './main/public/modules/bootstrap/dist/js/bootstrap.min.js',
           './main/public/modules/angular/angular.min.js',
+          './main/public/modules/angular-sanitize/angular-sanitize.min.js',
           './main/public/modules/moment/min/moment.min.js',
-          './main/public/modules/lodash/lodash.min.js',
+          './main/public/modules/moment/locale/de.js',
+          './main/public/modules/lodash/lodash.min.js'
+        ],
+        dest: './main/public/js/min/framework.min.js'
+      },
+      c3d3: {
+        src : [
           './main/public/modules/d3/d3.min.js',
           './main/public/modules/c3/c3.min.js'
         ],
-        dest: './main/public/js/framework.min.js'
+        dest: './main/public/js/min/c3d3.min.js'
       },
       css      : {
         src : [
@@ -73,14 +80,27 @@ module.exports = function (grunt) {
           './main/public/css/ferropoly.css'
         ],
         dest: './main/public/css/ferropoly.min.css'
+      },
+      checkin  : {
+        src : [
+          './main/public/js/checkin/index.js',
+          './main/public/js/checkin/geolocation.js',
+          './main/public/js/checkin/datastore.js',
+          './main/public/js/checkin/checkinsocket.js',
+          './main/public/js/checkin/dashboardctrl.js',
+          './main/public/js/checkin/mapctrl.js',
+          './main/public/js/checkin/propertiesctrl.js',
+          './main/public/js/checkin/priceslistctrl.js'
+        ],
+        dest: 'main/public/js/checkin.js'
       }
     },
     uglify: {
       js     : {
         files: {
-          './main/public/js/reception.min.js'        : ['./main/public/js/reception.js'],
-          './main/public/js/loginctrl.min.js'        : ['./main/public/js/loginctrl.js'],
-          './main/public/js/checkin/datastore.min.js': ['./main/public/js/checkin/datastore.js']
+          './main/public/js/min/reception.min.js': ['./main/public/js/reception.js'],
+          './main/public/js/min/loginctrl.min.js': ['./main/public/js/loginctrl.js'],
+          './main/public/js/min/checkin.min.js'  : ['./main/public/js/checkin.js']
         }
       },
       options: {
