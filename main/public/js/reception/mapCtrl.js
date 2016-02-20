@@ -9,65 +9,65 @@ function initializeMap() {
   if (!_.isUndefined(google)) {
     // Create an array of styles.
     var styles =
-      [{
-        "stylers": [
-          {"saturation": -29},
-          {"lightness": 38}
-        ]
-      },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry",
-          "stylers": [
-            {"visibility": "simplified"}
-          ]
-        }, {
-        "featureType": "transit.station.bus",
-        "stylers": [
-          {"hue": "#ffff00"},
-          {"visibility": "on"}
-        ]
-      }, {
-        "featureType": "administrative.locality",
-        "elementType": "labels",
-        "stylers": [
-          {"visibility": "on"},
-          {"weight": 0.1},
-          {"color": "#252320"}
-        ]
-      }, {
-        "featureType": "road",
-        "elementType": "labels",
-        "stylers": [
-          {"visibility": "off"}
-        ]
-      }, {
-        "featureType": "administrative.country",
-        "elementType": "geometry.stroke",
-        "stylers": [
-          {"visibility": "on"},
-          {"weight": 1.6},
-          {"color": "#a50f08"}
-        ]
-      }, {
-        "featureType": "transit.station.rail",
-        "stylers": [
-          {"visibility": "on"},
-          {"hue": "#006eff"},
-          {"weight": 1.1}
-        ]
-      }, {
-        "featureType": "transit.line",
-        "elementType": "geometry.fill",
-        "stylers": [
-          {"visibility": "on"},
-          {"color": "#333333"},
-          {"weight": 1.5}
-        ]
-      }, {
-        "featureType": "landscape.natural.landcover"
-      }
-      ];
+          [{
+            "stylers": [
+              {"saturation": -29},
+              {"lightness": 38}
+            ]
+          },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry",
+              "stylers"    : [
+                {"visibility": "simplified"}
+              ]
+            }, {
+            "featureType": "transit.station.bus",
+            "stylers"    : [
+              {"hue": "#ffff00"},
+              {"visibility": "on"}
+            ]
+          }, {
+            "featureType": "administrative.locality",
+            "elementType": "labels",
+            "stylers"    : [
+              {"visibility": "on"},
+              {"weight": 0.1},
+              {"color": "#252320"}
+            ]
+          }, {
+            "featureType": "road",
+            "elementType": "labels",
+            "stylers"    : [
+              {"visibility": "off"}
+            ]
+          }, {
+            "featureType": "administrative.country",
+            "elementType": "geometry.stroke",
+            "stylers"    : [
+              {"visibility": "on"},
+              {"weight": 1.6},
+              {"color": "#a50f08"}
+            ]
+          }, {
+            "featureType": "transit.station.rail",
+            "stylers"    : [
+              {"visibility": "on"},
+              {"hue": "#006eff"},
+              {"weight": 1.1}
+            ]
+          }, {
+            "featureType": "transit.line",
+            "elementType": "geometry.fill",
+            "stylers"    : [
+              {"visibility": "on"},
+              {"color": "#333333"},
+              {"weight": 1.5}
+            ]
+          }, {
+            "featureType": "landscape.natural.landcover"
+          }
+          ];
 
     // Create a new StyledMapType object, passing it the array of styles,
     // as well as the name to be displayed on the map type control.
@@ -77,7 +77,7 @@ function initializeMap() {
     // Create a map object, and include the MapTypeId to add
     // to the map type control.
     var mapOptions = {
-      zoom: 8,
+      zoom  : 8,
       center: new google.maps.LatLng(47.29725, 8.867215),
 
       mapTypeControlOptions: {
@@ -92,14 +92,11 @@ function initializeMap() {
     //Associate the styled map with the MapTypeId and set it to display.
     map.mapTypes.set('map_style', styledMap);
     map.setMapTypeId('map_style');
+    return map;
   }
+
+  return null;
 }
-/**
- * Load map when ready
- */
-$(document).ready(function () {
-  initializeMap();
-});
 
 /**
  * Refresh map panel when activating it
@@ -127,14 +124,14 @@ function refreshMapPanel() {
  */
 function createTravelLogMarker(position, color, radiusFactor) {
   var markerOptions = {
-    strokeColor: color,
+    strokeColor  : color,
     strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: color,
-    fillOpacity: 0.35,
-    map: map,
-    center: new google.maps.LatLng(position.lat, position.lng),
-    radius: 4000 * radiusFactor
+    strokeWeight : 2,
+    fillColor    : color,
+    fillOpacity  : 0.35,
+    map          : map,
+    center       : new google.maps.LatLng(position.lat, position.lng),
+    radius       : 4000 * radiusFactor
   };
   // Add the circle for this city to the map.
   return new google.maps.Circle(markerOptions);
@@ -148,12 +145,12 @@ function createTravelLogMarker(position, color, radiusFactor) {
  */
 function drawTeamTravelLine(line, color) {
   var lineOptions = {
-    path: line,
-    geodesic: true,
-    strokeColor: color,
+    path         : line,
+    geodesic     : true,
+    strokeColor  : color,
     strokeOpacity: 1.0,
-    strokeWeight: 2,
-    map: map
+    strokeWeight : 2,
+    map          : map
   };
   return new google.maps.Polyline(lineOptions);
 }
@@ -164,7 +161,7 @@ function drawTeamTravelLine(line, color) {
  */
 function createFreePropertyMarkers() {
   var freeProperties = dataStore.getFreeProperties();
-  var markers = [];
+  var markers        = [];
   for (var i = 0; i < freeProperties.length; i++) {
     markers.push(createFreePropertyMarker(freeProperties[i]));
   }
@@ -181,28 +178,40 @@ function createFreePropertyMarker(property) {
   }
 
   var markerOptions = {
-    strokeColor: 'black',
+    strokeColor  : 'black',
     strokeOpacity: 0.6,
-    strokeWeight: 1,
-    fillColor: 'white',
-    fillOpacity: 0.5,
-    map: map,
-    center: new google.maps.LatLng(parseFloat(property.location.position.lat), parseFloat(property.location.position.lng)),
-    radius: 2000
+    strokeWeight : 1,
+    fillColor    : 'white',
+    fillOpacity  : 0.5,
+    map          : map,
+    center       : new google.maps.LatLng(parseFloat(property.location.position.lat), parseFloat(property.location.position.lng)),
+    radius       : 2000
   };
   // Add the circle for this city to the map.
   return new google.maps.Circle(markerOptions);
 }
-/**
+
+/*****************************************************************************************
  * The angular controller for the maps
  */
 ferropolyApp.controller('mapCtrl', mapCtrl);
 function mapCtrl($scope, $http) {
 
-  $scope.travelLogAll = false;
+  $scope.travelLogAll     = false;
   $scope.travelLogMarkers = [];
-  $scope.teams = [];
-  $scope.activePanel = 'none';
+  $scope.teams            = [];
+  $scope.activePanel      = 'none';
+
+  /**
+   * Load map when ready
+   */
+  $(document).ready(function () {
+    var newMap = initializeMap();
+    if (newMap) {
+      $scope.propertyMarkers = new PropertyMarkers(map);
+    }
+  });
+
   /**
    * Build the team info for the map
    */
@@ -210,9 +219,9 @@ function mapCtrl($scope, $http) {
     var teams = dataStore.getTeams();
     for (var i = 0; i < teams.length; i++) {
       $scope.teams.push({
-        teamId: teams[i].uuid,
-        name: teams[i].data.name,
-        color: dataStore.getTeamColor(teams[i].uuid),
+        teamId      : teams[i].uuid,
+        name        : teams[i].data.name,
+        color       : dataStore.getTeamColor(teams[i].uuid),
         displayOnMap: false
       });
     }
@@ -263,21 +272,32 @@ function mapCtrl($scope, $http) {
     $scope.deleteTravelLogMarkers();
     $scope.deleteTravelLines();
     $scope.freePropertyMarkers = createFreePropertyMarkers();
-    $scope.travelLines = [];
+
+    $scope.travelLines         = [];
+
+    $scope.propertyMarkers.showMarkers(function (p) {
+      if (!p.gamedata) {
+        return true;
+      }
+      return !p.gamedata.owner;
+    }, dataStore.getProperties());
 
     // filter hidden ones
     for (i = 0; i < $scope.teams.length; i++) {
       if ($scope.teams[i].displayOnMap) {
-        var log = _.map(dataStore.getTravelLog($scope.teams[i].teamId), _.clone);
-        log = _.sortBy(log, 'timestamp');
+        var log    = _.map(dataStore.getTravelLog($scope.teams[i].teamId), _.clone);
+        log        = _.sortBy(log, 'timestamp');
         var factor = 1 / log.length;
-        var line = [];
+        var line   = [];
         for (var t = 0; t < log.length; t++) {
           if (log[t].position) {
             line.push(new google.maps.LatLng(log[t].position.lat, log[t].position.lng));
             $scope.travelLogMarkers.push({
               teamId: log[t].teamId,
-              marker: createTravelLogMarker({lat:log[t].position.lat, lng:log[t].position.lng}, dataStore.getTeamColor(log[t].teamId), factor * (t + 1))
+              marker: createTravelLogMarker({
+                lat: log[t].position.lat,
+                lng: log[t].position.lng
+              }, dataStore.getTeamColor(log[t].teamId), factor * (t + 1))
             });
 
             $scope.travelLines.push(drawTeamTravelLine(line, dataStore.getTeamColor(log[t].teamId)));

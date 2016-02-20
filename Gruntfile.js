@@ -46,6 +46,7 @@ module.exports = function (grunt) {
           './main/public/js/reception/teamaccountsCtrl.js',
           './main/public/js/reception/managecallCtrl.js',
           './main/public/js/reception/dashboardCtrl.js',
+          './main/public/js/propertyMarkers.js',
           './main/public/js/reception/mapCtrl.js',
           './main/public/js/reception/ferrostatsCtrl.js',
           './main/public/js/reception/chanceCtrl.js',
