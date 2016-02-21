@@ -100,12 +100,12 @@ PropertyMarkers.prototype.updateMarker = function (marker) {
       marker.setMap(self.map);
     }
     marker.setIcon(self.markerIcons(marker.ferropolyProperty));
-    console.log('Show marker ' + marker.ferropolyProperty.location.name);
+    // console.log('Show marker ' + marker.ferropolyProperty.location.name);
   }
   else {
     // hide this one
     marker.setMap(null);
-    console.log('Hide marker ' + marker.ferropolyProperty.location.name);
+    // console.log('Hide marker ' + marker.ferropolyProperty.location.name);
   }
 };
 
