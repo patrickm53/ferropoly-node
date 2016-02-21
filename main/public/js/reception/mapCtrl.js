@@ -155,18 +155,7 @@ function drawTeamTravelLine(line, color) {
   return new google.maps.Polyline(lineOptions);
 }
 
-/**
- * Creates markers for all free properties
- * @returns {Array}
- */
-function createFreePropertyMarkers() {
-  var freeProperties = dataStore.getFreeProperties();
-  var markers        = [];
-  for (var i = 0; i < freeProperties.length; i++) {
-    markers.push(createFreePropertyMarker(freeProperties[i]));
-  }
-  return markers;
-}
+
 /**
  * Creates a marker for a free property
  * @param property
@@ -210,7 +199,7 @@ function mapCtrl($scope, $http) {
     if (newMap) {
       $scope.propertyMarkers = new PropertyMarkers(map, dataStore.getProperties());
       dataStore.onPropertiesUpdated(function (p) {
-        $scope.propertyMarkers.updateProperty(p)
+        $scope.propertyMarkers.updateProperty(p);
       });
     }
   });
@@ -239,6 +228,7 @@ function mapCtrl($scope, $http) {
     }
     $scope.drawTravelLog();
   };
+
   /**
    * Returns true when the api was loaded
    */
@@ -263,6 +253,7 @@ function mapCtrl($scope, $http) {
       $scope.drawTravelLog();
     }
   };
+
   /**
    * Draw the travel log on the map
    */
@@ -271,10 +262,8 @@ function mapCtrl($scope, $http) {
       return;
     }
     var i;
-    $scope.deleteFreePropertyMarkers();
     $scope.deleteTravelLogMarkers();
     $scope.deleteTravelLines();
-    $scope.freePropertyMarkers = createFreePropertyMarkers();
 
     $scope.travelLines = [];
 
@@ -319,20 +308,6 @@ function mapCtrl($scope, $http) {
     }
   };
 
-  /**
-   * Deletes the free property markers
-   */
-  $scope.deleteFreePropertyMarkers = function () {
-    if (_.isUndefined(google)) {
-      return;
-    }
-    if ($scope.freePropertyMarkers) {
-      for (var i = 0; i < $scope.freePropertyMarkers.length; i++) {
-        $scope.freePropertyMarkers[i].setMap(null);
-      }
-      $scope.freePropertyMarkers = [];
-    }
-  };
   /**
    * Deletes the free property markers
    */

@@ -416,12 +416,32 @@ function managecallCtrl($scope, $http) {
    * MAP HANDLERS (TRAVEL LOG
    */
 
+  $scope.mapFilter = 'free';
+
   /**
    * Is api loaded or not?
    * @returns {*}
    */
   $scope.mapApiLoaded = function () {
     return (google && google.maps);
+  };
+
+  $scope.filterChanged = function() {
+    switch($scope.mapFilter) {
+      case 'free':
+        $scope.propertyMarkers.setFilter($scope.propertyMarkers.filterFreeProperties);
+        break;
+
+      case 'teamAccount':
+        $scope.propertyMarkers.setTeam(activeCall.getCurrentTeam().uuid);
+        $scope.propertyMarkers.setFilter($scope.propertyMarkers.filterTeamProperties);
+        break;
+
+      case 'all':
+        $scope.propertyMarkers.setFilter($scope.propertyMarkers.filterAllProperties);
+        break;
+    }
+    $scope.propertyMarkers.updateMarkers();
   };
 
   /**
@@ -443,6 +463,11 @@ function managecallCtrl($scope, $http) {
     console.log(document.getElementById('map_canvas'));
     $scope.map = new google.maps.Map(document.getElementById('map-log'),
       mapOptions);
+
+    $scope.propertyMarkers = new PropertyMarkers($scope.map, dataStore.getProperties());
+    dataStore.onPropertiesUpdated(function (p) {
+      $scope.propertyMarkers.updateProperty(p);
+    });
   }
 
   /**
@@ -466,6 +491,7 @@ function managecallCtrl($scope, $http) {
     // Draw the line with the travel route and set the current marker
     drawTravelLog();
     setCurrentMarker();
+    $scope.propertyMarkers.updateMarkers();
   }
 
   /**

@@ -4,3 +4,6 @@
  */
 
 var dataStore = new DataStore(ferropoly, ferropolySocket); // ferropoly is defined in the main view
+
+// Just update properties after starting up
+dataStore.updateProperties();

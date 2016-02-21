@@ -64,7 +64,7 @@ PropertyMarkers.prototype.setMarkerIcons = function (markerFunction) {
  * @param property
  */
 PropertyMarkers.prototype.updateProperty = function (property) {
-  var marker = _.find(this.markers, function (m) {
+  var marker               = _.find(this.markers, function (m) {
     return m.ferropolyProperty.uuid === property.uuid
   });
   marker.ferropolyProperty = property;
@@ -125,6 +125,14 @@ PropertyMarkers.prototype.createMarkers = function () {
       title   : p.location.name
     });
     m.ferropolyProperty = p;
+
+    var infowindow = new google.maps.InfoWindow({
+      content: '<h4>' + p.location.name + '</h4><p>Kaufpreis: ' + p.pricelist.price + '</p>'
+    });
+    m.addListener('click', function () {
+      infowindow.open(self.map, m);
+    });
+
     self.markers.push(m);
   });
 };
@@ -139,6 +147,35 @@ PropertyMarkers.prototype.filterFreeProperties = function (p) {
     return true;
   }
   return !p.gamedata.owner;
+};
+
+/**
+ * A filter displaying the properties of a team
+ * @param p
+ * @returns {boolean}
+ */
+PropertyMarkers.prototype.filterTeamProperties = function (p) {
+  if (!p.gamedata) {
+    return false;
+  }
+  return (p.gamedata.owner === this.teamId);
+};
+
+/**
+ * A filter displaying all properties
+ * @param p
+ * @returns {boolean}
+ */
+PropertyMarkers.prototype.filterAllProperties = function (p) {
+  return true;
+};
+
+/**
+ * Set the team Id
+ * @param teamId
+ */
+PropertyMarkers.prototype.setTeam = function(teamId) {
+  this.teamId = teamId;
 };
 
 var ICON_EDIT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png';

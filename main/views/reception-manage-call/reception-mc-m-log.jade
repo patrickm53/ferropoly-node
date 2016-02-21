@@ -21,3 +21,15 @@
       h3.panel-title Standortverlauf
     .panel-body
       #map-log
+      form.form-inline
+        label.radio-inline
+          input(type='radio' id='showFreeOption' ng-model='mapFilter' ng-change='filterChanged()' value='free' name='filter')
+          | Freie Orte
+
+        label.radio-inline
+          input(type='radio' id='showTeamOption' ng-model='mapFilter' value='teamAccount' ng-change='filterChanged()'  name='filter')
+          | Orte der Gruppe
+
+        label.radio-inline
+          input(type='radio' id='showAllOption' ng-model='mapFilter' value='all' ng-change='filterChanged()'  name='filter')
+          | Alle
