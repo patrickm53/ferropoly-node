@@ -25,12 +25,12 @@
 
 var DataStore = function (initData, socket) {
 
-  this.data = initData;
-  this.data.events = {};
-  this.socket = socket;
-  this.teamAccountUpdateHandlers = [];
-
-  var self = this;
+  this.data                        = initData;
+  this.data.events                 = {};
+  this.socket                      = socket;
+  this.teamAccountUpdateHandlers   = [];
+  this.onPropertiesUpdatedHandlers = [];
+  var self                         = this;
 
   this.teamColors = [
     'blue', 'brown', 'darkgreen', 'gold', 'red', 'olive', 'peru', 'cyan', 'indianred', 'khaki',
@@ -60,8 +60,11 @@ var DataStore = function (initData, socket) {
     switch (ind.cmd) {
       case 'propertyBought':
       case 'buildingBuilt':
-        var i = _.findIndex(self.data.pricelist, {uuid: ind.property.uuid});
+        var i                  = _.findIndex(self.data.pricelist, {uuid: ind.property.uuid});
         self.data.pricelist[i] = ind.property;
+        self.onPropertiesUpdatedHandlers.forEach(function (h) {
+          h(ind.property);
+        });
         console.log('Property account, updated: ' + i + '(' + ind.cmd + ')');
         break;
 
@@ -118,7 +121,7 @@ DataStore.prototype.getGameplay = function () {
  */
 DataStore.prototype.isGameActive = function () {
   var start = moment(this.data.gameplay.scheduling.gameStartTs);
-  var end = moment(this.data.gameplay.scheduling.gameEndTs);
+  var end   = moment(this.data.gameplay.scheduling.gameEndTs);
   if (moment().isAfter(end)) {
     console.log('Game over');
     return false;

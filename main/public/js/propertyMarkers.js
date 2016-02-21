@@ -5,12 +5,6 @@
 
 'use strict';
 
-var ICON_EDIT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png';
-var ICON_TRAIN_LOCATION    = 'https://maps.gstatic.com/mapfiles/ms2/micons/green.png';
-var ICON_BUS_LOCATION      = 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow.png';
-var ICON_BOAT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/blue.png';
-var ICON_CABLECAR_LOCATION = 'https://maps.gstatic.com/mapfiles/ms2/micons/purple.png';
-var ICON_OTHER_LOCATION    = 'https://maps.gstatic.com/mapfiles/ms2/micons/pink.png';
 
 /**
  * Constructor
@@ -31,9 +25,15 @@ function PropertyMarkers(map, properties) {
 
   this.enabled = true;
 
-
+  // Default filter and icons
+  this.setMarkerIcons(this.iconsByAccessibility);
+  this.setFilter(this.filterFreeProperties);
+  this.createMarkers();
 }
 
+/**
+ * Remove all markers from the map
+ */
 PropertyMarkers.prototype.removeAll = function () {
   if (!this.enabled) {
     return;
@@ -43,14 +43,83 @@ PropertyMarkers.prototype.removeAll = function () {
   });
 };
 
-PropertyMarkers.prototype.createMarkers = function (properties) {
+/**
+ * Set the filter to a function defining which markers have to be shown
+ * @param filter
+ */
+PropertyMarkers.prototype.setFilter = function (filter) {
+  this.markerFilter = filter;
+};
+
+/**
+ * Set the function defining which marker icon has to be used
+ * @param markerFunction
+ */
+PropertyMarkers.prototype.setMarkerIcons = function (markerFunction) {
+  this.markerIcons = markerFunction;
+};
+
+/**
+ * Update property callback for the datastore
+ * @param property
+ */
+PropertyMarkers.prototype.updateProperty = function (property) {
+  var marker = _.find(this.markers, function (m) {
+    return m.ferropolyProperty.uuid === property.uuid
+  });
+  marker.ferropolyProperty = property;
+  this.updateMarker(marker);
+};
+
+
+/**
+ * Show selected markers
+ */
+PropertyMarkers.prototype.updateMarkers = function () {
+  if (!this.enabled) {
+    return;
+  }
+  var self = this;
+  this.markers.forEach(self.updateMarker.bind(self));
+};
+
+
+/**
+ * Update a marker (icon and visibility)
+ * @param marker
+ */
+PropertyMarkers.prototype.updateMarker = function (marker) {
+  if (!marker) {
+    console.warn('Marker not found', marker);
+    return;
+  }
+  var self = this;
+  if (this.markerFilter(marker.ferropolyProperty)) {
+    // This one has to be shown
+    if (true || !marker.getMap() === self.map) {
+      marker.setMap(self.map);
+    }
+    marker.setIcon(self.markerIcons(marker.ferropolyProperty));
+    console.log('Show marker ' + marker.ferropolyProperty.location.name);
+  }
+  else {
+    // hide this one
+    marker.setMap(null);
+    console.log('Hide marker ' + marker.ferropolyProperty.location.name);
+  }
+};
+
+/**
+ * Create a marker (has to be done only once)
+ */
+PropertyMarkers.prototype.createMarkers = function () {
   if (!this.enabled) {
     return;
   }
   var self     = this;
   this.markers = [];
 
-  properties.forEach(function (p) {
+  this.properties.forEach(function (p) {
     var m               = new google.maps.Marker({
       position: new google.maps.LatLng(p.location.position.lat, p.location.position.lng),
       title   : p.location.name
@@ -61,32 +130,41 @@ PropertyMarkers.prototype.createMarkers = function (properties) {
 };
 
 /**
- * Show selected markers
- * @param filter is a function which applies on the property
- * @param properties are only supplied if there is an update needed
+ * A filter displaying only free properties
+ * @param p
+ * @returns {boolean}
  */
-PropertyMarkers.prototype.showMarkers = function (filter, properties) {
-  if (!this.enabled) {
-    return;
+PropertyMarkers.prototype.filterFreeProperties = function (p) {
+  if (!p.gamedata) {
+    return true;
   }
-  var self = this;
+  return !p.gamedata.owner;
+};
 
-  // default is all filters on
-  filter = filter || function () {
-      return true
-    };
+var ICON_EDIT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png';
+var ICON_TRAIN_LOCATION    = 'https://maps.gstatic.com/mapfiles/ms2/micons/green.png';
+var ICON_BUS_LOCATION      = 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow.png';
+var ICON_BOAT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/blue.png';
+var ICON_CABLECAR_LOCATION = 'https://maps.gstatic.com/mapfiles/ms2/micons/purple.png';
+var ICON_OTHER_LOCATION    = 'https://maps.gstatic.com/mapfiles/ms2/micons/pink.png';
 
-  if (properties) {
-    this.removeAll();
-    this.createMarkers(properties);
+
+/**
+ * Creates markers depending on the accessibility of a location
+ * @param p
+ * @returns {*}
+ */
+PropertyMarkers.prototype.iconsByAccessibility = function (p) {
+  switch (p.location.accessibility) {
+    case 'train':
+      return ICON_TRAIN_LOCATION;
+    case 'bus':
+      return ICON_BUS_LOCATION;
+    case 'boat':
+      return ICON_BOAT_LOCATION;
+    case 'cablecar':
+      return ICON_CABLECAR_LOCATION;
+    default:
+      return ICON_OTHER_LOCATION;
   }
-
-  var markers = _.filter(this.markers, function (m) {
-    return filter(m.ferropolyProperty);
-  });
-
-  markers.forEach(function (m) {
-    m.setMap(self.map);
-  });
-
 };

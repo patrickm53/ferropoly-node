@@ -208,7 +208,10 @@ function mapCtrl($scope, $http) {
   $(document).ready(function () {
     var newMap = initializeMap();
     if (newMap) {
-      $scope.propertyMarkers = new PropertyMarkers(map);
+      $scope.propertyMarkers = new PropertyMarkers(map, dataStore.getProperties());
+      dataStore.onPropertiesUpdated(function (p) {
+        $scope.propertyMarkers.updateProperty(p)
+      });
     }
   });
 
@@ -273,14 +276,9 @@ function mapCtrl($scope, $http) {
     $scope.deleteTravelLines();
     $scope.freePropertyMarkers = createFreePropertyMarkers();
 
-    $scope.travelLines         = [];
+    $scope.travelLines = [];
 
-    $scope.propertyMarkers.showMarkers(function (p) {
-      if (!p.gamedata) {
-        return true;
-      }
-      return !p.gamedata.owner;
-    }, dataStore.getProperties());
+    $scope.propertyMarkers.updateMarkers();
 
     // filter hidden ones
     for (i = 0; i < $scope.teams.length; i++) {

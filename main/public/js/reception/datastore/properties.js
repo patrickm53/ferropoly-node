@@ -8,12 +8,19 @@
  * @param property
  */
 DataStore.prototype.updatePropertyInPricelist = function (property) {
+  var self = this;
   if (property && property.uuid) {
-    var i = _.findIndex(this.data.pricelist, {uuid: property.uuid});
+    var i = _.findIndex(self.data.pricelist, {uuid: property.uuid});
     if (i > -1) {
-      this.data.pricelist[i] = property;
+      self.data.pricelist[i] = property;
     }
   }
+  self.onPropertiesUpdatedHandlers.forEach(function (h) {
+    if (h) {
+      return h(property);
+    }
+    console.warn('Invalid onPropertiesUpdatedHandler');
+  });
 };
 
 /**
@@ -80,4 +87,12 @@ DataStore.prototype.getMapCenter = function () {
     lngSum += parseFloat(this.data.pricelist[i].location.position.lng);
   }
   return {lat: latSum / this.data.pricelist.length, lng: lngSum / this.data.pricelist.length};
+};
+
+/**
+ * Registers a handler which is called each time a property is updated
+ * @param handler
+ */
+DataStore.prototype.onPropertiesUpdated = function (handler) {
+  this.onPropertiesUpdatedHandlers.push(handler);
 };
