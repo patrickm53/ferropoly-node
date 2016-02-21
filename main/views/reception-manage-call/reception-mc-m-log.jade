@@ -5,15 +5,16 @@
       h3.panel-title Reiselog
         i.fa.fa-refresh.refresh-button(ng-click='refreshProperties()')
     .panel-body
-      table.table.table-hover
-        thead
-          th Zeit
-          th Ort
-        tbody
-          tr(ng-repeat='p in teamInfo.travelLog | orderBy:"timestamp"')
-            td {{p.timestamp | date:'dd.MM. HH:mm:ss'}}
-            td
-              a(href='#' ng-click='focusLogPosition(p)') {{getPropertyName(p)}}
+      #teams-travel-log
+        table.table.table-hover
+          thead
+            th Zeit
+            th Ort
+          tbody
+            tr(ng-repeat='p in teamInfo.travelLog | orderBy:"timestamp"')
+              td {{p.timestamp | date:'dd.MM. HH:mm:ss'}}
+              td
+                a(href='#' ng-click='focusLogPosition(p)') {{getPropertyName(p)}}
 
 .col-md-8(ng-show='mapApiLoaded()')
   .panel.panel-default

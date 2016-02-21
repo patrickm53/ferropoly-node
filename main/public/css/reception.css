@@ -75,6 +75,11 @@
     height   : 200px;
 }
 
+#teams-travel-log {
+    overflow : auto;
+    height   : 80vh;
+}
+
 .chart-area {
     width : 100%;
 }
