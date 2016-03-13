@@ -13,6 +13,7 @@ div(ng-controller='pricelistCtrl')
     tbody
       tr(ng-repeat='p in pricelist')
         td {{p.pricelist.position + 1}}
+          i.fa.fa-flag(ng-show='p.gamedata.owner') &nbsp;
         td {{p.location.name}}
         td {{p.pricelist.propertyGroup}}
         td {{p.pricelist.price}}
