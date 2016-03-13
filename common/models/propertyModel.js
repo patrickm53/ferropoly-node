@@ -371,7 +371,7 @@ var allowBuilding = function (gameId, callback) {
     'gamedata.owner': {'$exists': true, '$ne': ''}
   }, {'gamedata.buildingEnabled': true}, {multi: true}, function (err, numAffected) {
     callback(err, numAffected);
-  })
+  });
 };
 
 /**
