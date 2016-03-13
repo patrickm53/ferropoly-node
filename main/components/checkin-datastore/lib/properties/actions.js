@@ -29,5 +29,16 @@ module.exports = {
       type   : cst.UPDATE_PROPERTY,
       property  : property
     };
+  },
+
+  /**
+   * Building is allowed again for all properties (paying rent)
+   * @returns {{type: string}}
+   */
+  buildingAllowedAgain: function() {
+    return {
+      type: cst.BUILDING_ALLOWED_AGAIN
+    }
   }
+
 };

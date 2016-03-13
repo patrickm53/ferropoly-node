@@ -11,5 +11,6 @@ module.exports = {
   SET_CHANCELLERY_ASSET       : 'setChancelleryAsset',
   RESET_CHANCELLERY           : 'resetChancellery',
   SET_PROPERTIES              : 'setProperties',
-  UPDATE_PROPERTY             : 'updateProperty'
+  UPDATE_PROPERTY             : 'updateProperty',
+  BUILDING_ALLOWED_AGAIN      : 'buildingAllowedAgain'
 };

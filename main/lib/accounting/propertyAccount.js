@@ -234,6 +234,8 @@ function buyBuilding(gameplay, property, team, callback) {
           property   : property,
           transaction: pt
         });
+
+        ferroSocket.emitToTeam(gameplay.internal.gameId, team.uuid, 'checkinStore', propertyActions.updateProperty(property));
       }
       callback(err, retVal);
     });

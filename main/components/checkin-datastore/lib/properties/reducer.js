@@ -22,6 +22,16 @@ module.exports = function (state, action) {
       newProperties.push(action.property);
       return assign({}, state, {properties: newProperties});
 
+    case cst.BUILDING_ALLOWED_AGAIN:
+      // Building is allowed again
+      var newProperties = state.properties || [];
+      for (var i = 0; i < newProperties.length; i++) {
+        if (newProperties[i].gamedata) {
+          newProperties[i].gamedata.buildingEnabled = true;
+        }
+      }
+      return assign({}, state, {properties: newProperties});
+
     default:
       return state;
   }

@@ -4,20 +4,21 @@
  * Created by kc on 20.04.15.
  */
 'use strict';
-var gameCache = require('../gameCache');
-var propWrap = require('../propertyWrapper');
-var teamAccount = require('./teamAccount');
-var propertyAccount = require('./propertyAccount');
+var gameCache          = require('../gameCache');
+var propWrap           = require('../propertyWrapper');
+var teamAccount        = require('./teamAccount');
+var propertyAccount    = require('./propertyAccount');
 var chancelleryAccount = require('./chancelleryAccount');
-var _ = require('lodash');
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
-var logger = require('../../../common/lib/logger').getLogger('marketplace');
-var travelLog = require('../../../common/models/travelLogModel');
-var async = require('async');
-var moment = require('moment');
+var propertyActions    = require('../../components/checkin-datastore/lib/properties/actions');
+var logger             = require('../../../common/lib/logger').getLogger('marketplace');
+var travelLog          = require('../../../common/models/travelLogModel');
+var async              = require('async');
+var moment             = require('moment');
+var EventEmitter       = require('events').EventEmitter;
+var util               = require('util');
+var _                  = require('lodash');
 var marketplace;
-
+var ferroSocket;
 /**
  * Just a logger helper
  * @param gameId
@@ -112,11 +113,11 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
   }
 
   var start = moment(gameplay.scheduling.gameStartTs).subtract(additionalMinutes, 'minutes');
-  var end = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
+  var end   = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
   if (moment().isAfter(end)) {
     marketLog(gameplay.internal.gameId, 'Game over', {
-      start: start.toDate(),
-      end: end.toDate(),
+      start            : start.toDate(),
+      end              : end.toDate(),
       additionalMinutes: additionalMinutes
     });
     return false;
@@ -164,7 +165,7 @@ Marketplace.prototype.buyProperty = function (options, callback) {
         logger.error(err);
         return callback(err);
       }
-      var gp = res.gameplay;
+      var gp   = res.gameplay;
       var team = res.teams[options.teamId];
 
       if (!gp || !team) {
@@ -186,7 +187,7 @@ Marketplace.prototype.buyProperty = function (options, callback) {
             return callback(err);
           }
           options.amount = info.amount;
-          options.info = 'Kauf ' + property.location.name;
+          options.info   = 'Kauf ' + property.location.name;
           teamAccount.chargeToBank(options, function (err) {
             if (err) {
               return callback(err, {message: 'Fehler beim Grundstückkauf'});
@@ -237,7 +238,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         logger.error(err);
         return callback(err);
       }
-      var gp = res.gameplay;
+      var gp   = res.gameplay;
       var team = res.teams[teamId];
 
       if (!gp || !team) {
@@ -248,7 +249,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         return callback(new Error('BuildHouses: Marketplace is closed'));
       }
 
-      var log = [];
+      var log     = [];
       var handled = 0;
 
       // Callback when buying building
@@ -274,7 +275,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
               teamId: teamId,
               gameId: gameId,
               amount: totalAmount,
-              info: {info: 'Hausbau', parts: log}
+              info  : {info: 'Hausbau', parts: log}
             }, function (err) {
               if (err) {
                 logger.error(err);
@@ -321,7 +322,7 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
         logger.error(err);
         return callback(err);
       }
-      var gp = res.gameplay;
+      var gp   = res.gameplay;
       var team = res.teams[teamId];
 
       if (!gp || !team) {
@@ -342,7 +343,7 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
           teamId: teamId,
           gameId: gameId,
           amount: info.amount,
-          info: {info: 'Hausbau ' + property.location.name}
+          info  : {info: 'Hausbau ' + property.location.name}
         }, function (err) {
           if (err) {
             logger.error(err);
@@ -368,7 +369,7 @@ Marketplace.prototype.payInitialAsset = function (gameId, callback) {
       logger.error(err);
       return callback(err);
     }
-    var gp = res.gameplay;
+    var gp    = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
     if (!self.isOpen(gp, 15)) {
@@ -398,7 +399,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
       logger.error(err);
       return callback(err);
     }
-    var gp = res.gameplay;
+    var gp        = res.gameplay;
     var tolerance = 10; // in minutes
     var count = 0;
 
@@ -436,7 +437,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
 Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
   var self = this;
   if (_.isFunction(tolerance)) {
-    callback = tolerance;
+    callback  = tolerance;
     tolerance = 0;
   }
 
@@ -445,7 +446,7 @@ Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
       logger.error(err);
       return callback(err);
     }
-    var gp = res.gameplay;
+    var gp    = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
     if (!self.isOpen(gp, tolerance)) {
@@ -470,7 +471,7 @@ Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
 Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback) {
   var self = this;
   if (_.isFunction(tolerance)) {
-    callback = tolerance;
+    callback  = tolerance;
     tolerance = 0;
   }
 
@@ -479,7 +480,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback
       logger.error(err);
       return callback(err);
     }
-    var gp = res.gameplay;
+    var gp    = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
     if (!self.isOpen(gp, tolerance)) {
@@ -512,7 +513,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback
  */
 Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback) {
   if (_.isFunction(tolerance)) {
-    callback = tolerance;
+    callback  = tolerance;
     tolerance = 0;
   }
 
@@ -532,7 +533,7 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback)
       }
       if (info.totalAmount > 0) {
         teamAccount.receiveFromBank(info.teamId, gp.internal.gameId, info.totalAmount, {
-          info: 'Grundstückzins',
+          info : 'Grundstückzins',
           parts: info.register
         }, function (err) {
           return callback(err);
@@ -554,7 +555,7 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback)
  * @param callback
  */
 Marketplace.prototype.payRents = function (options, callback) {
-  var gameId = options.gameId;
+  var gameId    = options.gameId;
   var tolerance = options.tolerance || 0;
 
   if (!gameId) {
@@ -568,7 +569,7 @@ Marketplace.prototype.payRents = function (options, callback) {
       logger.error(err);
       return callback(err);
     }
-    var gp = res.gameplay;
+    var gp    = res.gameplay;
     var teams = _.valuesIn(res.teams);
 
     if (!gp) {
@@ -593,6 +594,10 @@ Marketplace.prototype.payRents = function (options, callback) {
         propWrap.allowBuilding(gameId, function (err, nbAffected) {
           if (err) {
             return callback(err);
+          }
+          if (ferroSocket) {
+            // Inform clients that the can build again
+            ferroSocket.emitToGame(gameId, 'checkinStore', propertyActions.buildingAllowedAgain());
           }
           marketLog(gameId, 'Building allowed again for ' + nbAffected.toString() + ' buildings');
 
@@ -630,7 +635,7 @@ Marketplace.prototype.chancellery = function (gameId, teamId, callback) {
       logger.error(err);
       return callback(err);
     }
-    var gp = res.gameplay;
+    var gp   = res.gameplay;
     var team = res.teams[teamId];
 
     if (!self.isOpen(gp)) {
@@ -663,7 +668,7 @@ Marketplace.prototype.chancelleryGamble = function (gameId, teamId, amount, call
       logger.error(err);
       return callback(err);
     }
-    var gp = res.gameplay;
+    var gp   = res.gameplay;
     var team = res.teams[teamId];
 
     if (!self.isOpen(gp)) {
@@ -702,7 +707,7 @@ Marketplace.prototype.manipulateTeamAccount = function (gameId, teamId, amount, 
       teamId: teamId,
       gameId: gameId,
       amount: amount,
-      info: 'Manuelle Lastschrift: ' + reason
+      info  : 'Manuelle Lastschrift: ' + reason
     }, function (err) {
       callback(err);
     });
@@ -749,13 +754,15 @@ module.exports = {
     propWrap.init();
     chancelleryAccount.init();
 
+    ferroSocket = require('../ferroSocket').get();
+
     return marketplace;
   },
   /**
    * Gets the marketplace, throws an error, if not defined
    * @returns {*}
    */
-  getMarketplace: function () {
+  getMarketplace   : function () {
     if (!marketplace) {
       throw new Error('You must create a marketplace first before getting it');
     }

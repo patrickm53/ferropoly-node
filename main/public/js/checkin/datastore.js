@@ -51,7 +51,8 @@ module.exports = {
   SET_CHANCELLERY_ASSET       : 'setChancelleryAsset',
   RESET_CHANCELLERY           : 'resetChancellery',
   SET_PROPERTIES              : 'setProperties',
-  UPDATE_PROPERTY             : 'updateProperty'
+  UPDATE_PROPERTY             : 'updateProperty',
+  BUILDING_ALLOWED_AGAIN      : 'buildingAllowedAgain'
 };
 
 },{}],4:[function(require,module,exports){
@@ -77,6 +78,16 @@ module.exports = function (state, action) {
       var newProperties = state.properties || [];
       remove(newProperties, {uuid: action.property.uuid});
       newProperties.push(action.property);
+      return assign({}, state, {properties: newProperties});
+
+    case cst.BUILDING_ALLOWED_AGAIN:
+      // Building is allowed again
+      var newProperties = state.properties || [];
+      for (var i = 0; i < newProperties.length; i++) {
+        if (newProperties[i].gamedata) {
+          newProperties[i].gamedata.buildingEnabled = true;
+        }
+      }
       return assign({}, state, {properties: newProperties});
 
     default:
