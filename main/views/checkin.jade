@@ -41,7 +41,7 @@ block navbar-right
     a(href='#' onclick='activateView("#view-properties")') Besitz
   li
     a(href='#' onclick='activateView("#view-teamaccount")') Kontobuch
- 
+
   li#online
     a(href='#')
       i.fa.fa-cloud.online &nbsp;online
@@ -51,7 +51,7 @@ block navbar-right
 
 block content
 
-  div(ng-app='checkinApp')
+  .container-fluid(ng-app='checkinApp')
     #view-dashboard.ng-cloak
       include checkin/checkin-dashboard
     #view-map.ng-cloak

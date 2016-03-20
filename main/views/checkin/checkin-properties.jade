@@ -1,13 +1,22 @@
 // The properties of a team
    Created by kc on 25.01.16.
 div(ng-controller='propertiesCtrl')
-  h1 Besitz
-  p(ng-show='properties.length === 0') Bisher habt ihr noch keine Orte gekauft.
-
-  div(ng-show='properties.length > 0')
-    p Gekaufte Orte: {{properties.length}}
-    div(ng-repeat="p in properties | orderBy: 'gamedata.boughtTs'")
-      h3 {{p.location.name}}
-      p Kaufzeit: {{p.gamedata.boughtTs | date:'HH:mm'}}
-      p Anzahl Häuser: {{p.gamedata.buildings}}
+  .row
+    .col-md-12.col-sm-12.col-xs-12
+      h1 Besitz
+      p(ng-show='properties.length === 0') Bisher habt ihr noch keine Orte gekauft.
+  .row
+    div(ng-show='properties.length > 0')
+      .col-md-12.col-sm-12.col-xs-12
+        p Gekaufte Orte: {{properties.length}}
+      .col-md-4.col-sm-6.col-xs-6(ng-repeat="p in properties | orderBy: 'location.name'")
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title {{p.location.name}}
+          .panel-body
+            p Kaufzeit: {{p.gamedata.boughtTs | date:'HH:mm'}}
+            p Anzahl Häuser: {{p.gamedata.buildings}}
+            p Hausbau möglich:&nbsp;
+              span(ng-show='p.gamedata.buildingEnabled && p.gamedata.buildings < 5') Ja
+              span(ng-show='!p.gamedata.buildingEnabled || p.gamedata.buildings < 4') Nein
 
