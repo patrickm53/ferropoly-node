@@ -2,13 +2,12 @@
  * Settings File
  * Created by kc on 14.04.15.
  */
-'use strict';
 
-var pkg    = require('./../package.json'),
-    fs     = require('fs'),
-    _      = require('lodash'),
-    path   = require('path');
-var logger = require('../common/lib/logger').getLogger('settings');
+const pkg    = require('./../package.json')
+const fs     = require('fs');
+const _      = require('lodash');
+const path   = require('path');
+const logger = require('../common/lib/logger').getLogger('settings');
 
 // Set default
 var deployType = process.env.DEPLOY_TYPE || 'local';

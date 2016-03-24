@@ -7,16 +7,15 @@
  * the money comes into this pot. Todo: check the money flow for the questions
  * Created by kc on 20.04.15.
  */
-'use strict';
 
-var chancelleryTransaction = require('../../../common/models/accounting/chancelleryTransaction');
-var teamAccount            = require('./teamAccount');
-var _                      = require('lodash');
-var moment                 = require('moment');
-var chancelleryActions     = require('../../components/checkin-datastore/lib/chancellery/actions');
-var logger                 = require('../../../common/lib/logger').getLogger('chancelleryAccount');
+const chancelleryTransaction = require('../../../common/models/accounting/chancelleryTransaction');
+const teamAccount            = require('./teamAccount');
+const _                      = require('lodash');
+const moment                 = require('moment');
+const chancelleryActions     = require('../../components/checkin-datastore/lib/chancellery/actions');
+const logger                 = require('../../../common/lib/logger').getLogger('chancelleryAccount');
 var ferroSocket;
-var jackpotFull            = {};
+var jackpotFull              = {};
 /**
  * Internal function: Books the chancellery event in the chancellery and the teams account
  * @param gameplay
@@ -36,7 +35,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
   function bookCallback(err) {
     if (!ferroSocket) {
       // No socket, just return
-      callback(err);
+      return callback(err);
     }
 
     chancelleryTransaction.getBalance(gameplay.internal.gameId, function (err, info) {
@@ -48,7 +47,9 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         else {
           jackpotFull[gameplay.internal.gameId] = false;
         }
-        ferroSocket.emitToGame(gameplay.internal.gameId, 'checkinStore', chancelleryActions.setAsset(info.balance));
+        if (ferroSocket) {
+          ferroSocket.emitToGame(gameplay.internal.gameId, 'checkinStore', chancelleryActions.setAsset(info.balance));
+        }
       }
       callback();
     })
@@ -234,7 +235,14 @@ module.exports = {
   init: function () {
     ferroSocket = require('../ferroSocket').get();
 
+    if (!ferroSocket) {
+      return;
+    }
     ferroSocket.on('player-connected', function (data) {
+      if (!ferroSocket) {
+        return;
+      }
+
       getBalance(data.gameId, function (err, info) {
         if (err) {
           logger.error(err);
