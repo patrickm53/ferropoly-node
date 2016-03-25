@@ -2,18 +2,17 @@
  * The index route
  * Created by kc on 14.04.15.
  */
-'use strict';
 
-var express = require('express');
-var router  = express.Router();
+const express = require('express');
+const router  = express.Router();
 
-var settings      = require('../settings');
-var gameplayModel = require('../../common/models/gameplayModel');
-var users         = require('../../common/models/userModel');
-var logger        = require('../../common/lib/logger').getLogger('routes:index');
-var errorHandler  = require('../lib/errorHandler');
-var teams         = require('../../common/models/teamModel');
-var async         = require('async');
+const settings      = require('../settings');
+const gameplayModel = require('../../common/models/gameplayModel');
+const users         = require('../../common/models/userModel');
+const logger        = require('../../common/lib/logger').getLogger('routes:index');
+const errorHandler  = require('../lib/errorHandler');
+const teams         = require('../../common/models/teamModel');
+const async         = require('async');
 
 var ngFile = '/js/indexctrl.js';
 if (settings.minifiedjs) {
@@ -86,7 +85,7 @@ router.get('/gameplays', function (req, res) {
               team      : team
             });
             cb();
-          })
+          });
         },
         function (err) {
           // That's it iterated through all found teams

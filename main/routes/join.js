@@ -4,16 +4,15 @@
  */
 
 
-var express   = require('express');
-var router    = express.Router();
-var gameCache = require('../lib/gameCache');
-var settings  = require('../settings');
-var users     = require('../../common/models/userModel');
-var teams     = require('../../common/models/teamModel');
-var logger    = require('../../common/lib/logger').getLogger('routes:join');
-var async     = require('async');
-var mailer    = require('../../common/lib/mailer');
-var ngFile    = '/js/joinctrl.js';
+const express   = require('express');
+const router    = express.Router();
+const gameCache = require('../lib/gameCache');
+const settings  = require('../settings');
+const users     = require('../../common/models/userModel');
+const teams     = require('../../common/models/teamModel');
+const logger    = require('../../common/lib/logger').getLogger('routes:join');
+const mailer    = require('../../common/lib/mailer');
+var ngFile      = '/js/joinctrl.js';
 if (settings.minifiedjs) {
   ngFile = '/js/joinctrl.min.js';
 }
@@ -116,7 +115,7 @@ router.post('/:gameId', (req, res) => {
             };
             d.data.remarks            = req.body.remarks;
             d.data.onlineRegistration = true; // Game owner can't change email address
-            d.data.changedDate = new Date();
+            d.data.changedDate        = new Date();
             return d;
           }
 
@@ -177,7 +176,7 @@ function sendInfoMail(gameplay, team, options, callback) {
     subject = 'Neue Ferropoly Anmeldung';
     html += '<h1>Neue Ferropoly Anmeldung</h1>';
     html += `<p>${team.data.teamLeader.name} meldet sich mit dem Team "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" an.</p>`;
-    html += `<p>Bite bestätige diese Anmeldung in der Ferropoly Editor App.</p>`;
+    html += '<p>Bite bestätige diese Anmeldung in der Ferropoly Editor App.</p>';
 
     text += `${team.data.teamLeader.name} meldet sich mit dem Team "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" an.\n`;
     text += `Bite bestätige diese Anmeldung in der Ferropoly Editor App.\n`;
@@ -186,10 +185,10 @@ function sendInfoMail(gameplay, team, options, callback) {
     subject = 'Bearbeitete Ferropoly Anmeldung';
     html += '<h1>Bearbeitete Ferropoly Anmeldung</h1>';
     html += `<p>${team.data.teamLeader.name} hat die Anmeldung des Teams "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" bearbeitet.</p>`;
-    html += `<p>Die Änderungen kannst Du in der Ferropoly Editor App anschauen.</p>`;
+    html += '<p>Die Änderungen kannst Du in der Ferropoly Editor App anschauen.</p>';
 
     text += `${team.data.teamLeader.name} hat die Anmeldung des Teams "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" bearbeitet.\n`;
-    text += `Die Änderungen kannst Du in der Ferropoly Editor App anschauen.\n`;
+    text += 'Die Änderungen kannst Du in der Ferropoly Editor App anschauen.\n';
   }
 
 

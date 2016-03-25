@@ -3,15 +3,13 @@
  * Created by kc on 30.12.15.
  */
 
-var express = require('express');
-var router  = express.Router();
+const express = require('express');
+const router  = express.Router();
 
-var ngFile = '/js/accountCtrl.js';
-
-router.get('/', function (req, res) {
+router.get('/', (req, res) => {
   res.render('account', {
-    title       : 'Mein Account',
-    hideLogout  : false
+    title     : 'Mein Account',
+    hideLogout: false
   });
 });
 

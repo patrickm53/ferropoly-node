@@ -52,7 +52,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         }
       }
       callback();
-    })
+    });
   }
 
   if (info.amount > 0) {

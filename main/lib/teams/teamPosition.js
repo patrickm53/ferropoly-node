@@ -6,10 +6,10 @@
  */
 
 var ferroSocket;
-var logger         = require('../../../common/lib/logger').getLogger('teams:teamPositions');
-var travelLogModel = require('../../../common/models/travelLogModel');
-var gameCache      = require('../gameCache');
-var moment         = require('moment');
+const logger         = require('../../../common/lib/logger').getLogger('teams:teamPositions');
+const travelLogModel = require('../../../common/models/travelLogModel');
+const gameCache      = require('../gameCache');
+const moment         = require('moment');
 
 function addLog(data) {
   gameCache.getGameData(data.gameId, (err, gc) => {
@@ -49,7 +49,7 @@ function onPlayerLocation(data) {
       break;
 
     default:
-      logger.info('Unhandled command: ' + data.cmd)
+      logger.info('Unhandled command: ' + data.cmd);
   }
 }
 
