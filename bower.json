@@ -14,14 +14,14 @@
     "node"
   ],
   "dependencies": {
-    "angular": "1.5.0",
-    "angular-sanitize": "1.5.0",
-    "jquery": "2.1.4",
-    "lodash": "3.10.1",
+    "angular": "1.5.2",
+    "angular-sanitize": "1.5.2",
+    "jquery": "2.2.2",
+    "lodash": "4.6.1",
     "c3": "0.4.10",
     "components-font-awesome": "4.5.0",
     "bootstrap": "3.3.6",
-    "moment": "2.10.6"
+    "moment": "2.12.0"
   },
   "private": true,
   "ignore": [
