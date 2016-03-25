@@ -6,7 +6,7 @@
  * Created by kc on 16.12.15.
  */
 
-'use strict';
+
 
 var maps = require('./maps.json');
 var locationModel = require('../models/locationModel');

@@ -4,11 +4,11 @@
  * Created by kc on 20.04.15.
  */
 
-const mongoose = require('mongoose');
-const moment   = require('moment');
-const logger   = require('../../lib/logger').getLogger('chancelleryTransaction');
-const isArray  = require('lodash/isArray');
 
+var mongoose                            = require('mongoose');
+var moment                              = require('moment');
+var logger                              = require('../../lib/logger').getLogger('chancelleryTransaction');
+var isArray                             = require('lodash/lang/isArray');
 /**
  * The mongoose schema for a team account
  */
@@ -29,7 +29,7 @@ var chancelleryAccountTransactionSchema = mongoose.Schema({
 /**
  * The Gameplay model
  */
-const ChancelleryTransaction = mongoose.model('ChancelleryTransactions', chancelleryAccountTransactionSchema);
+var ChancelleryTransaction = mongoose.model('ChancelleryTransactions', chancelleryAccountTransactionSchema);
 
 /**
  * Book the transaction
@@ -91,6 +91,7 @@ function getEntries(gameId, tsStart, tsEnd, callback) {
  * @param callback
  */
 function getBalance(gameId, callback) {
+
   ChancelleryTransaction.aggregate({
     $match: {
       gameId: gameId

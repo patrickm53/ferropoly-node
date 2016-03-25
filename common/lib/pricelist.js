@@ -2,7 +2,7 @@
  * Common library for the pricelist
  * Created by kc on 26.04.15.
  */
-'use strict';
+
 
 var _ = require('lodash');
 var properties = require('../models/propertyModel');

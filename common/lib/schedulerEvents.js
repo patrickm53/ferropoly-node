@@ -3,7 +3,7 @@
  *
  * Created by kc on 01.05.15.
  */
-'use strict';
+
 var gameplayModel = require('../models/gameplayModel');
 var eventModel = require('../models/schedulerEventModel');
 var moment = require('moment');

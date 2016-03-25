@@ -3,7 +3,7 @@
  *
  * Created by kc on 16.04.15.
  */
-'use strict';
+
 
 var express  = require('express');
 var passport = require('passport');
@@ -20,7 +20,6 @@ var logger   = require('../lib/logger').getLogger('login');
 router.get('/', function (req, res) {
   var loginController = 'loginctrl';
   loginController = settings.minifiedjs ? '/js/min/' + loginController +'.min.js' : '/js/src/' + loginController +'.js';
-
 
   res.render('login', {
     title       : settings.appName + ' Login',

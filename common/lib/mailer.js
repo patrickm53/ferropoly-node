@@ -5,7 +5,7 @@
  *
  * Created by kc on 20.06.15.
  */
-'use strict';
+
 
 var _ = require('lodash');
 var nodemailer = require('nodemailer');

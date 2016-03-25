@@ -3,7 +3,7 @@
  *
  * Created by kc on 22.03.15.
  */
-'use strict';
+
 
 var mongoose = require('mongoose');
 var uuid     = require('node-uuid');

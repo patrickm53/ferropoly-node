@@ -4,7 +4,7 @@
  * In the game, only properties are used, no locations.
  * Created by kc on 10.02.15.
  */
-'use strict';
+
 
 var mongoose       = require('mongoose');
 var uuid           = require('node-uuid');

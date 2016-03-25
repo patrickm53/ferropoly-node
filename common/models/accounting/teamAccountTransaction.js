@@ -3,7 +3,7 @@
  *
  * Created by kc on 19.04.15.
  */
-'use strict';
+
 
 var mongoose                     = require('mongoose');
 var moment                       = require('moment');

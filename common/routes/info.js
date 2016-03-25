@@ -2,7 +2,7 @@
  * Info route
  * Created by kc on 22.07.15.
  */
-'use strict';
+
 
 var express = require('express');
 var router = express.Router();

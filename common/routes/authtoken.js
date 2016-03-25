@@ -2,7 +2,7 @@
  * Authtoken: used for POST and socket.io, when we need to know that the user is really logged in
  * Created by kc on 29.01.15.
  */
-'use strict';
+
 var express = require('express');
 var router = express.Router();
 var session = require('express-session');

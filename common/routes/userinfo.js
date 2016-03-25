@@ -3,7 +3,7 @@
  * Created by kc on 29.12.15.
  */
 
-'use strict';
+
 
 var express   = require('express');
 var router    = express.Router();

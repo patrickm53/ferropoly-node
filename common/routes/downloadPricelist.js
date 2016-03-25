@@ -7,7 +7,7 @@
  * Created by kc on 14.12.15.
  */
 
-'use strict';
+
 
 var express = require('express');
 var router = express.Router();

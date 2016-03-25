@@ -2,7 +2,7 @@
  * The travel log of a team
  * Created by kc on 11.06.15.
  */
-'use strict';
+
 
 var mongoose        = require('mongoose');
 var logger          = require('../lib/logger').getLogger('travelLogModel');

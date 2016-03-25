@@ -3,7 +3,7 @@
  *
  * Created by kc on 08.06.15.
  */
-'use strict';
+
 var winston = require('winston');
 var moment = require('moment');
 var util = require('util');

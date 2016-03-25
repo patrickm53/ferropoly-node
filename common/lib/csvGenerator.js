@@ -2,7 +2,7 @@
  * Generates a CSV file. This is the COMMON LIB VERSION, replacing the one from the main module
  * Created by kc on 17.07.15.
  */
-'use strict';
+
 var _ = require('lodash');
 var moment = require('moment-timezone');
 
