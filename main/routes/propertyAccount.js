@@ -2,7 +2,7 @@
  * Route for for property Account Issues
  * Created by kc on 27.05.15.
  */
-'use strict';
+
 
 
 var express         = require('express');

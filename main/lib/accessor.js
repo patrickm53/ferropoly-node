@@ -4,7 +4,7 @@
  *
  * Created by kc on 10.07.15.
  */
-'use strict';
+
 var gamecache = require('./gameCache');
 var gameplays = require('../../common/models/gameplayModel');
 var _         = require('lodash');

@@ -4,7 +4,7 @@
  * Reason for this module: simplify testing and access to properties
  * Created by kc on 24.04.15.
  */
-'use strict';
+
 var pm = require('../../common/models/propertyModel');
 var logger = require('../../common/lib/logger').getLogger('propertyWrapper');
 

@@ -6,7 +6,7 @@
  *
  * Created by kc on 22.04.15.
  */
-'use strict';
+
 
 var teamModel = require('../../common/models/teamModel');
 var gpModel = require('../../common/models/gameplayModel');

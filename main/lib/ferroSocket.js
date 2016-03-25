@@ -3,7 +3,7 @@
  * sent by this module.
  * Created by kc on 10.05.15.
  */
-'use strict';
+
 var EventEmitter     = require('events').EventEmitter;
 var authTokenManager = require('./authTokenManager');
 var logger           = require('../../common/lib/logger').getLogger('ferroSocket');

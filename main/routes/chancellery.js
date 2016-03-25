@@ -2,7 +2,7 @@
  * Chancellery route
  * Created by kc on 28.05.15.
  */
-'use strict';
+
 
 var express = require('express');
 var router = express.Router();

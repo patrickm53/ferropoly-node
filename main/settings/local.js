@@ -2,7 +2,7 @@
  * Settings for local debugging
  * Created by kc on 14.04.15.
  */
-'use strict';
+
 
 
 module.exports = function (settings) {

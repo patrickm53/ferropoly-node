@@ -2,7 +2,7 @@
  * The traffic route. This route is needed as we can't call another server from the javascript in the browser
  * Created by kc on 01.09.15.
  */
-'use strict';
+
 
 var trafficLib = require('../lib/traffic');
 var express = require('express');

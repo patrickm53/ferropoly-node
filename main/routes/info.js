@@ -3,7 +3,7 @@
  *
  * Created by kc on 08.05.15.
  */
-'use strict';
+
 
 
 var express = require('express');

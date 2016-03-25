@@ -3,7 +3,7 @@
  *
  * Created by kc on 20.04.15.
  */
-'use strict';
+
 var gameCache          = require('../gameCache');
 var propWrap           = require('../propertyWrapper');
 var teamAccount        = require('./teamAccount');

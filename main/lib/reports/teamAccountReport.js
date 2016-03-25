@@ -2,7 +2,7 @@
  * Team Account reporting
  * Created by kc on 17.07.15.
  */
-'use strict';
+
 var teamAccount = require('../../lib/accounting/teamAccount');
 var teamModel = require('../../../common/models/teamModel');
 var moment = require('moment-timezone');

@@ -10,7 +10,7 @@
  *
  * Created by kc on 20.04.15.
  */
-'use strict';
+
 var propWrap            = require('../propertyWrapper');
 var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
 var teamAccount         = require('./teamAccount');

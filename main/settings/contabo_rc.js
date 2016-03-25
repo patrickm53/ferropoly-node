@@ -2,7 +2,7 @@
  * Release candidate instance
  * Created by kc on 30.08.15.
  */
-'use strict';
+
 
 module.exports = function (settings) {
 

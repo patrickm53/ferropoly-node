@@ -2,7 +2,7 @@
  * The autopilot - generates automatically data for test games
  * Created by kc on 13.06.15.
  */
-'use strict';
+
 
 var _ = require('lodash');
 var logger = require('../../common/lib/logger').getLogger('autopilot');

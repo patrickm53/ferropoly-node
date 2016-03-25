@@ -7,7 +7,7 @@
  *
  * Created by kc on 01.09.15.
  */
-'use strict';
+
 var needle = require('needle');
 var moment = require('moment');
 var pixlXml = require('pixl-xml');

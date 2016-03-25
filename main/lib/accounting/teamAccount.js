@@ -3,7 +3,7 @@
  * over this module.
  * Created by kc on 19.04.15.
  */
-'use strict';
+
 var _                      = require('lodash');
 var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
 var moment                 = require('moment');

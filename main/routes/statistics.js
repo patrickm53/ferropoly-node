@@ -2,7 +2,7 @@
  * Statistics API
  * Created by kc on 25.05.15.
  */
-'use strict';
+
 
 var express         = require('express');
 var router          = express.Router();
