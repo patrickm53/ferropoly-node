@@ -266,9 +266,9 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
     if (err) {
       return callback(err);
     }
-    if (info.balance < 0) {
-      var interest = Math.floor(Math.abs(info.balance * rate / 100));
-      logger.info('Negative balance, pay interest ' + interest + ' from ' + info.balance);
+    if (info.asset < 0) {
+      var interest = Math.floor(Math.abs(info.asset * rate / 100));
+      logger.info('Negative balance, pay interest ' + interest + ' from ' + info.asset);
       // Do not book here! The teamAccount does not have a connection to the chancellery, it's the
       // chancellerys job to book, we just make the calculation here.
       callback(null, {amount: interest});
@@ -356,6 +356,9 @@ module.exports = {
   init: function () {
     ferroSocket = require('../ferroSocket').get();
 
+    if (!ferroSocket) {
+      return;
+    }
     ferroSocket.on('player-connected', function (data) {
       getBalance(data.gameId, data.teamId, function (err, info) {
         if (err) {

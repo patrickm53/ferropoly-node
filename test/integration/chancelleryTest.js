@@ -295,8 +295,8 @@ describe('Chancellery tests', function () {
   describe('Verify the accounts', function () {
     it('should have the correct value on the users account', function (done) {
       teamAccount.getBalance(gameId, gameData.teams[0].uuid, function (err, info) {
-        expect(info.balance).to.be(gameData.teams[0].expectedMoney);
-        expect(info.entries).to.be(gameData.teams[0].expectedEntries);
+        expect(info.asset).to.be(gameData.teams[0].expectedMoney);
+        expect(info.count).to.be(gameData.teams[0].expectedEntries);
         done(err);
       });
     });
@@ -350,8 +350,8 @@ describe('Chancellery tests', function () {
     describe('checking the accounts', function() {
       it('should have the correct value on the users account', function (done) {
         teamAccount.getBalance(gameId, gameData.teams[1].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.teams[1].expectedMoney);
-          expect(info.entries).to.be(gameData.teams[1].expectedEntries);
+          expect(info.asset).to.be(gameData.teams[1].expectedMoney);
+          expect(info.count).to.be(gameData.teams[1].expectedEntries);
           done(err);
         });
       });

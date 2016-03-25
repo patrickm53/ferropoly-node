@@ -15,13 +15,13 @@
  */
 'use strict';
 var expect = require('expect.js');
-var _ = require('lodash');
+var _      = require('lodash');
 
-var db = require('./../../common/lib/ferropolyDb');
-var pricelistLib = require('./../../common/lib/pricelist');
-var gameCache = require('../../main/lib/gameCache');
-var marketplace = require('../../main/lib/accounting/marketplace').createMarketplace(null);
-var teamAccount = require('../../main/lib/accounting/teamAccount');
+var db              = require('./../../common/lib/ferropolyDb');
+var pricelistLib    = require('./../../common/lib/pricelist');
+var gameCache       = require('../../main/lib/gameCache');
+var marketplace     = require('../../main/lib/accounting/marketplace').createMarketplace(null);
+var teamAccount     = require('../../main/lib/accounting/teamAccount');
 var propertyAccount = require('../../main/lib/accounting/propertyAccount');
 
 var settings = require('./../../main/settings');
@@ -39,7 +39,7 @@ describe('Marketplace integration tests', function () {
           gameCache.getGameData(gameId, function (err, gd) {
             gameData = {
               gameplay: gd.gameplay,
-              teams: _.values(gd.teams)
+              teams   : _.values(gd.teams)
             };
 
             for (var i = 0; i < gameData.teams.length; i++) {
@@ -66,8 +66,8 @@ describe('Marketplace integration tests', function () {
       marketplace.payInterests(gameId, function (err) {
         expect(err).to.be(null);
         teamAccount.getBalance(gameId, gameData.teams[0].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.gameplay.gameParams.interest);
-          expect(info.entries).to.be(1);
+          expect(info.asset).to.be(gameData.gameplay.gameParams.interest);
+          expect(info.count).to.be(1);
           done(err);
         });
       });
@@ -77,8 +77,8 @@ describe('Marketplace integration tests', function () {
       marketplace.payInterests(gameId, function (err) {
         expect(err).to.be(null);
         teamAccount.getBalance(gameId, gameData.teams[4].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.gameplay.gameParams.interest * 2);
-          expect(info.entries).to.be(2);
+          expect(info.asset).to.be(gameData.gameplay.gameParams.interest * 2);
+          expect(info.count).to.be(2);
           done(err);
         });
       });
@@ -88,8 +88,8 @@ describe('Marketplace integration tests', function () {
       marketplace.payInterests(gameId, function (err) {
         expect(err).to.be(null);
         teamAccount.getBalance(gameId, gameData.teams[5].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.gameplay.gameParams.interest * 3);
-          expect(info.entries).to.be(3);
+          expect(info.asset).to.be(gameData.gameplay.gameParams.interest * 3);
+          expect(info.count).to.be(3);
           done(err);
         });
       });
@@ -99,8 +99,8 @@ describe('Marketplace integration tests', function () {
       marketplace.payInterests(gameId, function (err) {
         expect(err).to.be(null);
         teamAccount.getBalance(gameId, gameData.teams[7].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.gameplay.gameParams.interest * 4);
-          expect(info.entries).to.be(4);
+          expect(info.asset).to.be(gameData.gameplay.gameParams.interest * 4);
+          expect(info.count).to.be(4);
 
           teamAccount.getAccountStatement(gameId, gameData.teams[3].uuid, function (err, data) {
             expect(data.length).to.be(4);
@@ -108,7 +108,7 @@ describe('Marketplace integration tests', function () {
 
             // set the expected money values now
             for (var i = 0; i < gameData.teams.length; i++) {
-              gameData.teams[i].expectedMoney = gameData.gameplay.gameParams.interest * 4;
+              gameData.teams[i].expectedMoney   = gameData.gameplay.gameParams.interest * 4;
               gameData.teams[i].expectedEntries = 4;
             }
           });
@@ -131,8 +131,8 @@ describe('Marketplace integration tests', function () {
   describe('Buying some properties', function () {
     it('should buy the cheapest place for team 0', function (done) {
       marketplace.buyProperty({
-        gameId: gameId,
-        teamId: gameData.teams[0].uuid,
+        gameId    : gameId,
+        teamId    : gameData.teams[0].uuid,
         propertyId: pricelist[0].uuid
       }, function (err, info) {
         expect(err).to.be(null);
@@ -143,8 +143,8 @@ describe('Marketplace integration tests', function () {
         gameData.teams[0].expectedEntries++;
 
         teamAccount.getBalance(gameId, gameData.teams[0].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.teams[0].expectedMoney);
-          expect(info.entries).to.be(gameData.teams[0].expectedEntries);
+          expect(info.asset).to.be(gameData.teams[0].expectedMoney);
+          expect(info.count).to.be(gameData.teams[0].expectedEntries);
 
           teamAccount.getAccountStatement(gameId, gameData.teams[0].uuid, function (err, data) {
             expect(data.length).to.be(gameData.teams[0].expectedEntries);
@@ -156,12 +156,12 @@ describe('Marketplace integration tests', function () {
     });
 
     it('should buy the most expensive place for team 0', function (done) {
-      var index = 79;
-      var price = 8000;
+      var index     = pricelist.length - 1;
+      var price     = 8000;
       var teamIndex = 0;
       marketplace.buyProperty({
-        gameId: gameId,
-        teamId: gameData.teams[teamIndex].uuid,
+        gameId    : gameId,
+        teamId    : gameData.teams[teamIndex].uuid,
         propertyId: pricelist[index].uuid
       }, function (err, info) {
         expect(err).to.be(null);
@@ -175,8 +175,8 @@ describe('Marketplace integration tests', function () {
         gameData.teams[teamIndex].expectedEntries++;
 
         teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-          expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+          expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+          expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
           teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
             expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -200,11 +200,11 @@ describe('Marketplace integration tests', function () {
 
   describe('Pay rent & interest, allow building houses', function () {
     it('should pay the rent #1', function (done) {
-      var teamIndex = 0;
-      var expectedRent = 1120;
+      var teamIndex      = 0;
+      var expectedRent   = 1120;
       var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-      marketplace.payRents({gameId:gameId}, function (err) {
+      marketplace.payRents({gameId: gameId}, function (err) {
         if (err) {
           return done(err);
         }
@@ -212,8 +212,8 @@ describe('Marketplace integration tests', function () {
         gameData.teams[0].expectedEntries += 2;
 
         teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-          expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-          expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+          expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+          expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
           teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
             expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -234,7 +234,7 @@ describe('Marketplace integration tests', function () {
   describe('Building houses', function () {
     describe('Building houses #1', function () {
       it('should build two houses (1)', function (done) {
-        var teamIndex = 0;
+        var teamIndex          = 0;
         var buildingNbExpected = 1;
         marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
           console.log(info);
@@ -254,8 +254,8 @@ describe('Marketplace integration tests', function () {
           gameData.teams[teamIndex].expectedEntries++;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
             teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
               console.log(data);
@@ -277,17 +277,17 @@ describe('Marketplace integration tests', function () {
 
     describe('Pay rent & interest, allow building houses', function () {
       it('should pay the rent #2', function (done) {
-        var teamIndex = 0;
-        var expectedRent = 4500;
+        var teamIndex      = 0;
+        var expectedRent   = 4500;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents({gameId:gameId}, function (err) {
+        marketplace.payRents({gameId: gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
             teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
               expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -307,7 +307,7 @@ describe('Marketplace integration tests', function () {
 
     describe('Building houses #2', function () {
       it('should build two houses (2)', function (done) {
-        var teamIndex = 0;
+        var teamIndex          = 0;
         var buildingNbExpected = 2;
         marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
           console.log(info);
@@ -332,17 +332,17 @@ describe('Marketplace integration tests', function () {
 
     describe('Pay rent & interest, allow building houses', function () {
       it('should pay the rent #3', function (done) {
-        var teamIndex = 0;
-        var expectedRent = 18000;
+        var teamIndex      = 0;
+        var expectedRent   = 18000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents({gameId:gameId}, function (err) {
+        marketplace.payRents({gameId: gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
             teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
               expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -362,7 +362,7 @@ describe('Marketplace integration tests', function () {
 
     describe('Building houses #3', function () {
       it('should build two houses (3)', function (done) {
-        var teamIndex = 0;
+        var teamIndex          = 0;
         var buildingNbExpected = 3;
         marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
           console.log(info);
@@ -389,17 +389,17 @@ describe('Marketplace integration tests', function () {
 
     describe('Pay rent & interest, allow building houses', function () {
       it('should pay the rent #4', function (done) {
-        var teamIndex = 0;
-        var expectedRent = 27000;
+        var teamIndex      = 0;
+        var expectedRent   = 27000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents({gameId:gameId}, function (err) {
+        marketplace.payRents({gameId: gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
             teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
               expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -419,7 +419,7 @@ describe('Marketplace integration tests', function () {
 
     describe('Building houses #4', function () {
       it('should build two houses (4)', function (done) {
-        var teamIndex = 0;
+        var teamIndex          = 0;
         var buildingNbExpected = 4;
         marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
           console.log(info);
@@ -445,17 +445,17 @@ describe('Marketplace integration tests', function () {
 
     describe('Pay rent & interest, allow building houses', function () {
       it('should pay the rent #4', function (done) {
-        var teamIndex = 0;
-        var expectedRent = 36000;
+        var teamIndex      = 0;
+        var expectedRent   = 36000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents({gameId:gameId}, function (err) {
+        marketplace.payRents({gameId: gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
             teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
               expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -476,7 +476,7 @@ describe('Marketplace integration tests', function () {
 
     describe('Building houses #5 (Hotel)', function () {
       it('should build two houses (5)', function (done) {
-        var teamIndex = 0;
+        var teamIndex          = 0;
         var buildingNbExpected = 5;
         marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
           console.log(info);
@@ -496,8 +496,8 @@ describe('Marketplace integration tests', function () {
           gameData.teams[teamIndex].expectedEntries++;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
             teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
               expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -518,17 +518,17 @@ describe('Marketplace integration tests', function () {
 
     describe('Pay rent & interest, allow building houses', function () {
       it('should pay the rent #4', function (done) {
-        var teamIndex = 0;
-        var expectedRent = 45000;
+        var teamIndex      = 0;
+        var expectedRent   = 45000;
         var expectedIncome = expectedRent + gameData.gameplay.gameParams.interest;
 
-        marketplace.payRents({gameId:gameId}, function (err) {
+        marketplace.payRents({gameId: gameId}, function (err) {
           gameData.teams[0].expectedMoney += expectedIncome;
           gameData.teams[0].expectedEntries += 2;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
 
             teamAccount.getAccountStatement(gameId, gameData.teams[teamIndex].uuid, function (err, data) {
               expect(data.length).to.be(gameData.teams[teamIndex].expectedEntries);
@@ -548,7 +548,7 @@ describe('Marketplace integration tests', function () {
 
     describe('Building houses #6 (Hotel++???)', function () {
       it('should build build nothing', function (done) {
-        var teamIndex = 0;
+        var teamIndex          = 0;
         var buildingNbExpected = 5;
         marketplace.buildHouses(gameId, gameData.teams[0].uuid, function (err, info) {
           console.log(info);
@@ -558,8 +558,8 @@ describe('Marketplace integration tests', function () {
           gameData.teams[teamIndex].expectedEntries -= 0;
 
           teamAccount.getBalance(gameId, gameData.teams[teamIndex].uuid, function (err, info) {
-            expect(info.balance).to.be(gameData.teams[teamIndex].expectedMoney);
-            expect(info.entries).to.be(gameData.teams[teamIndex].expectedEntries);
+            expect(info.asset).to.be(gameData.teams[teamIndex].expectedMoney);
+            expect(info.count).to.be(gameData.teams[teamIndex].expectedEntries);
             done(err);
           });
         });
@@ -574,8 +574,8 @@ describe('Marketplace integration tests', function () {
           expect(err).to.be(null);
           teamAccount.getBalance(gameId, gameData.teams[5].uuid, function (err, info) {
             console.log(info);
-            expect(info.balance).to.be(55000);
-            expect(info.entries).to.be(11);
+            expect(info.asset).to.be(55000);
+            expect(info.count).to.be(11);
             done(err);
           });
         });
@@ -585,8 +585,8 @@ describe('Marketplace integration tests', function () {
           expect(err).to.be(null);
           teamAccount.getBalance(gameId, gameData.teams[6].uuid, function (err, info) {
             console.log(info);
-            expect(info.balance).to.be(20000);
-            expect(info.entries).to.be(11);
+            expect(info.asset).to.be(20000);
+            expect(info.count).to.be(11);
             done(err);
           });
         })
