@@ -68,11 +68,11 @@
     "grunt-contrib-uglify": "1.0.1",
     "grunt-contrib-watch": "0.6.1",
     "grunt-eslint": "18.0.0",
-    "grunt-mocha-test": "0.12.1",
+    "grunt-mocha-test": "0.12.7",
     "grunt-processhtml": "0.3.7",
     "grunt-shell": "1.1.2",
     "load-grunt-tasks": "2.0.0",
-    "mocha": "1.20.0",
+    "mocha": "2.4.5",
     "redux": "3.0.5",
     "sandboxed-module": "2.0.0"
   },
