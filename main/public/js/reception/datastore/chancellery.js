@@ -48,7 +48,7 @@ DataStore.prototype.getChancelleryEntries = function (teamId) {
 };
 
 DataStore.prototype.getChancelleryAsset = function () {
-  return _.sum(this.data.chancelleryEntries, 'transaction.amount');
+  return _.sumBy(this.data.chancelleryEntries, 'transaction.amount');
 };
 /**
  * Updates the pricelist (complete or the only for the user supplied)
