@@ -1,10 +1,12 @@
 #online {
     color   : #639a00;
     display : none;
+    padding: 15px;
 }
 
 #offline {
     color : red;
+    padding: 15px;
 }
 
 #active-call {
