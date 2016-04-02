@@ -6,6 +6,14 @@
 var assign = require('lodash/assign');
 var cst    = require('../constants');
 
+function convertTransaction(t) {
+  t.timestamp = new Date(t.timestamp);
+  delete t.gameId;
+  delete t.teamId;
+  delete t._id;
+  return t;
+}
+
 module.exports = function (state, action) {
   state = state || {transactions: [], asset: 0};
   console.log(state, action);
@@ -19,12 +27,16 @@ module.exports = function (state, action) {
       return {transactions: [], asset: 0};
 
     case cst.SET_TEAM_ACCOUNT_TRANSACTIONS:
-      // Set the transactions
-      return assign({}, state, {entryNb: action.transactions.length, transactions: action.transactions});
+      // Set the transactions, convert the timestamp to dateTime
+      var transactions = [];
+      for (var i = 0; i < action.transactions.length; i++) {
+        transactions.push(convertTransaction(action.transactions[i]));
+      }
+      return assign({}, state, {entryNb: action.transactions.length, transactions: transactions});
 
     case cst.ADD_TEAM_ACCOUNT_TRANSACTION:
       // Add new transaction
-      state.transactions.push(action.transaction);
+      state.transactions.push(convertTransaction(action.transaction));
       return assign({}, state, {asset: state.asset + action.transaction.transaction.amount});
 
     default:

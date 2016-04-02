@@ -5,3 +5,11 @@ div(ng-controller='checkinAccountCtrl')
   .row
     .col-md-12.col-sm-12.col-xs-12
       h1 Kontobuch
+      table.table.table-striped
+        tr(ng-repeat='t in transactions | orderBy : "timestamp" : true')
+          td {{t.timestamp | date:'HH:mm'}}
+          td {{t.transaction.info}}
+            div(ng-show='t.transaction.parts.length > 0')
+              div(ng-repeat='d in t.transaction.parts') {{d.propertyName}}: {{d.amount}}
+                br
+          td {{t.transaction.amount}}
