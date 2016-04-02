@@ -63,7 +63,7 @@ module.exports = function (grunt) {
           './main/public/modules/angular-sanitize/angular-sanitize.min.js',
           './main/public/modules/moment/min/moment.min.js',
           './main/public/modules/moment/locale/de.js',
-          './main/public/modules/lodash/lodash.min.js'
+          './main/public/modules/lodash/dist/lodash.min.js'
         ],
         dest: './main/public/js/min/framework.min.js'
       },
@@ -91,7 +91,8 @@ module.exports = function (grunt) {
           './main/public/js/checkin/dashboardctrl.js',
           './main/public/js/checkin/mapctrl.js',
           './main/public/js/checkin/propertiesctrl.js',
-          './main/public/js/checkin/priceslistctrl.js'
+          './main/public/js/checkin/priceslistctrl.js',
+          './main/public/js/checkin/accountctrl.js'
         ],
         dest: 'main/public/js/checkin.js'
       }
