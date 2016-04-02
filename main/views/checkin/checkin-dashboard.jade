@@ -32,8 +32,3 @@ div(ng-controller='dashboardCtrl')
           tr(ng-repeat="t in liveTicker | orderBy: 'ts' :true | limitTo: 5")
             td {{t.ts | date:'HH:mm:ss'}}
             td {{t.message}}
-
-    h3 Geolocalization
-    p Diese App benötigt die GPS Daten der Spieler, wir müssen wissen, wo der Spieler ist. Das ist bisher nur experimentiell, wird jedoch später mit der dazugehörigen Datenschutzerklärung vollständig implementiert.
-    p
-    p Standort: {{position.coords.latitude}} / {{position.coords.longitude}}
