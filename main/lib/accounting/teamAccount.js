@@ -367,7 +367,10 @@ module.exports = {
         }
         ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', teamAccountActions.setAsset(info.asset, info.count));
 
-        logger.info(info);
+        getAccountStatement(data.gameId, data.teamId, function(err, transactions) {
+          ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', teamAccountActions.setTransactions(transactions));
+          logger.info('Socket connected', info);
+        });
       });
     });
   }

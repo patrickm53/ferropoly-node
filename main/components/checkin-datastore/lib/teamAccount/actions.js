@@ -9,9 +9,16 @@ var cst = require('../constants');
 module.exports = {
   setAsset: function (asset, entryNb) {
     return {
-      type : cst.SET_TEAM_ACCOUNT_ASSET,
-      asset: asset,
+      type   : cst.SET_TEAM_ACCOUNT_ASSET,
+      asset  : asset,
       entryNb: entryNb
+    };
+  },
+
+  setTransactions: function (transactions) {
+    return {
+      type        : cst.SET_TEAM_ACCOUNT_TRANSACTIONS,
+      transactions: transactions
     };
   },
 
@@ -26,9 +33,9 @@ module.exports = {
    * @param entry is a teamAccountTransaction
    * @returns {{type: string, entry: *}}
    */
-  addTransaction: function(entry) {
+  addTransaction: function (entry) {
     return {
-      type: cst.ADD_TEAM_ACCOUNT_TRANSACTION,
+      type       : cst.ADD_TEAM_ACCOUNT_TRANSACTION,
       transaction: entry
     }
   }

@@ -3,7 +3,7 @@
  * Created by kc on 12.01.16.
  */
 
-var assign = require('lodash/object/assign');
+var assign = require('lodash/assign');
 var cst    = require('../constants');
 
 module.exports = function (state, action) {

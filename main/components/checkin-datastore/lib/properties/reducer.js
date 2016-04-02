@@ -3,9 +3,9 @@
  * Created by kc on 19.01.16.
  */
 
-var assign = require('lodash/object/assign');
+var assign = require('lodash/assign');
 var cst    = require('../constants');
-var remove = require('lodash/array/remove');
+var remove = require('lodash/remove');
 
 module.exports = function (state, action) {
   state = state || {properties: []};

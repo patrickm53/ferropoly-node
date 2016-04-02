@@ -3,7 +3,7 @@
  * Created by kc on 15.01.16.
  */
 
-var assign = require('lodash/object/assign');
+var assign = require('lodash/assign');
 var cst    = require('../constants');
 
 module.exports = function (state, action) {
@@ -17,6 +17,10 @@ module.exports = function (state, action) {
     case cst.RESET_TEAM_ACCOUNT:
       // Reset value
       return {transactions: [], asset: 0};
+
+    case cst.SET_TEAM_ACCOUNT_TRANSACTIONS:
+      // Set the transactions
+      return assign({}, state, {entryNb: action.transactions.length, transactions: action.transactions});
 
     case cst.ADD_TEAM_ACCOUNT_TRANSACTION:
       // Add new transaction
