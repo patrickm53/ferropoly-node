@@ -4,74 +4,79 @@
  */
 'use strict';
 
-var ferropolySocket = io.connect();
+var ferropolySocket;
 
 
-$('#offline').show();
-$('#online').hide();
+ferropolySocket = io.connect();
 
-ferropolySocket.on('disconnect', function() {
+ferropolySocket.on('disconnect', function () {
   console.log('disconnected');
   $('#offline').show();
   $('#online').hide();
 });
-ferropolySocket.on('test', function(data) {
+ferropolySocket.on('test', function (data) {
   console.log('test: ' + data);
 });
 
-ferropolySocket.on('identify', function() {
+ferropolySocket.on('identify', function () {
   console.log('identify received');
   console.log(ferropoly.authToken);
-  ferropolySocket.emit('identify', {user: ferropoly.user, authToken: ferropoly.authToken, gameId: ferropoly.gameplay.internal.gameId});
+  ferropolySocket.emit('identify', {
+    user     : ferropoly.user,
+    authToken: ferropoly.authToken,
+    gameId   : ferropoly.gameplay.internal.gameId
+  });
 });
 
-ferropolySocket.on('welcome', function(data) {
+ferropolySocket.on('welcome', function (data) {
   console.log('Welcome Data', data);
 });
 
 // Now the initialized connection in set up
-ferropolySocket.on('initialized', function() {
+ferropolySocket.on('initialized', function () {
   console.log('initialized: SOCKET.IO is online');
-
-  // Now we are really online
-  $('#online').show();
-  $('#offline').hide();
+  _.delay(function () {
+    // Now we are really online. We delay this as we otherwise had some troubles with showing the right state
+    $('#online').show();
+    $('#offline').hide();
+  }, 1000);
 
 });
 
-ferropolySocket.on('connection', function(){
+ferropolySocket.on('connection', function () {
   // Next the server issues an 'identify' request
   console.log('socket.io connection event');
 });
-ferropolySocket.on('connect', function(){
+ferropolySocket.on('connect', function () {
   // Next the server issues an 'identify' request
   console.log('socket.io connect event');
 });
-ferropolySocket.on('connect_error', function(obj){
+ferropolySocket.on('connect_error', function (obj) {
   // Next the server issues an 'identify' request
   console.log('socket.io connect_error event');
   console.log(obj);
 });
-ferropolySocket.on('reconnect', function(){
+ferropolySocket.on('reconnect', function () {
   // Next the server issues an 'identify' request
   console.log('socket.io reconnect event');
 });
-ferropolySocket.on('reconnect_attempt', function(){
+ferropolySocket.on('reconnect_attempt', function () {
   // Next the server issues an 'identify' request
   console.log('socket.io reconnect_attempt event');
 });
-ferropolySocket.on('reconnecting', function(){
-   console.log('socket.io reconnecting event');
+ferropolySocket.on('reconnecting', function () {
+  console.log('socket.io reconnecting event');
 });
 
 
-ferropolySocket.on('reconnect_error', function(){
-   console.log('socket.io reconnect_error event');
+ferropolySocket.on('reconnect_error', function () {
+  console.log('socket.io reconnect_error event');
+});
+
+ferropolySocket.on('reconnect_failed', function () {
+  console.log('socket.io reconnect_failed event');
 });
 
 
-ferropolySocket.on('reconnect_failed', function(){
-   console.log('socket.io reconnect_failed event');
-});
 
 
