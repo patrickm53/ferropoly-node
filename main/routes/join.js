@@ -56,7 +56,7 @@ router.get('/:gameId', (req, res) => {
             teamInfo.registrationDate = team.data.registrationDate;
             teamInfo.changedDate      = team.data.changedDate;
           }
-          res.render('join', {
+          res.render('join/join', {
             title   : 'Ferropoly Spielauswertung',
             ngFile  : ngFile,
             gameplay: JSON.stringify(gameplay),

@@ -1,7 +1,7 @@
 //
    Created by kc on 05.02.16.
 
-extends layout
+extends ../layout
 
 block head
   script(src='/modules/moment/min/moment.min.js')
@@ -21,8 +21,8 @@ block content
   .container(ng-app='joinApp' ng-controller='joinCtrl')
     div(ng-cloak)
       div(ng-show='showGameNotFoundPanel()')
-        include join/join-game-not-found
+        include ./join-game-not-found
       div(ng-show='showJoiningNotAllowedPanel()')
-        include join/join-not-possible
+        include ./join-not-possible
       div(ng-show='showJoiningPanel()')
-        include join/join-game
+        include ./join-game

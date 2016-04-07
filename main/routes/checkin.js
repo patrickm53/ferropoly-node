@@ -58,7 +58,7 @@ router.get('/:gameId', function (req, res) {
           }
           req.session.ferropolyToken = token;
 
-          res.render('checkin', {
+          res.render('checkin/checkin', {
             title        : 'Ferropoly',
             minifiedjs   : settings.minifiedjs,
             hideLogout   : true,

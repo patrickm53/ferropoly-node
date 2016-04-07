@@ -4,8 +4,6 @@
  * Created by kc on 08.05.15.
  */
 
-
-
 var express = require('express');
 var router = express.Router();
 
@@ -53,7 +51,7 @@ router.get('/:gameId', function (req, res) {
           });
         }
 
-        res.render('info', {
+        res.render('info/info', {
           title: 'Ferropoly',
           ngFile: '/js/infoctrl.js',
           hideLogout: true,

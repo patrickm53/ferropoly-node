@@ -1,6 +1,6 @@
 //
    Created by kc on 10.05.15.
-extends layout
+extends ../layout
 
 block head
   script(src='/socket.io/socket.io.js')
@@ -100,13 +100,13 @@ block content
     #panel-main
       include reception-main
     #panel-managecall
-      include reception-manage-call/reception-mc
+      include manage-call/reception-mc
     #panel-teamaccounts
       include reception-teamaccounts
     #panel-map
-      include reception-map/reception-map
+      include map/reception-map
     #panel-stats
-      include reception-stats/reception-stats
+      include stats/reception-stats
     #panel-chance
       include reception-chance
     #panel-properties

@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block head
   script
@@ -54,12 +54,12 @@ block content
 
   .container-fluid(ng-app='checkinApp')
     #view-dashboard.ng-cloak
-      include checkin/checkin-dashboard
+      include ./checkin-dashboard
     #view-map.ng-cloak
-      include checkin/checkin-map
+      include ./checkin-map
     #view-teamaccount.ng-cloak
-      include checkin/checkin-teamaccount
+      include ./checkin-teamaccount
     #view-properties.ng-cloak
-      include checkin/checkin-properties
+      include ./checkin-properties
     #view-pricelist.ng-cloak
-      include checkin/checkin-pricelist
+      include ./checkin-pricelist

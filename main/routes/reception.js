@@ -60,7 +60,7 @@ router.get('/:gameId', function (req, res) {
           }
           req.session.ferropolyToken = token;
 
-          res.render('reception', {
+          res.render('reception/reception', {
             title: 'Ferropoly',
             minifiedjs: settings.minifiedjs,
             ngFile: '/js/infoctrl.js',

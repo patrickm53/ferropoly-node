@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block head
   script
@@ -30,15 +30,15 @@ block navbar
 block content
   div(ng-app='infoApp' ng-controller='infoCtrl')
     div(id='ps')
-      include info/info-loading
+      include ./info-loading
     div(id='p0' ng-cloak)
-      include info/info-error
+      include ./info-error
     div(id='p1' ng-cloak)
-      include info/info-main
+      include ./info-main
     div(id='p2' ng-cloak)
-      include info/info-list
+      include ./info-list
     div(id='p3' ng-cloak)
-      include info/info-map
+      include ./info-map
     script
       | console.log(gp);
 
