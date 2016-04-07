@@ -106,6 +106,9 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
   $scope.hasGames             = function () {
     return ($scope.games.length > 0);
   };
+  $scope.isTeamleader         = function (game) {
+    return _.get(game, 'team.data.teamLeader.email', 'x') === _.get(user, 'personalData.email');
+  };
 
   // When document ready, load gameplays
   $(document).ready(function () {
@@ -121,11 +124,7 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
       $scope.gameplays = resp.data.gameplays || [];
       $scope.games     = resp.data.games || [];
       console.log('Gameplays loaded, nb:' + $scope.gameplays.length);
-      $scope.gameplays.forEach(function (gp) {
-        var d = new Date(gp.log.lastEdited);
-        console.log(gp);
-        console.log(gp.log.lastEdited);
-      });
+      console.log('Games loaded, nb:' + $scope.games.length);
       getAuthToken();
     }, function (resp) {
       // Error case

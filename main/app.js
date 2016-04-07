@@ -121,6 +121,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/account', require('./routes/account'));
   app.use('/checkin', require('./routes/checkin'));
   app.use('/gameplays', require('./routes/gameplays'));
+  app.use('/team', require('./routes/team'));
   app.use('/join', joinRoute);
   app.use('/anmelden', joinRoute);
   authtoken.init(app);

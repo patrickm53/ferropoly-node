@@ -1,14 +1,14 @@
 extends layout
 
 block head
-  script(src='/modules/moment/min/moment.min.js')
-  script(src='/modules/moment/locale/de.js')
+  //script(src='/modules/moment/min/moment.min.js')
+  //script(src='/modules/moment/locale/de.js')
   link(rel='stylesheet', href='/css/index.css',  type='text/css')
   script
     | var user =
     != userJson
     | ;
-    | console.log(user);
+    | //console.log(user);
   script(src='/js/indexmctrl.js')
 block navbar-right
   li
@@ -88,7 +88,7 @@ block content
                           a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0) && gameplay.mobile.level') Spielen
                           a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level) || (gameplay.internal.finalized && (isGameRunning(gameplay) === 0))') Spiel ansehen
                           | &nbsp;
-                          a.btn.btn-default.btn-sm(href='/team/{{gameplay.internal.gameId}}/' ng-hide='(!gameplay.mobile || !gameplay.mobile.level)') Team-Mitglieder
+                          a.btn.btn-default.btn-sm(href='/team/members/{{gameplay.internal.gameId}}/{{gameplay.team.uuid}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level || !isTeamleader(gameplay))') Team-Mitglieder
                       p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
                     .panel-footer
                       p {{getGpInfo(gameplay)}}
