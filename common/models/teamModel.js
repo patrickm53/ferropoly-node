@@ -29,7 +29,8 @@ var teamSchema = mongoose.Schema({
     onlineRegistration: {type: Boolean},
     registrationDate  : {type: Date, default: Date.now},
     changedDate       : {type: Date, default: Date.now},
-    confirmationDate  : {type: Date}
+    confirmationDate  : {type: Date},
+    members           : {type: Array, default: []} // Array with strings (email) of all team members
   }
 }, {autoIndex: true});
 

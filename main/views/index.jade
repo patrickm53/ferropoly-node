@@ -87,6 +87,8 @@ block content
                           | &nbsp;
                           a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0) && gameplay.mobile.level') Spielen
                           a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level) || (gameplay.internal.finalized && (isGameRunning(gameplay) === 0))') Spiel ansehen
+                          | &nbsp;
+                          a.btn.btn-default.btn-sm(href='/team/{{gameplay.internal.gameId}}/' ng-hide='(!gameplay.mobile || !gameplay.mobile.level)') Team-Mitglieder
                       p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
                     .panel-footer
                       p {{getGpInfo(gameplay)}}

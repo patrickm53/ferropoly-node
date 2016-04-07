@@ -30,15 +30,16 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
    * Get the auttoken (async!)
    */
   var getAuthToken = function () {
-    $http.get('/authtoken').success(function (data) {
-      authToken = data.authToken;
+    $http({
+      method: 'GET',
+      url   : '/authtoken'
+    }).then(function (resp) {
+      authToken = resp.data.authToken;
       console.log('Auth ok');
-    }).error(function (data, status) {
-      console.log('error:');
-      console.log(data);
-      console.log(status);
+    }, function (resp) {
+      console.error(resp);
       $scope.panel        = 'error';
-      $scope.errorMessage = 'Authentisierungsfehler. Status: ' + status;
+      $scope.errorMessage = 'Authentisierungsfehler. Status: ' + resp.status;
     });
   };
 
@@ -53,7 +54,7 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     return 0;
   };
   // Get Info about Game timings
-  $scope.getGpInfo = function (gp) {
+  $scope.getGpInfo     = function (gp) {
     if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
       return 'Spiel ist ' + moment(gp.scheduling.gameEndTs).fromNow(false) + ' zu Ende gegangen.';
     }
@@ -112,24 +113,28 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     var index = moment().hours() % 6;
     $('#info-header').css('background-image', 'url("/images/ferropoly_header_0' + index + '.jpg")');
 
-    $http.get('/gameplays').success(function (data) {
-      $scope.gameplays = data.gameplays || [];
-      $scope.games     = data.games || [];
-      console.log(data);
+    $http({
+      method: 'GET',
+      url   : '/gameplays'
+    }).then(function (resp) {
+      // OK Case
+      $scope.gameplays = resp.data.gameplays || [];
+      $scope.games     = resp.data.games || [];
       console.log('Gameplays loaded, nb:' + $scope.gameplays.length);
-
       $scope.gameplays.forEach(function (gp) {
         var d = new Date(gp.log.lastEdited);
         console.log(gp);
         console.log(gp.log.lastEdited);
       });
       getAuthToken();
-    }).error(function (data, status) {
-      console.log('error:');
-      console.log(data);
-      console.log(status);
-      $scope.gameplays = [];
+    }, function (resp) {
+      // Error case
+      console.error(resp);
+      $scope.gameplays    = [];
+      $scope.panel        = 'error';
+      $scope.errorMessage = 'Spiele konnten nicht geladen werden. Status: ' + resp.status;
     });
+
   });
 
 
