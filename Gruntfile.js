@@ -67,7 +67,7 @@ module.exports = function (grunt) {
         ],
         dest: './main/public/js/min/framework.min.js'
       },
-      c3d3: {
+      c3d3     : {
         src : [
           './main/public/modules/d3/d3.min.js',
           './main/public/modules/c3/c3.min.js'
@@ -102,7 +102,8 @@ module.exports = function (grunt) {
         files: {
           './main/public/js/min/reception.min.js': ['./main/public/js/reception.js'],
           './main/public/js/min/loginctrl.min.js': ['./main/public/js/loginctrl.js'],
-          './main/public/js/min/checkin.min.js'  : ['./main/public/js/checkin.js']
+          './main/public/js/min/checkin.min.js'  : ['./main/public/js/checkin.js'],
+          './main/public/js/min/teamctrl.min.js' : ['./main/public/js/teamctrl.js']
         }
       },
       options: {
