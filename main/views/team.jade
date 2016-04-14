@@ -10,17 +10,20 @@ block head
     != gameId
     | ';
   script(src=ngFile)
+  link(rel='stylesheet', href='/css/team.css')
 
 block content
   div(ng-app='teamApp' ng-controller='teamCtrl')
-    .container-fluid
+    include team-modal-delete
+
+    .container-fluid(ng-cloak)
       .row
         .col-md-12
           h1 Team Mitglieder
           p Hier kannst Du Deine Kollegen zum Team hinzufügen. Diese haben vollen Zugriff auf das Spiel, können aber keine weiteren Mitglieder einladen.
           p
-            i.fa.fa-bolt
-            | &nbsp;WICHTIG: erfasse nur Personen, welche beim Spiel auch wirklich dabei sind: Die Position der Spieler wird während dem Spiel erfasst, es könnte sonst zu einem "Gruppe geteilt Alarm" in der Zentrale kommen.
+            i#important-sign.fa.fa-bolt
+            span WICHTIG: erfasse nur Personen, welche beim Spiel auch wirklich dabei sind: Die Position der Spieler wird während dem Spiel erfasst, es könnte sonst zu einem "Gruppe geteilt Alarm" in der Zentrale kommen.
       .row
         .col-xs-12.col-sm-12.col-md-12
           .panel.panel-default
@@ -33,6 +36,8 @@ block content
                   input#login.form-control(type='text' placeholder='name@domain.ch' ng-model='newMember')
                   | &nbsp;
                   button.btn.btn-default(ng-click='addMember()') hinzufügen
+                  .well.well-sm.well-ok#info-ok(ng-show='successMessage') {{successMessage}}
+                  .well.well-sm.well-error#info-error(ng-show='errorMessage') {{errorMessage}}
        .row
          .col-xs-12.col-sm-12.col-md-12
            .panel.panel.panel-default
@@ -59,6 +64,6 @@ block content
                          span(ng-show='m.personalData')
                            img(ng-src='{{m.personalData.avatar}}')
                        td
-                         i.fa.fa-trash(ng-click='deleteMember(m)')
+                         i.delete-user.fa.fa-trash(data-toggle="modal" data-target="#delete-modal" ng-click='deleteMember(m)')
 
 

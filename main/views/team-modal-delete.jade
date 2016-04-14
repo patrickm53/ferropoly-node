@@ -1,0 +1,13 @@
+// Modal dialog when deleting
+#delete-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='delete-modal-label')
+  .modal-dialog(role='document')
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') ×
+        h4#delete-modal-label.modal-title Team-Mitglied löschen?
+      .modal-body
+        | Bitte bestätige, dass Du {{memberToDelete.personalData.forename}} {{memberToDelete.personalData.surename}} aus dem Team entfernen willst
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Schliessen
+        button.btn.btn-primary(type='button', data-dismiss='modal' ng-click='finallyDelete()') Löschen

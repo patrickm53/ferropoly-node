@@ -1,5 +1,5 @@
 /**
- *
+ * Team Member management, adding and removing team members
  * Created by kc on 07.04.16.
  */
 
@@ -10,6 +10,48 @@ teamCtrl.controller('teamCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.members   = [];
   $scope.newMember = '';
 
+  /**
+   * Show a successful result
+   * @param message
+   */
+  function showSuccessInfo(message) {
+    var lastMessage = message;
+
+    function setMessage(msg) {
+      $scope.successMessage = msg;
+
+      _.delay(function() {
+        if ($scope.successMessage === lastMessage) {
+          $scope.successMessage = '';
+          $scope.$apply();
+        }
+      }, 5000);
+    }
+    setMessage(message);
+  }
+  /**
+   * Show an errored result
+   * @param message
+   */
+  function showError(message) {
+    var lastMessage = message;
+
+    function setMessage(msg) {
+      $scope.errorMessage = msg;
+
+      _.delay(function() {
+        if ($scope.errorMessage === lastMessage) {
+          $scope.errorMessage = '';
+          $scope.$apply();
+        }
+      }, 10000);
+    }
+    setMessage(message);
+  }
+
+  /**
+   * Load all team members
+   */
   function getTeams() {
     $http({
       method: 'GET',
@@ -20,6 +62,7 @@ teamCtrl.controller('teamCtrl', ['$scope', '$http', function ($scope, $http) {
         console.log(resp);
       },
       function getTeamError(resp) {
+        showError('Fehler beim Laden der Teammitglieder');
         console.error(resp);
       }
     );
@@ -46,9 +89,11 @@ teamCtrl.controller('teamCtrl', ['$scope', '$http', function ($scope, $http) {
     }).then(
       function postMemberSuccess(resp) {
         $scope.members = resp.data.members;
+        showSuccessInfo(newMember + ' hinzugefügt');
         console.log(resp);
       },
       function postMemberError(resp) {
+        showError('Das Teammitglied konnte nicht gespeichert werden');
         console.error(resp);
       }
     );
@@ -58,12 +103,23 @@ teamCtrl.controller('teamCtrl', ['$scope', '$http', function ($scope, $http) {
    * Remove a member
    */
   $scope.deleteMember = function(memberToDelete) {
+    $scope.memberToDelete = memberToDelete;
+  };
+
+  /**
+   * Delete the member which was confirmed in the modal dialog
+   */
+  $scope.finallyDelete = function() {
+    if (!$scope.memberToDelete) {
+      return;
+    }
+
     $http({
       method: 'DELETE',
       url   : '/team/members/' + gameId + '/' + teamId,
       headers: {"Content-Type": "application/json;charset=utf-8"},
       data  : {
-        memberToDelete: memberToDelete.login,
+        memberToDelete: $scope.memberToDelete.login,
         authToken     : $scope.authToken
       }
     }).then(
@@ -72,6 +128,7 @@ teamCtrl.controller('teamCtrl', ['$scope', '$http', function ($scope, $http) {
         console.log(resp);
       },
       function postMemberError(resp) {
+        showError('Das Teammitglied konnte nicht gelöscht werden');
         console.error(resp);
       }
     );
@@ -85,6 +142,7 @@ teamCtrl.controller('teamCtrl', ['$scope', '$http', function ($scope, $http) {
       console.log('Auth ok');
     },
     function(resp) {
+      showError('Wir haben ein Authentisierungsproblem');
       console.error(resp);
     });
     getTeams();
