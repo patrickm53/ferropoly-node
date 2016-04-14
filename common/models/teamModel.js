@@ -200,7 +200,7 @@ function getMyTeams(email, callback) {
   Team.find({
       $or: [
         {'data.teamLeader.email': email},
-        {'members': email}
+        {'data.members': email}
       ]
     },
     function (err, docs) {
