@@ -97,6 +97,10 @@ module.exports = {
         return callback();
       }
 
+      if (_.find(team.data.members, function(m) { return m === userId; })) {
+        return callback();
+      }
+
       if (userHasAdminRights(userId, gc.gameplay)) {
         // Admin is also ok
         return callback();

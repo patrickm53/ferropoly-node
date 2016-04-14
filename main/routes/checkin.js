@@ -32,7 +32,14 @@ router.get('/:gameId', function (req, res) {
         if (t.data.teamLeader.email === req.session.passport.user) {
           return true;
         }
+        return _.find(t.data.members, function (m) {
+          return m === req.session.passport.user;
+        });
       });
+
+      if (!team) {
+        return errorHandler(res, 'Team nicht gefunden.', new Error('gp or gamedata is undefined'), 500);
+      }
 
       if (!gp || !gamedata) {
         return errorHandler(res, 'Spiel nicht gefunden.', new Error('gp or gamedata is undefined'), 500);
