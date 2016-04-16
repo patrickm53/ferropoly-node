@@ -29,7 +29,7 @@ function addLog(data) {
       return;
     }
 
-    travelLogModel.addPositionEntry(data.gameId, data.teamId, {
+    travelLogModel.addPositionEntry(data.gameId, data.teamId, data.user, {
       lat     : data.position.lat,
       lng     : data.position.lng,
       accuracy: data.position.accuracy

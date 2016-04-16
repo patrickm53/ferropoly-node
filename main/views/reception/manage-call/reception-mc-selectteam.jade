@@ -12,13 +12,19 @@ h2 Bitte anrufendes Team auswählen
           font#color-tag(color='{{getTeamColor(t.uuid)}}') &#9608;&#9608;
       .panel-body
         p {{t.data.organization}}
+          span(ng-show='t.data.teamLeader.name')
+          | , {{t.data.teamLeader.name}}
         details
-          p {{t.data.teamLeader.name}}
-          p
+          .team-leader-phone
             a(href='tel:{{t.data.teamLeader.phone}}') {{t.data.teamLeader.phone}}
-          p
+          .team-leader-email
             a(href='mailto:{{t.data.teamLeader.email}}') {{t.data.teamLeader.email}}
-          p {{t.data.remarks}}
+          .team-leader-remarks {{t.data.remarks}}
+          .team-members(ng-show='t.data.members')
+            | Teammitglieder:
+            .team-member(ng-repeat='m in t.data.members')
+              .team-member-login {{m}}
+
         p
         button.btn.btn-primary(href='#' ng-click="preselectTeam(t)" data-toggle="modal" data-target="#confirmTeam" ng-show='isGameActive()') Anruf bearbeiten
         button.btn.btn-primary(href='#' ng-click="preselectTeam(t);confirmTeam(false)" ng-hide='isGameActive()') Team ansehen

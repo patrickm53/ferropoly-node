@@ -15,6 +15,7 @@ var travelLogSchema = mongoose.Schema({
   _id       : String,
   gameId    : String,
   teamId    : String,
+  user      : String, // User who causes this entry
   propertyId: String, // EITHER propertyId
   position  : {       // OR location coordinates must be supplied
     lat     : Number,
@@ -73,9 +74,10 @@ var addPropertyEntry = function (gameId, teamId, property, callback) {
   logEntry.teamId     = teamId;
   logEntry.propertyId = property.uuid;
   logEntry.position   = {
-    lat: property.location.position.lat,
-    lng: property.location.position.lng,
-    accuracy: 200};
+    lat     : property.location.position.lat,
+    lng     : property.location.position.lng,
+    accuracy: 200
+  };
   logEntry._id        = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
   logEntry.save(callback);
 }
@@ -89,8 +91,8 @@ var addPropertyEntry = function (gameId, teamId, property, callback) {
  * @param callback
  * @returns {*}
  */
-var addPositionEntry = function (gameId, teamId, position, callback) {
-  if (!gameId || !teamId || !position) {
+var addPositionEntry = function (gameId, teamId, user, position, callback) {
+  if (!gameId || !teamId || !user || !position) {
     return callback(new Error('all params in addEntry must be set'));
   }
   if (!_.isString(gameId) || !_.isString(teamId)) {
@@ -100,6 +102,7 @@ var addPositionEntry = function (gameId, teamId, position, callback) {
   logEntry.gameId   = gameId;
   logEntry.teamId   = teamId;
   logEntry.position = position;
+  logEntry.user     = user;
   logEntry._id      = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
   logEntry.save(callback);
 };

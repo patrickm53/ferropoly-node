@@ -87,7 +87,8 @@ var FerroSocket = function (server) {
               socket.ferropoly = {
                 isAdmin : false,
                 isPlayer: true,
-                teamId  : data.teamId
+                teamId  : data.teamId,
+                user    : data.user
               };
               logger.info('Verified PLAYER socket added for ' + data.gameId + ' : ' + socket.id);
               self.addSocket(socket, data.user, data.gameId);
@@ -163,8 +164,9 @@ FerroSocket.prototype.registerChannels = function (socket) {
   function registerChannel(channelName) {
     socket.on(channelName, function (data) {
       logger.info(channelName + ' request received:' + data.cmd);
-      data.gameId = socket.ferropoly.gameId;
-      data.teamId = socket.ferropoly.teamId; // not defined for admins
+      data.gameId   = socket.ferropoly.gameId;
+      data.teamId   = socket.ferropoly.teamId; // not defined for admins
+      data.user     = socket.ferropoly.user; // not defined for admins
       data.response = function (channel, resp) {
         self.emitToClients(socket.gameId, channel, resp);
       };

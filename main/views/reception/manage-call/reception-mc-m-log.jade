@@ -15,6 +15,7 @@
               td {{p.timestamp | date:'dd.MM. HH:mm:ss'}}
               td
                 a(href='#' ng-click='focusLogPosition(p)') {{getPropertyName(p)}}
+                .log-user(ng-show='p.user') {{p.user}}
 
 .col-md-8(ng-show='mapApiLoaded()')
   .panel.panel-default
