@@ -3,7 +3,7 @@
 
 h1 {{selectedTeam.data.name}}
   font#color-tag(color='{{getTeamColor(selectedTeam.uuid)}}') &#9608;&#9608;
-button.finish-call-button(type="button" class="btn btn-default" ng-click="finishCall()") Anruf beenden
+button.finish-call-button.btn.btn-info.btn-sm(type="button" ng-click="finishCall()") Anruf beenden
 
 include reception-mc-m-buyproperty-modal
 
