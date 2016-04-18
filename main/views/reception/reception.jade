@@ -94,23 +94,24 @@ block navbar-right
     | &nbsp;offline
 
 block content
-  #active-call.alert.alert-danger(role="alert" onclick="showPanel('#panel-managecall');") Anruf ist aktiv. Bitte unter "Anruf behandeln" beenden.
+  .container-fluid
+    #active-call.alert.alert-danger(role="alert" onclick="showPanel('#panel-managecall');") Anruf ist aktiv. Bitte unter "Anruf behandeln" beenden.
 
-  div(ng-app='ferropolyApp')
-    #panel-main
-      include reception-main
-    #panel-managecall
-      include manage-call/reception-mc
-    #panel-teamaccounts
-      include reception-teamaccounts
-    #panel-map
-      include map/reception-map
-    #panel-stats
-      include stats/reception-stats
-    #panel-chance
-      include reception-chance
-    #panel-properties
-      include reception-properties
-    #panel-traffic
-      include reception-traffic
+    div(ng-app='ferropolyApp')
+      #panel-main
+        include reception-main
+      #panel-managecall
+        include manage-call/reception-mc
+      #panel-teamaccounts
+        include reception-teamaccounts
+      #panel-map
+        include map/reception-map
+      #panel-stats
+        include stats/reception-stats
+      #panel-chance
+        include reception-chance
+      #panel-properties
+        include reception-properties
+      #panel-traffic
+        include reception-traffic
 
