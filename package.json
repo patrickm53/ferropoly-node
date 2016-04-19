@@ -53,6 +53,7 @@
     "pbkdf2-sha256": "1.1.1",
     "pixl-xml": "1.0.4",
     "socket.io": "1.4.5",
+    "socket.io-client": "1.4.5",
     "winston": "1.1.1"
   },
   "devDependencies": {

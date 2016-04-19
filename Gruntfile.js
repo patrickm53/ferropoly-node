@@ -29,6 +29,7 @@ module.exports = function (grunt) {
       options  : {},
       dist     : {
         src : [
+          './node_modules/socket.io-client/socket.io.js',
           './main/public/js/reception/reception-framework.js',
           './main/public/js/reception/ferropoly-socket.js',
           './main/public/js/reception/datastore/datastore.js',
@@ -76,14 +77,15 @@ module.exports = function (grunt) {
       },
       css      : {
         src : [
-          './main/public/modules/bootstrap/dist/css/bootstrap.min.css',
-          './main/public/modules/bootstrap/dist/css/bootstrap-theme.min.css',
+          './main/public/css/cosmo.min.css',
+          //'./main/public/modules/bootstrap/dist/css/bootstrap-theme.min.css',
           './main/public/css/ferropoly.css'
         ],
         dest: './main/public/css/ferropoly.min.css'
       },
       checkin  : {
         src : [
+          './node_modules/socket.io-client/socket.io.js',
           './main/public/js/checkin/index.js',
           './main/public/js/checkin/geolocation.js',
           './main/public/js/checkin/datastore.js',

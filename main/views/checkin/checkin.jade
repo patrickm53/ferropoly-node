@@ -14,11 +14,12 @@ block head
     != pricelist
     | };
 
-  script(src='/socket.io/socket.io.js')
+
 
   if minifiedjs
     script(src='/js/min/checkin.min.js')
   else
+    script(src='/socket.io/socket.io.js')
     script(src='/js/checkin/index.js')
     script(src='/js/checkin/geolocation.js')
     script(src='/js/checkin/datastore.js')
