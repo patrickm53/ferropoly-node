@@ -35,7 +35,7 @@ block content
                   label(for='login') Login-Name:&nbsp;
                   input#login.form-control(type='text' placeholder='name@domain.ch' ng-model='newMember')
                   | &nbsp;
-                  button.btn.btn-default(ng-click='addMember()') hinzufügen
+                  button.btn.btn-primary(ng-click='addMember()') hinzufügen
                   .well.well-sm.well-ok#info-ok(ng-show='successMessage') {{successMessage}}
                   .well.well-sm.well-error#info-error(ng-show='errorMessage') {{errorMessage}}
        .row
