@@ -93,7 +93,7 @@ module.exports = function (grunt) {
           './main/public/js/checkin/dashboardctrl.js',
           './main/public/js/checkin/mapctrl.js',
           './main/public/js/checkin/propertiesctrl.js',
-          './main/public/js/checkin/priceslistctrl.js',
+          './main/public/js/checkin/pricelistctrl.js',
           './main/public/js/checkin/accountctrl.js'
         ],
         dest: 'main/public/js/checkin.js'
