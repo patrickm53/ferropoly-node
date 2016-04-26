@@ -19,5 +19,5 @@
             td {{p.pricelist.price | amount}}
             td {{p.gamedata.buildings}}
             td
-              button.btn.btn-default.btn-xs(type='button' ng-show='p.gamedata.buildingEnabled' ng-click='buyHouse(p)') bauen
-              span(ng-hide='p.gamedata.buildingEnabled') nicht möglich
+              button.btn.btn-default.btn-xs(type='button' ng-show='p.gamedata.buildingEnabled && p.gamedata.buildings < 5' ng-click='buyHouse(p)') bauen
+              span(ng-hide='p.gamedata.buildingEnabled || p.gamedata.buildings > 4') nicht möglich
