@@ -15,7 +15,7 @@
           tr(ng-repeat='t in incomeList | orderBy:"teamName"')
             td
              a(href='#' ng-click='showIncomeDetails(t.teamId)') {{t.teamName}}
-            td {{t.totalAmount}}
+            td {{t.totalAmount | amount}}
 
   .col-md-8
     .panel.panel-default

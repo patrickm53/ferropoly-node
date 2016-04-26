@@ -19,7 +19,7 @@ div(ng-controller='dashboardCtrl')
             tr(ng-repeat='t in rankingList | orderBy:"rank"')
               td {{t.rank}}
               td {{t.teamName}}
-              td {{t.asset}}
+              td {{t.asset | amount}}
 
     .col-md-4
       .panel.panel-default
@@ -55,10 +55,10 @@ div(ng-controller='dashboardCtrl')
               td {{gp.gameParams.interestInterval}} min
             tr
               td Startgeld pro Runde
-              td {{gp.gameParams.interest}}
+              td {{gp.gameParams.interest | amount}}
             tr
               td Guthaben zu Spielbeginn
-              td {{gp.gameParams.startCapital}}
+              td {{gp.gameParams.startCapital | amount}}
             tr
               td Zinsrunden bei Spielende
               td {{gp.gameParams.interestCyclesAtEndOfGame}}

@@ -21,7 +21,7 @@ div(ng-controller='propertiesCtrl' ng-cloak)
             td
               a(href='' ng-click='setCurrentProperty(p)') {{p.location.name}}
             td.pricelist {{p.pricelist.propertyGroup}}
-            td.pricelist {{p.pricelist.price}}
+            td.pricelist {{p.pricelist.price | amount}}
             td.pricelist {{getTeamName(p.gamedata.owner)}}
             td.pricelist {{p.gamedata.buildings}}
   .col-md-6
@@ -35,32 +35,32 @@ div(ng-controller='propertiesCtrl' ng-cloak)
             th Erreichbarkeit
             td {{currentProperty.location.accessibility}}
             th Miete unbebaut
-            td {{currentProperty.pricelist.rents.noHouse}}
+            td {{currentProperty.pricelist.rents.noHouse | amount}}
           tr
             th Position in Preisliste
             td {{currentProperty.pricelist.position}}
             th Miete 1 Haus
-            td {{currentProperty.pricelist.rents.oneHouse}}
+            td {{currentProperty.pricelist.rents.oneHouse | amount}}
           tr
             th Preisgruppe
             td {{currentProperty.pricelist.propertyGroup}}
             th Miete 2 Häuser
-            td {{currentProperty.pricelist.rents.twoHouses}}
+            td {{currentProperty.pricelist.rents.twoHouses | amount}}
           tr
             th Kaufpreis
-            td {{currentProperty.pricelist.price}}
+            td {{currentProperty.pricelist.price | amount}}
             th Miete 3 Häuser
-            td {{currentProperty.pricelist.rents.threeHouses}}
+            td {{currentProperty.pricelist.rents.threeHouses | amount}}
           tr
             th Preis pro Haus
-            td {{currentProperty.pricelist.pricePerHouse}}
+            td {{currentProperty.pricelist.pricePerHouse | amount}}
             th Miete 4 Häuser
-            td {{currentProperty.pricelist.rents.fourHouses}}
+            td {{currentProperty.pricelist.rents.fourHouses | amount}}
           tr
             th
             td
             th Miete Hotel
-            td {{currentProperty.pricelist.rents.hotel}}
+            td {{currentProperty.pricelist.rents.hotel | amount}}
         div(ng-show='currentProperty.gamedata.owner')
           h4 Besucher
           table.table.table-condensed

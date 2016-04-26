@@ -9,7 +9,7 @@ div#chance-ctrl(ng-controller='chanceCtrl' ng-cloak)
           h3.panel-title Übersicht
         .panel-body
           p Anzahl Einträge: {{entries.length}}
-          p Kontostand: {{chancelleryAsset}}
+          p Kontostand: {{chancelleryAsset | amount}}
     .col-md-9
       table.table.table-hover.table-condensed
         thead
@@ -24,4 +24,4 @@ div#chance-ctrl(ng-controller='chanceCtrl' ng-cloak)
             td {{e.timestamp | date:'dd.MM. HH:mm:ss'}}
             td {{teamNames[e.transaction.origin.uuid]}}
             td {{e.transaction.info}}
-            td {{e.transaction.amount}}
+            td {{e.transaction.amount | amount}}

@@ -16,7 +16,7 @@
           tr(ng-repeat='p in teamInfo.properties | orderBy:"location.name"')
             td {{p.location.name}}
             td {{p.pricelist.position + 1}}
-            td {{p.pricelist.price}}
+            td {{p.pricelist.price | amount}}
             td {{p.gamedata.buildings}}
             td
               button.btn.btn-default.btn-xs(type='button' ng-show='p.gamedata.buildingEnabled' ng-click='buyHouse(p)') bauen

@@ -8,7 +8,7 @@
       h3.panel-title Konto
         i.fa.fa-refresh.refresh-button(ng-click='refreshAccountInfo()')
     .panel-body
-      p Aktueller Kontostand: {{teamInfo.balance}}
+      p Aktueller Kontostand: {{teamInfo.balance | amount}}
       table.table.table-hover
         thead
           th Zeit
@@ -18,7 +18,7 @@
           tr(ng-repeat='e in teamInfo.accountEntries | orderBy:"timestamp" | offset: currentPage*itemsPerPage | limitTo: itemsPerPage')
             td {{e.timestamp | date:'dd.MM. HH:mm:ss'}}
             td {{e.transaction.info}}
-            td {{e.transaction.amount}}
+            td {{e.transaction.amount | amount}}
         tfoot
           td(colspan=3)
              ul.pagination

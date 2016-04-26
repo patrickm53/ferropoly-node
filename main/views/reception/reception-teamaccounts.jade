@@ -25,10 +25,10 @@ div#team-accounts-ctrl(ng-controller='teamAccountsCtrl' ng-cloak)
         td {{e.timestamp | date:'HH:mm:ss'}}
         td {{teamNames[e.teamId]}}
         td {{getTransactionInfoText(e)}}
-        td {{e.transaction.amount}}
-        td {{e.balance}}
+        td {{e.transaction.amount | amount}}
+        td {{e.balance | amount}}
         td
           div(ng-show='e.transaction.parts.length > 0')
             ul
-              li(ng-repeat='d in e.transaction.parts') {{d.propertyName}} : {{d.amount}}
+              li(ng-repeat='d in e.transaction.parts') {{d.propertyName}} : {{d.amount | amount}}
 

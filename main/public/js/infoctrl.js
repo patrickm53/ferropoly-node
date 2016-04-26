@@ -28,6 +28,18 @@ function showPanel(p) {
 }
 
 var infoControl = angular.module('infoApp', []);
+/**
+ * This is the amount filter returning nicer values
+ */
+infoControl.filter('amount', function () {
+  return function (val) {
+    if (_.isNumber(val)) {
+      return val.toLocaleString('de-CH');
+    }
+    return val;
+  }
+});
+
 infoControl.controller('infoCtrl', ['$scope', '$http', function ($scope, $http) {
   var ICON_EDIT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png';
   var ICON_TRAIN_LOCATION    = 'https://maps.gstatic.com/mapfiles/ms2/micons/green.png';

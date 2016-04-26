@@ -20,7 +20,7 @@
           tbody
             tr(ng-repeat='p in propertyQueryResult | orderBy:"location.name"')
               td {{p.location.name}}
-              td {{p.pricelist.price}}
+              td {{p.pricelist.price | amount}}
               td
                 button.btn.btn-default.btn-sm(type="button" data-toggle="modal" data-target="#confirmBuy" ng-click="setPropertyInvestCandidate(p)") kaufen
 

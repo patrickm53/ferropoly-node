@@ -16,7 +16,7 @@
           tr(ng-repeat='t in rankingList | orderBy:"teamName"')
             td {{t.rank}}
             td {{t.teamName}}
-            td {{t.asset}}
+            td {{t.asset | amount}}
   .col-md-8
     .panel.panel-default
       .panel-heading
