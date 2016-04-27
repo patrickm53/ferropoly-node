@@ -1,5 +1,5 @@
 /**
- * The summary of a game
+ * The summary of a game, all data is collected here and uploaded to the page
  * Created by kc on 27.04.16.
  */
 
@@ -7,61 +7,81 @@
 var express = require('express');
 var router  = express.Router();
 
-var gameplayModel     = require('../../common/models/gameplayModel');
-var pricelist         = require('../../common/lib/pricelist');
-var teamModel         = require('../../common/models/teamModel');
-var errorHandler      = require('../lib/errorHandler');
-var logger            = require('../../common/lib/logger').getLogger('routes:summary');
+var gameplayModel               = require('../../common/models/gameplayModel');
+var chancelleryTransactionModel = require('../../common/models/accounting/chancelleryTransaction');
+var teamAccountTransactionModel = require('../../common/models/accounting/teamAccountTransaction');
+var travelLogModel              = require('../../common/models/travelLogModel');
+var pricelist                   = require('../../common/lib/pricelist');
+var teamModel                   = require('../../common/models/teamModel');
+var errorHandler                = require('../lib/errorHandler');
+var logger                      = require('../../common/lib/logger').getLogger('routes:summary');
+var async                       = require('async');
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
   var gameId = req.params.gameId;
+  var info   = {};
 
-  gameplayModel.getGameplay(gameId, null, function (err, gp) {
-    if (err) {
-      logger.err(err);
-      return errorHandler(res, 'Interner Fehler', err, 500);
-    }
-    if (!gp) {
-      return errorHandler(res, 'Interner Fehler: gp ist null.', new Error('gp is undefined'), 500);
-    }
-
-    pricelist.getPricelist(gameId, function (err2, pl) {
-      if (err2) {
-        logger.err(err2);
-        return errorHandler(res, 'Interner Fehler', err2, 500);
-      }
-      if (!pl) {
-        return errorHandler(res, 'Interner Fehler: pl ist null.', new Error('pl is undefined'), 500);
-      }
-
-      teamModel.getTeams(gameId, function (err3, foundTeams) {
-        if (err3) {
-          logger.err(err3);
-          return errorHandler(res, 'Interner Fehler', err3, 500);
-        }
-        // Filter some info
-        var teams = [];
-        for (var i = 0; i < foundTeams.length; i++) {
-          teams.push({
-            name          : foundTeams[i].data.name,
-            organization  : foundTeams[i].data.organization,
-            teamLeaderName: foundTeams[i].data.teamLeader.name,
-            uuid          : foundTeams[i].uuid
-          });
-        }
-
-        res.render('summary/summary', {
-          title     : 'Ferropoly',
-          ngFile    : '/js/summaryctrl.js',
-          hideLogout: true,
-          gameplay  : JSON.stringify(gp),
-          pricelist : JSON.stringify(pl),
-          teams     : JSON.stringify(teams)
+  async.waterfall(
+    [
+      function (cb) {
+        gameplayModel.getGameplay(gameId, null, cb);
+      },
+      function (gp, cb) {
+        info.gameplay = gp;
+        pricelist.getPricelist(gameId, cb);
+      },
+      function (pl, cb) {
+        info.pricelist = pl;
+        teamModel.getTeams(gameId, (err, foundTeams) => {
+          if (err) {
+            return cb(err);
+          }
+          info.teams = [];
+          for (var i = 0; i < foundTeams.length; i++) {
+            info.teams.push({
+              name          : foundTeams[i].data.name,
+              organization  : foundTeams[i].data.organization,
+              teamLeaderName: foundTeams[i].data.teamLeader.name,
+              teamId        : foundTeams[i].uuid
+            });
+          }
+          cb(null);
         });
+      },
+      function (cb) {
+        chancelleryTransactionModel.getEntries(gameId, null, null, cb);
+      },
+      function (chancellery, cb) {
+        info.chancellery = chancellery;
+        teamAccountTransactionModel.getEntries(gameId, null, null, null, cb);
+      },
+      function (teamTransactions, cb) {
+        info.teamTransactions = teamTransactions;
+        travelLogModel.getLogEntries(gameId, null, null, null, cb);
+      },
+      function (log, cb) {
+        info.travelLog = log;
+        teamAccountTransactionModel.getRankingList(gameId, cb);
+      },
+      function(rankingList, cb) {
+        info.rankingList = rankingList;
+        cb();
+      }
+    ],
+    function (err) {
+      if (err) {
+        logger.error(err);
+      }
+      res.render('summary/summary', {
+        title     : 'Ferropoly',
+        ngFile    : '/js/summaryctrl.js',
+        hideLogout: true,
+        info      : JSON.stringify(info)
       });
-    });
-  });
+    }
+  );
+
 });
 
 module.exports = router;

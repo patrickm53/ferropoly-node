@@ -5,14 +5,8 @@ extends ../layout
 
 block head
   script
-    | var teams =
-    != teams
-    | ;
-    | var gp =
-    != gameplay
-    | ;
-    | var pl =
-    != pricelist
+    | var info =
+    != info
     | ;
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU')
   script(src=ngFile)
@@ -20,4 +14,16 @@ block head
 
 block content
   div(ng-app='summaryApp' ng-controller='summaryCtrl')
-    h1 Hallo
+    h1 Spielzusammenfassung "{{info.gameplay.gamename}}"
+    .row
+      .col-sm-6.col-md-4
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title Rangliste
+          .panel-body
+            table.table(ng-cloak)
+              tr(ng-repeat='t in info.rankingList | orderBy:"rank"')
+                td {{$index + 1}}
+                td {{t.team.name}}
+                td {{t.asset | amount}}
+
