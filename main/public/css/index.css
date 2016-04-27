@@ -46,3 +46,8 @@ h1.info-header {
     margin-bottom : 20px;
     color         : white;
 }
+
+.btn {
+    margin-right  : 5px;
+    margin-bottom : 5px;
+}

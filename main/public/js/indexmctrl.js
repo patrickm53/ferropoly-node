@@ -43,6 +43,11 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     });
   };
 
+  /**
+   * Returns 0 if the game is running
+   * @param gp
+   * @returns {number}
+   */
   $scope.isGameRunning = function (gp) {
     if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
       return -1;
@@ -53,8 +58,17 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     // Is running
     return 0;
   };
+
+  /**
+   * Returns true if the game is over
+   * @param gp
+   */
+  $scope.isGameOver = function (gp) {
+    return (moment(gp.scheduling.gameEndTs).isBefore(moment()));
+  };
+
   // Get Info about Game timings
-  $scope.getGpInfo     = function (gp) {
+  $scope.getGpInfo = function (gp) {
     if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
       return 'Spiel ist ' + moment(gp.scheduling.gameEndTs).fromNow(false) + ' zu Ende gegangen.';
     }

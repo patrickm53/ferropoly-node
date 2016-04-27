@@ -1,0 +1,23 @@
+//
+   Created by kc on 27.04.16.
+
+extends ../layout
+
+block head
+  script
+    | var teams =
+    != teams
+    | ;
+    | var gp =
+    != gameplay
+    | ;
+    | var pl =
+    != pricelist
+    | ;
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU')
+  script(src=ngFile)
+  link(rel='stylesheet', href='/css/summary.css',  type='text/css')
+
+block content
+  div(ng-app='summaryApp' ng-controller='summaryCtrl')
+    h1 Hallo

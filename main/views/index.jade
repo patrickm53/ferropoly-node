@@ -56,6 +56,7 @@ block content
                           | &nbsp;
                           a.btn.btn-primary.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel administrieren
                           a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-hide='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel ansehen
+                          a.btn.btn-primary.btn-sm(href='/summary/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && isGameOver(gameplay)') Zusammenfassung
                       p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
                     .panel-footer
                       p {{getGpInfo(gameplay)}}
@@ -86,10 +87,9 @@ block content
                       div(ng-show='gameplay.internal.finalized')
                         p
                           a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
-                          | &nbsp;
                           a.btn.btn-primary.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0) && gameplay.mobile.level') Spielen
                           a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level) || (gameplay.internal.finalized && (isGameRunning(gameplay) === 0))') Spiel ansehen
-                          | &nbsp;
+                          a.btn.btn-primary.btn-sm(href='/summary/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && isGameOver(gameplay)') Zusammenfassung
                           a.btn.btn-default.btn-sm(href='/team/edit/{{gameplay.internal.gameId}}/{{gameplay.team.uuid}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level || !isTeamleader(gameplay))') Team-Mitglieder
                       p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
                     .panel-footer
