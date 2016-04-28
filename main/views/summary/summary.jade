@@ -12,18 +12,13 @@ block head
   script(src=ngFile)
   link(rel='stylesheet', href='/css/summary.css',  type='text/css')
 
-block content
-  div(ng-app='summaryApp' ng-controller='summaryCtrl')
-    h1 Spielzusammenfassung "{{info.gameplay.gamename}}"
-    .row
-      .col-sm-6.col-md-4
-        .panel.panel-default
-          .panel-heading
-            h3.panel-title Rangliste
-          .panel-body
-            table.table(ng-cloak)
-              tr(ng-repeat='t in info.rankingList | orderBy:"rank"')
-                td {{$index + 1}}
-                td {{t.team.name}}
-                td {{t.asset | amount}}
+block navbar
+  li
+    a(href='#' onclick="showPanel('#panel-main');") Übersicht
 
+block content
+  .container-fluid(ng-app='summaryApp' ng-controller='summaryCtrl')
+    #panel-main
+      include summary-overview
+    #panel-team
+      include summary-team

@@ -75,7 +75,8 @@ ferropolyDb.init(settings, function (err) {
 
   // Non authenticated pages
   app.use('/info', require('./routes/info'));
-
+  app.use('/summary', require('./routes/summary'));
+  
   // Define Strategy, login
   passport.use(authStrategy.facebookStrategy);
   passport.use(authStrategy.googleStrategy);
@@ -122,7 +123,6 @@ ferropolyDb.init(settings, function (err) {
   app.use('/checkin', require('./routes/checkin'));
   app.use('/gameplays', require('./routes/gameplays'));
   app.use('/team', require('./routes/team'));
-  app.use('/summary', require('./routes/summary'));
   app.use('/join', joinRoute);
   app.use('/anmelden', joinRoute);
   authtoken.init(app);

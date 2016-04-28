@@ -11,6 +11,7 @@ var gameplayModel               = require('../../common/models/gameplayModel');
 var chancelleryTransactionModel = require('../../common/models/accounting/chancelleryTransaction');
 var teamAccountTransactionModel = require('../../common/models/accounting/teamAccountTransaction');
 var travelLogModel              = require('../../common/models/travelLogModel');
+var propertyModel               = require('../../common/models/propertyModel');
 var pricelist                   = require('../../common/lib/pricelist');
 var teamModel                   = require('../../common/models/teamModel');
 var errorHandler                = require('../lib/errorHandler');
@@ -64,8 +65,12 @@ router.get('/:gameId', function (req, res) {
         info.travelLog = log;
         teamAccountTransactionModel.getRankingList(gameId, cb);
       },
-      function(rankingList, cb) {
+      function (rankingList, cb) {
         info.rankingList = rankingList;
+        propertyModel.getPropertiesForGameplay(gameId, {lean: true}, cb);
+      },
+      function (properties, cb) {
+        info.properties = properties;
         cb();
       }
     ],

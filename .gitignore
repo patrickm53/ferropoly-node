@@ -43,6 +43,8 @@ main/views/info/*.html
 main/views/reception/*.html
 main/views/join/*.html
 main/views/checkin/*.html
+main/views/summary/*.html
 
 main/public/js/reception.js
 main/public/js/checkin.js
+
