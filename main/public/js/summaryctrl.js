@@ -84,9 +84,24 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
       return e.gamedata.owner === team.teamId;
     });
     $scope.teamTransactions = _.filter($scope.info.teamTransactions, {'teamId': team.teamId});
-    console.log($scope.teamTransactions);
+    $scope.teamTravelLog    = _.filter($scope.info.travelLog, {'teamId': team.teamId});
+
+    $scope.teamTravelLog.forEach(function (t) {
+      if (t.propertyId) {
+        t.property = _.find($scope.info.properties, {'uuid': t.propertyId});
+      }
+    });
+
+    console.log($scope.teamTravelLog);
   };
 
+  /**
+   * Focus the location on the map
+   * @param travelLogEntry
+   */
+  $scope.focusOnMap = function (travelLogEntry) {
+    console.log(travelLogEntry);
+  };
 
   // make sure all data is available
   prepareData();
