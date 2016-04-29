@@ -22,8 +22,9 @@ h1 Spielzusammenfassung "{{info.gameplay.gamename}}"
           tbody
             tr(ng-repeat='t in info.rankingList | orderBy:"rank"')
               td {{$index + 1}}
-              td.teamlink(ng-click='showTeam(t.team)') {{t.team.name}}
-              td {{t.asset | amount}}
+              td
+                a(href='#' ng-click='showTeam(t.team)') {{t.team.name}}
+              td.amount {{t.asset | amount}}
               td {{t.team.gamedata.properties.length}}
               td {{t.team.gamedata.buildings}}
 

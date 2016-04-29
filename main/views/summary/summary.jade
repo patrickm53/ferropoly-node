@@ -15,6 +15,8 @@ block head
 block navbar
   li
     a(href='#' onclick="showPanel('#panel-main');") Übersicht
+  li
+    a(href='#' onclick="showPanel('#panel-chancellery');") Chance/Kanzlei
 
 block content
   .container-fluid(ng-app='summaryApp' ng-controller='summaryCtrl')
@@ -22,3 +24,5 @@ block content
       include summary-overview
     #panel-team
       include summary-team
+    #panel-chancellery
+      include summary-chancellery

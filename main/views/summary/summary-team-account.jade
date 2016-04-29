@@ -6,12 +6,13 @@
       .panel-heading
         h3.panel-title Kontobuchungen
       .panel-body
-        table.table(ng-cloak)
+        table.table.table-striped(ng-cloak)
           thead
             tr
               th Zeit
               th Buchung
-              th Betrag
+              th.amount Betrag
+              th.amount Saldo
           tbody
             tr(ng-repeat='t in teamTransactions | orderBy:"timestamp"')
               td {{t.timestamp | date:'HH:mm'}}
@@ -19,6 +20,7 @@
                 span(ng-show='t.transaction.parts.length') &nbsp;:&nbsp;
                   span(ng-repeat='p in t.transaction.parts') {{p.propertyName}}: {{p.amount | amount}};&nbsp;
 
-              td {{t.transaction.amount | amount}}
+              td.amount {{t.transaction.amount | amount}}
+              td.amount {{t.saldo | amount}}
 
 

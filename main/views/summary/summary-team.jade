@@ -1,21 +1,22 @@
-h1 {{team.name}}
-div
-  // Nav tabs
-  ul.nav.nav-tabs(role='tablist')
-    li.active(role='presentation')
-      a(href='#summary-team-possession', aria-controls='summary-team-possession', role='tab', data-toggle='tab') Übersicht
-    li(role='presentation')
-      a(href='#summary-team-account', aria-controls='summary-team-account', role='tab', data-toggle='tab') Kontobuch
-    li(role='presentation')
-      a(href='#summary-team-travellog', aria-controls='summary-team-travellog', role='tab', data-toggle='tab') Reiselog
-  p
+div(ng-cloak)
+  h1 {{team.name}}
+  div
+    // Nav tabs
+    ul.nav.nav-tabs(role='tablist')
+      li.active(role='presentation')
+        a(href='#summary-team-possession', aria-controls='summary-team-possession', role='tab', data-toggle='tab') Übersicht
+      li(role='presentation')
+        a(href='#summary-team-account', aria-controls='summary-team-account', role='tab', data-toggle='tab') Kontobuch
+      li(role='presentation')
+        a(href='#summary-team-travellog', aria-controls='summary-team-travellog', role='tab', data-toggle='tab') Reiselog
+    p
 
-  // Tab panes
-  .tab-content
-    #summary-team-possession.tab-pane.active(role='tabpanel')
-      include summary-team-possession
-    #summary-team-account.tab-pane(role='tabpanel')
-      include summary-team-account
-    #summary-team-travellog.tab-pane(role='tabpanel')
-      include summary-team-travellog
+    // Tab panes
+    .tab-content
+      #summary-team-possession.tab-pane.active(role='tabpanel')
+        include summary-team-possession
+      #summary-team-account.tab-pane(role='tabpanel')
+        include summary-team-account
+      #summary-team-travellog.tab-pane(role='tabpanel')
+        include summary-team-travellog
 

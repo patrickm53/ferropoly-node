@@ -8,7 +8,7 @@
 /**
  * Panel handling
  */
-var panels = ['#panel-main', '#panel-team'];
+var panels = ['#panel-main', '#panel-team', '#panel-chancellery'];
 function showPanel(panel) {
   panels.forEach(function (p) {
     $(p).hide();
@@ -69,8 +69,22 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
         $scope.teams[$scope.info.properties[i].gamedata.owner].gamedata.buildings += $scope.info.properties[i].gamedata.buildings;
       }
     }
+    // Set saldo on chancellery data
+    setSaldo($scope.info.chancellery);
   }
 
+  /**
+   * Sets the saldo on a  transaction list
+   * @param list
+   */
+  function setSaldo(list) {
+    if (list.length > 0) {
+      list[0].saldo = list[0].transaction.amount;
+      for (var i = 1; i < list.length; i++) {
+        list[i].saldo = list[i - 1].saldo + list[i].transaction.amount;
+      }
+    }
+  }
   /**
    * Shows the selected team
    * @param team
@@ -80,11 +94,15 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
     showPanel('#panel-team');
 
     // Create datasets for this team
+    // Properties
     $scope.teamProperties   = _.filter($scope.info.properties, function (e) {
       return e.gamedata.owner === team.teamId;
     });
+    // Team Transactions
     $scope.teamTransactions = _.filter($scope.info.teamTransactions, {'teamId': team.teamId});
-    $scope.teamTravelLog    = _.filter($scope.info.travelLog, {'teamId': team.teamId});
+    setSaldo($scope.teamTransactions);
+    // Travel Log
+    $scope.teamTravelLog = _.filter($scope.info.travelLog, {'teamId': team.teamId});
 
     $scope.teamTravelLog.forEach(function (t) {
       if (t.propertyId) {

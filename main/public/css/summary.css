@@ -2,3 +2,7 @@
     color  : blue;
     cursor : pointer;
 }
+
+.amount {
+    text-align: right;
+}
