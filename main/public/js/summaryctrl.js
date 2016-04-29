@@ -50,6 +50,10 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
    * Prepare Data for the view
    */
   function prepareData() {
+    if ($scope.info.error) {
+      console.error(info.error);
+      return;
+    }
     // Set Teams Object
     $scope.teams = {};
     for (var i = 0; i < info.teams.length; i++) {
@@ -145,15 +149,15 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
     // Draw markers for all the teams properties
     $scope.bounds = new google.maps.LatLngBounds();
     $scope.teamProperties.forEach(function (p) {
-      var marker = new google.maps.Marker({
-            position: {lat: parseFloat(p.location.position.lat), lng: parseFloat(p.location.position.lng)},
-            map     : $scope.map,
-            title   : 'Hello World!'
-          });
+      var marker     = new google.maps.Marker({
+        position: {lat: parseFloat(p.location.position.lat), lng: parseFloat(p.location.position.lng)},
+        map     : $scope.map,
+        title   : 'Hello World!'
+      });
       var infowindow = new google.maps.InfoWindow({
         content: p.location.name
       });
-      marker.addListener('click', function() {
+      marker.addListener('click', function () {
         infowindow.open($scope.map, marker);
       });
       $scope.bounds.extend(marker.getPosition());
@@ -171,11 +175,11 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
       $scope.travelPath.setMap(null);
     }
     $scope.travelPath = new google.maps.Polyline({
-      path: cords,
-      geodesic: true,
-      strokeColor: '#FF0000',
+      path         : cords,
+      geodesic     : true,
+      strokeColor  : '#FF0000',
       strokeOpacity: 1.0,
-      strokeWeight: 2
+      strokeWeight : 2
     });
 
     $scope.travelPath.setMap($scope.map);

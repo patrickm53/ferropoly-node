@@ -20,9 +20,12 @@ block navbar
 
 block content
   .container-fluid(ng-app='summaryApp' ng-controller='summaryCtrl')
-    #panel-main
-      include summary-overview
-    #panel-team
-      include summary-team
-    #panel-chancellery
-      include summary-chancellery
+    div(ng-show='info.error')
+      include summary-error
+    div(ng-hide='info.error')
+      #panel-main
+        include summary-overview
+      #panel-team
+        include summary-team
+      #panel-chancellery
+        include summary-chancellery

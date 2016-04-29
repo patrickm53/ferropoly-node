@@ -17,7 +17,8 @@ var teamModel                   = require('../../common/models/teamModel');
 var errorHandler                = require('../lib/errorHandler');
 var logger                      = require('../../common/lib/logger').getLogger('routes:summary');
 var async                       = require('async');
-
+var moment                      = require('moment');
+var _                           = require('lodash');
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
   var gameId = req.params.gameId;
@@ -77,6 +78,10 @@ router.get('/:gameId', function (req, res) {
     function (err) {
       if (err) {
         logger.error(err);
+        info = {error: err.message};
+      }
+      else if (moment(_.get(info, 'gameplay.scheduling.gameDate')).isSame(new Date(), 'day')) {
+        info = {error: 'Die Spieldaten stehen ab Mitternacht zur Verfügung!'};
       }
       res.render('summary/summary', {
         title     : 'Ferropoly',
