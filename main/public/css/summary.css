@@ -4,5 +4,10 @@
 }
 
 .amount {
-    text-align: right;
+    text-align : right;
+}
+
+#travel-map {
+    width  : 100%;
+    height : 90vh;
 }

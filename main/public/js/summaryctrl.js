@@ -31,13 +31,20 @@ app.filter('amount', function () {
   }
 });
 
+var mapApiLoaded = false;
+function initMap() {
+  mapApiLoaded = true;
+}
 
 /**
  * The controller
  */
 app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
   console.log(info);
-  $scope.info = info;
+  $scope.info    = info;
+  $scope.markers = [];
+  $scope.map;
+
 
   /**
    * Prepare Data for the view
@@ -85,6 +92,7 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
       }
     }
   }
+
   /**
    * Shows the selected team
    * @param team
@@ -109,6 +117,7 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
         t.property = _.find($scope.info.properties, {'uuid': t.propertyId});
       }
     });
+    drawTravelLog();
 
     console.log($scope.teamTravelLog);
   };
@@ -124,4 +133,83 @@ app.controller('summaryCtrl', ['$scope', '$http', function ($scope, $http) {
   // make sure all data is available
   prepareData();
   showPanel('#panel-main');
+
+  //////////////////////////////////
+  // All the things about the map
+  function drawTravelLog() {
+    $scope.markers.forEach(function (m) {
+      m.setMap(null);
+    });
+    $scope.markers = [];
+
+    // Draw markers for all the teams properties
+    $scope.bounds = new google.maps.LatLngBounds();
+    $scope.teamProperties.forEach(function (p) {
+      var marker = new google.maps.Marker({
+            position: {lat: parseFloat(p.location.position.lat), lng: parseFloat(p.location.position.lng)},
+            map     : $scope.map,
+            title   : 'Hello World!'
+          });
+      var infowindow = new google.maps.InfoWindow({
+        content: p.location.name
+      });
+      marker.addListener('click', function() {
+        infowindow.open($scope.map, marker);
+      });
+      $scope.bounds.extend(marker.getPosition());
+      // console.log('marker', marker.getPosition().lng(), marker.getPosition().lat());
+      $scope.markers.push(marker);
+    });
+    $scope.map.fitBounds($scope.bounds);
+
+    // Draw the line
+    var cords = [];
+    $scope.teamTravelLog.forEach(function (m) {
+      cords.push({lat: parseFloat(m.position.lat), lng: parseFloat(m.position.lng)});
+    });
+    if ($scope.travelPath) {
+      $scope.travelPath.setMap(null);
+    }
+    $scope.travelPath = new google.maps.Polyline({
+      path: cords,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    $scope.travelPath.setMap($scope.map);
+  }
+
+  $(document).ready(function () {
+    function initMap() {
+      if (!mapApiLoaded) {
+        _.delay(initMap, 500);
+      }
+
+
+      $scope.map = new google.maps.Map(document.getElementById('travel-map'), {
+        zoom  : 10,
+        center: {lat: 47.320293, lng: 8.794331}
+      });
+    }
+
+    initMap();
+
+  });
+
+  /**
+   * Refreshing the map: when changing the view google maps does not refresh itself. This must be enforced
+   * by a "resize" call
+   * @param id
+   */
+  $scope.refreshMap = function () {
+    _.delay(function () {
+      // Force the update
+      console.log('Map resize triggered');
+      google.maps.event.trigger($scope.map, 'resize');
+      drawTravelLog();
+    }, 500);
+  }
+
 }]);
