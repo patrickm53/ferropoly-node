@@ -367,6 +367,12 @@ function managecallCtrl($scope, $http) {
           msg = 'Grundstück gekauft. Preis: ' + res.amount.toLocaleString('de-CH');
         }
         $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
+
+        // Update Travel Log Log
+        dataStore.updateTravelLog(activeCall.getCurrentTeam().uuid, function () {
+          $scope.teamInfo.travelLog = dataStore.getTravelLog(activeCall.getCurrentTeam().uuid);
+          redrawMap();
+        });
       }
     }).error(function (data, status) {
       console.log('ERROR');
@@ -495,6 +501,7 @@ function managecallCtrl($scope, $http) {
     drawTravelLog();
     setCurrentMarker();
     $scope.propertyMarkers.updateMarkers();
+    $scope.propertyMarkers.closeAllInfoWindows();
   }
 
   /**

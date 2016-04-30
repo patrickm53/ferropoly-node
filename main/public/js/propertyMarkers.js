@@ -13,9 +13,10 @@
  * @constructor
  */
 function PropertyMarkers(map, properties) {
-  this.map        = map;
-  this.properties = properties;
-  this.markers    = [];
+  this.map             = map;
+  this.properties      = properties;
+  this.markers         = [];
+  this.openInfoWindows = [];
 
   if (_.isUndefined(google)) {
     console.warn('Google Maps are not defined, PropertyMarkers are not enabled');
@@ -129,12 +130,26 @@ PropertyMarkers.prototype.createMarkers = function () {
     var infowindow = new google.maps.InfoWindow({
       content: '<h4>' + p.location.name + '</h4><p>Kaufpreis: ' + p.pricelist.price + '</p>'
     });
+    infowindow.addListener('', function () {
+
+    });
     m.addListener('click', function () {
       infowindow.open(self.map, m);
+      self.openInfoWindows.push(infowindow);
     });
 
     self.markers.push(m);
   });
+};
+
+/**
+ * Closes all currently open info Windows
+ */
+PropertyMarkers.prototype.closeAllInfoWindows = function () {
+  this.openInfoWindows.forEach(function (i) {
+    i.close();
+  });
+  this.openInfoWindows = [];
 };
 
 /**
@@ -174,7 +189,7 @@ PropertyMarkers.prototype.filterAllProperties = function (p) {
  * Set the team Id
  * @param teamId
  */
-PropertyMarkers.prototype.setTeam = function(teamId) {
+PropertyMarkers.prototype.setTeam = function (teamId) {
   this.teamId = teamId;
 };
 
