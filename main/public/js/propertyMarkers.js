@@ -130,9 +130,6 @@ PropertyMarkers.prototype.createMarkers = function () {
     var infowindow = new google.maps.InfoWindow({
       content: '<h4>' + p.location.name + '</h4><p>Kaufpreis: ' + p.pricelist.price + '</p>'
     });
-    infowindow.addListener('', function () {
-
-    });
     m.addListener('click', function () {
       infowindow.open(self.map, m);
       self.openInfoWindows.push(infowindow);
