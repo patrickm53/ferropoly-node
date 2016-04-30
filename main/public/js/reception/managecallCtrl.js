@@ -8,11 +8,11 @@ ferropolyApp.controller('managecallCtrl', managecallCtrl);
 function managecallCtrl($scope, $http) {
 
   // Pagination
-  $scope.itemsPerPage = 6;
-  $scope.currentPage  = 0;
+  $scope.itemsPerPage            = 6;
+  $scope.currentPage             = 0;
   // Property Query
-  $scope.propertyQuery       = '';
-  $scope.propertyQueryResult = [];
+  $scope.propertyQuery           = '';
+  $scope.propertyQueryResult     = [];
   // General
   $scope.teams                   = dataStore.getTeams();
   $scope.callPanel               = 0;
@@ -138,7 +138,7 @@ function managecallCtrl($scope, $http) {
           $scope.callLog.push({
             class  : infoClass,
             title  : data.result.infoText,
-            message: data.result.amount,
+            message: data.result.amount.toLocaleString('de-CH'),
             ts     : new Date()
           });
         }
@@ -160,7 +160,7 @@ function managecallCtrl($scope, $http) {
    * Finish the call and go back to the main screen
    */
   $scope.finishCall = function () {
-    $scope.callPanel = 0;
+    $scope.callPanel                   = 0;
     // Reset info, avoid that another call displays the data during fetching it
     $scope.teamInfo.numberOfProperties = 0;
     $scope.teamInfo.balance            = 0;
@@ -188,9 +188,9 @@ function managecallCtrl($scope, $http) {
         msg = 'Es konnten keine Häuser gebaut werden';
       }
       else {
-        msg = 'Belastung: ' + data.result.amount + ', Gebaute Häuser: ';
+        msg = 'Belastung: ' + data.result.amount.toLocaleString('de-CH') + ', Gebaute Häuser: ';
         for (var i = 0; i < data.result.log.length; i++) {
-          msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
+          msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount.toLocaleString('de-CH') + ') ';
         }
       }
       $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
@@ -212,17 +212,20 @@ function managecallCtrl($scope, $http) {
       authToken: dataStore.getAuthToken()
     }).success(function (data) {
       console.log(data);
+      property = dataStore.getPropertyById(property.uuid);
       var msg;
       if (data.result.amount === 0) {
-        msg = 'Es konnten keine Häuser gebaut werden';
+        msg = 'In ' + property.location.name + ' konnte nicht gebaut werden';
       }
       else {
-        msg = 'Belastung: ' + data.result.amount + ', Gebaute Häuser: ';
-        for (var i = 0; i < data.result.log.length; i++) {
-          msg += data.result.log[i].propertyName + ' (' + data.result.log[i].buildingNb + ' / ' + data.result.log[i].amount + ') ';
-        }
+        msg = 'Belastung für Hausbau in ' + property.location.name + ': ' + data.result.amount.toLocaleString('de-CH');
       }
-      $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
+      $scope.callLog.push({
+        class  : 'list-group-item-success',
+        title  : 'Hausbau einzelnes Grundstück',
+        message: msg,
+        ts     : new Date()
+      });
     }).error(function (data, status) {
       $scope.callLog.push({
         class  : 'list-group-item-danger',
@@ -256,7 +259,7 @@ function managecallCtrl($scope, $http) {
         $scope.callLog.push({
           class  : infoClass,
           title  : data.result.infoText,
-          message: data.result.amount,
+          message: data.result.amount.toLocaleString('de-CH'),
           ts     : new Date()
         });
         $scope.$apply();
@@ -264,7 +267,7 @@ function managecallCtrl($scope, $http) {
     }).error(function (data, status) {
       $scope.callLog.push({
         class  : 'list-group-item-danger',
-        title  : 'Hausbau',
+        title  : 'Gambling',
         message: 'Fehler: ' + status,
         ts     : new Date()
       });
@@ -352,7 +355,7 @@ function managecallCtrl($scope, $http) {
         if (res.owner) {
           // belongs another team
           infoClass = 'list-group-item-danger';
-          msg       = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount;
+          msg       = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount.toLocaleString('de-CH');
         }
         else if (res.amount === 0) {
           // our own
@@ -361,7 +364,7 @@ function managecallCtrl($scope, $http) {
         }
         else {
           // we buy now
-          msg = 'Grundstück gekauft. Preis: ' + res.amount;
+          msg = 'Grundstück gekauft. Preis: ' + res.amount.toLocaleString('de-CH');
         }
         $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
       }
@@ -426,8 +429,8 @@ function managecallCtrl($scope, $http) {
     return (google && google.maps);
   };
 
-  $scope.filterChanged = function() {
-    switch($scope.mapFilter) {
+  $scope.filterChanged = function () {
+    switch ($scope.mapFilter) {
       case 'free':
         $scope.propertyMarkers.setFilter($scope.propertyMarkers.filterFreeProperties);
         break;
