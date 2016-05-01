@@ -50,7 +50,7 @@ function dashboardCtrl($scope, $http) {
   checkinDatastore.dataStore.subscribe('chancellery', function (data) {
     console.log(data);
     $scope.chancelleryAsset = data.asset;
-    addTicker('Neuer Kontostand auf dem Parkplatz: ' + data.asset);
+    addTicker('Neuer Kontostand auf dem Parkplatz: ' + data.asset.toLocaleString('de-CH'));
     $scope.$apply();
   });
 
@@ -59,7 +59,7 @@ function dashboardCtrl($scope, $http) {
     $scope.teamAccount = data;
     if (data.transactions.length > 0) {
       var tr = data.transactions[data.transactions.length - 1];
-      addTicker('Kontobuchung ' + tr.transaction.info + ': ' + tr.transaction.amount);
+      addTicker('Kontobuchung ' + tr.transaction.info + ': ' + tr.transaction.amount.toLocaleString('de-CH'));
     }
     $scope.$apply();
   });

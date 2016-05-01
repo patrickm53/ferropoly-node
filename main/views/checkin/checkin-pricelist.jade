@@ -28,4 +28,4 @@ div(ng-controller='pricelistCtrl')
           span(ng-show='p.gamedata.buildingEnabled && p.gamedata.buildings < 5')
             i.fa.fa-star-o
         td {{p.pricelist.propertyGroup}}
-        td {{p.pricelist.price}}
+        td {{p.pricelist.price | amount}}

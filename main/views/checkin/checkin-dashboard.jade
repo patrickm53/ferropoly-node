@@ -9,7 +9,7 @@ div(ng-controller='dashboardCtrl')
       .col-md-4.col-sm-4.col-xs-12
         .dashboard-tile.tile-asset
           p.dashboard-title Vermögen
-          p.dashboard-value {{teamAccount.asset}}
+          p.dashboard-value {{teamAccount.asset | amount}}
 
       .col-md-4.col-sm-4.col-xs-6
         .dashboard-tile.tile-propertynb
@@ -19,7 +19,7 @@ div(ng-controller='dashboardCtrl')
       .col-md-4.col-sm-4.col-xs-6
         .dashboard-tile.tile-chancellery
           p.dashboard-title Parkplatz
-          p.dashboard-value {{chancelleryAsset}}
+          p.dashboard-value {{chancelleryAsset | amount}}
     .row
       .col-md-12
         h3 Live-Ticker

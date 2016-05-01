@@ -48,3 +48,14 @@ $(document).ready(function () {
  * @type {*|module}
  */
 var checkinApp = angular.module('checkinApp', []);
+/**
+ * This is the amount filter returning nicer values
+ */
+checkinApp.filter('amount', function () {
+  return function (val) {
+    if (_.isNumber(val)) {
+      return val.toLocaleString('de-CH');
+    }
+    return val;
+  }
+});

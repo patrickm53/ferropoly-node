@@ -10,6 +10,6 @@ div(ng-controller='checkinAccountCtrl')
           td {{t.timestamp | date:'HH:mm'}}
           td {{t.transaction.info}}
             div(ng-show='t.transaction.parts.length > 0')
-              div(ng-repeat='d in t.transaction.parts') {{d.propertyName}}: {{d.amount}}
+              div(ng-repeat='d in t.transaction.parts') {{d.propertyName}}: {{d.amount | amount}}
                 br
-          td {{t.transaction.amount}}
+          td {{t.transaction.amount | amount}}
