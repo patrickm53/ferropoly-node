@@ -1,15 +1,13 @@
 extends layout
 
 block head
-  //script(src='/modules/moment/min/moment.min.js')
-  //script(src='/modules/moment/locale/de.js')
   link(rel='stylesheet', href='/css/index.css',  type='text/css')
   script
     | var user =
     != userJson
     | ;
     | //console.log(user);
-  script(src='/js/indexmctrl.js')
+  script(src=ngFile)
 block navbar-right
   li
     a(href='/about') Hilfe / Info

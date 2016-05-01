@@ -11,9 +11,9 @@ const users        = require('../../common/models/userModel');
 const logger       = require('../../common/lib/logger').getLogger('routes:index');
 const errorHandler = require('../lib/errorHandler');
 
-var ngFile = '/js/indexctrl.js';
+var ngFile = '/js/indexmctrl.js';
 if (settings.minifiedjs) {
-  ngFile = '/js/indexctrl.min.js';
+  ngFile = '/js/min/indexmctrl.min.js';
 }
 
 /* GET home page. */

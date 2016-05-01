@@ -4,21 +4,29 @@
  */
 
 
-var express = require('express');
-var router  = express.Router();
+const express = require('express');
+const router  = express.Router();
 
-var gameplayModel               = require('../../common/models/gameplayModel');
-var chancelleryTransactionModel = require('../../common/models/accounting/chancelleryTransaction');
-var teamAccountTransactionModel = require('../../common/models/accounting/teamAccountTransaction');
-var travelLogModel              = require('../../common/models/travelLogModel');
-var propertyModel               = require('../../common/models/propertyModel');
-var pricelist                   = require('../../common/lib/pricelist');
-var teamModel                   = require('../../common/models/teamModel');
-var errorHandler                = require('../lib/errorHandler');
-var logger                      = require('../../common/lib/logger').getLogger('routes:summary');
-var async                       = require('async');
-var moment                      = require('moment');
-var _                           = require('lodash');
+const settings                  = require('../settings');
+const gameplayModel               = require('../../common/models/gameplayModel');
+const chancelleryTransactionModel = require('../../common/models/accounting/chancelleryTransaction');
+const teamAccountTransactionModel = require('../../common/models/accounting/teamAccountTransaction');
+const travelLogModel              = require('../../common/models/travelLogModel');
+const propertyModel               = require('../../common/models/propertyModel');
+const pricelist                   = require('../../common/lib/pricelist');
+const teamModel                   = require('../../common/models/teamModel');
+const errorHandler                = require('../lib/errorHandler');
+const logger                      = require('../../common/lib/logger').getLogger('routes:summary');
+const async                       = require('async');
+const moment                      = require('moment');
+const _                           = require('lodash');
+
+
+var ngFile = '/js/summaryctrl.js';
+if (settings.minifiedjs) {
+  ngFile = '/js/min/summaryctrl.min.js';
+}
+
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
   var gameId = req.params.gameId;
