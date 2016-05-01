@@ -9,12 +9,12 @@
  * 17.1.15 KC
  *
  */
-var mongoose   = require('mongoose');
-var crypto     = require('crypto');
-var uuid       = require('node-uuid');
-var pbkdf2     = require('pbkdf2-sha256');
-var logger     = require('../lib/logger').getLogger('userModel');
-var _          = require('lodash');
+const mongoose   = require('mongoose');
+const crypto     = require('crypto');
+const uuid       = require('node-uuid');
+const pbkdf2     = require('pbkdf2-sha256');
+const logger     = require('../lib/logger').getLogger('userModel');
+const _          = require('lodash');
 /**
  * The mongoose schema for an user
  */
@@ -44,7 +44,8 @@ var userSchema = mongoose.Schema({
     registrationDate: Date,
     lastLogin       : Date,
     facebook        : Object,
-    google          : Object
+    google          : Object,
+    agbAccepted     : {type: Number, default: 0}
   }
 }, {autoIndex: true});
 
@@ -52,7 +53,7 @@ var userSchema = mongoose.Schema({
 /**
  * The User model
  */
-var User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 /**
  * Copy a user
@@ -334,10 +335,10 @@ function findOrCreateFacebookUser(profile, callback) {
         newUser.info.facebook           = profile;
         newUser.info.registrationDate   = new Date();
         newUser.login.verifiedEmail     = true; // Facebook does not need verification
-        newUser.personalData.forename = profile.name.givenName;
-        newUser.personalData.surname  = profile.name.familyName;
-        newUser.personalData.email    = emailAddress ? emailAddress : profile.id; // using facebook profile id as email alternative
-        newUser.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.personalData.forename   = profile.name.givenName;
+        newUser.personalData.surname    = profile.name.familyName;
+        newUser.personalData.email      = emailAddress ? emailAddress : profile.id; // using facebook profile id as email alternative
+        newUser.personalData.avatar     = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -355,9 +356,9 @@ function findOrCreateFacebookUser(profile, callback) {
           }
           if (user) {
             // Ok, we know this user. Update profile for facebook access
-            user.info.facebook         = profile;
-            user.info.registrationDate = new Date();
-            user.login.verifiedEmail   = true; // Facebook does not need verification
+            user.info.facebook           = profile;
+            user.info.registrationDate   = new Date();
+            user.login.verifiedEmail     = true; // Facebook does not need verification
             user.personalData.forename   = profile.name.givenName;
             user.personalData.surname    = profile.name.familyName;
             user.login.facebookProfileId = profile.id;
@@ -424,7 +425,7 @@ function findOrCreateGoogleUser(profile, callback) {
         newUser.personalData.forename = profile.name.givenName;
         newUser.personalData.surname  = profile.name.familyName;
         newUser.personalData.email    = emailAddress ? emailAddress : profile.id; // using google profile id as email alternative
-        newUser.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);

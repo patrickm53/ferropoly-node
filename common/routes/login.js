@@ -61,6 +61,10 @@ module.exports = {
       req.logout();
       res.redirect('/login');
     });
+    app.post('/logout', function (req, res) {
+      req.session.targetUrl = undefined;
+      req.logout();
+    });
 
     // Filter for get, redirect to login page if not logged out
     app.get('*', function (req, res, next) {

@@ -41,7 +41,8 @@ var gameplaySchema = mongoose.Schema({
     gameStart  : String, // hh:mm
     gameEnd    : String, // hh:mm
     gameStartTs: Date,   // Is set during finalization
-    gameEndTs  : Date    // Is set during finalization
+    gameEndTs  : Date,   // Is set during finalization
+    deleteTs   : Date    // Timestamp when the game is deleted
   },
   gameParams: {
     interestInterval         : {type: Number, default: 60},   // Interval in minutes of the interests
@@ -120,6 +121,7 @@ var createGameplay      = function (gpOptions, callback) {
   gp.scheduling.gameDate         = gpOptions.gameDate;
   gp.scheduling.gameStart        = gpOptions.gameStart;
   gp.scheduling.gameEnd          = gpOptions.gameEnd;
+  gp.scheduling.deleteTs         = moment(gpOptions.gameDate).add(30, 'd').hour(23).minute(59).toDate();
   gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
   gp.joining.possibleUntil       = gpOptions.joiningUntilDate || moment(gp.scheduling.gameDate).subtract(5, 'days').set('hour', 20).set('minute', 0).set('second', 0).toDate();
   gp.joining.infotext            = gpOptions.infoText;
