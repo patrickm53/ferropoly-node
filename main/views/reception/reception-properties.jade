@@ -23,7 +23,19 @@ div(ng-controller='propertiesCtrl' ng-cloak)
             td.pricelist {{p.pricelist.propertyGroup}}
             td.pricelist {{p.pricelist.price | amount}}
             td.pricelist {{getTeamName(p.gamedata.owner)}}
-            td.pricelist {{p.gamedata.buildings}}
+            td.pricelist 
+              span(ng-show='p.gamedata.buildings > 0')
+                i.fa.fa-star
+              span(ng-show='p.gamedata.buildings > 1')
+                i.fa.fa-star
+              span(ng-show='p.gamedata.buildings > 2')
+                i.fa.fa-star
+              span(ng-show='p.gamedata.buildings > 3')
+                i.fa.fa-star
+              span(ng-show='p.gamedata.buildings > 4')
+                i.fa.fa-star
+              span(ng-show='p.gamedata.buildingEnabled && p.gamedata.buildings < 5')
+                i.fa.fa-star-o
   .col-md-6
     .panel.panel-default
       .panel-heading
