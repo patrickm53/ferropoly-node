@@ -47,6 +47,10 @@ function showPanel(p) {
     case '#panel-map':
       refreshMapPanel();
       break;
+
+    case '#panel-main':
+      angular.element('#reception-dashboard').scope().refresh();
+      break;
   }
 
   // Update panel info (THE NEW WAY)

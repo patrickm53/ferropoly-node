@@ -7,12 +7,17 @@
 ferropolyApp.controller('dashboardCtrl', dashboardCtrl);
 function dashboardCtrl($scope, $http) {
   ///// RANKING LIST
-  $scope.rankingList = [];
-  $scope.teamIdToTeamName = dataStore.teamIdToTeamName;
+  $scope.rankingList       = [];
+  $scope.teamIdToTeamName  = dataStore.teamIdToTeamName;
   $scope.rankingListLoaded = false;
 
-  $scope.refreshRankingList = function() {
-    dataStore.getRankingList(function(err, list) {
+  $scope.refresh = function () {
+    $scope.refreshRankingList();
+    $scope.updateTrafficInfo();
+  };
+
+  $scope.refreshRankingList = function () {
+    dataStore.getRankingList(function (err, list) {
       if (err) {
         console.log('Error while getting ranking list: ' + err.message);
         $scope.rankingList = [];
@@ -32,18 +37,18 @@ function dashboardCtrl($scope, $http) {
 
 
   ///// TRAFFIC
-  $scope.trafficInfo = {};
+  $scope.trafficInfo       = {};
   $scope.trafficInfoLoaded = false;
 
   $scope.updateTrafficInfo = function (callback) {
     dataStore.getTrafficInfo({
-      delay: true,
+      delay       : true,
       construction: true,
-      restriction: true,
-      limit: 8,
-      onlyCurrent: false
+      restriction : true,
+      limit       : 8,
+      onlyCurrent : false
     }, function (err, trafficInfo) {
-      $scope.trafficInfo = trafficInfo;
+      $scope.trafficInfo       = trafficInfo;
       $scope.trafficInfoLoaded = true;
       console.log(trafficInfo);
       if (callback) {
@@ -57,10 +62,9 @@ function dashboardCtrl($scope, $http) {
   $scope.gp = dataStore.getGameplay();
 
 
-
   $(document).ready(function () {
     $scope.refreshRankingList();
-    $scope.updateTrafficInfo(function() {
+    $scope.updateTrafficInfo(function () {
       $scope.$apply();
     });
   });
