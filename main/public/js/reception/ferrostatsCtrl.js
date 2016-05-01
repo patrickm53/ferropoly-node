@@ -11,7 +11,6 @@ function ferrostatsCtrl($scope, $http) {
   $scope.refreshHandler = $scope.showStatsIncome;
 
   $scope.refresh = function() {
-    ferroStats.loadChartApi();
     if($scope.refreshHandler) {
       $scope.refreshHandler();
     }
@@ -40,6 +39,17 @@ function ferrostatsCtrl($scope, $http) {
   $scope.teamIdToTeamName = dataStore.teamIdToTeamName;
 
   /**
+   * This is the chart with the timeline
+   */
+  $scope.showStatsPossessionTimeline = function() {
+    var entries = dataStore.getTeamAccountEntries();
+    if (entries.length === 0) {
+      $scope.updatePossessionTimeline();
+      return;
+    }
+    ferroStats.drawPossessionTimelineChart(entries, dataStore.getTeams());
+  };
+  /**
    * Show stats income
    */
   $scope.showStatsIncome = function () {
@@ -57,6 +67,16 @@ function ferrostatsCtrl($scope, $http) {
       $scope.$apply();
       console.log('Ranking list received');
       console.log($scope.incomeList);
+    });
+  };
+
+  /**
+   * Update complete chart
+   */
+  $scope.updatePossessionTimeline = function() {
+    dataStore.updateTeamAccountEntries(function() {
+      $scope.showStatsPossessionTimeline();
+      $scope.$apply();
     });
   };
 
@@ -80,6 +100,10 @@ function ferrostatsCtrl($scope, $http) {
     {
       id: 'stats-income',
       handler: $scope.showStatsIncome
+    },
+    {
+      id: 'stats-possession-timeline',
+      handler: $scope.showStatsPossessionTimeline
     }];
 
   /**

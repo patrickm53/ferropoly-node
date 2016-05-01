@@ -1,0 +1,29 @@
+//
+   Created by kc on 09.01.16.
+
+div(ng-controller='dashboardCtrl')
+  .container-fluid
+    h2 {{team.data.name}}
+
+    .row
+      .col-md-4.col-sm-4.col-xs-12
+        .dashboard-tile.tile-asset
+          p.dashboard-title Vermögen
+          p.dashboard-value {{teamAccount.asset | amount}}
+
+      .col-md-4.col-sm-4.col-xs-6
+        .dashboard-tile.tile-propertynb
+          p.dashboard-title Anzahl Orte
+          p.dashboard-value {{properties.length}}
+
+      .col-md-4.col-sm-4.col-xs-6
+        .dashboard-tile.tile-chancellery
+          p.dashboard-title Parkplatz
+          p.dashboard-value {{chancelleryAsset | amount}}
+    .row
+      .col-md-12
+        h3 Live-Ticker
+        table.table.table-condensed.table-striped
+          tr(ng-repeat="t in liveTicker | orderBy: 'ts' :true | limitTo: 5")
+            td {{t.ts | date:'HH:mm:ss'}}
+            td {{t.message}}

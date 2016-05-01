@@ -18,7 +18,6 @@ globals:
   beforeEach : false
   afterEach : false
   after : false
-  before : false
   beforeEachChapter: false
   describeScenario: false
   describeChapter: false
@@ -75,7 +74,7 @@ rules:
   no-wrap-func: 0
   comma-dangle: 0
   no-extra-semi: 0
-  no-use-before-define: nofunc
+  no-use-before-define: 0
 
   # AUTOMATED BY EDITORCONFIG
   eol-last: 0

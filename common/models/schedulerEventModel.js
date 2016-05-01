@@ -2,7 +2,7 @@
  * Scheduling events: all planned events are stored in this DB
  * Created by kc on 01.05.15.
  */
-'use strict';
+
 
 
 var mongoose = require('mongoose');

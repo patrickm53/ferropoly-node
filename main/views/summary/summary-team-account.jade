@@ -1,0 +1,26 @@
+//
+   Created by kc on 28.04.16.
+.row
+  .col-sm-12.col-md-12
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title Kontobuchungen
+      .panel-body
+        table.table.table-striped(ng-cloak)
+          thead
+            tr
+              th Zeit
+              th Buchung
+              th.amount Betrag
+              th.amount Saldo
+          tbody
+            tr(ng-repeat='t in teamTransactions | orderBy:"timestamp"')
+              td {{t.timestamp | date:'HH:mm'}}
+              td {{t.transaction.info}}
+                span(ng-show='t.transaction.parts.length') &nbsp;:&nbsp;
+                  span(ng-repeat='p in t.transaction.parts') {{p.propertyName}}: {{p.amount | amount}};&nbsp;
+
+              td.amount {{t.transaction.amount | amount}}
+              td.amount {{t.saldo | amount}}
+
+

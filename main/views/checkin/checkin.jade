@@ -1,0 +1,66 @@
+extends ../layout
+
+block head
+  script
+    | var ferropoly = { authToken:"
+    != authToken
+    | ", user :"
+    != user
+    | ", team:
+    != team
+    | , gameplay :
+    != gameplay
+    | , pricelist :
+    != pricelist
+    | };
+
+
+
+  if minifiedjs
+    script(src='/js/min/checkin.min.js')
+  else
+    script(src='/socket.io/socket.io.js')
+    script(src='/js/checkin/index.js')
+    script(src='/js/checkin/geolocation.js')
+    script(src='/js/checkin/datastore.js')
+    script(src='/js/checkin/checkinsocket.js')
+    script(src='/js/checkin/dashboardctrl.js')
+    script(src='/js/checkin/mapctrl.js')
+    script(src='/js/checkin/propertiesctrl.js')
+    script(src='/js/checkin/pricelistctrl.js')
+    script(src='/js/checkin/accountctrl.js')
+
+  link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
+
+block navbar-right
+  li
+    a(href='#' onclick='activateView("#view-dashboard")') Dashboard
+  li
+    a(href='#' onclick='activateView("#view-map")') Karte
+  li
+    a(href='#' onclick='activateView("#view-pricelist")') Preisliste
+  li
+    a(href='#' onclick='activateView("#view-properties")') Besitz
+  li
+    a(href='#' onclick='activateView("#view-teamaccount")') Kontobuch
+
+  li#online
+    i.fa.fa-cloud.online
+    | &nbsp;online
+  li#offline
+    i.fa.fa-cloud.offline
+    | &nbsp;offline
+
+block content
+
+  .container-fluid(ng-app='checkinApp')
+    #view-dashboard.ng-cloak
+      include ./checkin-dashboard
+    #view-map.ng-cloak
+      include ./checkin-map
+    #view-teamaccount.ng-cloak
+      include ./checkin-teamaccount
+    #view-properties.ng-cloak
+      include ./checkin-properties
+    #view-pricelist.ng-cloak
+      include ./checkin-pricelist

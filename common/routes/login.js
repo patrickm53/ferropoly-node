@@ -3,26 +3,33 @@
  *
  * Created by kc on 16.04.15.
  */
-'use strict';
 
-var express = require('express');
+
+var express  = require('express');
 var passport = require('passport');
-var url = require('url');
-var router = express.Router();
+var url      = require('url');
+var router   = express.Router();
 var settings;
-var _ = require('lodash');
-var logger = require('../lib/logger').getLogger('login');
+var _        = require('lodash');
+var logger   = require('../lib/logger').getLogger('login');
+
 
 /**
  * Get the login page
  */
 router.get('/', function (req, res) {
+  var loginController = 'loginctrl';
+  loginController = settings.minifiedjs ? '/js/min/' + loginController +'.min.js' : '/js/src/' + loginController +'.js';
+
   res.render('login', {
-    title: settings.appName + ' Login',
-    hideLogout: true,
-    showSignUp: true,
-    versionInfo: settings.version,
-    preview: settings.preview
+    title       : settings.appName + ' Login',
+    hideLogout  : true,
+    showSignUp  : true,
+    versionInfo : settings.version,
+    preview     : settings.preview,
+    ngController: 'loginCtrl',
+    ngApp       : 'loginApp',
+    ngFile      : loginController
   });
 });
 
@@ -34,7 +41,7 @@ router.post('/', function (req, res) {
   passport.authenticate('local', {
     successRedirect: redirectUri,
     failureRedirect: '/login',
-    failureFlash: true
+    failureFlash   : true
   })(req, res);
 });
 
@@ -50,9 +57,13 @@ module.exports = {
 
     // Logging out
     app.get('/logout', function (req, res) {
-      req.session.targetUrl = '';
+      req.session.targetUrl = undefined;
       req.logout();
       res.redirect('/login');
+    });
+    app.post('/logout', function (req, res) {
+      req.session.targetUrl = undefined;
+      req.logout();
     });
 
     // Filter for get, redirect to login page if not logged out
@@ -77,7 +88,7 @@ module.exports = {
       if (_.startsWith(uri, '/info')) {
         return next();
       }
-      if (!req.session.passport.user) {
+      if (!req.session.passport || !req.session.passport.user) {
         // valid user in session
         logger.info(uri + " redirected in login.js to login");
         req.session.targetUrl = req.url;

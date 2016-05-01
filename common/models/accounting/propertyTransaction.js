@@ -3,27 +3,28 @@
  *
  * Created by kc on 20.04.15.
  */
-'use strict';
+
 
 var mongoose = require('mongoose');
-var moment = require('moment');
-var logger = require('../../lib/logger').getLogger('propertyTransaction');
+var moment   = require('moment');
+var logger   = require('../../lib/logger').getLogger('propertyTransaction');
+var _        = require('lodash');
 
 /**
  * The mongoose schema for a team account
  */
 var propertyAccountTransactionSchema = mongoose.Schema({
-  gameId: String, // Game the transaction belongs to
-  timestamp: {type: Date, default: Date.now}, // Timestamp of the transaction
+  gameId    : String, // Game the transaction belongs to
+  timestamp : {type: Date, default: Date.now}, // Timestamp of the transaction
   propertyId: String, // This is the uuid of the property the account belongs to
 
   transaction: {
     origin: {
-      uuid: {type: String, default: 'none'}, // uuid of the origin
+      uuid    : {type: String, default: 'none'}, // uuid of the origin
       category: {type: String, default: 'not defined'}  // either "team" or "bank"
     },
     amount: {type: Number, default: 0}, // value to be transferred, positive or negative
-    info: String  // Info about the transaction
+    info  : String  // Info about the transaction
   }
 }, {autoIndex: true});
 
@@ -101,12 +102,41 @@ function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
         callback(err, data);
       });
   }
+}
 
+
+/**
+ * Returns the sum of all account transactions sorted per property
+ * @param gameId
+ * @param propertyId optional
+ * @param callback
+ */
+function getSummary(gameId, propertyId, callback) {
+  if (_.isFunction(propertyId)) {
+    callback = propertyId;
+    propertyId = undefined;
+  }
+
+  var match = {};
+  match['gameId'] = gameId;
+  if (propertyId) {
+    match['propertyId'] = propertyId;
+  }
+
+  PropertyAccountTransaction.aggregate({
+    $match: match
+  }, {
+    $group: {
+      _id    : '$propertyId',
+      balance: {$sum: "$transaction.amount"}
+    }
+  }, callback);
 }
 
 module.exports = {
-  Model: PropertyAccountTransaction,
+  Model       : PropertyAccountTransaction,
   dumpAccounts: dumpAccounts,
-  book: book,
-  getEntries: getEntries
+  book        : book,
+  getEntries  : getEntries,
+  getSummary  : getSummary
 };

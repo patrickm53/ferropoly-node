@@ -7,7 +7,7 @@
  *
  * Created by kc on 01.09.15.
  */
-'use strict';
+
 var needle = require('needle');
 var moment = require('moment');
 var pixlXml = require('pixl-xml');
@@ -80,6 +80,15 @@ function transformData(data) {
     return {};
   }
 
+  /**
+   * Filter used in the _.remove function below in the loop
+   * @param n
+   * @returns {boolean}
+   */
+  function removeFilter(n) {
+    return (!n || n.length === 0);
+  }
+
   for (var i = 0; i < data.channel.item.length; i++) {
     try {
       // They both use <br /> and <br/>. Split description into time element and description itself
@@ -87,9 +96,7 @@ function transformData(data) {
       data.channel.item[i].description = data.channel.item[i].description.replace(/<br \/>/g, '<br>');
 
       var elements = data.channel.item[i].description.split('<br>');
-      _.remove(elements, function (n) {
-        return (!n || n.length === 0);
-      });
+      _.remove(elements, removeFilter);
 
       data.channel.item[i].duration = extractDuration(elements[0]);
       data.channel.item[i].info = _.rest(elements);
@@ -123,7 +130,7 @@ function getRssFeed(url, callback) {
   }
 
   needle.get(url, function (error, response) {
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
       callback(null, response.body);
     }
     else {

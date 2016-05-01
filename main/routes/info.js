@@ -3,45 +3,43 @@
  *
  * Created by kc on 08.05.15.
  */
-'use strict';
-
 
 var express = require('express');
 var router = express.Router();
-var _ = require('lodash');
 
 var gameplayModel = require('../../common/models/gameplayModel');
 var pricelist = require('../../common/lib/pricelist');
 var teamModel = require('../../common/models/teamModel');
+var errorHandler = require('../lib/errorHandler');
 var logger = require('../../common/lib/logger').getLogger('routes:info');
+var priceListDownload = require('../../common/routes/downloadPricelist');
 
 /* GET home page. */
-router.get('*', function (req, res) {
-  var gameId = _.trimLeft(req.url, '/');
+router.get('/:gameId', function (req, res) {
+  var gameId = req.params.gameId;
 
   gameplayModel.getGameplay(gameId, null, function (err, gp) {
-    if (!gp) {
-      gp = {};
-    }
-    var errMsg1 = '';
     if (err) {
       logger.err(err);
-      errMsg1 = err.message;
+      return errorHandler(res, 'Interner Fehler', err, 500);
     }
+    if (!gp) {
+      return errorHandler(res, 'Interner Fehler: gp ist null.', new Error('gp is undefined'), 500);
+    }
+
     pricelist.getPricelist(gameId, function (err2, pl) {
-      if (!pl) {
-        pl = {};
-      }
-      var errMsg2 = '';
       if (err2) {
-        logger.err(err);
-        errMsg2 = err2.message;
+        logger.err(err2);
+        return errorHandler(res, 'Interner Fehler', err2, 500);
+      }
+      if (!pl) {
+        return errorHandler(res, 'Interner Fehler: pl ist null.', new Error('pl is undefined'), 500);
       }
 
       teamModel.getTeams(gameId, function (err3, foundTeams) {
         if (err3) {
-          logger.err(err);
-          foundTeams = [];
+          logger.err(err3);
+          return errorHandler(res, 'Interner Fehler', err3, 500);
         }
         // Filter some info
         var teams = [];
@@ -53,12 +51,10 @@ router.get('*', function (req, res) {
           });
         }
 
-        res.render('info', {
+        res.render('info/info', {
           title: 'Ferropoly',
           ngFile: '/js/infoctrl.js',
           hideLogout: true,
-          err: errMsg1,
-          err2: errMsg2,
           gameplay: JSON.stringify(gp),
           pricelist: JSON.stringify(pl),
           teams: JSON.stringify(teams)
@@ -68,5 +64,6 @@ router.get('*', function (req, res) {
   });
 });
 
+router.get('/:gameId/download', priceListDownload.handler);
 
 module.exports = router;

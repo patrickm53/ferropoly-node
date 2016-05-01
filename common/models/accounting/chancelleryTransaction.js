@@ -3,17 +3,17 @@
  *
  * Created by kc on 20.04.15.
  */
-'use strict';
 
-var mongoose = require('mongoose');
-var moment = require('moment');
-var logger = require('../../lib/logger').getLogger('chancelleryTransaction');
 
+var mongoose                            = require('mongoose');
+var moment                              = require('moment');
+var logger                              = require('../../lib/logger').getLogger('chancelleryTransaction');
+var isArray                             = require('lodash/isArray');
 /**
  * The mongoose schema for a team account
  */
 var chancelleryAccountTransactionSchema = mongoose.Schema({
-  gameId: String, // Game the transaction belongs to
+  gameId   : String, // Game the transaction belongs to
   timestamp: {type: Date, default: Date.now}, // Timestamp of the transaction
   // teamId: String, // This is the uuid of the team the account belongs to
 
@@ -22,7 +22,7 @@ var chancelleryAccountTransactionSchema = mongoose.Schema({
       uuid: {type: String, default: 'none'} // uuid of the origin, this is always the uuid of a  team
     },
     amount: {type: Number, default: 0}, // value to be transferred, positive or negative
-    info: String  // Info about the transaction
+    info  : String  // Info about the transaction
   }
 }, {autoIndex: true});
 
@@ -85,31 +85,38 @@ function getEntries(gameId, tsStart, tsEnd, callback) {
     })
 }
 
-// This does not work, if you have a solution for me, please contact me, thanks!
-function getBalance(gameId, tsStart, tsEnd, callback) {
-  ChancelleryTransaction.aggregate([
-    {
-      $match: {
-        gameId: gameId
-      }
-    },
-    {$unwind: "$records"},
-    {
-      $group: {
-        _id: "$_id",
-        balance: {$sum: "$records.transaction.amount"}
-      }
+/**
+ * Get the balance, the current value of the chancellery
+ * @param gameId
+ * @param callback
+ */
+function getBalance(gameId, callback) {
+
+  ChancelleryTransaction.aggregate({
+    $match: {
+      gameId: gameId
     }
-  ], function (err, result) {
-    logger.info(result);
-    callback(err, result);
+  }, {
+    $group: {
+      _id    : 'balance',
+      balance: {$sum: "$transaction.amount"}
+    }
+  }, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    if (data && isArray(data) && data.length > 0) {
+      return callback(null, data[0]);
+    }
+    callback(null, data);
   });
 }
 
+
 module.exports = {
-  Model: ChancelleryTransaction,
-  book: book,
-  getEntries: getEntries,
-  dumpChancelleryData: dumpChancelleryData
-  //getBalance:getBalance
+  Model              : ChancelleryTransaction,
+  book               : book,
+  getEntries         : getEntries,
+  dumpChancelleryData: dumpChancelleryData,
+  getBalance         : getBalance
 };

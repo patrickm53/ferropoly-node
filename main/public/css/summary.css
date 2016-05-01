@@ -1,0 +1,13 @@
+.teamlink {
+    color  : blue;
+    cursor : pointer;
+}
+
+.amount {
+    text-align : right;
+}
+
+#travel-map {
+    width  : 100%;
+    height : 90vh;
+}

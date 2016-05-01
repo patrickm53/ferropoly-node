@@ -2,7 +2,7 @@
  * About page
  * Created by kc on 03.06.15.
  */
-'use strict';
+
 
 var express = require('express');
 var router = express.Router();

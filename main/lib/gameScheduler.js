@@ -7,7 +7,7 @@
  *
  * Created by kc on 19.04.15.
  */
-'use strict';
+
 
 var eventRepo = require('../../common/models/schedulerEventModel');
 var moment = require('moment');

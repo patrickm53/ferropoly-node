@@ -1,0 +1,16 @@
+
+#infotext {
+    background-color : rgb(239, 239, 255);
+    padding-left     : 3px;
+    padding-top      : 3px;
+    padding-bottom   : 3px;
+}
+
+h4.join {
+    border-bottom: #ccc;
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    border-bottom-width: thin;
+    border-bottom-style: solid;
+}

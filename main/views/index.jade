@@ -1,50 +1,95 @@
 extends layout
 
 block head
-  script(src='/moment/moment.min.js')
-  script(src='/moment/de.js')
-  script(src='/js/indexmctrl.js')
   link(rel='stylesheet', href='/css/index.css',  type='text/css')
-
+  script
+    | var user =
+    != userJson
+    | ;
+    | //console.log(user);
+  script(src=ngFile)
 block navbar-right
   li
     a(href='/about') Hilfe / Info
+  li
+    a(href='/account') Mein Account
 
 block content
   div(ng-app='indexApp' ng-controller='indexCtrl' ng-cloak)
-    .row
-      .col-md-12
-        h1 Hallo
-          = ' ' + user.personalData.forename + ' ' + user.personalData.surname
-        p In dieser App kannst Du deine im Editor erstellten Spiele anschauen und in das Geschehen eines Deiner aktuellen Spiele eingreifen.
-        h2 Meine Spiele
-        div(ng-show='gameplays.length === 0' ng-cloak)
-          | Du hast noch keine Spiele.&nbsp;
-          a(href='http://editor-ferropoly.rhcloud.com') Im Ferropoly Editor ein neues Spiel anlegen.
+    #info-header
+      #info-welcome
+        h1.info-header {{intro}}
+          = ' ' + user.personalData.forename
+    .container-fluid
+      p In dieser App kannst Du deine im Editor erstellten Spiele anschauen und in das Geschehen eines Deiner aktuellen Spiele eingreifen.
+      .row
+        .col-md-12
+          div(ng-hide='hasOnlyGames()')
+            // Administrator section is hidden when the user has only games to play
+            h2 Meine Spiele (Administrator)
+            div(ng-hide='hasGameplays()' ng-cloak)
+              | Du hast noch keine Spiele.&nbsp;
+              a(href='http://editor-ferropoly.rhcloud.com') Im Ferropoly Editor ein neues Spiel anlegen.
 
-        div(ng-show='gameplays.length > 0' ng-cloak)
-          .row
-            div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in gameplays')
-                .panel.panel-default
-                  .panel-heading
-                    h3.panel-title {{gameplay.gamename}}
-                  .panel-body
-                    p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}, {{gameplay.scheduling.gameStart}} - {{gameplay.scheduling.gameEnd}}
-                    p Karte: {{gameplay.internal.map.toUpperCase()}}
-                    p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
-                    p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
-                      div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
-                    div(ng-hide='gameplay.internal.finalized')
-                      .alert.alert-danger Das Spiel wurde noch nicht finalisiert! Bitte im Editor unter 'Preisliste' erledigen.
-                    div(ng-show='gameplay.internal.finalized')
-                      p
-                        a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
-                        | &nbsp;
-                        a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel administrieren
-                        a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-hide='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel ansehen
-                    p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
-                  .panel-footer
-                    p {{getGpInfo(gameplay)}}
+            div(ng-show='hasGameplays()' ng-cloak)
+              .row
+                div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in gameplays')
+                  .panel.panel-default
+                    .panel-heading
+                      h3.panel-title {{gameplay.gamename}}
+                        span(ng-hide='userIsAdmin(gameplay)') &nbsp; (Spielleiter)
+                    .panel-body
+                      p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}, {{gameplay.scheduling.gameStart}} - {{gameplay.scheduling.gameEnd}}
+                      p Karte: {{gameplay.internal.map.toUpperCase()}}
+                      p Erstellt: {{gameplay.log.created | date:'d.M.yyyy H:mm'}}
+                      p(ng-hide='userIsAdmin(gameplay)') Organisator: {{createOrganisatorInfo(gameplay)}}
+                      p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
+                        div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
+                      div(ng-hide='gameplay.internal.finalized')
+                        .alert.alert-danger Das Spiel wurde noch nicht finalisiert! Bitte im Editor unter 'Preisliste' erledigen.
+                      p Das Spiel wird am {{gameplay.scheduling.deleteTs | date:'d.M.yyyy'}} automatisch gelöscht.
+                      div(ng-show='gameplay.internal.finalized')
+                        p
+                          a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
+                          | &nbsp;
+                          a.btn.btn-primary.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel administrieren
+                          a.btn.btn-default.btn-sm(href='/reception/{{gameplay.internal.gameId}}' ng-hide='gameplay.internal.finalized && (isGameRunning(gameplay) === 0)') Spiel ansehen
+                          a.btn.btn-primary.btn-sm(href='/summary/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && isGameOver(gameplay)') Zusammenfassung
+                      p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
+                    .panel-footer
+                      p {{getGpInfo(gameplay)}}
 
+          div(ng-hide='hasOnlyGameplays()')
+            // Games section is hidden when an admin without such games logs in
+            h2 Meine Spiele
+            div(ng-hide='hasGames()' ng-cloak)
+              | Du wurdest noch keinem Spiel zugewiesen.
 
+            div(ng-show='hasGames()' ng-cloak)
+              .row
+                div.col-xs-12.col-sm-6.col-md-4(data-ng-repeat='gameplay in games')
+                  .panel.panel-default
+                    .panel-heading
+                      h3.panel-title {{gameplay.gamename}}
+                    .panel-body
+                      p Spieldatum: {{gameplay.scheduling.gameDate | date:'d.M.yyyy'}}, {{gameplay.scheduling.gameStart}} - {{gameplay.scheduling.gameEnd}}
+                      p Karte: {{gameplay.internal.map.toUpperCase()}}
+                      p(ng-hide='userIsAdmin(gameplay)') Organisator:&nbsp;
+                        a(href='mailto:{{createOrganisatorInfo(gameplay)}}') {{createOrganisatorInfo(gameplay)}}
+
+                      p(ng-show='gameplay.log.priceListVersion > 0') Preisliste: {{gameplay.log.priceListCreated | date:'d.M.yyyy H:mm'}}
+                        div(ng-show='gameplay.internal.finalized') Preisliste ist finalisiert
+                      div(ng-hide='gameplay.internal.finalized')
+                        .alert.alert-warning Die Preisliste wurde noch nicht finalisiert, es sind noch Änderungen möglich.
+                      p Die Spieldaten werden am {{gameplay.scheduling.deleteTs | date:'d.M.yyyy'}} automatisch gelöscht.
+                      div(ng-show='gameplay.internal.finalized')
+                        p
+                          a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
+                          a.btn.btn-primary.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0) && gameplay.mobile.level') Spielen
+                          a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level) || (gameplay.internal.finalized && (isGameRunning(gameplay) === 0))') Spiel ansehen
+                          a.btn.btn-primary.btn-sm(href='/summary/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && isGameOver(gameplay)') Zusammenfassung
+                          a.btn.btn-default.btn-sm(href='/team/edit/{{gameplay.internal.gameId}}/{{gameplay.team.uuid}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level || !isTeamleader(gameplay))') Team-Mitglieder
+                      p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
+                    .panel-footer
+                      p {{getGpInfo(gameplay)}}
 

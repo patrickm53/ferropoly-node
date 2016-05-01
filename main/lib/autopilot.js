@@ -2,7 +2,7 @@
  * The autopilot - generates automatically data for test games
  * Created by kc on 13.06.15.
  */
-'use strict';
+
 
 var _ = require('lodash');
 var logger = require('../../common/lib/logger').getLogger('autopilot');
@@ -81,7 +81,7 @@ function playRound(gameId, teamId, travelLog, properties, callback) {
   mp.chancellery(gameId, teamId, function () {
     mp.buildHouses(gameId, teamId, function () {
       var propertyId = selectClosestsProperty(travelLog, properties);
-      mp.buyProperty(gameId, teamId, propertyId, function () {
+      mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, function () {
         callback();
       });
     });
@@ -169,7 +169,7 @@ module.exports = {
     }
     settings = options.autopilot;
     settings.interval = options.autopilot.interval || (5 * 60 * 1000);
-    settings.gameId = 'play-a-demo-game';
+    settings.gameId = options.autopilot.gameId || 'play-a-demo-game';
     logger.info('autopilot ACTIVE');
     startTimer();
   }

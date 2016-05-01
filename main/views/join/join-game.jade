@@ -1,0 +1,91 @@
+//
+   Created by kc on 05.02.16.
+.row
+  .col-md-6
+    h2 {{gameplay.gamename}}
+    h3(ng-show='gameplay.owner.organisation') {{gameplay.owner.organisation}}
+
+    #infotext(ng-show='gameplay.joining.infotext' ng-bind-html='gameplay.joining.infotext')
+
+    h4.join Spieldaten
+    .row
+      .col-md-4
+        | Datum
+      .col-md-8
+        | {{gameplay.scheduling.gameDate | date:'d. M. yyyy'}}
+    h4.join Spielleiter
+    .row(ng-show='gameplay.owner.organisatorName')
+      .col-md-4
+        | Name
+      .col-md-8
+        | {{gameplay.owner.organisatorName}}
+    .row
+      .col-md-4
+        | Email
+      .col-md-8
+        | {{gameplay.owner.organisatorEmail}}
+    .row(ng-show='gameplay.owner.organisatorPhone')
+      .col-md-4
+        | Telefonnummer
+      .col-md-8
+        | {{gameplay.owner.organisatorPhone}}
+
+    div(ng-show='teamInfo.id')
+      h4.join Meine Anmeldung
+      .row
+        .col-md-4
+          | Anmeldedatum
+        .col-md-8
+          | {{teamInfo.registrationDate| date:'d. M. yyyy HH:mm'}}
+        .col-md-4
+          | Letzte Änderung
+        .col-md-8
+          | {{teamInfo.changedDate| date:'d. M. yyyy HH:mm'}}
+        .col-md-4
+          | Vom Organisator bestätigt
+        .col-md-8
+          span(ng-show='teamInfo.confirmed')
+            | Ja
+          span(ng-hide='teamInfo.confirmed')
+            | Nein
+
+
+  .col-md-6
+    div(ng-hide='saved || error')
+      h2 Anmeldung
+      form(name='joinForm')
+        .form-group
+          label(for='teamName') Name Deines Teams
+          input.form-control#teamName(type='text' required ng-minlength='3' ng-maxlength='60' maxlength='60' ng-model='teamName')
+        .form-group
+          label(for='organization') Zu welchem Verein / welcher Organisation gehört ihr?
+          input.form-control#organization(type='text' maxlength='80'  ng-model='organization')
+
+        .form-group
+          label(for='teamLeaderName') Ansprechperson
+          input.form-control#teamLeaderName(type='text' readonly='true' ng-model='teamLeaderName')
+
+        .form-group
+          label(for='teamLeaderEmail') Email-Adresse
+          input.form-control#teamLeaderEmail(type='text' readonly='true' ng-model='teamLeaderEmail')
+
+        .form-group
+          label(for='teamLeaderPhone') Telefon-Nummer
+          input.form-control#teamLeaderPhone(type='text' required ng-minlength='10' ng-maxlength='15' maxlength='15' ng-model='teamLeaderPhone')
+
+        .form-group
+          label(for='remarks') Bemerkungen
+          textarea.form-control#remarks(rows='4' ng-model='remarks')
+
+
+        button.btn.btn-primary(type='submit' ng-disabled='!joinForm.$valid || requestPending' ng-click='save()' ng-hide='teamInfo.id') Anmelden
+        button.btn.btn-primary(type='submit' ng-disabled='!joinForm.$valid || requestPending' ng-click='save()' ng-show='teamInfo.id') Speichern
+    .well.well-sm.well-ok(ng-show='saved && teamInfo.id')
+      h4 Änderungen gespeichert
+      p Deine Änderungen wurden erfolgreich gespeichert.
+    .well.well-sm.well-ok(ng-show='saved && !teamInfo.id')
+      h4 Besten Dank für die Anmeldung
+      p Deine Anmeldung wurde dem Spielleiter zur Bestätigung übermittelt.
+    .well.well-sm.well-error(ng-show='error')
+      h4 Oh je, leider gab es da ein Problem
+      p {{error}}

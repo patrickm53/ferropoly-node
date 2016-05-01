@@ -2,7 +2,7 @@
  * Settings for the contabo PREVIEW server, its IP is 5.189.159.156
  * Created by kc on 15.08.15.
  */
-'use strict';
+
 
 module.exports = function (settings) {
 
@@ -35,6 +35,11 @@ module.exports = function (settings) {
     interval: 263445,
     active: true
   };
+
+  // Facebook settings
+  settings.oAuth.facebook.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/facebook/callback';
+  // Google Settings
+  settings.oAuth.google.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/google/callback';
 
   return settings;
 };

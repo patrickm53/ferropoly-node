@@ -1,0 +1,20 @@
+//
+   Created by kc on 20.05.15.
+
+.modal.fade(id="confirmBuy" tabindex="-1" role="dialog" aria-labelledby="confirmBuyLabel" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+          span(aria-hidden="true") &times;
+        h2(id='confirmBuyLabel') Kauf bestätigen
+      .modal-body
+        p Bitte bestätigen, dass {{selectedTeam.data.name}} folgendes Grundstück kaufen will:
+        p
+        h3 {{propertyInvestCandidate.location.name}}
+        h4 Kaufpreis: {{propertyInvestCandidate.pricelist.price | amount}}
+        p
+        p
+      .modal-footer
+        button(type="button" class="btn btn-primary" ng-click='buyProperty(propertyInvestCandidate)' data-dismiss="modal") Kaufen
+        button(type="button" class="btn btn-default" data-dismiss="modal") Abbrechen

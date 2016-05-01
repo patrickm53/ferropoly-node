@@ -34,12 +34,17 @@ node_modules
 # Webstorm
 .idea
 
+# Bower modules
+main/public/modules
+
 # Generated HTML
 main/views/*.html
 main/views/info/*.html
-main/views/reception-manage-call/*.html
-main/views/reception-map/*.html
-main/views/reception-stats/*.html
-
+main/views/reception/*.html
+main/views/join/*.html
+main/views/checkin/*.html
+main/views/summary/*.html
 
 main/public/js/reception.js
+main/public/js/checkin.js
+

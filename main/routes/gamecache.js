@@ -2,7 +2,7 @@
  * Access to the gamecache
  * Created by kc on 17.08.15.
  */
-'use strict';
+
 
 var express = require('express');
 var router = express.Router();

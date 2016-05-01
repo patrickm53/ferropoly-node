@@ -28,10 +28,7 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
       $('#account-' + $scope.teams[i].uuid).removeClass('active');
     }
     $('#account-' + teamId).addClass('active');
-    console.log('set team Id: ' + teamId);
-    $scope.entries = dataStore.getTeamAccountEntries(teamId);
     $scope.currentTeamId = teamId;
-    console.log('entries: ' + $scope.entries.length);
   };
 
   /**
@@ -39,17 +36,8 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
    * @returns {string}
    */
   $scope.downloadUrl = function() {
-    return  dataStore.getGameplay().internal.gameId + '/' + $scope.currentTeamId;
+    return  dataStore.getGameplay().internal.gameId;
   };
-
-  /**
-   * Socket.io handler, updating the values
-   */
-  ferropolySocket.on('teamAccount', function () {
-    // Update scope variable
-    $scope.entries = dataStore.getTeamAccountEntries();
-    $scope.$apply();
-  });
 
   $scope.getTransactionInfoText = function(entry) {
     var retVal = entry.transaction.info;
@@ -58,11 +46,36 @@ ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope
     }
     return retVal;
   };
+
+  /**
+   * Filter for the account list
+   * @param entry
+   * @returns {boolean}
+   */
+  $scope.accountFilter = function(entry) {
+    if (!$scope.currentTeamId) {
+      return true;
+    }
+    return entry.teamId === $scope.currentTeamId;
+  };
+
+  var newTransactionHandler = function() {
+    // Just update the entries
+   /* dataStore.updateTeamAccountEntries(undefined, function(err, entries) {
+       $scope.entries = entries;
+       $scope.$apply();
+    });*/
+  };
+
+  // Register the handler for Team account transaction changes
+  dataStore.registerTeamAccountUpdateHandler(newTransactionHandler);
+
   /**
    * Refresh view, needed when entering it
    */
   $scope.refreshTeamAccounts = function() {
     console.log('refreshTeamAccounts!');
+    $scope.entries = dataStore.getTeamAccountEntries();
     $scope.setTeam(undefined);
     $scope.$apply();
   };

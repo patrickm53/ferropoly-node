@@ -9,75 +9,90 @@
  * Created by kc on 22.01.15.
  */
 
-var mongoose = require('mongoose');
-var crypto = require('crypto');
-var uuid = require('node-uuid');
-var Moniker = require('moniker');
+var mongoose           = require('mongoose');
+var crypto             = require('crypto');
+var uuid               = require('node-uuid');
+var Moniker            = require('moniker');
 var finalizedGameplays = [];
-var moment = require('moment-timezone');
-var logger = require('../lib/logger').getLogger('gameplayModel');
+var moment             = require('moment-timezone');
+var logger             = require('../lib/logger').getLogger('gameplayModel');
+
+const MOBILE_NONE  = 0;
+const MOBILE_BASIC = 5;
+const MOBILE_FULL  = 10;
 
 /**
  * The mongoose schema for an user
  */
 var gameplaySchema = mongoose.Schema({
-  _id: String,
-  gamename: String, // name of the game
-  owner: {
-    organisatorName: String,
-    organisation: String,
+  _id       : {type: String, index: true},
+  gamename  : String, // name of the game
+  owner     : {
+    organisatorName : String,
+    organisation    : String,
     organisatorEmail: String,
     organisatorPhone: String
   },
+  admins    : {
+    logins: {type: Array, default: []}
+  },
   scheduling: {
-    gameDate: Date,
-    gameStart: String, // hh:mm
-    gameEnd: String, // hh:mm
-    gameStartTs: Date, // Is set during finalization
-    gameEndTs: Date // Is set during finalization
+    gameDate   : Date,
+    gameStart  : String, // hh:mm
+    gameEnd    : String, // hh:mm
+    gameStartTs: Date,   // Is set during finalization
+    gameEndTs  : Date,   // Is set during finalization
+    deleteTs   : Date    // Timestamp when the game is deleted
   },
   gameParams: {
-    interestInterval: {type: Number, default: 60}, // Interval in minutes of the interests
-    interest: {type: Number, default: 4000}, // "Startgeld"
-    interestCyclesAtEndOfGame: {type: Number, default: 2}, // number of interests at end of game
-    startCapital: {type: Number, default: 4000}, // "Startkapital"
-    debtInterest: {type: Number, default: 20},    // fee on debts
-    housePrices: {type: Number, default: .5},
-    properties: {
-      lowestPrice: {type: Number, default: 1000},
-      highestPrice: {type: Number, default: 8000},
-      numberOfPriceLevels: {type: Number, default: 8},
+    interestInterval         : {type: Number, default: 60},   // Interval in minutes of the interests
+    interest                 : {type: Number, default: 4000}, // "Startgeld"
+    interestCyclesAtEndOfGame: {type: Number, default: 2},    // number of interests at end of game
+    startCapital             : {type: Number, default: 4000}, // "Startkapital"
+    debtInterest             : {type: Number, default: 20},   // fee on debts
+    housePrices              : {type: Number, default: .5},
+    properties               : {
+      lowestPrice               : {type: Number, default: 1000},
+      highestPrice              : {type: Number, default: 8000},
+      numberOfPriceLevels       : {type: Number, default: 8},
       numberOfPropertiesPerGroup: {type: Number, default: 2}
     },
-    rentFactors: {
-      noHouse: {type: Number, default: .125},
-      oneHouse: {type: Number, default: .5},
-      twoHouses: {type: Number, default: 2},
-      threeHouses: {type: Number, default: 3},
-      fourHouses: {type: Number, default: 4},
-      hotel: {type: Number, default: 5},
+    rentFactors              : {
+      noHouse             : {type: Number, default: .125},
+      oneHouse            : {type: Number, default: .5},
+      twoHouses           : {type: Number, default: 2},
+      threeHouses         : {type: Number, default: 3},
+      fourHouses          : {type: Number, default: 4},
+      hotel               : {type: Number, default: 5},
       allPropertiesOfGroup: {type: Number, default: 2}
     },
-    chancellery: {
-      minLottery: {type: Number, default: 1000},  // amount to loose or win each call
-      maxLottery: {type: Number, default: 5000},
-      minGambling: {type: Number, default: 1000}, // amount to bet in the individual games
-      maxGambling: {type: Number, default: 50000},
-      maxJackpotSize: {type: Number, default: 500000}, // max jackpot size
-      probabilityWin: {type:Number, default: 0.45},
-      probabilityLoose: {type:Number, default: 0.45}
+    chancellery              : {
+      minLottery      : {type: Number, default: 1000},   // amount to loose or win each call
+      maxLottery      : {type: Number, default: 5000},
+      minGambling     : {type: Number, default: 1000},   // amount to bet in the individual games
+      maxGambling     : {type: Number, default: 50000},
+      maxJackpotSize  : {type: Number, default: 500000}, // max jackpot size
+      probabilityWin  : {type: Number, default: 0.45},
+      probabilityLoose: {type: Number, default: 0.45}
     }
   },
-  internal: {
-    gameId: {type: String, index: true}, // Identifier of the game
-    owner: String,  // Owner of the game
-    map: String,     // map to use
-    finalized: {type: Boolean, default: false}, // finalized means no edits anymore,
-    creatingInstance: String // Instance creating this gameplay
+  mobile    : {
+    level: {type: Number, default: MOBILE_NONE}
   },
-  log: {
-    created: {type: Date, default: Date.now},
-    lastEdited: {type: Date, default: Date.now},
+  internal  : {
+    gameId          : {type: String, index: true},     // Identifier of the game
+    owner           : String,                          // Owner of the game. This is the ID of the user!
+    map             : String,                          // map to use
+    finalized       : {type: Boolean, default: false}, // finalized means no edits anymore,
+    creatingInstance: String                           // Instance creating this gameplay
+  },
+  joining   : {
+    possibleUntil: {type: Date},
+    infotext     : String
+  },
+  log       : {
+    created         : {type: Date, default: Date.now},
+    lastEdited      : {type: Date, default: Date.now},
     priceListCreated: Date,
     priceListVersion: {type: Number, default: 0}
   }
@@ -93,24 +108,28 @@ var Gameplay = mongoose.model('Gameplay', gameplaySchema);
  * @param gpOptions is an object with at least 'map', 'ownerEmail' and 'name'
  * @param callback
  */
-var createGameplay = function (gpOptions, callback) {
+var createGameplay      = function (gpOptions, callback) {
   var gp = new Gameplay();
   if (!gpOptions.map || !gpOptions.ownerEmail || !gpOptions.name) {
     return callback(new Error('Missing parameter'));
   }
 
-  gp.internal.map = gpOptions.map;
-  gp.internal.owner = gpOptions.ownerEmail;
-  gp.owner.organisatorEmail = gpOptions.ownerEmail;
-  gp.owner.organisatorName = gpOptions.organisatorName;
-  gp.scheduling.gameDate = gpOptions.gameDate;
-  gp.scheduling.gameStart = gpOptions.gameStart;
-  gp.scheduling.gameEnd = gpOptions.gameEnd;
+  gp.internal.map                = gpOptions.map;
+  gp.internal.owner              = gpOptions.ownerId || gpOptions.ownerEmail;
+  gp.owner.organisatorEmail      = gpOptions.ownerEmail;
+  gp.owner.organisatorName       = gpOptions.organisatorName;
+  gp.scheduling.gameDate         = gpOptions.gameDate;
+  gp.scheduling.gameStart        = gpOptions.gameStart;
+  gp.scheduling.gameEnd          = gpOptions.gameEnd;
+  gp.scheduling.deleteTs         = moment(gpOptions.gameDate).add(30, 'd').hour(23).minute(59).toDate();
   gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
-  gp.gamename = gpOptions.name;
-  gp.internal.gameId = gpOptions.gameId || Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]).choose();
-  gp.internal.creatingInstance = gpOptions.instance;
-  gp._id = gp.internal.gameId;
+  gp.joining.possibleUntil       = gpOptions.joiningUntilDate || moment(gp.scheduling.gameDate).subtract(5, 'days').set('hour', 20).set('minute', 0).set('second', 0).toDate();
+  gp.joining.infotext            = gpOptions.infoText;
+  gp.gamename                    = gpOptions.name;
+  gp.internal.gameId             = gpOptions.gameId || Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]).choose();
+  gp.internal.creatingInstance   = gpOptions.instance;
+  gp.mobile                      = gpOptions.mobile || {level: MOBILE_NONE};
+  gp._id                         = gp.internal.gameId;
 
   checkIfGameIdExists(gp.internal.gameId, function (err, isExisting) {
     if (err) {
@@ -133,11 +152,15 @@ var createGameplay = function (gpOptions, callback) {
 };
 /**
  * Get all gameplays associated for a user
- * @param ownerEmail
+ * @param email is an object with either id or email or both
  * @param callback
  */
-var getGameplaysForUser = function (ownerEmail, callback) {
-  Gameplay.find({'internal.owner': ownerEmail}, function (err, docs) {
+var getGameplaysForUser = function (email, callback) {
+  Gameplay.find({
+    $or: [
+      {'internal.owner': email},
+      {'admins.logins': email}]
+  }, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -153,7 +176,7 @@ var getGameplaysForUser = function (ownerEmail, callback) {
  * @param gameId
  * @param callback
  */
-var checkIfGameIdExists = function (gameId, callback) {
+var checkIfGameIdExists   = function (gameId, callback) {
   Gameplay.count({'internal.gameId': gameId}, function (err, nb) {
     if (err) {
       return callback(err);
@@ -163,11 +186,11 @@ var checkIfGameIdExists = function (gameId, callback) {
 };
 /**
  * Counts the gameplays for a user
- * @param ownerEmail
+ * @param ownerId
  * @param callback
  */
-var countGameplaysForUser = function (ownerEmail, callback) {
-  Gameplay.count({'internal.owner': ownerEmail}, function (err, nb) {
+var countGameplaysForUser = function (ownerId, callback) {
+  Gameplay.count({'internal.owner': ownerId}, function (err, nb) {
     if (err) {
       return callback(err);
     }
@@ -177,7 +200,6 @@ var countGameplaysForUser = function (ownerEmail, callback) {
 
 /**
  * Counts all gameplays for all users
- * @param ownerEmail
  * @param callback
  */
 var countGameplays = function (callback) {
@@ -192,23 +214,24 @@ var countGameplays = function (callback) {
 /**
  * Returns exactly one (or none, if not existing) gameplay with the params supplied
  * @param gameId
- * @param ownerEmail
+ * @param ownerId which is the email address of the person getting the data
  * @param callback
  */
-var getGameplay = function (gameId, ownerEmail, callback) {
-  var params = {'internal.owner': ownerEmail, 'internal.gameId': gameId};
-  if (ownerEmail === null) {
+var getGameplay = function (gameId, ownerId, callback) {
+  var params = {$or: [{'internal.owner': ownerId}, {'admins.logins': ownerId}], 'internal.gameId': gameId};
+  //  var params = {'internal.owner': ownerId, 'internal.gameId': gameId};
+  if (ownerId === null) {
     params = {'internal.gameId': gameId};
   }
-  else if (ownerEmail === undefined) {
-    return callback(new Error('undefined is not a valid value for ownerEmail'));
+  else if (ownerId === undefined) {
+    return callback(new Error('undefined is not a valid value for ownerId'));
   }
   Gameplay.find(params, function (err, docs) {
     if (err) {
       return callback(err);
     }
     if (docs.length === 0) {
-      return callback(new Error('This gameplay does not exist for this user:' + gameId + ' @ ' + ownerEmail));
+      return callback(new Error('This gameplay does not exist for this user:' + gameId + ' @ ' + ownerId));
     }
     callback(null, docs[0]);
   });
@@ -251,8 +274,8 @@ var removeGameplay = function (gp, callback) {
  */
 function finalizeTime(date, time) {
   try {
-    var e = time.split(':');
-    var hour = e[0];
+    var e      = time.split(':');
+    var hour   = e[0];
     var minute = e[1];
 
     var newDate = moment.tz(date.getTime(), 'Europe/Zurich');
@@ -269,11 +292,11 @@ function finalizeTime(date, time) {
 /**
  * Finalizes the gameplay, it can't be edited afterwards
  * @param gameId
- * @param ownerEmail
+ * @param ownerId
  * @param callback
  */
-var finalize = function (gameId, ownerEmail, callback) {
-  getGameplay(gameId, ownerEmail, function (err, gp) {
+var finalize = function (gameId, ownerId, callback) {
+  getGameplay(gameId, ownerId, function (err, gp) {
     if (err) {
       callback(err);
     }
@@ -281,15 +304,15 @@ var finalize = function (gameId, ownerEmail, callback) {
       // nothing to do, is already finalized
       return callback(null, gp);
     }
-    if (gp.owner.organisatorEmail !== ownerEmail) {
+    if (gp.owner.organisatorEmail !== ownerId) {
       return callback(new Error('Wrong user, not allowed to finalize'));
     }
     if (gp.log.priceListVersion === 0) {
       return callback(new Error('Can only finalize gameplays with pricelist'));
     }
-    gp.internal.finalized = true;
+    gp.internal.finalized     = true;
     gp.scheduling.gameStartTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameStart);
-    gp.scheduling.gameEndTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameEnd);
+    gp.scheduling.gameEndTs   = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameEnd);
 
     gp.save(function (err, gpSaved) {
       if (err) {
@@ -306,7 +329,7 @@ var finalize = function (gameId, ownerEmail, callback) {
  * @param gameId
  * @param callback
  */
-var isFinalized = function (gameId, callback) {
+var isFinalized    = function (gameId, callback) {
   if (finalizedGameplays[gameId]) {
     // return cached value
     logger.info('return cached value');
@@ -342,12 +365,14 @@ var updateGameplay = function (gp, callback) {
         return (err);
       }
       // we need to assign the data now to this gameplay loaded
-      loadedGp.gamename = gp.gamename;
-      loadedGp.owner = gp.owner;
+      loadedGp.gamename   = gp.gamename;
+      loadedGp.owner      = gp.owner;
       loadedGp.scheduling = gp.scheduling;
       loadedGp.gameParams = gp.gameParams;
-      loadedGp.log = gp.log;
-      loadedGp.pricelist = gp.pricelist;
+      loadedGp.joining    = gp.joining;
+      loadedGp.log        = gp.log;
+      loadedGp.pricelist  = gp.pricelist;
+      loadedGp.mobile     = gp.mobile;
       // we do not copy internal as this does not change (must not change!)
 
       // Call update again (this is recursive)
@@ -371,17 +396,37 @@ var updateGameplay = function (gp, callback) {
 };
 
 /**
+ * Sets the admins of a gameplay. This has to work even when the gameplay was finalized before, that's why it is a
+ * specific function and not done in updateGameplay()
+ * @param gameId
+ * @param ownerId
+ * @param logins is an array with the entries to write
+ * @param callback
+ */
+var setAdmins = function (gameId, ownerId, logins, callback) {
+  getGameplay(gameId, ownerId, function (err, gameplay) {
+    if (err) {
+      return callback(err);
+    }
+    gameplay.log.lastEdited = new Date();
+    gameplay.admins         = gameplay.admins || {};
+    gameplay.admins.logins  = logins || [];
+    gameplay.save(callback);
+  });
+};
+
+/**
  * Just updates the gamplay 'last saved' field
- * @param ownerEmail
+ * @param ownerId
  * @param gameId
  * @param callback
  * @returns {*}
  */
-var updateGameplayLastChangedField = function (ownerEmail, gameId, callback) {
-  if (!gameId || !ownerEmail) {
+var updateGameplayLastChangedField = function (ownerId, gameId, callback) {
+  if (!gameId || !ownerId) {
     return callback(new Error('no gameplay name or email supplied'));
   }
-  Gameplay.find({'internal.owner': ownerEmail, 'internal.gameId': gameId}, function (err, docs) {
+  Gameplay.find({'internal.owner': ownerId, 'internal.gameId': gameId}, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -428,18 +473,24 @@ var saveNewPriceListRevision = function (gameplay, callback) {
  */
 module.exports = {
 
-  Model: Gameplay,
-  createGameplay: createGameplay,
-  getGameplaysForUser: getGameplaysForUser,
-  removeGameplay: removeGameplay,
-  updateGameplay: updateGameplay,
-  getGameplay: getGameplay,
+  Model                         : Gameplay,
+  createGameplay                : createGameplay,
+  getGameplaysForUser           : getGameplaysForUser,
+  removeGameplay                : removeGameplay,
+  updateGameplay                : updateGameplay,
+  setAdmins                     : setAdmins,
+  getGameplay                   : getGameplay,
   updateGameplayLastChangedField: updateGameplayLastChangedField,
-  saveNewPriceListRevision: saveNewPriceListRevision,
-  isFinalized: isFinalized,
-  countGameplaysForUser: countGameplaysForUser,
-  countGameplays: countGameplays,
-  checkIfGameIdExists: checkIfGameIdExists,
-  finalize: finalize,
-  getAllGameplays: getAllGameplays
+  saveNewPriceListRevision      : saveNewPriceListRevision,
+  isFinalized                   : isFinalized,
+  countGameplaysForUser         : countGameplaysForUser,
+  countGameplays                : countGameplays,
+  checkIfGameIdExists           : checkIfGameIdExists,
+  finalize                      : finalize,
+  getAllGameplays               : getAllGameplays,
+  // Constants
+  MOBILE_NONE                   : MOBILE_NONE,
+  MOBILE_BASIC                  : MOBILE_BASIC,
+  MOBILE_FULL                   : MOBILE_FULL
+
 };

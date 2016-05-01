@@ -1,0 +1,20 @@
+//
+   Created by kc on 28.04.16.
+
+h1 Chance / Kanzlei
+
+table.table.table-striped(ng-cloak)
+  thead
+    tr
+      th Zeit
+      th Buchung
+      th.amount Betrag
+      th.amount Saldo
+  tbody
+    tr(ng-repeat='t in info.chancellery | orderBy:"timestamp"')
+      td {{t.timestamp | date:'HH:mm'}}
+      td {{t.transaction.info}}
+      td.amount {{t.transaction.amount | amount}}
+      td.amount {{t.saldo | amount}}
+
+

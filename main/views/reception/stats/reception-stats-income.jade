@@ -1,0 +1,26 @@
+//
+   Created by kc on 31.05.15.
+
+.row
+  .col-md-4
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title Einkommen
+          // i.fa.fa-refresh.refresh-button(ng-click='refreshRankingList()')
+      .panel-body
+        table.table
+          thead
+            th Name
+            th Einkommen
+          tr(ng-repeat='t in incomeList | orderBy:"teamName"')
+            td
+             a(href='#' ng-click='showIncomeDetails(t.teamId)') {{t.teamName}}
+            td {{t.totalAmount | amount}}
+
+  .col-md-8
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title Graph
+      .panel-body
+        .chart-area
+          #stats-income-chart

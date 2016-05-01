@@ -4,24 +4,14 @@
  *
  * Created by kc on 10.07.15.
  */
-'use strict';
+
 var gamecache = require('./gameCache');
 var gameplays = require('../../common/models/gameplayModel');
-var _ = require('lodash');
+var _         = require('lodash');
+var logger    = require('../../common/lib/logger').getLogger('lib:accessor');
 
-var PLAYER = 1;
-var ADMIN = 2;
-/**
- * Checks the rights: has a user the required minimal rights level?
- *
- * If no rights are given, an error is issued
- *
- * @param userId
- * @param gameId
- * @param minLevel minimal level required for accessing the page
- * @param callback
- */
-var logger = require('../../common/lib/logger').getLogger('lib:accessor');
+const PLAYER = 1;
+const ADMIN  = 2;
 
 /**
  * Checks if admins rights are granted (as owner or as assigned admin)
@@ -35,7 +25,7 @@ function userHasAdminRights(email, gameplay) {
   }
   if (gameplay.admins && gameplay.admins.logins) {
     return _.find(gameplay.admins.logins, function (n) {
-      return n === email
+      return n === email;
     });
   }
   return false;
@@ -44,7 +34,19 @@ function userHasAdminRights(email, gameplay) {
 module.exports = {
 
   player: PLAYER,
-  admin: ADMIN,
+  admin : ADMIN,
+  /**
+   * Checks the rights: has a user the required minimal rights level?
+   *
+   * This function is only for admins, it does not fit for teams.
+   *
+   * If no rights are given, an error is issued
+   *
+   * @param userId
+   * @param gameId
+   * @param minLevel minimal level required for accessing the page
+   * @param callback
+   */
 
   verify: function (userId, gameId, minLevel, callback) {
     gamecache.getGameData(gameId, function (err, gc) {
@@ -64,7 +66,7 @@ module.exports = {
           // The gameplay is here, refresh cache
           gamecache.refreshCache(function () {
             if (userHasAdminRights(userId, gc.gameplay)) {
-              return callback(null);
+              return callback();
             }
             logger.debug('No access rights granted for ' + userId);
             return callback(new Error('No access rights granted'));
@@ -72,11 +74,40 @@ module.exports = {
         });
       } else if (userHasAdminRights(userId, gc.gameplay)) {
         // it's the admin and the game is in the cache, return always ok
-        return callback(null);
+        return callback();
       }
       // Todo: handle player rights for future features
       logger.debug('No access rights granted for ' + userId);
       return callback(new Error('No access rights granted'));
-    })
+    });
+  },
+
+  verifyPlayer: function (userId, gameId, teamId, callback) {
+    gamecache.getGameData(gameId, function (err, gc) {
+      if (err) {
+        return callback(err);
+      }
+
+      var team = gc.teams[teamId];
+      if (!team) {
+        return callback(new Error('Unknown teamId'));
+      }
+
+      if (team.data.teamLeader.email === userId) {
+        return callback();
+      }
+
+      if (_.find(team.data.members, function(m) { return m === userId; })) {
+        return callback();
+      }
+
+      if (userHasAdminRights(userId, gc.gameplay)) {
+        // Admin is also ok
+        return callback();
+      }
+
+      logger.debug('No user access rights granted for ' + userId);
+      return callback(new Error('No access rights granted'));
+    });
   }
 };

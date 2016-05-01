@@ -3,30 +3,36 @@
  *
  * Created by kc on 22.03.15.
  */
-'use strict';
+
 
 var mongoose = require('mongoose');
-var uuid = require('node-uuid');
-var logger = require('../lib/logger').getLogger('teamModel');
+var uuid     = require('node-uuid');
+var logger   = require('../lib/logger').getLogger('teamModel');
 
 /**
  * The mongoose schema for a property
  */
 var teamSchema = mongoose.Schema({
-  _id: String,
+  _id   : {type: String, index: true},
   gameId: String, // Gameplay this team plays with
-  uuid: {type: String, index: {unique: true}},     // UUID of this team (index)
-  data: {
-    name: String, // Name of the team
-    organization: String, // Organization the team belongs to
-    teamLeader: {
-      name: String,
+  uuid  : {type: String, index: {unique: true}},     // UUID of this team (index)
+  data  : {
+    name              : String, // Name of the team
+    organization      : String, // Organization the team belongs to
+    teamLeader        : {
+      name : String,
       email: String,
       phone: String
     },
-    remarks: String
+    remarks           : String,
+    confirmed         : {type: Boolean, default: true},
+    onlineRegistration: {type: Boolean},
+    registrationDate  : {type: Date, default: Date.now},
+    changedDate       : {type: Date, default: Date.now},
+    confirmationDate  : {type: Date},
+    members           : {type: Array, default: []} // Array with strings (email) of all team members
   }
-}, {_id: false});
+}, {autoIndex: true});
 
 /**
  * The Property model
@@ -40,11 +46,11 @@ var Team = mongoose.model('Team', teamSchema);
  * @param callback
  */
 var createTeam = function (newTeam, gameId, callback) {
-  var team = new Team();
-  team.uuid = uuid.v4();
+  var team    = new Team();
+  team.uuid   = uuid.v4();
   team.gameId = gameId;
-  team.data = newTeam.data;
-  team._id = gameId + '-' + team.uuid;
+  team.data   = newTeam.data;
+  team._id    = gameId + '-' + team.uuid;
   team.save(function (err, savedTeam) {
     callback(err, savedTeam);
   })
@@ -130,6 +136,43 @@ var getTeams = function (gameId, callback) {
 };
 
 /**
+ * Get a specific team
+ * @param gameId
+ * @param teamId
+ * @param callback
+ * @returns {*}
+ */
+var getTeam = function (gameId, teamId, callback) {
+  Team.find({
+      'uuid'  : teamId,
+      'gameId': gameId
+    },
+    function (err, docs) {
+      if (err) {
+        return callback(err);
+      }
+      if (docs.length === 0) {
+        return callback(null, null);
+      }
+      callback(null, docs[0]);
+    }
+  );
+};
+
+/**
+ * Count the teams of a given game
+ * @param gameId
+ * @param callback
+ * @returns {*}
+ */
+function countTeams(gameId, callback) {
+  if (!gameId) {
+    return callback(new Error('No gameId supplied'));
+  }
+  Team.count({gameId: gameId}, callback);
+};
+
+/**
  * Returns the teams as object, each team accessible using team[teamId]
  * @param gameId
  * @param callback
@@ -148,12 +191,62 @@ var getTeamsAsObject = function (gameId, callback) {
   });
 };
 
+/**
+ * Returns all teams where I am assigned as team leader or member
+ * @param email
+ * @param callback
+ */
+function getMyTeams(email, callback) {
+  Team.find({
+      $or: [
+        {'data.teamLeader.email': email},
+        {'data.members': email}
+      ]
+    },
+    function (err, docs) {
+      if (err) {
+        return callback(err);
+      }
+      if (docs.length === 0) {
+        return callback(null, null);
+      }
+      callback(null, docs);
+    }
+  );
+}
+
+/**
+ * Returns my team for a gameplay where I am assigned as team leader
+ * @param email
+ * @param callback
+ */
+function getMyTeam(gameId, email, callback) {
+  Team.find({
+      'data.teamLeader.email': email,
+      'gameId'               : gameId
+    },
+    function (err, docs) {
+      if (err) {
+        return callback(err);
+      }
+      if (docs.length === 0) {
+        return callback(null, null);
+      }
+      callback(null, docs[0]);
+    }
+  );
+}
+
 module.exports = {
-  Model: Team,
-  createTeam: createTeam,
-  updateTeam: updateTeam,
-  deleteTeam: deleteTeam,
-  deleteAllTeams: deleteAllTeams,
-  getTeams: getTeams,
-  getTeamsAsObject: getTeamsAsObject
+  Model             : Team,
+  createTeam        : createTeam,
+  updateTeam        : updateTeam,
+  deleteTeam        : deleteTeam,
+  deleteAllTeams    : deleteAllTeams,
+  getTeams          : getTeams,
+  getTeamsAsObject  : getTeamsAsObject,
+  countTeams        : countTeams,
+  getMyTeams        : getMyTeams,
+  getMyTeam         : getMyTeam,
+  getTeam           : getTeam
 };

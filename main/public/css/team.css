@@ -1,0 +1,19 @@
+
+#info-ok {
+    display     : inline-block;
+    margin-left : 20px;
+}
+
+#info-error {
+    display     : inline-block;
+    margin-left : 20px;
+}
+
+#important-sign {
+    color        : red;
+    margin-right : 5px;
+}
+
+.delete-user {
+    font-size: large;
+}

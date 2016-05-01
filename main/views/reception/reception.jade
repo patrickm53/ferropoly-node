@@ -1,0 +1,115 @@
+//
+   Created by kc on 10.05.15.
+extends ../layout
+
+block head
+  if !minifiedjs
+    script(src='/socket.io/socket.io.js')
+    script(src='/modules/d3/d3.min.js')
+    script(src='/modules/c3/c3.min.js')
+  script
+    | var google = undefined;
+    | var receptionPanels = [ '#panel-main', '#panel-managecall', '#panel-teamaccounts', '#panel-map', '#panel-stats', '#panel-chance', '#panel-properties', '#panel-traffic' ];
+    | var socketUrl = "
+    != socketUrl
+    | ";
+  script
+    | var ferropoly = { authToken:"
+    != authToken
+    | ", teams :
+    != teams
+    | , user :"
+    != user
+    | ", gameplay :
+    != gameplay
+    | , pricelist :
+    != pricelist
+    | , err :"
+    = err
+    | ", err2 :"
+    = err2
+    | "};
+    | console.log(ferropoly.teams);
+  - var gameId = currentGameId
+
+  if minifiedjs
+    script(src='/js/min/c3d3.min.js')
+    script(src='/js/min/reception.min.js')
+  else
+    script(src='/js/reception/reception-framework.js')
+    script(src='/js/reception/ferropoly-socket.js')
+    script(src='/js/reception/datastore/datastore.js')
+    script(src='/js/reception/datastore/chancellery.js')
+    script(src='/js/reception/datastore/properties.js')
+    script(src='/js/reception/datastore/propertyAccount.js')
+    script(src='/js/reception/datastore/statistics.js')
+    script(src='/js/reception/datastore/team.js')
+    script(src='/js/reception/datastore/teamAccount.js')
+    script(src='/js/reception/datastore/trafficInfo.js')
+    script(src='/js/reception/datastore/travellog.js')
+    script(src='/js/reception/datastore/datastoreStarter.js')
+    script(src='/js/reception/ferrostats.js')
+    script(src='/js/reception/activecall.js')
+    script(src='/js/reception/teamaccountsCtrl.js')
+    script(src='/js/reception/managecallCtrl.js')
+    script(src='/js/reception/dashboardCtrl.js')
+    script(src='/js/propertyMarkers.js')
+    script(src='/js/reception/mapCtrl.js')
+    script(src='/js/reception/ferrostatsCtrl.js')
+    script(src='/js/reception/chanceCtrl.js')
+    script(src='/js/reception/propertiesCtrl.js')
+    script(src='/js/reception/trafficCtrl.js')
+
+  link(rel='stylesheet', href='/modules/c3/c3.min.css', type='text/css')
+  link(rel='stylesheet', href='/css/reception.css', type='text/css')
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU')
+
+block navbar
+  li
+    a(href='#' onclick="showPanel('#panel-main');") Übersicht
+  li
+    a(href='#' onclick="showPanel('#panel-managecall');") Anruf behandeln
+  li
+    a(href='#' onclick="showPanel('#panel-map');") Karte
+  li
+    a(href='#' onclick="showPanel('#panel-stats');") Statistik
+  li
+    a(href='#' onclick="showPanel('#panel-teamaccounts');") Kontobuch
+  li
+    a(href='#' onclick="showPanel('#panel-chance');") Chance / Kanzlei
+  li
+    a(href='#' onclick="showPanel('#panel-traffic');") Verkehrsinfo
+  li
+    a(href='#' onclick="showPanel('#panel-properties');") Preisliste
+
+
+block navbar-right
+  li#online
+    i.fa.fa-cloud
+    | &nbsp;online
+  li#offline
+    i.fa.fa-cloud
+    | &nbsp;offline
+
+block content
+  .container-fluid
+    #active-call.alert.alert-danger(role="alert" onclick="showPanel('#panel-managecall');") Anruf ist aktiv. Bitte unter "Anruf behandeln" beenden.
+
+    div(ng-app='ferropolyApp')
+      #panel-main
+        include reception-main
+      #panel-managecall
+        include manage-call/reception-mc
+      #panel-teamaccounts
+        include reception-teamaccounts
+      #panel-map
+        include map/reception-map
+      #panel-stats
+        include stats/reception-stats
+      #panel-chance
+        include reception-chance
+      #panel-properties
+        include reception-properties
+      #panel-traffic
+        include reception-traffic
+

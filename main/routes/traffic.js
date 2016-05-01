@@ -2,7 +2,7 @@
  * The traffic route. This route is needed as we can't call another server from the javascript in the browser
  * Created by kc on 01.09.15.
  */
-'use strict';
+
 
 var trafficLib = require('../lib/traffic');
 var express = require('express');
@@ -29,6 +29,9 @@ router.get('/:gameId', function (req, res) {
         return res.send({status:'error', message:'Gameplay not found'});
       }
       trafficLib.getTrafficInfo(gameData.gameplay.internal.map, function (err, data) {
+        if (err) {
+          return res.send({status: 'error', message: err.message});
+        }
         res.send({status: 'ok', trafficInfo: data});
       });
     });

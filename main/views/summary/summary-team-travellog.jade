@@ -1,0 +1,22 @@
+//
+   Created by kc on 28.04.16.
+.row
+  .col-sm-12.col-md-4
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title Reiselog
+      .panel-body
+        table.table(ng-cloak)
+          thead
+            tr
+              th Zeit
+              th Ort
+          tbody
+            tr(ng-repeat='t in teamTravelLog | orderBy:"timestamp"')
+              td {{t.timestamp | date:'HH:mm'}}
+              td
+                a(href='#' ng-click='focusOnMap(t)')
+                  span(ng-show='t.property') {{t.property.location.name}}
+                  span(ng-hide='t.property') {{t.position.lat}} / {{t.position.lng}}
+  .col-sm-12.col-md-8
+    #travel-map

@@ -7,24 +7,29 @@
  * Created by kc on 02.01.15.
  */
 
-var mongoose = require('mongoose');
-var logger = require('../lib/logger').getLogger('locationModel');
-
+var mongoose       = require('mongoose');
+var logger         = require('../lib/logger').getLogger('locationModel');
+var mapinfo        = require('../lib/maps.json');
+var _              = require('lodash');
+var async          = require('async');
 /**
  * The mongoose schema for a location
  */
 var locationSchema = mongoose.Schema({
-  name: String, // Name of the location
-  uuid: String, // UUID of the location, this is the key we are referencing to
-  position: {lat: String, lng: String}, // position of the location
-  accessibility: String, // How do we access it?
-  maps: {
-    zvv: Boolean,
-    sbb: Boolean,
-    ostwind: {type: Boolean, default: false}
+  name         : String,                       // Name of the location
+  uuid         : {type: String, index: true},  // UUID of the location, this is the key we are referencing to
+  position     : {lat: String, lng: String},   // position of the location
+  accessibility: String,                       // How do we access it?
+  maps         : {
+    zvv    : Boolean,
+    sbb    : Boolean,
+    ostwind: {type: Boolean, default: false},
+    libero : {type: Boolean, default: false},
+    tva    : {type: Boolean, default: false},
+    tvlu   : {type: Boolean, default: false},
+    tnw    : {type: Boolean, default: false}
   }
-}, {autoIndex: false});
-locationSchema.index({uuid: 1, type: -1}); // schema level
+}, {autoIndex: true});
 
 /**
  * The Location model
@@ -56,16 +61,11 @@ var getAllLocations = function (callback) {
  * @param callback
  */
 var getAllLocationsForMap = function (map, callback) {
-  var query = {};
-  if (map === 'zvv') {
-    query = {'maps.zvv': true};
-  }
-  else if (map === 'ostwind') {
-    query = {'maps.ostwind': true};
-  }
-  else {
-    query = {'maps.sbb': true};
-  }
+  // This creates a query in this format: {'maps.zvv': true}
+  var index    = 'maps.' + map;
+  var query    = {};
+  query[index] = true;
+
   Location.find(query).lean().exec(function (err, docs) {
     if (err) {
       logger.error('LocationFind failed', err);
@@ -83,7 +83,7 @@ var getAllLocationsForMap = function (map, callback) {
  * @param uuid
  * @param callback
  */
-var getLocationByUuid = function (uuid, callback) {
+var getLocationByUuid     = function (uuid, callback) {
   Location.find({uuid: uuid}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -101,40 +101,32 @@ var getLocationByUuid = function (uuid, callback) {
  * @param callback
  */
 var countLocations = function (callback) {
-  var retVal = {};
+  var retVal = _.clone(mapinfo, true);
 
   Location.count({}, function (err, nb) {
     if (err) {
-      retVal.all = nb;
+      retVal.all = 0;
     }
     else {
       retVal.all = nb;
     }
-    Location.count({'maps.zvv': true}, function (err, nb) {
-      if (err) {
-        retVal.zvv = -1;
-      }
-      else {
-        retVal.zvv = nb;
-      }
-      Location.count({'maps.sbb': true}, function (err, nb) {
-        if (err) {
-          retVal.sbb = -1;
-        }
-        else {
-          retVal.sbb = nb;
-        }
-        Location.count({'maps.ostwind':true}, function(err, nb) {
-          if (err) {
-            retVal.ostwind = -1;
-          }
-          else {
-            retVal.ostwind = nb;
-          }
-          callback(null, retVal);
+
+    async.each(retVal.maps,
+      function (m, cb) {
+        // This creates a query in this format: {'maps.zvv': true}
+        var index    = 'maps.' + m.map;
+        var query    = {};
+        query[index] = true;
+
+        Location.count(query, function (err, nb) {
+          m.locationNb = nb;
+          cb(err);
         });
-      });
-    });
+      },
+      function (err) {
+        callback(err, retVal);
+      }
+    );
   });
 };
 
@@ -144,12 +136,12 @@ var countLocations = function (callback) {
  * @returns {{}} Ferropoly alike object
  */
 var convertModelDataToObject = function (data) {
-  var retVal = {};
-  retVal.name = data.name;
-  retVal.uuid = data.uuid;
-  retVal.position = data.position;
+  var retVal           = {};
+  retVal.name          = data.name;
+  retVal.uuid          = data.uuid;
+  retVal.position      = data.position;
   retVal.accessibility = data.accessibility;
-  retVal.maps = data.maps;
+  retVal.maps          = data.maps;
   return retVal;
 };
 
@@ -183,7 +175,7 @@ module.exports = {
   /**
    * Get one single location by its UUID (or null, if it does not exist)
    */
-  getLocationByUuid: getLocationByUuid,
+  getLocationByUuid    : getLocationByUuid,
 
   /**
    * Save the location

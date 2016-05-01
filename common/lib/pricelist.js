@@ -2,10 +2,13 @@
  * Common library for the pricelist
  * Created by kc on 26.04.15.
  */
-'use strict';
+
 
 var _ = require('lodash');
 var properties = require('../models/propertyModel');
+var gameplayModel = require('../models/gameplayModel');
+var logger = require('./logger').getLogger('lib:pricelist');
+var moment = require('moment');
 
 module.exports = {
   /**
@@ -35,5 +38,46 @@ module.exports = {
 
       return callback(null, sortedPricelist);
     })
+  },
+
+  /**
+   * Returns an array of the pricelist suitable as excel sheet
+   * @param gameId
+   * @param callback
+   */
+  getArray: function (gameId, callback) {
+    logger.info('Downloading pricelist array for ' + gameId);
+    this.getPricelist(gameId, function (err, list) {
+      if (err) {
+        return callback(err);
+      }
+
+      gameplayModel.getGameplay(gameId, null, function (err, gp) {
+        if (err) {
+          return callback(err);
+        }
+
+        var csvList = [['Preisliste ' + gp.gamename], ['Position', 'Ort', 'Gruppe', 'Kaufpreis', 'Hauspreis', 'Miete', 'Miete 1H', 'Miete 2H', 'Miete 3H', 'Miete 4H', 'Miete Hotel']];
+        for (var i = 0; i < list.length; i++) {
+          var e = list[i];
+          csvList.push([
+            e.pricelist.position + 1,
+            e.location.name,
+            e.pricelist.propertyGroup,
+            e.pricelist.price,
+            e.pricelist.pricePerHouse,
+            e.pricelist.rents.noHouse,
+            e.pricelist.rents.oneHouse,
+            e.pricelist.rents.twoHouses,
+            e.pricelist.rents.threeHouses,
+            e.pricelist.rents.fourHouses,
+            e.pricelist.rents.hotel
+          ]);
+        }
+        csvList.push(['Stand: ' + moment(gp.log.priceListCreated).format('D.M.YYYY') + ', Version: ' + gp.log.priceListVersion]);
+
+        callback(null, {name: _.kebabCase(gp.gamename) + '-preisliste.xlsx', data: csvList});
+      });
+    });
   }
 };

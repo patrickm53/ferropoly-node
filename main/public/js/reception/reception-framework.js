@@ -31,7 +31,7 @@ function showPanel(p) {
     activeCallAlert.hide();
   }
   // There are some things to be done when activating a panel (THE OLD WAY)
-  switch(p) {
+  switch (p) {
     case '#panel-teamaccounts':
       dataStore.updateTeamAccountEntries(undefined, angular.element('#team-accounts-ctrl').scope().refreshTeamAccounts);
       break;
@@ -46,6 +46,10 @@ function showPanel(p) {
 
     case '#panel-map':
       refreshMapPanel();
+      break;
+
+    case '#panel-main':
+      angular.element('#reception-dashboard').scope().refresh();
       break;
   }
 
@@ -74,9 +78,21 @@ var ferropolyApp = angular.module('ferropolyApp', []);
 /**
  * Filter function for the pagers
  */
-ferropolyApp.filter('offset', function() {
-  return function(input, start) {
+ferropolyApp.filter('offset', function () {
+  return function (input, start) {
     start = parseInt(start, 10);
     return input.slice(start);
   };
+});
+
+/**
+ * This is the amount filter returning nicer values
+ */
+ferropolyApp.filter('amount', function () {
+  return function (val) {
+    if (_.isNumber(val)) {
+      return val.toLocaleString('de-CH');
+    }
+    return val;
+  }
 });

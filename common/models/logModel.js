@@ -2,7 +2,7 @@
  * Model for the ferropoly log
  * Created by kc on 08.06.15.
  */
-'use strict';
+
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
 var moment = require('moment');

@@ -2,7 +2,7 @@
  * Release candidate instance
  * Created by kc on 30.08.15.
  */
-'use strict';
+
 
 module.exports = function (settings) {
 
@@ -35,6 +35,10 @@ module.exports = function (settings) {
     interval: 263445,
     active: true
   };
+
+
+  // Facebook settings
+  settings.oAuth.facebook.callbackURL = 'https://spiel-rc.ferropoly.ch/auth/facebook/callback';
 
 
   return settings;

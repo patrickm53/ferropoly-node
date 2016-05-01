@@ -3,19 +3,20 @@
  *
  * Created by kc on 19.04.15.
  */
-'use strict';
 
-var mongoose = require('mongoose');
-var moment = require('moment');
-var logger = require('../../lib/logger').getLogger('teamAccountTransaction');
-var _ = require('lodash');
+
+var mongoose                     = require('mongoose');
+var moment                       = require('moment');
+var logger                       = require('../../lib/logger').getLogger('teamAccountTransaction');
+var _                            = require('lodash');
 /**
  * The mongoose schema for a team account
  */
 var teamAccountTransactionSchema = mongoose.Schema({
-  gameId: String, // Game the transaction belongs to
+  gameId   : String, // Game the transaction belongs to
   timestamp: {type: Date, default: Date.now}, // Timestamp of the transaction
-  teamId: String, // This is the uuid of the team the account belongs to
+  teamId   : String, // This is the uuid of the team the account belongs to
+  user     : String, // The user (one of the admins) which was initiating the transaction
 
   transaction: {
     /*
@@ -23,17 +24,17 @@ var teamAccountTransactionSchema = mongoose.Schema({
      by the amount, which is either positive or negative.
      */
     origin: {
-      uuid: {type: String, default: 'fff'}, // uuid of the origin, can be a property or a team
+      uuid    : {type: String, default: 'fff'}, // uuid of the origin, can be a property or a team
       category: {type: String, default: 'undefined'}  // either "team", "property", "bank", "chancellery"
     },
     amount: {type: Number, default: 0}, // value to be transferred, positive or negative
-    info: String, // Info about the transaction
+    info  : String, // Info about the transaction
     /*
      If the transaction consists of several other transactions (interests every hour), we do not create
      a specific TeamAccountTransaction for every property. Instead there is an array having the same
      data as this transaction (except this array)
      */
-    parts: Array
+    parts : Array
   }
 
 }, {autoIndex: true});
@@ -78,7 +79,7 @@ function bookTransfer(debitor, creditor, callback) {
  * Get the entries of the account
  * @param gameId
  * @param teamId, if undefined, then all entries of all teams are returned
- * @param tsStart moment() to start, if undefined all
+ * @param tsStart moment() to start, if undefined all. NOT INCLUDING the entry with exactly this timestamp.
  * @param tsEnd   moment() to end, if undefined now()
  * @param callback
  * @returns {*}
@@ -98,7 +99,7 @@ function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
     // Only of one team
     TeamAccountTransaction.find({gameId: gameId})
       .where('teamId').equals(teamId)
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
       .sort('timestamp')
       .lean()
       .exec(function (err, data) {
@@ -108,7 +109,7 @@ function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
   else {
     // all teams
     TeamAccountTransaction.find({gameId: gameId})
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
       .sort('timestamp')
       .lean()
       .exec(function (err, data) {
@@ -132,10 +133,73 @@ function dumpAccounts(gameId, callback) {
   })
 }
 
+/**
+ * Returns the sum of all accounts of a game
+ * @param gameId
+ * @param callback
+ */
+function getRankingList(gameId, callback) {
+  TeamAccountTransaction.aggregate({
+    $match: {
+      gameId: gameId,
+    }
+  }, {
+    $group: {
+      _id  : '$teamId',
+      asset: {$sum: "$transaction.amount"}
+    }
+  }, callback);
+}
+
+
+/**
+ * Get the balance of a team
+ * @param gameId
+ * @param callback
+ */
+function getBalance(gameId, teamId, callback) {
+
+  var retVal = {};
+
+  TeamAccountTransaction.aggregate({
+    $match: {
+      gameId: gameId,
+      teamId: teamId
+    }
+  }, {
+    $group: {
+      _id  : 'balance',
+      asset: {$sum: "$transaction.amount"}
+    }
+  }, function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    if (!data || data.length === 0) {
+      return callback(null, {asset: 0, count: 0});
+    }
+    retVal.asset = data[0].asset;
+
+    TeamAccountTransaction.count({
+      gameId: gameId,
+      teamId: teamId
+    }, function (err, result) {
+      if (err) {
+        return callback(err);
+      }
+      retVal.count = result;
+      callback(null, retVal);
+    });
+  });
+}
+
+
 module.exports = {
-  Model: TeamAccountTransaction,
-  book: book,
-  bookTransfer: bookTransfer,
-  getEntries: getEntries,
-  dumpAccounts: dumpAccounts
+  Model         : TeamAccountTransaction,
+  book          : book,
+  bookTransfer  : bookTransfer,
+  getEntries    : getEntries,
+  getRankingList: getRankingList,
+  dumpAccounts  : dumpAccounts,
+  getBalance    : getBalance
 };

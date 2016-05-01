@@ -1,0 +1,60 @@
+#online {
+    color   : #639a00;
+    display : none;
+    padding: 15px;
+}
+
+#offline {
+    color : red;
+    padding: 15px;
+}
+
+.online {
+    color : #639a00;
+}
+
+.offline {
+    color : red;
+}
+
+.dashboard-tile {
+    background-color : lightcyan;
+
+    padding          : 20px;
+    margin-bottom    : 20px;
+    border-radius    : 10px;
+}
+
+.tile-asset {
+    background-color : #00A000;
+    color            : white;
+}
+
+.tile-propertynb {
+    background-color : #8c8c8c;
+    color            : white;
+}
+
+.tile-property-value {
+    background-color : #dbad3e;
+    color            : white;
+}
+
+.tile-chancellery {
+    background-color : #6873f7;
+    color            : white;
+}
+
+.dashboard-title {
+    font-weight : bold;
+    font-size   : large;
+}
+
+.dashboard-value {
+    font-size : 24px;
+}
+
+#map {
+    height : 90vh;
+    width  : 100%;
+}

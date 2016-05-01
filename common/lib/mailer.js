@@ -5,7 +5,7 @@
  *
  * Created by kc on 20.06.15.
  */
-'use strict';
+
 
 var _ = require('lodash');
 var nodemailer = require('nodemailer');
@@ -40,6 +40,7 @@ module.exports = {
     transporter.sendMail({
       from: options.mailer.senderAddress,
       to: mailContents.to,
+      cc: mailContents.cc,
       subject: mailContents.subject,
       text: mailContents.text,
       html: mailContents.html

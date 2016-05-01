@@ -2,7 +2,7 @@
  * The travel log route
  * Created by kc on 11.06.15.
  */
-'use strict';
+
 var express = require('express');
 var router = express.Router();
 var travelLog = require('../../common/models/travelLogModel');
