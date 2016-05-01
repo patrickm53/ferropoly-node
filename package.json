@@ -1,7 +1,11 @@
 {
   "name": "Ferropoly-Game",
   "title": "Ferropoly Spielauswertung",
+<<<<<<< HEAD
   "version": "1.108.0",
+=======
+  "version": "1.0.8",
+>>>>>>> 7854ab6e5f3d5500612ab70bec0399a9dca44a6d
   "description": "Ferropoly Spiel",
   "keywords": [
     "Ferropoly",
