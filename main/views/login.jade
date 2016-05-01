@@ -18,6 +18,7 @@ block content
   .login-box.ls-box-shape(ng-controller='loginCtrl' ng-app='loginApp')
     h3 Ferropoly Spiel Login
     #login-with-password(ng-show='passwordLogin')
+      p Das Login mit Passwort ist nicht empfohlen. Falls Du das dennoch willst, dann melde Dich in der Ferropoly Editor-App an.
       form(action='login' method='post')
         label(for='inputUserName' class='sr-only') Benutzername
         input(type='text' name='username' id='inputUserName' class='form-control' placeholder='Benutzername' required autofocus)
@@ -25,7 +26,7 @@ block content
         input(type='password' name='password' id='inputPassword' class='form-control' placeholder='Passwort' required)
         br
         button#button-login.btn.btn-lg.btn-primary.btn-block(type='submit') Login
-        a#button-signup.btn.btn-success.btn-block(href='/signup') Login erstellen
+        //a#button-signup.btn.btn-success.btn-block(href='/signup') Login erstellen
       br
       button.btn.btn-xs.btn-default.btn-block(ng-click='passwordLogin = false') Login mit Social Networks
     #login-with-social-networks(ng-hide='passwordLogin')
@@ -35,7 +36,7 @@ block content
       a#button-google.btn.btn-lg.btn-danger.btn-block(href='/auth/google')
         i.fa.fa-google-plus
         | &nbsp;Login mit Google
-      button.btn.btn-sm.btn-default.btn-block(ng-click='passwordLogin = true')
+      button.btn.btn-sm.btn-block(ng-click='passwordLogin = true')
         | Login mit Passwort
     br
     .row
