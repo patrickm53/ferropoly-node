@@ -23,7 +23,7 @@ div(ng-controller='propertiesCtrl' ng-cloak)
             td.pricelist {{p.pricelist.propertyGroup}}
             td.pricelist {{p.pricelist.price | amount}}
             td.pricelist {{getTeamName(p.gamedata.owner)}}
-            td.pricelist 
+            td.pricelist
               span(ng-show='p.gamedata.buildings > 0')
                 i.fa.fa-star
               span(ng-show='p.gamedata.buildings > 1')
