@@ -39,6 +39,8 @@ module.exports = function (settings) {
 
   // Facebook settings
   settings.oAuth.facebook.callbackURL = 'https://spiel-rc.ferropoly.ch/auth/facebook/callback';
+  // Google Settings
+  settings.oAuth.google.callbackURL = 'https://spiel-rc.ferropoly.ch/auth/google/callback';
 
 
   return settings;
