@@ -9,12 +9,12 @@
  * 17.1.15 KC
  *
  */
-const mongoose   = require('mongoose');
-const crypto     = require('crypto');
-const uuid       = require('node-uuid');
-const pbkdf2     = require('pbkdf2-sha256');
-const logger     = require('../lib/logger').getLogger('userModel');
-const _          = require('lodash');
+const mongoose = require('mongoose');
+const crypto   = require('crypto');
+const uuid     = require('node-uuid');
+const pbkdf2   = require('pbkdf2-sha256');
+const logger   = require('../lib/logger').getLogger('userModel');
+const _        = require('lodash');
 /**
  * The mongoose schema for an user
  */
@@ -384,6 +384,8 @@ function findOrCreateFacebookUser(profile, callback) {
     }
 
     // User found, update
+    user.info.facebook       = profile;
+    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
     updateUser(user, null, callback);
   });
 }
@@ -471,6 +473,8 @@ function findOrCreateGoogleUser(profile, callback) {
     }
 
     // User found, update
+    user.info.google         = profile;
+    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
     updateUser(user, null, callback);
   });
 }

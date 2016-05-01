@@ -17,7 +17,7 @@
       "map" :"ostwind",
       "name":"Ostwind",
       "description": "Ein Ferropoly in der Ostschweiz",
-      "enabled": true
+      "enabled": false
     },
     {
       "map" :"libero",
