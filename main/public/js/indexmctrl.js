@@ -123,6 +123,29 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
   $scope.isTeamleader         = function (game) {
     return _.get(game, 'team.data.teamLeader.email', 'x') === _.get(user, 'personalData.email');
   };
+  // Accept AGB
+  $scope.acceptAgb = function () {
+    $http({method: 'POST', url: '/agb/accept'}).then(
+      function () {
+        $scope.agb.accepted = true;
+      },
+      function (resp) {
+        console.error(resp);
+      }
+    );
+  };
+  // Decline AGB
+  $scope.declineAgb = function () {
+    $http({method: 'POST', url: '/logout'}).then(
+      function () {
+        console.log('logged out');
+        window.location.replace("/");
+      },
+      function (resp) {
+        console.error(resp);
+      }
+    );
+  };
 
   // When document ready, load gameplays
   $(document).ready(function () {
@@ -130,6 +153,19 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
     var index = moment().hours() % 6;
     $('#info-header').css('background-image', 'url("/images/ferropoly_header_0' + index + '.jpg")');
 
+    $http({method: 'GET', url: '/agb'}).then(
+      function (resp) {
+        console.log(resp);
+        $scope.agb = resp.data.info;
+        if ($scope.agb.actionRequired) {
+          $('#agb-trigger').click();
+        }
+      },
+      function (resp) {
+        console.error(resp);
+      }
+    );
+    
     $http({
       method: 'GET',
       url   : '/gameplays'
