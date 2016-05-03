@@ -1,5 +1,5 @@
 /**
- * Fetchs the SBB traffic situation and wraps it into a ferropoly compatible JSON format.
+ * Fetches the SBB traffic situation and wraps it into a ferropoly compatible JSON format.
  *
  * This conversion is not free of pain: if they decide to change the format of the XML or the RSS URL changes, I won't
  * be noticed then and this functionality fails. Therefore it is implemented to be as fail resistant as possible:
@@ -8,19 +8,19 @@
  * Created by kc on 01.09.15.
  */
 
-var needle = require('needle');
-var moment = require('moment');
-var pixlXml = require('pixl-xml');
-var _ = require('lodash');
-var logger = require('../../common/lib/logger').getLogger('traffic');
-var path = require('path');
-var fs = require('fs');
-var settings = require('../settings');
+const needle   = require('needle');
+const moment   = require('moment');
+const pixlXml  = require('pixl-xml');
+const _        = require('lodash');
+const logger   = require('../../common/lib/logger').getLogger('traffic');
+const path     = require('path');
+const fs       = require('fs');
+const settings = require('../settings');
 
 // Set default settings
-settings.traffic = settings.traffic || {};
+settings.traffic                 = settings.traffic || {};
 settings.traffic.refreshInterval = settings.traffic.refreshInterval || 1;
-settings.traffic.simulation = settings.traffic.simulation || false;
+settings.traffic.simulation      = settings.traffic.simulation || false;
 
 var sampleTrafficInfo = path.join(__dirname, '..', '..', 'test', 'fixtures', 'sampleTrafficInfo.xml');
 
@@ -43,7 +43,7 @@ var cachedData = {};
 function extractDuration(durationString) {
   try {
     var elements = durationString.split('-');
-    var from = moment(elements[0], 'DD.MM.YYYY HH:mm');
+    var from     = moment(elements[0], 'DD.MM.YYYY HH:mm');
     if (elements[1].indexOf('.') < 0) {
       elements[1] = elements[0].split(' ')[0] + ' ' + elements[1];
     }
@@ -80,6 +80,11 @@ function transformData(data) {
     return {};
   }
 
+  var version = _.get(data, 'version', 'unknown');
+  if (version !== '2.0') {
+    logger.error(`TRAFFIC INFORMATION MISMATCH: found version ${version}, check for compatibility!`);
+  }
+
   /**
    * Filter used in the _.remove function below in the loop
    * @param n
@@ -98,10 +103,11 @@ function transformData(data) {
       var elements = data.channel.item[i].description.split('<br>');
       _.remove(elements, removeFilter);
 
-      data.channel.item[i].duration = extractDuration(elements[0]);
-      data.channel.item[i].info = _.rest(elements);
-      data.channel.item[i].reason = getCategory(data.channel.item[i]);
-      data.channel.item[i].publishDate = moment(data.channel.item[i].pubDate);
+      data.channel.item[i].duration    = extractDuration(elements[0]);
+      data.channel.item[i].info        = _.drop(elements, 1);
+      data.channel.item[i].reason      = getCategory(data.channel.item[i]);
+      // Moment dislikes the format "Tue, 03 May 2016 15:12:11 +0200" so we have to create a date object first
+      data.channel.item[i].publishDate = moment(new Date(data.channel.item[i].pubDate));
 
       delete data.channel.item[i].description;
       delete data.channel.item[i].guid;
@@ -163,8 +169,8 @@ function getTrafficInfo(map, callback) {
   if (!cachedData[map] || cachedData[map].nextUpdateTime.isBefore(moment())) {
     updateTrafficInfo(rssFeed[map], function (err, data) {
       if (!err) {
-        cachedData[map] = {};
-        cachedData[map].data = data;
+        cachedData[map]                = {};
+        cachedData[map].data           = data;
         // I don't want to fetch the RSS Feed with every request, cache it for some time
         cachedData[map].nextUpdateTime = moment().add({minutes: 5});
         callback(null, cachedData[map]);
