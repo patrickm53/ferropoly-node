@@ -1,0 +1,22 @@
+#rules {
+    padding-left  : 10px;
+    padding-right : 10px;
+}
+
+#no-rules {
+    margin-right : 10px;
+    margin-left  : 10px;
+    margin-top   : 20px;
+}
+
+#version {
+    text-align : right;
+}
+
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}

@@ -1,56 +1,57 @@
 //
    Created by kc on 09.05.15.
 
-h1 {{gp.gamename}}
-h2 {{gp.organisation}}
-.container-fluid
-  .row
-    .col-xs-12.col-md-6
-      .panel.panel-default
-        .panel-heading
-          h3.panel-title Spielinfo
-        .panel-body
-          table(width='100%')
-            tr
-              td Spieldatum
-              td {{gp.scheduling.gameDate | date:'d. M. yyyy'}}
-            tr
-              td Startzeit
-              td {{gp.scheduling.gameStartTs | date:'HH:mm'}}
-            tr
-              td Spielende
-              td {{gp.scheduling.gameEndTs | date:'HH:mm'}}
-            tr
-              td Spielleiter
-              td {{gp.owner.organisatorName}}
-            tr
-              td Email
-              td
-                a(href='mailto:{{gp.owner.organisatorEmail}}') {{gp.owner.organisatorEmail}}
-            tr
-              td Telefon (während dem Spiel)
-              td {{gp.owner.organisatorPhone}}
-      .panel.panel-default
-        .panel-heading
-          h3.panel-title Preisliste
-        .panel-body
-          p Die Preisliste enthält {{pl.length}} Orte und kann &nbsp;
-            a(href='#' onclick="showPanel('#p2');") hier eingesehen
-            | &nbsp;oder&nbsp;
-            a(href='/info/{{gp.internal.gameId}}/download') hier als Excel-Tabelle
-            | &nbsp;geladen werden.
-          p Eine&nbsp;
-            a(href='#' onclick="showPanel('#p3');") Karte mit allen Orten
-            | &nbsp;ist ebenfalls verfügbar.
-    .col-xs-12.col-md-6
-      .panel.panel-default
-        .panel-heading
-          h3.panel-title Angemeldete Teams ({{teams.length}})
-        .panel-body
-          .alert.alert-info(ng-hide='teams.length > 0') Es haben sich noch keine Gruppen angemeldet.
-          div(ng-show='teams.length > 0')
-            table.table.table-responsive
-              tr(data-ng-repeat='p in teams')
-                td {{p.name}}
-                td {{p.organization}}
-                td {{p.teamLeaderName}}
+.row
+  .col-md-12
+    h1 {{gp.gamename}}
+    h2 {{gp.organisation}}
+.row
+  .col-xs-12.col-md-6
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title Spielinfo
+      .panel-body
+        table(width='100%')
+          tr
+            td Spieldatum
+            td {{gp.scheduling.gameDate | date:'d. M. yyyy'}}
+          tr
+            td Startzeit
+            td {{gp.scheduling.gameStartTs | date:'HH:mm'}}
+          tr
+            td Spielende
+            td {{gp.scheduling.gameEndTs | date:'HH:mm'}}
+          tr
+            td Spielleiter
+            td {{gp.owner.organisatorName}}
+          tr
+            td Email
+            td
+              a(href='mailto:{{gp.owner.organisatorEmail}}') {{gp.owner.organisatorEmail}}
+          tr
+            td Telefon (während dem Spiel)
+            td {{gp.owner.organisatorPhone}}
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title Preisliste
+      .panel-body
+        p Die Preisliste enthält {{pl.length}} Orte und kann &nbsp;
+          a(href='#' onclick="showPanel('#p2');") hier eingesehen
+          | &nbsp;oder&nbsp;
+          a(href='/info/{{gp.internal.gameId}}/download') hier als Excel-Tabelle
+          | &nbsp;geladen werden.
+        p Eine&nbsp;
+          a(href='#' onclick="showPanel('#p3');") Karte mit allen Orten
+          | &nbsp;ist ebenfalls verfügbar.
+  .col-xs-12.col-md-6
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title Angemeldete Teams ({{teams.length}})
+      .panel-body
+        .alert.alert-info(ng-hide='teams.length > 0') Es haben sich noch keine Gruppen angemeldet.
+        div(ng-show='teams.length > 0')
+          table.table.table-responsive
+            tr(data-ng-repeat='p in teams')
+              td {{p.name}}
+              td {{p.organization}}
+              td {{p.teamLeaderName}}

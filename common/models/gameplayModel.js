@@ -90,6 +90,15 @@ var gameplaySchema = mongoose.Schema({
     possibleUntil: {type: Date},
     infotext     : String
   },
+  rules     : {
+    // The rules are currently part of the gameplay. In a next version, the rules are probably
+    // a separate model with versioning (allowing to show old rules), but this has currently
+    // no priority
+    version  : {type: Number, default: -1},
+    text     : String,
+    changelog: {type: Array, default: []},
+    date     : Date
+  },
   log       : {
     created         : {type: Date, default: Date.now},
     lastEdited      : {type: Date, default: Date.now},
@@ -370,6 +379,7 @@ var updateGameplay = function (gp, callback) {
       loadedGp.scheduling = gp.scheduling;
       loadedGp.gameParams = gp.gameParams;
       loadedGp.joining    = gp.joining;
+      loadedGp.rules      = gp.rules;
       loadedGp.log        = gp.log;
       loadedGp.pricelist  = gp.pricelist;
       loadedGp.mobile     = gp.mobile;
@@ -441,7 +451,44 @@ var updateGameplayLastChangedField = function (ownerId, gameId, callback) {
     gp.log.lastEdited = new Date();
     gp.save(function (err) {
       return callback(err);
-    })
+    });
+  });
+};
+
+/**
+ * Update the rules of a gameplay
+ * @param gameId
+ * @param ownerId
+ * @param info
+ * @param callback
+ */
+function updateRules(gameId, ownerId, info, callback) {
+  if (!gameId || !ownerId) {
+    return callback(new Error('no gameplay name or email supplied'));
+  }
+  Gameplay.find({'internal.owner': ownerId, 'internal.gameId': gameId}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback(new Error(`Gameplay ${gameId} not found for user ${ownerId}`));
+    }
+    var gp = docs[0];
+
+    if (!gp.rules || gp.rules.version < 0) {
+      gp.rules = {
+        version: 0, text: info.text, date: new Date(), changelog: []
+      };
+      gp.rules.changelog.push({ts: new Date(), version: gp.rules.version, changes: 'Automatisch erstellte Grundversion'});
+    }
+    else {
+      gp.rules.version++;
+      gp.rules.text = info.text;
+      gp.rules.changelog.push({ts: new Date(), version: gp.rules.version, changes: info.changes});
+    }
+    gp.save(function (err) {
+      return callback(err);
+    });
   });
 };
 
@@ -481,6 +528,7 @@ module.exports = {
   setAdmins                     : setAdmins,
   getGameplay                   : getGameplay,
   updateGameplayLastChangedField: updateGameplayLastChangedField,
+  updateRules                   : updateRules,
   saveNewPriceListRevision      : saveNewPriceListRevision,
   isFinalized                   : isFinalized,
   countGameplaysForUser         : countGameplaysForUser,

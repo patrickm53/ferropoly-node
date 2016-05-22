@@ -16,18 +16,19 @@ function showPanel(p) {
   $('#p1').hide();
   $('#p2').hide();
   $('#p3').hide();
+  $('#p4').hide();
   $(p).show();
 
 
   _.delay(function () {
     // Force the update
-    google.maps.event.trigger(map, 'resize')
+    google.maps.event.trigger(map, 'resize');
     map.fitBounds(mapBounds);
   }, 250);
 
 }
 
-var infoControl = angular.module('infoApp', []);
+var infoControl = angular.module('infoApp', ['wiz.markdown']);
 /**
  * This is the amount filter returning nicer values
  */
@@ -155,13 +156,26 @@ infoControl.controller('infoCtrl', ['$scope', '$http', function ($scope, $http) 
     $scope.pl    = pl;
     $scope.teams = teams;
 
+    $http({method: 'GET', url: '/rules/' + gameId}).then(
+      function (resp) {
+        console.log(resp);
+        $scope.rules = resp.data.text;
+        console.log($scope.rules);
+        $scope.version   = resp.data.version;
+        $scope.changelog = resp.data.changelog;
+        $scope.date      = new Date(resp.data.date);
+      },
+      function (resp) {
+        console.error(resp);
+      }
+    );
+
     var mapOptions = {
       center   : new google.maps.LatLng(47.29725, 8.867215),
       zoom     : 8,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    map            = new google.maps.Map(document.getElementById("map_canvas"),
-      mapOptions);
+    map            = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
     google.maps.event.addListener(map, 'zoom_changed', function (e) {
       if (map.getZoom() < 7) {

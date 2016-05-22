@@ -4,15 +4,15 @@
  * Created by kc on 08.05.15.
  */
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router  = express.Router();
 
-var gameplayModel = require('../../common/models/gameplayModel');
-var pricelist = require('../../common/lib/pricelist');
-var teamModel = require('../../common/models/teamModel');
-var errorHandler = require('../lib/errorHandler');
-var logger = require('../../common/lib/logger').getLogger('routes:info');
-var priceListDownload = require('../../common/routes/downloadPricelist');
+const gameplayModel     = require('../../common/models/gameplayModel');
+const pricelist         = require('../../common/lib/pricelist');
+const teamModel         = require('../../common/models/teamModel');
+const errorHandler      = require('../lib/errorHandler');
+const logger            = require('../../common/lib/logger').getLogger('routes:info');
+const priceListDownload = require('../../common/routes/downloadPricelist');
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
@@ -45,19 +45,20 @@ router.get('/:gameId', function (req, res) {
         var teams = [];
         for (var i = 0; i < foundTeams.length; i++) {
           teams.push({
-            name: foundTeams[i].data.name,
-            organization: foundTeams[i].data.organization,
+            name          : foundTeams[i].data.name,
+            organization  : foundTeams[i].data.organization,
             teamLeaderName: foundTeams[i].data.teamLeader.name
           });
         }
 
         res.render('info/info', {
-          title: 'Ferropoly',
-          ngFile: '/js/infoctrl.js',
+          title     : 'Ferropoly',
+          ngFile    : '/js/infoctrl.js',
           hideLogout: true,
-          gameplay: JSON.stringify(gp),
-          pricelist: JSON.stringify(pl),
-          teams: JSON.stringify(teams)
+          gameId    : gameId,
+          gameplay  : JSON.stringify(gp),
+          pricelist : JSON.stringify(pl),
+          teams     : JSON.stringify(teams)
         });
       });
     });

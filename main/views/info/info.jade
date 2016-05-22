@@ -2,6 +2,7 @@ extends ../layout
 
 block head
   script
+    | var gameId = '#{gameId}';
     | var teams =
     != teams
     | ;
@@ -11,11 +12,10 @@ block head
     | var pl =
     != pricelist
     | ;
-  //script(src='/modules/moment/min/moment.min.js')
-  //script(src='/modules/moment/locale/de.js')
-  //script(src='/modules/lodash/dist/lodash.min.js')
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU')
+  script(src='/modules/wiz-markdown/wizMarkdown/wizMarkdown.min.js')
   script(src=ngFile)
+  link(rel='stylesheet', href='/css/rules.css')
   link(rel='stylesheet', href='/css/index.css',  type='text/css')
   link(rel='stylesheet', href='/css/info.css', type='text/css')
 
@@ -26,20 +26,26 @@ block navbar
       a(href='#list' onclick="showPanel('#p2');") Preisliste
     li
       a(href='#map' onclick="showPanel('#p3');") Karte
+    li
+      a(href='#map' onclick="showPanel('#p4');") Spielregeln
 
 block content
-  div(ng-app='infoApp' ng-controller='infoCtrl')
-    div(id='ps')
-      include ./info-loading
-    div(id='p0' ng-cloak)
-      include ./info-error
-    div(id='p1' ng-cloak)
-      include ./info-main
-    div(id='p2' ng-cloak)
-      include ./info-list
-    div(id='p3' ng-cloak)
-      include ./info-map
-    script
-      | console.log(gp);
+  .container-fluid
+      div(ng-app='infoApp' ng-controller='infoCtrl')
+        #ps
+          include ./info-loading
+        #p0(ng-cloak)
+          include ./info-error
+        #p1(ng-cloak)
+          include ./info-main
+        #p2(ng-cloak)
+          include ./info-list
+        #p3(ng-cloak)
+          include ./info-map
+        #p4(ng-cloak)
+          include ./info-rules-modal-changes
+          include ./info-rules
+        script
+          | console.log(gp);
 
 

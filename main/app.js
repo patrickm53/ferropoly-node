@@ -76,6 +76,7 @@ ferropolyDb.init(settings, function (err) {
   // Non authenticated pages
   app.use('/info', require('./routes/info'));
   app.use('/summary', require('./routes/summary'));
+  app.use('/rules', require('./routes/rules'));
 
   // Define Strategy, login
   passport.use(authStrategy.facebookStrategy);
