@@ -23,6 +23,10 @@
     "node": ">= 4.4.0",
     "npm": ">= 2.14.0"
   },
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "bower install"
+  },
   "dependencies": {
     "async": "1.4.2",
     "body-parser": "1.13.3",
