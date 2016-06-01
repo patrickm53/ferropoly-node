@@ -4,7 +4,7 @@
  */
 
 'use strict';
-angular.module('joinApp', ['ngSanitize']).controller('joinCtrl', ['$scope', '$http', function ($scope, $http) {
+angular.module('joinApp', ['ngSanitize', 'wiz.markdown']).controller('joinCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.gameplay        = gameplay;
   $scope.teamName        = team.name;
   $scope.organization    = team.organization;

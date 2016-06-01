@@ -2,10 +2,10 @@
    Created by kc on 05.02.16.
 .row
   .col-md-6
-    h2 {{gameplay.gamename}}
+    h1 {{gameplay.gamename}}
     h3(ng-show='gameplay.owner.organisation') {{gameplay.owner.organisation}}
 
-    #infotext(ng-show='gameplay.joining.infotext' ng-bind-html='gameplay.joining.infotext')
+    wiz-markdown#infotext(ng-show='gameplay.joining.infotext' content='gameplay.joining.infotext')
 
     h4.join Spieldaten
     .row
@@ -23,7 +23,7 @@
       .col-md-4
         | Email
       .col-md-8
-        | {{gameplay.owner.organisatorEmail}}
+        a(href='mailto:{{gameplay.owner.organisatorEmail}}') {{gameplay.owner.organisatorEmail}}
     .row(ng-show='gameplay.owner.organisatorPhone')
       .col-md-4
         | Telefonnummer
