@@ -34,6 +34,11 @@ module.exports = {
 
       var xlist = [['Kontobuch' + title], ['Zeit', 'Team', 'Buchungstext', 'Betrag', 'Saldo', 'Transaktionen']];
 
+      // Reset balance of all teams first
+      _.forOwn(teams, (v, k) => {
+        teams[k].balance = 0;
+      });
+
       // Format all data
       for (var i = 0; i < data.length; i++) {
         var partText = '';
