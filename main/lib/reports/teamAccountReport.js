@@ -3,12 +3,12 @@
  * Created by kc on 17.07.15.
  */
 
-var teamAccount = require('../../lib/accounting/teamAccount');
-var teamModel = require('../../../common/models/teamModel');
-var moment = require('moment-timezone');
-var _ = require('lodash');
-var xlsx = require('node-xlsx');
-var async = require('async');
+const teamAccount = require('../../lib/accounting/teamAccount');
+const teamModel = require('../../../common/models/teamModel');
+const moment = require('moment-timezone');
+const _ = require('lodash');
+const xlsx = require('node-xlsx');
+const async = require('async');
 
 module.exports = {
   /**
@@ -37,8 +37,10 @@ module.exports = {
       // Format all data
       for (var i = 0; i < data.length; i++) {
         var partText = '';
-        for (var t = 0; t < data[i].transaction.parts.length; t++) {
-          partText += data[i].transaction.parts[t].propertyName + ':' + data[i].transaction.parts[t].amount + ' ';
+        if (data[i].transaction.parts) {
+          data[i].transaction.parts.forEach(p => {
+            partText += p.propertyName + ':' + p.amount + ' ';
+          });
         }
 
         if (!teams[data[i].teamId].balance) {
