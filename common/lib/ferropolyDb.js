@@ -21,7 +21,8 @@ module.exports = {
   },
 
   init: function (settings, callback) {
-    logger.info('Connecting to MongoDb');
+    var poolSize = settings.locationDbSettings.poolSize || 5;
+    logger.info(`Connecting to MongoDb with a pool size of ${poolSize}`);
 
     // Already initialized
     if (db) {
@@ -31,7 +32,8 @@ module.exports = {
     // Connect to the MongoDb
     var options = {
       server: {
-        socketOptions: {keepAlive: 1}
+        socketOptions: {keepAlive: 1},
+        poolSize: poolSize
       },
       replset: {
         socketOptions: {keepAlive: 1}

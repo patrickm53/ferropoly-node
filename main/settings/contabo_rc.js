@@ -13,7 +13,8 @@ module.exports = function (settings) {
   };
 
   settings.locationDbSettings = {
-    mongoDbUrl: 'mongodb://localhost/ferropoly_rc'
+    mongoDbUrl: 'mongodb://localhost/ferropoly_rc',
+    poolSize: 3
   };
 
   settings.cron = {

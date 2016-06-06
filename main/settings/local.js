@@ -19,7 +19,8 @@ module.exports = function (settings) {
   };
 
   settings.locationDbSettings = {
-    mongoDbUrl: process.env.FERROPOLY_CONNECTION_STRING
+    mongoDbUrl: process.env.FERROPOLY_CONNECTION_STRING,
+    poolSize: 3
   };
 
   settings.cron = {};
