@@ -7,9 +7,10 @@
 ferropolyApp.controller('dashboardCtrl', dashboardCtrl);
 function dashboardCtrl($scope, $http) {
   ///// RANKING LIST
-  $scope.rankingList       = [];
-  $scope.teamIdToTeamName  = dataStore.teamIdToTeamName;
-  $scope.rankingListLoaded = false;
+  $scope.rankingList        = [];
+  $scope.teamIdToTeamName   = dataStore.teamIdToTeamName;
+  $scope.rankingListLoaded  = false;
+  $scope.rankingListWaiting = false;
 
   $scope.refresh = function () {
     $scope.refreshRankingList();
@@ -66,6 +67,29 @@ function dashboardCtrl($scope, $http) {
     $scope.refreshRankingList();
     $scope.updateTrafficInfo(function () {
       $scope.$apply();
+    });
+
+    dataStore.registerTeamAccountUpdateHandler(function () {
+      // get Rankinglist only with a delay, not all bookings shall update
+      if ($scope.rankingListWaiting) {
+        console.log('Waiting for ranking list...');
+        return;
+      }
+      $scope.rankingListWaiting = true;
+      _.delay(function () {
+        dataStore.getRankingList(function (err, list) {
+          $scope.rankingListWaiting = false;
+          if (err) {
+            console.error(err);
+          }
+          else {
+            $scope.rankingList = list;
+            console.log('Rankinglist updated');
+          }
+          $scope.$apply();
+        });
+      }, 5000);
+
     });
   });
 }
