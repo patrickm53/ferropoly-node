@@ -10,8 +10,8 @@ block head
 
 
 block content
-  div(ng-controller='accountCtrl' ng-app='accountApp')
-    h1 Account Daten von {{data.personalData.forename}} {{data.personalData.surname}}
+  .container-fluid(ng-controller='accountCtrl' ng-app='accountApp')
+    h1.ng-cloak Account Daten von {{data.personalData.forename}} {{data.personalData.surname}}
 
     .row(ng-cloak)
       .col-md-4
