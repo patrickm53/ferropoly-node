@@ -32,5 +32,12 @@ module.exports = function (settings) {
     delay: 0
   };
 
+  // Facebook settings
+  settings.oAuth.facebook.callbackURL = 'https://spiel.ferropoly.ch/auth/facebook/callback';
+  // Google Settings
+  settings.oAuth.google.callbackURL = 'https://spiel.ferropoly.ch/auth/google/callback';
+
+
+
   return settings;
 };
