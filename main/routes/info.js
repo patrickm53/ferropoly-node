@@ -20,7 +20,7 @@ router.get('/:gameId', function (req, res) {
 
   gameplayModel.getGameplay(gameId, null, function (err, gp) {
     if (err) {
-      logger.err(err);
+      logger.error(err);
       return errorHandler(res, 'Interner Fehler', err, 500);
     }
     if (!gp) {
@@ -29,7 +29,7 @@ router.get('/:gameId', function (req, res) {
 
     pricelist.getPricelist(gameId, function (err2, pl) {
       if (err2) {
-        logger.err(err2);
+        logger.error(err2);
         return errorHandler(res, 'Interner Fehler', err2, 500);
       }
       if (!pl) {
@@ -38,7 +38,7 @@ router.get('/:gameId', function (req, res) {
 
       teamModel.getTeams(gameId, function (err3, foundTeams) {
         if (err3) {
-          logger.err(err3);
+          logger.error(err3);
           return errorHandler(res, 'Interner Fehler', err3, 500);
         }
         // Filter some info
