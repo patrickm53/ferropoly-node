@@ -19,7 +19,7 @@ module.exports = function (settings) {
   };
 
   settings.locationDbSettings = {
-    mongoDbUrl: process.env.FERROPOLY_CONNECTION_STRING,
+    mongoDbUrl: 'mongodb://localhost/ferropoly',
     poolSize: 3
   };
 
