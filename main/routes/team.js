@@ -16,7 +16,7 @@ const accessor     = require('../lib/accessor');
 const async        = require('async');
 var ngFile         = '/js/teamctrl.js';
 if (settings.minifiedjs) {
-  ngFile = '/js/teamctrl.min.js';
+  ngFile = '/js/min/teamctrl.min.js';
 }
 
 /* GET the page where the team leader can add / remove other team members. Make sure
