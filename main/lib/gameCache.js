@@ -110,7 +110,7 @@ module.exports = {
       var teamError = null;
       _.forOwn(gameCache, function (cacheEntry) {
         var gp = cacheEntry.gameplay;
-        logger.info('GP value:', gp);
+        // logger.info('GP value:', gp);
         if (!gp.internal) {
           logger.error('gp.internal not defined', gp);
           return;

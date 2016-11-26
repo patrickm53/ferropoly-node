@@ -32,7 +32,7 @@ module.exports = function (settings, users) {
    * @returns {*}
    */
   var deserializeUser = function (userId, done) {
-    logger.debug("deserializeUser:" + userId);
+    // Don't talk too much logger.debug("deserializeUser:" + userId);
     return users.getUserByMailAddress(userId, function (err, foundUser) {
       if (err || !foundUser) {
         return done(new Error("not logged in"), null);
