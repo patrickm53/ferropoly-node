@@ -343,9 +343,18 @@ function managecallCtrl($scope, $http) {
    * @param property
    */
   $scope.buyProperty = function (property) {
+
+    if (property.isBeingBought) {
+      // This avoids duplicate buy entries for people clicking twice, GitHub issue #59
+      console.log('Already buying property, cancel request');
+      return;
+    }
+    property.isBeingBought = true;
+
     $http.post('/marketplace/buyProperty/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
       authToken: dataStore.getAuthToken()
     }).success(function (data) {
+      property.isBeingBought = false; // Request is over, reset flag
       if (data.status === 'ok') {
         console.log(data);
         var res       = data.result;
@@ -375,11 +384,9 @@ function managecallCtrl($scope, $http) {
         });
       }
     }).error(function (data, status) {
-      console.log('ERROR');
-      console.log(data);
-      console.log(status);
+      property.isBeingBought = false; // Request is over, reset flag
+      console.log('ERROR in buyProperty/', data, status);
       $scope.callLog.push({class: 'list-group-item-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
-
     });
   };
 
