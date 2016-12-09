@@ -16,5 +16,5 @@
         p
         p
       .modal-footer
-        button(type="button" class="btn btn-primary" ng-click='buyProperty(propertyInvestCandidate)' data-dismiss="modal") Kaufen
+        button(type="button" class="btn btn-primary" ng-click='buyProperty(propertyInvestCandidate)' ng-disable="propertyInvestCandidate.isBeingBought" data-dismiss="modal") Kaufen
         button(type="button" class="btn btn-default" data-dismiss="modal") Abbrechen
