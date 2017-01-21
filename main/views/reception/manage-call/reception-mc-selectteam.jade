@@ -11,9 +11,13 @@ h2 Bitte anrufendes Team auswählen
         h3.panel-title {{t.data.name}}
           font#color-tag(color='{{getTeamColor(t.uuid)}}') &#9608;&#9608;
       .panel-body
-        p {{t.data.organization}}
+        p
+          span(ng-show='t.data.organization')
+            | {{t.data.organization}}
+          span(ng-show='t.data.organization && t.data.teamLeader.name')
+            | ,&nbsp;
           span(ng-show='t.data.teamLeader.name')
-          | , {{t.data.teamLeader.name}}
+            | {{t.data.teamLeader.name}}
         details
           .team-leader-phone
             a(href='tel:{{t.data.teamLeader.phone}}') {{t.data.teamLeader.phone}}
