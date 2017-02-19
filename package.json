@@ -55,6 +55,7 @@
     "passport-google-oauth": "1.0.0",
     "passport-google-oauth20": "1.0.0",
     "passport-local": "1.0.0",
+    "passport-windowslive": "^1.0.2",
     "pbkdf2-sha256": "1.1.1",
     "pixl-xml": "1.0.9",
     "socket.io": "1.4.8",
