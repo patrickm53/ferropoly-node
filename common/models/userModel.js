@@ -33,18 +33,20 @@ var userSchema = mongoose.Schema({
     player: {type: Boolean, default: true}
   },
   login       : {
-    passwordSalt     : String,
-    passwordHash     : String,
-    verifiedEmail    : {type: Boolean, default: false},
-    verificationText : String,
-    facebookProfileId: String,
-    googleProfileId  : String
+    passwordSalt      : String,
+    passwordHash      : String,
+    verifiedEmail     : {type: Boolean, default: false},
+    verificationText  : String,
+    facebookProfileId : String,
+    googleProfileId   : String,
+    microsoftProfileId: String
   },
   info        : {
     registrationDate: Date,
     lastLogin       : Date,
     facebook        : Object,
     google          : Object,
+    microsoft       : Object,
     agbAccepted     : {type: Number, default: 0}
   }
 }, {autoIndex: true});
@@ -245,6 +247,23 @@ var getFacebookUser = function (profileId, callback) {
  */
 var getGoogleUser = function (profileId, callback) {
   User.find({'login.googleProfileId': profileId}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback();
+    }
+    callback(null, docs[0]);
+  });
+};
+
+/**
+ * Returns a user by its Microsoft profile
+ * @param profileId
+ * @param callback
+ */
+var getMicrosoftUser = function (profileId, callback) {
+  User.find({'login.microsoftProfileId': profileId}, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -479,17 +498,107 @@ function findOrCreateGoogleUser(profile, callback) {
   });
 }
 
+
+/**
+ * Find or create a user logging in with Microsoft
+ * @param profile
+ * @param callback
+ * @returns {*}
+ */
+function findOrCreateMicrosoftUser(profile, callback) {
+  logger.info('findOrCreateMicrosoftUser', profile);
+  if (!_.isObject(profile) || !_.isString(profile.id)) {
+    return callback(new Error('invalid profile supplied'));
+  }
+
+
+  if (profile.provider !== 'windowslive') {
+    logger.info('This is not a windowslive account: ' + profile.provider);
+    callback(new Error('not a windowslive account: ' + profile.provider));
+  }
+
+  // Try to get the user
+  getMicrosoftUser(profile.id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      // The user is not here, try to find him with the email-address
+      let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
+
+      function saveNewMicrosoftUser() {
+        newUser                          = new User();
+        newUser._id                      = emailAddress || profile.id;
+        newUser.login.microsoftProfileId = profile.id;
+        newUser.info.microsoft           = profile;
+        newUser.info.registrationDate    = new Date();
+        newUser.login.verifiedEmail      = true; // Microsoft Windows Live does not need verification
+        newUser.personalData.forename    = profile.name.givenName;
+        newUser.personalData.surname     = profile.name.familyName;
+        newUser.personalData.email       = emailAddress ? emailAddress : profile.id; // using profile id as email alternative
+        newUser.personalData.avatar      = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.save(function (err, savedUser) {
+          if (err) {
+            return callback(err);
+          }
+          logger.info('Created microsoft user', savedUser);
+          // Recursive call, now we'll find this user
+          return findOrCreateMicrosoftUser(profile, callback);
+        });
+      }
+
+      if (emailAddress) {
+        getUserByMailAddress(emailAddress, function (err, user) {
+          if (err) {
+            return callback(err);
+          }
+          if (user) {
+            // Ok, we know this user. Update profile for microsoft access
+            user.info.microsoft           = profile;
+            user.info.registrationDate    = new Date();
+            user.login.verifiedEmail      = true; // Facebook does not need verification
+            user.personalData.forename    = profile.name.givenName;
+            user.personalData.surname     = profile.name.familyName;
+            user.login.microsoftProfileId = profile.id;
+            user.personalData.avatar      = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.save(function (err) {
+              if (err) {
+                return callback(err);
+              }
+              logger.info('Upgraded user ' + emailAddress + ' for microsoft access');
+              // Recursive call, now we'll find this user
+              return findOrCreateMicrosoftUser(profile, callback);
+            });
+            return;
+          }
+
+          // We do not know this user. Add him/her to the list.
+          saveNewMicrosoftUser();
+        });
+        return;
+      }
+      // No email address (somehow an annonymous microsoft user). Add as new User
+      return saveNewMicrosoftUser();
+    }
+
+    // User found, update
+    user.info.microsoft      = profile;
+    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+    updateUser(user, null, callback);
+  });
+}
 module.exports = {
   Model: User,
 
-  updateUser              : updateUser,
-  generatePasswordHash    : generatePasswordHash,
-  verifyPassword          : verifyPassword,
-  getUserByMailAddress    : getUserByMailAddress,
-  removeUser              : removeUser,
-  getAllUsers             : getAllUsers,
-  getUser                 : getUser,
-  countUsers              : countUsers,
-  findOrCreateFacebookUser: findOrCreateFacebookUser,
-  findOrCreateGoogleUser  : findOrCreateGoogleUser
+  updateUser               : updateUser,
+  generatePasswordHash     : generatePasswordHash,
+  verifyPassword           : verifyPassword,
+  getUserByMailAddress     : getUserByMailAddress,
+  removeUser               : removeUser,
+  getAllUsers              : getAllUsers,
+  getUser                  : getUser,
+  countUsers               : countUsers,
+  findOrCreateFacebookUser : findOrCreateFacebookUser,
+  findOrCreateGoogleUser   : findOrCreateGoogleUser,
+  findOrCreateMicrosoftUser: findOrCreateMicrosoftUser
 };

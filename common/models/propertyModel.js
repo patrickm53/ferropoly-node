@@ -6,14 +6,15 @@
  */
 
 
-var mongoose       = require('mongoose');
-var uuid           = require('node-uuid');
-var logger         = require('../lib/logger').getLogger('propertyModel');
-var _              = require('lodash');
+const mongoose       = require('mongoose');
+const uuid           = require('node-uuid');
+const logger         = require('../lib/logger').getLogger('propertyModel');
+const _              = require('lodash');
+const async          = require('async');
 /**
  * The mongoose schema for a property
  */
-var propertySchema = mongoose.Schema({
+const propertySchema = mongoose.Schema({
   _id      : String,
   gameId   : String, // Gameplay this property belongs to
   uuid     : {type: String, index: {unique: true}},     // UUID of this property (index)
@@ -51,9 +52,9 @@ var propertySchema = mongoose.Schema({
 /**
  * The Property model
  */
-var Property = mongoose.model('Property', propertySchema);
+const Property = mongoose.model('Property', propertySchema);
 
-var createPropertyId = function (gameId, location) {
+const createPropertyId = function (gameId, location) {
   return gameId + '-' + _.kebabCase(_.deburr(location.name)) + '-' + _.random(10000000, 99999999);
 };
 
@@ -63,8 +64,8 @@ var createPropertyId = function (gameId, location) {
  * @param location
  * @param callback
  */
-var createPropertyFromLocation = function (gameId, location, callback) {
-  var newProperty      = new Property();
+const createPropertyFromLocation = function (gameId, location, callback) {
+  let newProperty      = new Property();
   newProperty.location = location;
   newProperty._id      = createPropertyId(gameId, location);
   return updateProperty(gameId, newProperty, callback);
@@ -75,32 +76,24 @@ var createPropertyFromLocation = function (gameId, location, callback) {
  * @param properties
  * @param callback
  */
-var updateProperties          = function (properties, callback) {
-  for (var i = 0; i < properties.length; i++) {
+const updateProperties = function (properties, callback) {
+  for (let i = 0; i < properties.length; i++) {
     if (!(properties[i] instanceof Property)) {
       return callback(new Error('not real properties'));
     }
-    var nb = 0;
-    for (var i = 0; i < properties.length; i++) {
-      properties[i].save(function (err) {
-        if (err) {
-          logger.info('ERROR in updateProperties: ' + err.message);
-        }
-        nb++;
-        if (nb === properties.length) {
-          return callback();
-        }
-      })
-    }
   }
+  async.each(properties, (p, cb) => {
+    p.save(cb);
+  }, callback);
 };
+
 /**
  * Updates a property, if not existing, creates a new one
  * @param gameId
  * @param property
  * @param callback
  */
-var updateProperty            = function (gameId, property, callback) {
+const updateProperty = function (gameId, property, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -111,7 +104,7 @@ var updateProperty            = function (gameId, property, callback) {
 
   if (!(property instanceof Property)) {
     // This is not an instance of a property, create a new one
-    var newProperty       = new Property();
+    let newProperty       = new Property();
     newProperty.gamedata  = property.gamedata;
     newProperty.pricelist = property.pricelist;
     newProperty.location  = property.location;
@@ -135,7 +128,7 @@ var updateProperty            = function (gameId, property, callback) {
       }
       if (!foundProperty) {
         // this is a new one!
-        var prop       = new Property();
+        let prop       = new Property();
         prop.gameId    = gameId;
         prop.uuid      = uuid.v4();
         prop.location  = property.location;
@@ -160,6 +153,7 @@ var updateProperty            = function (gameId, property, callback) {
     });
   }
 };
+
 /**
  * Updates the position in the pricelist for a single position
  * @param gameId
@@ -168,7 +162,7 @@ var updateProperty            = function (gameId, property, callback) {
  * @param callback
  * @returns {*}
  */
-var updatePositionInPriceList = function (gameId, propertyId, position, callback) {
+const updatePositionInPriceList = function (gameId, propertyId, position, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -195,7 +189,7 @@ var updatePositionInPriceList = function (gameId, propertyId, position, callback
  * @param callback
  * @returns {*}
  */
-var getPropertyByLocationId = function (gameId, locationId, callback) {
+const getPropertyByLocationId = function (gameId, locationId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -218,7 +212,7 @@ var getPropertyByLocationId = function (gameId, locationId, callback) {
  * @param callback
  * @returns {*}
  */
-var getPropertyById          = function (gameId, propertyId, callback) {
+const getPropertyById = function (gameId, propertyId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -232,6 +226,7 @@ var getPropertyById          = function (gameId, propertyId, callback) {
     callback(null, docs[0]);
   });
 };
+
 /**
  * Get all properties for a gameplay
  * Use the options to get:
@@ -243,7 +238,7 @@ var getPropertyById          = function (gameId, propertyId, callback) {
  * @param callback
  * @returns {Query}
  */
-var getPropertiesForGameplay = function (gameId, options, callback) {
+const getPropertiesForGameplay = function (gameId, options, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -272,6 +267,7 @@ var getPropertiesForGameplay = function (gameId, options, callback) {
       });
   }
 };
+
 /**
  * Get the poperties for a team
  * @param gameId
@@ -279,7 +275,7 @@ var getPropertiesForGameplay = function (gameId, options, callback) {
  * @param callback
  * @returns {*}
  */
-var getPropertiesForTeam     = function (gameId, teamId, callback) {
+const getPropertiesForTeam = function (gameId, teamId, callback) {
   if (!gameId || !teamId) {
     return callback(new Error('Parameter error'));
   }
@@ -298,7 +294,7 @@ var getPropertiesForTeam     = function (gameId, teamId, callback) {
  * @param callback
  * @returns {*}
  */
-var getPropertiesIdsForTeam = function (gameId, teamId, callback) {
+const getPropertiesIdsForTeam = function (gameId, teamId, callback) {
   if (!gameId || !teamId) {
     return callback(new Error('Parameter error'));
   }
@@ -317,7 +313,7 @@ var getPropertiesIdsForTeam = function (gameId, teamId, callback) {
  * @param locationId
  * @param callback
  */
-var removePropertyFromGameplay = function (gameId, locationId, callback) {
+const removePropertyFromGameplay = function (gameId, locationId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -333,7 +329,7 @@ var removePropertyFromGameplay = function (gameId, locationId, callback) {
  * @param callback
  * @returns {*}
  */
-var finalizeProperties              = function (gameId, callback) {
+const finalizeProperties              = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -348,7 +344,7 @@ var finalizeProperties              = function (gameId, callback) {
  * @param gameId
  * @param callback
  */
-var removeAllPropertiesFromGameplay = function (gameId, callback) {
+const removeAllPropertiesFromGameplay = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -362,7 +358,7 @@ var removeAllPropertiesFromGameplay = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-var allowBuilding = function (gameId, callback) {
+const allowBuilding = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }

@@ -21,7 +21,7 @@ router.get('/', function (req, res) {
       return;
     }
 
-    var info = {};
+    let info = {};
     if (!user.info.agbAccepted) {
       info.agbAccepted    = false;
       info.actionRequired = true;

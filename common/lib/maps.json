@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "maps": [
     {
       "map" :"sbb",
@@ -17,7 +17,7 @@
       "map" :"ostwind",
       "name":"Ostwind",
       "description": "Ein Ferropoly in der Ostschweiz",
-      "enabled": false
+      "enabled": true
     },
     {
       "map" :"libero",

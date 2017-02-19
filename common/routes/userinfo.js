@@ -5,12 +5,12 @@
 
 
 
-var express   = require('express');
-var router    = express.Router();
-var session   = require('express-session');
-var userModel = require('../models/userModel');
-var logger    = require('../lib/logger').getLogger('userinfo');
-var gravatar  = require('../lib/gravatar');
+const express   = require('express');
+const router    = express.Router();
+const session   = require('express-session');
+const userModel = require('../models/userModel');
+const logger    = require('../lib/logger').getLogger('userinfo');
+const gravatar  = require('../lib/gravatar');
 
 /* GET info about the user */
 router.get('/', function (req, res) {

@@ -6,12 +6,13 @@
  * Created by kc on 17.01.15.
  */
 
-var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
-var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
-var crypto           = require('crypto');
-var logger           = require('./logger').getLogger('authStrategy');
-var util             = require('util');
+const LocalStrategy     = require('passport-local').Strategy;
+const FacebookStrategy  = require('passport-facebook').Strategy;
+const GoogleStrategy    = require('passport-google-oauth20').Strategy;
+const MicrosoftStrategy = require('passport-windowslive').Strategy;
+const crypto            = require('crypto');
+const logger            = require('./logger').getLogger('authStrategy');
+const util              = require('util');
 
 module.exports = function (settings, users) {
 
@@ -20,10 +21,10 @@ module.exports = function (settings, users) {
    * @param user
    * @param done
    */
-  var serializeUser = function (user, done) {
+  function serializeUser(user, done) {
     logger.debug("serializeUser:" + user);
     done(null, user.personalData.email);
-  };
+  }
 
   /**
    * deserialize an user
@@ -31,21 +32,21 @@ module.exports = function (settings, users) {
    * @param done
    * @returns {*}
    */
-  var deserializeUser = function (userId, done) {
-    // Don't talk too much logger.debug("deserializeUser:" + userId);
+  function deserializeUser(userId, done) {
+    logger.debug("deserializeUser:" + userId);
     return users.getUserByMailAddress(userId, function (err, foundUser) {
       if (err || !foundUser) {
         return done(new Error("not logged in"), null);
       }
       return done(null, foundUser);
     });
-  };
+  }
 
   /**
    * The local strategy for users registered in the ferropoly site
    * @type {LocalStrategy}
    */
-  var localStrategy = new LocalStrategy(
+  const localStrategy = new LocalStrategy(
     function (username, password, done) {
       logger.info('Login attempt: ' + username);
       users.getUserByMailAddress(username, function (err, foundUser) {
@@ -70,12 +71,12 @@ module.exports = function (settings, users) {
   /**
    * Facebook strategy for users using their facebook account
    */
-  var facebookStrategy = new FacebookStrategy({
-      clientID         : settings.oAuth.facebook.appId,
-      clientSecret     : settings.oAuth.facebook.secret,
-      callbackURL      : settings.oAuth.facebook.callbackURL,
-      enableProof      : false,
-      profileFields    : ['id', 'about', 'website', 'cover', 'picture', 'email', 'gender', 'name']
+  const facebookStrategy = new FacebookStrategy({
+      clientID     : settings.oAuth.facebook.appId,
+      clientSecret : settings.oAuth.facebook.secret,
+      callbackURL  : settings.oAuth.facebook.callbackURL,
+      enableProof  : false,
+      profileFields: ['id', 'about', 'website', 'cover', 'picture', 'email', 'gender', 'name']
     },
     function (accessToken, refreshToken, profile, done) {
       //console.log('ACCESS-TOKEN  ' + util.inspect(accessToken));
@@ -90,7 +91,7 @@ module.exports = function (settings, users) {
   /**
    * Google Strategy
    */
-  var googleStrategy = new GoogleStrategy({
+  const googleStrategy = new GoogleStrategy({
       clientID         : settings.oAuth.google.clientId,
       clientSecret     : settings.oAuth.google.clientSecret,
       callbackURL      : settings.oAuth.google.callbackURL,
@@ -107,11 +108,27 @@ module.exports = function (settings, users) {
     }
   );
 
+  const microsoftStrategy = new MicrosoftStrategy({
+      clientID    : settings.oAuth.microsoft.appId,
+      clientSecret: settings.oAuth.microsoft.secret,
+      callbackURL : settings.oAuth.microsoft.callbackURL
+    },
+    function (accessToken, refreshToken, profile, done) {
+      console.log('WINDOWS Profile:', profile);
+
+      users.findOrCreateMicrosoftUser(profile, function (err, foundUser) {
+        return done(err, foundUser);
+      });
+    }
+  );
+
+
   return {
-    localStrategy   : localStrategy,
-    facebookStrategy: facebookStrategy,
-    googleStrategy  : googleStrategy,
-    deserializeUser : deserializeUser,
-    serializeUser   : serializeUser
+    localStrategy    : localStrategy,
+    facebookStrategy : facebookStrategy,
+    googleStrategy   : googleStrategy,
+    microsoftStrategy: microsoftStrategy,
+    deserializeUser  : deserializeUser,
+    serializeUser    : serializeUser
   }
 };
