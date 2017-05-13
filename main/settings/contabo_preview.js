@@ -41,6 +41,9 @@ module.exports = function (settings) {
   settings.oAuth.facebook.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/facebook/callback';
   // Google Settings
   settings.oAuth.google.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/google/callback';
+  // Dropbox settings
+  settings.oAuth.dropbox.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/dropbox/callback';
+
 
   return settings;
 };

@@ -75,4 +75,15 @@ angular.module('accountApp', []).controller('accountCtrl', ['$scope', '$http', f
     }
     return ($scope.data.login.googleProfileId);
   };
+  /**
+   * Check if dropbox is active
+   * @returns {boolean}
+   */
+  $scope.isDropboxActive = function () {
+    if (!$scope.data) {
+      return false;
+    }
+    return ($scope.data.login.dropboxProfileId);
+  };
+
 }]);

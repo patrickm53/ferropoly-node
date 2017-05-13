@@ -3,7 +3,7 @@
  * Created by kc on 26.12.15.
  */
 
-var passport = require('passport');
+const passport = require('passport');
 
 
 module.exports = function (app) {
@@ -47,20 +47,22 @@ module.exports = function (app) {
     });
 
   /**
-   * Authentication Route for Windows Live
+   * Authentication Route for Dropbox
    */
-  app.get('/auth/microsoft',
-    passport.authenticate('windowslive', { scope: ['wl.signin', 'wl.emails'] }));
+  app.get('/auth/dropbox',
+    passport.authenticate('dropbox'));
 
   /**
-   * Callback for Windows Live
+   * Callback for Dropbox
    */
-  app.get('/auth/microsoft/callback',
-    passport.authenticate('windowslive', { failureRedirect: '/login' }),
-    function(req, res) {
+  app.get('/auth/dropbox/callback',
+    passport.authenticate('dropbox', {failureRedirect: '/login'}),
+    function (req, res) {
       // Successful authentication, redirect home.
-      res.redirect('/');
+      console.log('SUCCESSFUL LOGGED IN WITH DROPBOX ------------------------------------');
+      res.redirect(req.session.targetUrl || '/');
     });
+
 };
 
 

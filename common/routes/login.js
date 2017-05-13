@@ -5,26 +5,25 @@
  */
 
 
-var express  = require('express');
-var passport = require('passport');
-var url      = require('url');
-var router   = express.Router();
-var settings;
-var _        = require('lodash');
-var logger   = require('../lib/logger').getLogger('login');
+const express  = require('express');
+const passport = require('passport');
+const url      = require('url');
+const router   = express.Router();
+let settings;
+const _        = require('lodash');
+const logger   = require('../lib/logger').getLogger('login');
 
 
 /**
  * Get the login page
  */
 router.get('/', function (req, res) {
-  var loginController = 'loginctrl';
+  let loginController = 'loginctrl';
   loginController = settings.minifiedjs ? '/js/min/' + loginController +'.min.js' : '/js/src/' + loginController +'.js';
 
   res.render('login', {
     title       : settings.appName + ' Login',
     hideLogout  : true,
-    showSignUp  : true,
     versionInfo : settings.version,
     preview     : settings.preview,
     ngController: 'loginCtrl',
@@ -37,7 +36,7 @@ router.get('/', function (req, res) {
  * The login post route
  */
 router.post('/', function (req, res) {
-  var redirectUri = req.session.targetUrl || '/';
+  let redirectUri = req.session.targetUrl || '/';
   passport.authenticate('local', {
     successRedirect: redirectUri,
     failureRedirect: '/login',
@@ -69,7 +68,7 @@ module.exports = {
 
     // Filter for get, redirect to login page if not logged out
     app.get('*', function (req, res, next) {
-      var uri = url.parse(req.url).pathname;
+      let uri = url.parse(req.url).pathname;
       if (_.startsWith(uri, '/signup')) {
         logger.info('Signup !');
         return next();

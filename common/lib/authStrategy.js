@@ -6,13 +6,13 @@
  * Created by kc on 17.01.15.
  */
 
-const LocalStrategy     = require('passport-local').Strategy;
-const FacebookStrategy  = require('passport-facebook').Strategy;
-const GoogleStrategy    = require('passport-google-oauth20').Strategy;
-const MicrosoftStrategy = require('passport-windowslive').Strategy;
-const crypto            = require('crypto');
-const logger            = require('./logger').getLogger('authStrategy');
-const util              = require('util');
+const LocalStrategy    = require('passport-local').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const GoogleStrategy   = require('passport-google-oauth20').Strategy;
+const DropboxStrategy  = require('passport-dropbox').Strategy;
+const crypto           = require('crypto');
+const logger           = require('./logger').getLogger('authStrategy');
+const util             = require('util');
 
 module.exports = function (settings, users) {
 
@@ -108,15 +108,21 @@ module.exports = function (settings, users) {
     }
   );
 
-  const microsoftStrategy = new MicrosoftStrategy({
-      clientID    : settings.oAuth.microsoft.appId,
-      clientSecret: settings.oAuth.microsoft.secret,
-      callbackURL : settings.oAuth.microsoft.callbackURL
+  /**
+   * Dropbox Strategy
+   */
+  const dropboxStrategy = new DropboxStrategy({
+      consumerKey      : settings.oAuth.dropbox.clientId,
+      consumerSecret   : settings.oAuth.dropbox.clientSecret,
+      callbackURL      : settings.oAuth.dropbox.callbackURL,
+      passReqToCallback: true
     },
-    function (accessToken, refreshToken, profile, done) {
-      console.log('WINDOWS Profile:', profile);
+    function (accessToken, refreshToken, donotknow, profile, done) {
+      //console.log('accessToken', accessToken);
+      //console.log('refreshToken', refreshToken);
+      console.log('Dropbox Profile:', profile);
 
-      users.findOrCreateMicrosoftUser(profile, function (err, foundUser) {
+      users.findOrCreateDropboxUser(profile, function (err, foundUser) {
         return done(err, foundUser);
       });
     }
@@ -124,11 +130,11 @@ module.exports = function (settings, users) {
 
 
   return {
-    localStrategy    : localStrategy,
-    facebookStrategy : facebookStrategy,
-    googleStrategy   : googleStrategy,
-    microsoftStrategy: microsoftStrategy,
-    deserializeUser  : deserializeUser,
-    serializeUser    : serializeUser
+    localStrategy   : localStrategy,
+    facebookStrategy: facebookStrategy,
+    googleStrategy  : googleStrategy,
+    dropboxStrategy : dropboxStrategy,
+    deserializeUser : deserializeUser,
+    serializeUser   : serializeUser
   }
 };
