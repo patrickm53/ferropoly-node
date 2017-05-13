@@ -29,7 +29,7 @@ module.exports = function (grunt) {
       options  : {},
       dist     : {
         src : [
-          './node_modules/socket.io-client/socket.io.js',
+          './node_modules/socket.io-client/dist/socket.io.slim.js',
           './main/public/js/reception/reception-framework.js',
           './main/public/js/reception/ferropoly-socket.js',
           './main/public/js/reception/datastore/datastore.js',
@@ -85,7 +85,7 @@ module.exports = function (grunt) {
       },
       checkin  : {
         src : [
-          './node_modules/socket.io-client/socket.io.js',
+          './node_modules/socket.io-client/dist/socket.io.slim.js',
           './main/public/js/checkin/index.js',
           './main/public/js/checkin/geolocation.js',
           './main/public/js/checkin/datastore.js',
@@ -102,22 +102,23 @@ module.exports = function (grunt) {
     uglify: {
       js     : {
         files: {
-          './main/public/js/min/reception.min.js': ['./main/public/js/reception.js'],
-          './main/public/js/min/loginctrl.min.js': ['./main/public/js/loginctrl.js'],
-          './main/public/js/min/checkin.min.js'  : ['./main/public/js/checkin.js'],
-          './main/public/js/min/teamctrl.min.js' : ['./main/public/js/teamctrl.js'],
+          './main/public/js/min/reception.min.js'  : ['./main/public/js/reception.js'],
+          './main/public/js/min/loginctrl.min.js'  : ['./main/public/js/loginctrl.js'],
+          './main/public/js/min/checkin.min.js'    : ['./main/public/js/checkin.js'],
+          './main/public/js/min/teamctrl.min.js'   : ['./main/public/js/teamctrl.js'],
           './main/public/js/min/indexmctrl.min.js' : ['./main/public/js/indexmctrl.js'],
-          './main/public/js/min/summaryctrl.min.js' : ['./main/public/js/summaryctrl.js']
+          './main/public/js/min/summaryctrl.min.js': ['./main/public/js/summaryctrl.js']
         }
       },
       options: {
-        unused    : false,
-        dead_code : true,
-        properties: false,
-        beautify  : false,
-        compress  : false,
-        mangle    : false, // do not rename variables
-        banner    : '/* <%= pkg.name %> V<%= pkg.version %>, <%= grunt.template.today("dd-mm-yyyy") %>, (c) Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch */\n'
+        unused      : true,
+        dead_code   : true,
+        properties  : false,
+        beautify    : false,
+        conditionals: true,
+        compress    : true,
+        mangle      : false, // do not rename variables
+        banner      : '/* <%= pkg.name %> V<%= pkg.version %>, <%= grunt.template.today("dd-mm-yyyy") %>, (c) Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch */\n'
 
       }
     },
