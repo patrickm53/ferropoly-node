@@ -378,7 +378,7 @@ function managecallCtrl($scope, $http) {
         $scope.teamInfo.travelLog = dataStore.getTravelLog(activeCall.getCurrentTeam().uuid);
         redrawMap();
       });
-      
+
     }).error(function (data, status) {
       property.isBeingBought = false; // Request is over, reset flag
       console.log('ERROR in buyProperty/', data, status);
