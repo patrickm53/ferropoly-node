@@ -4,15 +4,15 @@
  */
 
 
-var express         = require('express');
-var router          = express.Router();
-var teamAccount     = require('../lib/accounting/teamAccount');
-var propertyAccount = require('../lib/accounting/propertyAccount');
-var gameCache       = require('../lib/gameCache');
-var logger          = require('../../common/lib/logger').getLogger('routes:statistics');
-var accessor        = require('../lib/accessor');
-var async           = require('async');
-var _               = require('lodash');
+const express         = require('express');
+const router          = express.Router();
+const teamAccount     = require('../lib/accounting/teamAccount');
+const propertyAccount = require('../lib/accounting/propertyAccount');
+const gameCache       = require('../lib/gameCache');
+const logger          = require('../../common/lib/logger').getLogger('routes:statistics');
+const accessor        = require('../lib/accessor');
+const async           = require('async');
+const _               = require('lodash');
 
 /**
  * Get the ranking list
@@ -29,7 +29,7 @@ router.get('/rankingList/:gameId', function (req, res) {
       if (err) {
         return res.status(500).send({status: 'error', message: err.message});
       }
-      res.send({status: 'ok', ranking: ranking});
+      res.send({ranking: ranking});
     });
   });
 });
@@ -49,10 +49,10 @@ router.get('/income/:gameId', function (req, res) {
         logger.error(err);
         return res.status(500).send({status: 'error', message: err.message});
       }
-      var gp    = data.gameplay;
-      var teams = _.values(data.teams);
+      let gp    = data.gameplay;
+      let teams = _.values(data.teams);
 
-      var info = [];
+      let info = [];
       async.each(teams,
         function (team, cb) {
           propertyAccount.getRentRegister(gp, team, function (err, result) {
@@ -67,7 +67,7 @@ router.get('/income/:gameId', function (req, res) {
           if (err) {
             return res.status(500).send({status: 'error', message: err.message});
           }
-          res.send({status: 'ok', info: info});
+          res.send({info: info});
         });
     });
   });
@@ -93,7 +93,7 @@ router.get('/income/:gameId/:teamId', function (req, res) {
         if (err) {
           return res.status(500).send({status: 'error', message: err.message});
         }
-        return res.send({status: 'ok', info: result});
+        return res.send({info: result});
       });
     });
   });

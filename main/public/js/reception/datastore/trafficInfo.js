@@ -10,25 +10,23 @@
 DataStore.prototype.updateTrafficInfo = function (callback) {
   var self = this;
 
-  $.get('/traffic/' + this.getGameplay().internal.gameId, function (data) {
-      if (data.status === 'ok') {
-        // Convert times
-        for (var i = 0; i < data.trafficInfo.data.item.length; i++) {
-          data.trafficInfo.data.item[i].publishDate = moment(data.trafficInfo.data.item[i].publishDate);
-          data.trafficInfo.data.item[i].duration.from = moment(data.trafficInfo.data.item[i].duration.from);
-          data.trafficInfo.data.item[i].duration.to = moment(data.trafficInfo.data.item[i].duration.to);
-        }
-        self.data.trafficInfo = data.trafficInfo;
-        if (callback) {
-          callback(null, self.data.trafficInfo);
-        }
+  $.get('/traffic/' + this.getGameplay().internal.gameId,
+    function (data) {
+      // Convert times
+      for (var i = 0; i < data.trafficInfo.data.item.length; i++) {
+        data.trafficInfo.data.item[i].publishDate   = moment(data.trafficInfo.data.item[i].publishDate);
+        data.trafficInfo.data.item[i].duration.from = moment(data.trafficInfo.data.item[i].duration.from);
+        data.trafficInfo.data.item[i].duration.to   = moment(data.trafficInfo.data.item[i].duration.to);
       }
-      else {
-        self.data.trafficInfo = [];
-        return callback(new Error(data.message));
+      self.data.trafficInfo = data.trafficInfo;
+      if (callback) {
+        callback(null, self.data.trafficInfo);
       }
+
     })
     .fail(function (error) {
+
+      self.data.trafficInfo = [];
       callback(error);
     });
 };

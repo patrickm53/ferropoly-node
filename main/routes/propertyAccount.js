@@ -4,34 +4,33 @@
  */
 
 
-
-var express         = require('express');
-var router          = express.Router();
-var propertyAccount = require('../lib/accounting/propertyAccount');
-var gameCache       = require('../lib/gameCache');
-var logger          = require('../../common/lib/logger').getLogger('routes:propertyAccount');
-var accessor        = require('../lib/accessor');
-var async           = require('async');
-var propertyModel   = require('../../common/models/propertyModel');
+const express         = require('express');
+const router          = express.Router();
+const propertyAccount = require('../lib/accounting/propertyAccount');
+const gameCache       = require('../lib/gameCache');
+const logger          = require('../../common/lib/logger').getLogger('routes:propertyAccount');
+const accessor        = require('../lib/accessor');
+const async           = require('async');
+const propertyModel   = require('../../common/models/propertyModel');
 
 /**
  * Get all acount Info for a team
  */
 router.get('/getRentRegister/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId || !req.params.teamId) {
-    return res.send({status: 'error', message: 'No gameId/teamId supplied'});
+    return res.status(400).send({message: 'Missing parameters'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Access right error: ' + err.message});
     }
     gameCache.getGameData(req.params.gameId, function (err, data) {
       if (err) {
         logger.error(err);
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'getGameData error: ' + err.message});
       }
-      var gp   = data.gameplay;
-      var team = data.teams[req.params.teamId];
+      let gp   = data.gameplay;
+      let team = data.teams[req.params.teamId];
 
       if (!gp || !team) {
         return res.send({status: 'error', message: 'Invalid params'});
@@ -39,9 +38,9 @@ router.get('/getRentRegister/:gameId/:teamId', function (req, res) {
 
       propertyAccount.getRentRegister(gp, team, function (err, register) {
         if (err) {
-          return res.send({status: 'error', message: err.message});
+          return res.status(500).send({message: 'getRentRegister error: ' + err.message});
         }
-        res.send({status: 'ok', register: register});
+        res.send({register: register});
       });
     });
   });
@@ -52,11 +51,11 @@ router.get('/getRentRegister/:gameId/:teamId', function (req, res) {
  */
 router.get('/getAccountStatement/:gameId/:propertyId', function (req, res) {
   if (!req.params.gameId) {
-    return res.send({status: 'error', message: 'No gameId/teamId supplied'});
+    return res.status(400).send({message: 'Missing parameters'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Access right error: ' + err.message});
     }
     if (req.params.propertyId === 'undefined') {
       req.params.propertyId = undefined;
@@ -64,9 +63,9 @@ router.get('/getAccountStatement/:gameId/:propertyId', function (req, res) {
 
     propertyAccount.getAccountStatement(req.params.gameId, req.params.propertyId, function (err, register) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'getAccountStatement error: ' + err.message});
       }
-      res.send({status: 'ok', register: register});
+      res.send({register: register});
     });
   });
 });
@@ -78,14 +77,14 @@ router.get('/propertyProfitability/:gameId/', function (req, res) {
 
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Access right error: ' + err.message});
     }
 
     propertyAccount.getPropertyProfitability(req.params.gameId, undefined, function (err, info) {
       if (err) {
-        return res.status(500).send({message: err.message});
+        return res.status(500).send({message: 'getPropertyProfitability error: ' + err.message});
       }
-      res.send({status: 'ok', info: info});
+      res.send({info: info});
     });
   });
 });
@@ -98,17 +97,17 @@ router.get('/propertyProfitability/:gameId/:teamId', function (req, res) {
 
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Access right error: ' + err.message});
     }
 
     // Get all properties for a team
     propertyModel.getPropertiesIdsForTeam(req.params.gameId, req.params.teamId, function (err, properties) {
       console.log(properties);
       if (err) {
-        return res.status(500).send({message: err.message});
+        return res.status(500).send({message: 'getPropertiesIdsForTeam error: ' + err.message});
       }
 
-      var info = [];
+      let info = [];
       async.each(properties,
         function (prop, cb) {
           propertyAccount.getPropertyProfitability(req.params.gameId, prop.uuid, function (err, profit) {
@@ -121,9 +120,9 @@ router.get('/propertyProfitability/:gameId/:teamId', function (req, res) {
         },
         function (err) {
           if (err) {
-            return res.status(500).send({message: err.message});
+            return res.status(500).send({message: 'getPropertyProfitability error: ' + err.message});
           }
-          res.send({status: 'ok', info: info});
+          res.send({info: info});
         });
     });
   });

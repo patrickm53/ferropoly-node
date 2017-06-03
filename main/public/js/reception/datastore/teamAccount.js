@@ -10,12 +10,12 @@
  */
 DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
   console.log('update team account for ' + teamId);
-  var self = this;
-  var i = 0;
+  var self  = this;
+  var i     = 0;
   var query = '';
   if (_.isFunction(teamId)) {
     callback = teamId;
-    teamId = undefined;
+    teamId   = undefined;
   }
 
   if (teamId) {
@@ -25,38 +25,35 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
     }
   }
   // see https://api.jquery.com/jquery.get/
-  $.get('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId + query, function (data) {
-      if (data.status === 'ok') {
-        console.log('/teamAccount ok, entries: ' + data.accountData.length);
-        if (!teamId) {
-          // All entries were retrieved, replace them completely
-          self.data.teamAccountEntries = {};
-          for (i = 0; i < data.accountData.length; i++) {
-            var entry = data.accountData[i];
-            if (!self.data.teamAccountEntries[entry.teamId]) {
-              self.data.teamAccountEntries[entry.teamId] = [];
-            }
-            self.data.teamAccountEntries[entry.teamId].push(entry);
+  $.get('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId + query,
+    function (data) {
+
+      console.log('/teamAccount ok, entries: ' + data.accountData.length);
+      if (!teamId) {
+        // All entries were retrieved, replace them completely
+        self.data.teamAccountEntries = {};
+        for (i = 0; i < data.accountData.length; i++) {
+          var entry = data.accountData[i];
+          if (!self.data.teamAccountEntries[entry.teamId]) {
+            self.data.teamAccountEntries[entry.teamId] = [];
           }
-        }
-        else {
-          self.data.teamAccountEntries = self.data.teamAccountEntries || {};
-          self.data.teamAccountEntries[teamId] = self.data.teamAccountEntries[teamId] || [];
-          // add all received entries for this team, add saldo information (as not provided when getting only the last entries)
-          var balance = self.data.teamAccountEntries[teamId].length > 0 ? _.last(self.data.teamAccountEntries[teamId]).balance : 0;
-          for (i = 0; i < data.accountData.length; i++) {
-            var newEntry = data.accountData[i];
-            balance += newEntry.transaction.amount;
-            newEntry.balance = newEntry.balance || balance;
-            self.data.teamAccountEntries[teamId].push(newEntry);
-          }
+          self.data.teamAccountEntries[entry.teamId].push(entry);
         }
       }
       else {
-        console.error('ERROR when getting accountData:');
-        console.log(data);
+        self.data.teamAccountEntries         = self.data.teamAccountEntries || {};
+        self.data.teamAccountEntries[teamId] = self.data.teamAccountEntries[teamId] || [];
+        // add all received entries for this team, add saldo information (as not provided when getting only the last entries)
+        var balance                          = self.data.teamAccountEntries[teamId].length > 0 ? _.last(self.data.teamAccountEntries[teamId]).balance : 0;
+        for (i = 0; i < data.accountData.length; i++) {
+          var newEntry     = data.accountData[i];
+          balance += newEntry.transaction.amount;
+          newEntry.balance = newEntry.balance || balance;
+          self.data.teamAccountEntries[teamId].push(newEntry);
+        }
       }
-    })
+    }
+  )
     .fail(function (data) {
       console.error('ERROR when getting accountData (2):');
       console.log(data);
@@ -84,14 +81,14 @@ DataStore.prototype.getTeamAccountEntries = function (teamId) {
 
   if (!teamId) {
     var retVal = [];
-    _.forIn(this.data.teamAccountEntries, function(value, key) {
+    _.forIn(this.data.teamAccountEntries, function (value, key) {
       console.log(key);
       retVal = retVal.concat(value);
     });
     retVal = _.sortBy(retVal, 'timestamp');
     return retVal;
   }
-  return  this.data.teamAccountEntries[teamId];
+  return this.data.teamAccountEntries[teamId];
 };
 /**
  * Get the balance of the team
@@ -111,6 +108,6 @@ DataStore.prototype.getTeamAccountBalance = function (teamId) {
  * Adds a handler which is called when the team account of any team was updated
  * @param handler
  */
-DataStore.prototype.registerTeamAccountUpdateHandler = function(handler) {
+DataStore.prototype.registerTeamAccountUpdateHandler = function (handler) {
   this.teamAccountUpdateHandlers.push(handler);
 };

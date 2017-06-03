@@ -54,7 +54,7 @@ DataStore.prototype.updateProperties = function (teamId, callback) {
 
   // see https://api.jquery.com/jquery.get/
   $.get('/properties/get/' + this.getGameplay().internal.gameId + '/' + teamId, function (data) {
-   
+
     for (var i = 0; i < data.properties.length; i++) {
       self.updatePropertyInPricelist(data.properties[i]);
     }

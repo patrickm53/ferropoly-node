@@ -130,18 +130,18 @@ function managecallCtrl($scope, $http) {
       // Play chancellery in every standard call
       $http.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid).success(function (data) {
         console.log(data);
-        if (data.status === 'ok') {
-          var infoClass = 'list-group-item-success';
-          if (data.result.amount < 0) {
-            infoClass = 'list-group-item-danger';
-          }
-          $scope.callLog.push({
-            class  : infoClass,
-            title  : data.result.infoText,
-            message: data.result.amount.toLocaleString('de-CH'),
-            ts     : new Date()
-          });
+
+        var infoClass = 'list-group-item-success';
+        if (data.result.amount < 0) {
+          infoClass = 'list-group-item-danger';
         }
+        $scope.callLog.push({
+          class  : infoClass,
+          title  : data.result.infoText,
+          message: data.result.amount.toLocaleString('de-CH'),
+          ts     : new Date()
+        });
+
         $scope.callPanel = 2;
         $scope.showCallPanel('buy');
       }).error(function (data, status) {

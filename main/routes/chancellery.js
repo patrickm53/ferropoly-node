@@ -45,7 +45,7 @@ router.get('/account/statement/:gameId', function (req, res) {
     }
     chancellery.getAccountStatement(req.params.gameId, function (err, data) {
       if (err) {
-        return res.status(500).send({message: 'DB read error: ' + err.message});
+        return res.status(500).send({message: 'getAccountStatement error: ' + err.message});
       }
       res.send({entries: data});
     });
