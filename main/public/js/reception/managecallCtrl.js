@@ -351,34 +351,34 @@ function managecallCtrl($scope, $http) {
       authToken: dataStore.getAuthToken()
     }).success(function (data) {
       property.isBeingBought = false; // Request is over, reset flag
-      if (data.status === 'ok') {
-        console.log(data);
-        var res       = data.result;
-        var infoClass = 'list-group-item-success';
-        var title     = 'Kauf ' + res.property.location.name;
-        var msg;
-        if (res.owner) {
-          // belongs another team
-          infoClass = 'list-group-item-danger';
-          msg       = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount.toLocaleString('de-CH');
-        }
-        else if (res.amount === 0) {
-          // our own
-          infoClass = 'list-group-item-info';
-          msg       = 'Das Grundstück gehört der anrufenden Gruppe';
-        }
-        else {
-          // we buy now
-          msg = 'Grundstück gekauft. Preis: ' + res.amount.toLocaleString('de-CH');
-        }
-        $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
 
-        // Update Travel Log Log
-        dataStore.updateTravelLog(activeCall.getCurrentTeam().uuid, function () {
-          $scope.teamInfo.travelLog = dataStore.getTravelLog(activeCall.getCurrentTeam().uuid);
-          redrawMap();
-        });
+      console.log(data);
+      var res       = data.result;
+      var infoClass = 'list-group-item-success';
+      var title     = 'Kauf ' + res.property.location.name;
+      var msg;
+      if (res.owner) {
+        // belongs another team
+        infoClass = 'list-group-item-danger';
+        msg       = 'Das Grundstück ist bereits verkauft, Mietzins: ' + res.amount.toLocaleString('de-CH');
       }
+      else if (res.amount === 0) {
+        // our own
+        infoClass = 'list-group-item-info';
+        msg       = 'Das Grundstück gehört der anrufenden Gruppe';
+      }
+      else {
+        // we buy now
+        msg = 'Grundstück gekauft. Preis: ' + res.amount.toLocaleString('de-CH');
+      }
+      $scope.callLog.push({class: infoClass, title: title, message: msg, ts: new Date()});
+
+      // Update Travel Log Log
+      dataStore.updateTravelLog(activeCall.getCurrentTeam().uuid, function () {
+        $scope.teamInfo.travelLog = dataStore.getTravelLog(activeCall.getCurrentTeam().uuid);
+        redrawMap();
+      });
+      
     }).error(function (data, status) {
       property.isBeingBought = false; // Request is over, reset flag
       console.log('ERROR in buyProperty/', data, status);

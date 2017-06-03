@@ -4,30 +4,31 @@
  */
 
 
-var express = require('express');
-var router = express.Router();
-var marketplaceApi = require('../lib/accounting/marketplace');
-var accessor = require('../lib/accessor');
+const express        = require('express');
+const router         = express.Router();
+const marketplaceApi = require('../lib/accounting/marketplace');
+const accessor       = require('../lib/accessor');
+
 /**
  * Build Houses
  */
 router.post('/buildHouses/:gameId/:teamId', function (req, res) {
-  var marketplace = marketplaceApi.getMarketplace();
+  let marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (1)'});
+    return res.status(403).send({message: 'No auth token'});
   }
   if (req.body.authToken !== req.session.ferropolyToken) {
-    return res.send({status: 'error', message: 'Permission denied (2)'});
+    return res.status(403).send({message: 'No access granted'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Verification Error, ' + err.message});
     }
     marketplace.buildHouses(req.params.gameId, req.params.teamId, function (err, result) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'buildHouses error: ' + err.message});
       }
-      res.send({status: 'ok', result: result});
+      res.send({result: result});
     });
   });
 });
@@ -36,22 +37,22 @@ router.post('/buildHouses/:gameId/:teamId', function (req, res) {
  * Build a house on a specific property
  */
 router.post('/buildHouse/:gameId/:teamId/:propertyId', function (req, res) {
-  var marketplace = marketplaceApi.getMarketplace();
+  let marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (1)'});
+    return res.status(403).send({message: 'No auth token'});
   }
   if (req.body.authToken !== req.session.ferropolyToken) {
-    return res.send({status: 'error', message: 'Permission denied (2)'});
+    return res.status(403).send({message: 'No access granted'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Verification Error, ' + err.message});
     }
     marketplace.buildHouse(req.params.gameId, req.params.teamId, req.params.propertyId, function (err, result) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'buildHouse error: ' + err.message});
       }
-      res.send({status: 'ok', result: result});
+      res.send({result: result});
     });
   });
 });
@@ -61,27 +62,27 @@ router.post('/buildHouse/:gameId/:teamId/:propertyId', function (req, res) {
  * Buy Property
  */
 router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
-  var marketplace = marketplaceApi.getMarketplace();
+  let marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (1)'});
+    return res.status(403).send({message: 'No auth token'});
   }
   if (req.body.authToken !== req.session.ferropolyToken) {
-    return res.send({status: 'error', message: 'Permission denied (2)'});
+    return res.status(403).send({message: 'No access granted'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Verification Error, ' + err.message});
     }
     marketplace.buyProperty({
-      gameId: req.params.gameId,
-      teamId: req.params.teamId,
+      gameId    : req.params.gameId,
+      teamId    : req.params.teamId,
       propertyId: req.params.propertyId,
-      user: req.session.passport.user
+      user      : req.session.passport.user
     }, function (err, result) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'buyProperty error: ' + err.message});
       }
-      res.send({status: 'ok', result: result});
+      res.send({result: result});
     });
   });
 });
@@ -92,12 +93,12 @@ router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
 router.get('/payRents/:gameId', function (req, res) {
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Verification Error, ' + err.message});
     }
-    var marketplace = marketplaceApi.getMarketplace();
+    let marketplace = marketplaceApi.getMarketplace();
     marketplace.payRents({gameId: req.params.gameId, user: req.session.passport.user}, function (err) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'payRents error: ' + err.message});
       }
       res.send({status: 'ok'});
     });
