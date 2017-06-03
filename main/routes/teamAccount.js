@@ -4,13 +4,12 @@
  */
 
 
-
-var express = require('express');
-var router = express.Router();
-var teamAccount = require('../lib/accounting/teamAccount');
-var _ = require('lodash');
-var accessor = require('../lib/accessor');
-var moment = require('moment');
+const express = require('express');
+const router = express.Router();
+const teamAccount = require('../lib/accounting/teamAccount');
+const _ = require('lodash');
+const accessor = require('../lib/accessor');
+const moment = require('moment');
 
 router.get('/get/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
@@ -23,17 +22,17 @@ router.get('/get/:gameId/:teamId', function (req, res) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    var teamBalance = {};
-    var query = req.query || {};
-    var tsStart = query.start ? moment(query.start) : undefined;
-    var tsEnd = query.end ? moment(query.end) : undefined;
+    let teamBalance = {};
+    let query = req.query || {};
+    let tsStart = query.start ? moment(query.start) : undefined;
+    let tsEnd = query.end ? moment(query.end) : undefined;
 
     teamAccount.getAccountStatement(req.params.gameId, req.params.teamId, tsStart, tsEnd, function (err, data) {
       if (err) {
         return res.send({status: 'error', message: err.message});
       }
 
-      for (var i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
 
         if (!(tsStart || tsEnd)) {
           // The balance is only available if ALL data is requested. Otherwise it does not make sense!

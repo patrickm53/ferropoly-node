@@ -22,15 +22,15 @@ const moment                      = require('moment');
 const _                           = require('lodash');
 
 
-var ngFile = '/js/summaryctrl.js';
+let ngFile = '/js/summaryctrl.js';
 if (settings.minifiedjs) {
   ngFile = '/js/min/summaryctrl.min.js';
 }
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
-  var gameId = req.params.gameId;
-  var info   = {};
+  let gameId = req.params.gameId;
+  let info   = {};
 
   async.waterfall(
     [
@@ -48,7 +48,7 @@ router.get('/:gameId', function (req, res) {
             return cb(err);
           }
           info.teams = [];
-          for (var i = 0; i < foundTeams.length; i++) {
+          for (let i = 0; i < foundTeams.length; i++) {
             info.teams.push({
               name          : foundTeams[i].data.name,
               organization  : foundTeams[i].data.organization,

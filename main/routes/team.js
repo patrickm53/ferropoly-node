@@ -14,7 +14,7 @@ const users        = require('../../common/models/userModel');
 const _            = require('lodash');
 const accessor     = require('../lib/accessor');
 const async        = require('async');
-var ngFile         = '/js/teamctrl.js';
+let ngFile         = '/js/teamctrl.js';
 if (settings.minifiedjs) {
   ngFile = '/js/min/teamctrl.min.js';
 }

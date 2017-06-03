@@ -4,7 +4,7 @@
  */
 
 
-var trafficLib = require('../lib/traffic');
+const trafficLib = require('../lib/traffic');
 var express = require('express');
 var router = express.Router();
 var accessor = require('../lib/accessor');
