@@ -251,19 +251,16 @@ function managecallCtrl($scope, $http) {
       amount   : Math.abs($scope.gambleAmount) * factor
     }).success(function (data) {
       console.log(data);
-      if (data.status === 'ok') {
-        var infoClass = 'list-group-item-success';
-        if (data.result.amount < 0) {
-          infoClass = 'list-group-item-danger';
-        }
-        $scope.callLog.push({
-          class  : infoClass,
-          title  : data.result.infoText,
-          message: data.result.amount.toLocaleString('de-CH'),
-          ts     : new Date()
-        });
-        $scope.$apply();
+      var infoClass = 'list-group-item-success';
+      if (data.result.amount < 0) {
+        infoClass = 'list-group-item-danger';
       }
+      $scope.callLog.push({
+        class  : infoClass,
+        title  : data.result.infoText,
+        message: data.result.amount.toLocaleString('de-CH'),
+        ts     : new Date()
+      });
     }).error(function (data, status) {
       $scope.callLog.push({
         class  : 'list-group-item-danger',
@@ -272,7 +269,6 @@ function managecallCtrl($scope, $http) {
         ts     : new Date()
       });
       console.log(data);
-      $scope.$apply();
     })
   };
 

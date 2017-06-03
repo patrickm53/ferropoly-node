@@ -30,6 +30,7 @@ module.exports = function (grunt) {
       dist     : {
         src : [
           './node_modules/socket.io-client/dist/socket.io.slim.js',
+          './main/public/js/reception/genericmodals.js',
           './main/public/js/reception/reception-framework.js',
           './main/public/js/reception/ferropoly-socket.js',
           './main/public/js/reception/datastore/datastore.js',
