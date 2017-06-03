@@ -12,7 +12,7 @@ const users     = require('../../common/models/userModel');
 const teams     = require('../../common/models/teamModel');
 const logger    = require('../../common/lib/logger').getLogger('routes:join');
 const mailer    = require('../../common/lib/mailer');
-var ngFile      = '/js/joinctrl.js';
+let ngFile      = '/js/joinctrl.js';
 if (settings.minifiedjs) {
   ngFile = '/js/joinctrl.min.js';
 }
@@ -27,7 +27,7 @@ router.get('/:gameId', (req, res) => {
       return res.status(404).send({message: 'Game not found'});
     }
 
-    var gameplay = {};
+    let gameplay = {};
     if (gameData && gameData.gameplay) {
       gameplay = gameData.gameplay;
     }
@@ -45,7 +45,7 @@ router.get('/:gameId', (req, res) => {
             logger.error(err);
             return res.status(500).send(err.message);
           }
-          var teamInfo = {};
+          let teamInfo = {};
           if (team) {
             teamInfo.name             = team.data.name;
             teamInfo.organization     = team.data.organization;
@@ -169,9 +169,9 @@ router.post('/:gameId', (req, res) => {
  */
 function sendInfoMail(gameplay, team, options, callback) {
 
-  var html    = '';
-  var text    = '';
-  var subject = '';
+  let html    = '';
+  let text    = '';
+  let subject = '';
   if (options.newTeam) {
     subject = 'Neue Ferropoly Anmeldung';
     html += '<h1>Neue Ferropoly Anmeldung</h1>';

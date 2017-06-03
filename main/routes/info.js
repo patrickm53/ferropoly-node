@@ -16,7 +16,7 @@ const priceListDownload = require('../../common/routes/downloadPricelist');
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
-  var gameId = req.params.gameId;
+  let gameId = req.params.gameId;
 
   gameplayModel.getGameplay(gameId, null, function (err, gp) {
     if (err) {
@@ -42,8 +42,8 @@ router.get('/:gameId', function (req, res) {
           return errorHandler(res, 'Interner Fehler', err3, 500);
         }
         // Filter some info
-        var teams = [];
-        for (var i = 0; i < foundTeams.length; i++) {
+        let teams = [];
+        for (let i = 0; i < foundTeams.length; i++) {
           teams.push({
             name          : foundTeams[i].data.name,
             organization  : foundTeams[i].data.organization,

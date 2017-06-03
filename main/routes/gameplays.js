@@ -22,7 +22,7 @@ router.get('/', function (req, res) {
       logger.error('can not get gameplays for a user', err);
       return res.status(500).send({message: err.message});
     }
-    var retVal = {success: true, gameplays: [], games: []};
+    let retVal = {success: true, gameplays: [], games: []};
     if (gameplays) {
       gameplays.forEach(function (gameplay) {
         retVal.gameplays.push({
