@@ -4,18 +4,18 @@
  */
 
 
-var express = require('express');
-var router = express.Router();
-var _ = require('lodash');
-var settings = require('../settings');
-var pricelist = require('../../common/lib/pricelist');
-var authTokenManager = require('../lib/authTokenManager');
-var gamecache = require('../lib/gameCache');
-var errorHandler = require('../lib/errorHandler');
+const express = require('express');
+const router = express.Router();
+const _ = require('lodash');
+const settings = require('../settings');
+const pricelist = require('../../common/lib/pricelist');
+const authTokenManager = require('../lib/authTokenManager');
+const gamecache = require('../lib/gameCache');
+const errorHandler = require('../lib/errorHandler');
 
 /* GET the reception of all games */
 router.get('/:gameId', function (req, res) {
-  var gameId = req.params.gameId;
+  let gameId = req.params.gameId;
 
   gamecache.refreshCache(function (err) {
     if (err) {
@@ -26,8 +26,8 @@ router.get('/:gameId', function (req, res) {
       if (err) {
         return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
       }
-      var gp = gamedata.gameplay;
-      var teams = gamedata.teams;
+      let gp = gamedata.gameplay;
+      let teams = gamedata.teams;
 
       if (!gp || !gamedata) {
         return errorHandler(res, 'Spiel nicht gefunden.', new Error('gp or gamedata is undefined'), 500);
@@ -43,13 +43,13 @@ router.get('/:gameId', function (req, res) {
         }
       }
 
-      var errMsg1 = '';
+      let errMsg1 = '';
 
       pricelist.getPricelist(gameId, function (err2, pl) {
         if (!pl) {
           pl = {};
         }
-        var errMsg2 = '';
+        let errMsg2 = '';
         if (err2) {
           errMsg2 = err2.message;
         }

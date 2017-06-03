@@ -5,26 +5,26 @@
  * Created by kc on 06.07.15.
  */
 
+const express = require('express');
+const router = express.Router();
+const accessor = require('../lib/accessor');
+const rankingList = require('../lib/reports/rankingList');
+const teamAccountReport = require('../lib/reports/teamAccountReport');
 
-var express = require('express');
-var router = express.Router();
-var accessor = require('../lib/accessor');
-var rankingList = require('../lib/reports/rankingList');
-var teamAccountReport = require('../lib/reports/teamAccountReport');
 /**
  * Get the ranking list
  */
 router.get('/rankingList/:gameId', function (req, res) {
   if (!req.params.gameId) {
-    return res.send({status: 'error', message: 'No gameId supplied'});
+    return res.status(400).send({message: 'No gameId supplied'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Access right error: ' + err.message});
     }
     rankingList.createXlsx(req.params.gameId, function(err, report) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'createXlsx error: ' + err.message});
       }
       res.set({
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -43,16 +43,16 @@ router.get('/rankingList/:gameId', function (req, res) {
  */
 router.get('/teamAccount/:gameId', function (req, res) {
   if (!req.params.gameId) {
-    return res.send({status: 'error', message: 'No gameId supplied'});
+    return res.status(400).send({message: 'No gameId supplied'});
   }
 
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(403).send({message: 'Access right error: ' + err.message});
     }
     teamAccountReport.createXlsx(req.params.gameId, function (err, report) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: 'createXlsx error: ' + err.message});
       }
       res.set({
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -64,6 +64,5 @@ router.get('/teamAccount/:gameId', function (req, res) {
     });
   });
 });
-
 
 module.exports = router;

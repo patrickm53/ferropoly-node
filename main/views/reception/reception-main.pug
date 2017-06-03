@@ -8,7 +8,7 @@ div#reception-dashboard(ng-controller='dashboardCtrl')
       .panel.panel-default
         .panel-heading
           h3.panel-title Aktuelle Rangliste
-            a.fa.fa-download.button-right-1(href='/download/rankinglist/#{gameId}')
+            a.fa.fa-download.button-right-1(href='/download/rankinglist/'+ gameId)
             i.fa.fa-refresh.button-right-0(ng-click='refreshRankingList()')
         .panel-body
           div(ng-hide='rankingListLoaded')
