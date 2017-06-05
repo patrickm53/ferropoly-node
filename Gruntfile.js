@@ -23,6 +23,7 @@
  */
 'use strict';
 module.exports = function (grunt) {
+
   grunt.initConfig({
     pkg   : grunt.file.readJSON('package.json'),
     concat: {
@@ -205,12 +206,16 @@ module.exports = function (grunt) {
         }
       },
       options     : {
+        transform        : [['babelify', {presets: "es2015"}]],
         browserifyOptions: {
+          debug     : true,
           standalone: 'checkinDatastore'
         }
       }
     }
   });
+
+
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -223,7 +228,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-bump');
   grunt.registerTask('default', ['browserify']);
-  grunt.registerTask('minify', ['concat', 'uglify:js']);
+  grunt.registerTask('minify', ['browserify', 'concat', 'uglify:js']);
   grunt.registerTask('v:patch', ['bump-only:patch']);
   grunt.registerTask('v:minor', ['bump-only:minor']);
   grunt.registerTask('v:major', ['bump-only:major']);
