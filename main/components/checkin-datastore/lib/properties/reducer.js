@@ -3,9 +3,9 @@
  * Created by kc on 19.01.16.
  */
 
-var assign = require('lodash/assign');
-var cst    = require('../constants');
-var remove = require('lodash/remove');
+const assign = require('lodash/assign');
+const cst    = require('../constants');
+const remove = require('lodash/remove');
 
 module.exports = function (state, action) {
   state = state || {properties: []};
@@ -15,23 +15,24 @@ module.exports = function (state, action) {
       // set all properties
       return assign({}, state, {properties: action.properties});
 
-    case cst.UPDATE_PROPERTY:
+    case cst.UPDATE_PROPERTY: {
       // Update or add a property
-      var newProperties = state.properties || [];
+      let newProperties = state.properties || [];
       remove(newProperties, {uuid: action.property.uuid});
       newProperties.push(action.property);
       return assign({}, state, {properties: newProperties});
+    }
 
-    case cst.BUILDING_ALLOWED_AGAIN:
+    case cst.BUILDING_ALLOWED_AGAIN: {
       // Building is allowed again
-      var newProperties = state.properties || [];
-      for (var i = 0; i < newProperties.length; i++) {
+      let newProperties = state.properties || [];
+      for (let i = 0; i < newProperties.length; i++) {
         if (newProperties[i].gamedata) {
           newProperties[i].gamedata.buildingEnabled = true;
         }
       }
       return assign({}, state, {properties: newProperties});
-
+    }
     default:
       return state;
   }

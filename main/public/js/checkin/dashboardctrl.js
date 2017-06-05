@@ -56,6 +56,7 @@ function dashboardCtrl($scope, $http) {
 
   // teamAccount Updates
   checkinDatastore.dataStore.subscribe('teamAccount', function (data) {
+    console.log('teamAccount !!!!!!!!', data);
     $scope.teamAccount = data;
     if (data.transactions.length > 0) {
       var tr = data.transactions[data.transactions.length - 1];

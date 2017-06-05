@@ -11,6 +11,7 @@ var settings         = require('../settings');
 var _                = require('lodash');
 var util             = require('util');
 var accessor         = require('./accessor');
+const uuid           = require('node-uuid').v4;
 
 var ferroSocket;
 
@@ -239,6 +240,7 @@ FerroSocket.prototype.emitToAdmins = function (gameId, channel, data) {
  */
 FerroSocket.prototype.emitToTeam = function (gameId, teamId, channel, data) {
   logger.info('ferroSockets.emitToTeam: ' + gameId + ' ' + teamId + ' ' + channel);
+  data.msgId = uuid();
   if (this.sockets[gameId]) {
     this.sockets[gameId].forEach(function (socket) {
       if ((socket.ferropoly.isPlayer && socket.ferropoly.teamId === teamId)) {

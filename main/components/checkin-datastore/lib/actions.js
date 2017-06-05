@@ -7,5 +7,4 @@ module.exports = {
   chancellery: require('./chancellery/actions'),
   propertyAccount: require('./properties/actions'),
   teamAccount: require('./teamAccount/actions')
-
 };

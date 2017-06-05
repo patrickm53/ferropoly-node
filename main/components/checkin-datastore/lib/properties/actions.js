@@ -3,7 +3,7 @@
  * Created by kc on 19.01.16.
  */
 
-var cst = require('../constants');
+const cst = require('../constants');
 
 
 module.exports = {

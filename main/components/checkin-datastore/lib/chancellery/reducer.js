@@ -3,8 +3,8 @@
  * Created by kc on 12.01.16.
  */
 
-var assign = require('lodash/assign');
-var cst    = require('../constants');
+const assign = require('lodash/assign');
+const cst    = require('../constants');
 
 module.exports = function (state, action) {
   state = state || {};

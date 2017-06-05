@@ -3,9 +3,9 @@
  * Created by kc on 12.01.16.
  */
 
-var redux    = require('redux');
-var reducers = require('./reducers');
-
+const redux    = require('redux');
+const reducers = require('./reducers');
+const uuid     = require('node-uuid').v4;
 /**
  * Constructor of the DataStore
  * @constructor
@@ -20,10 +20,10 @@ function DataStore() {
  * @param fnct
  */
 DataStore.prototype.subscribe = function (dataset, fnct) {
-  var oldState = {};
-  var self = this;
+  let oldState = {};
+  let self     = this;
   self.store.subscribe(function () {
-    var newState = self.store.getState();
+    let newState = self.store.getState();
     if (newState[dataset] === oldState) {
       console.log('nothing changed for ' + dataset);
       return;
@@ -53,12 +53,18 @@ DataStore.prototype.dispatch = function (action) {
  * @param socket
  */
 DataStore.prototype.attachSocket = function (socket) {
-  var self    = this;
+  socket.id = socket.id || uuid();
+
+  let self = this;
+  if (this.socket) {
+    // Deregister Handler first
+    this.socket.removeAllListeners('checkinStore');
+  }
   this.socket = socket;
-  console.log('DataStore: socket attached');
+  console.log(`Datastore: socket with id ${socket.id} attached`);
 
   socket.on('checkinStore', function (data) {
-    console.log('Message on "checkinStore" received', data);
+    console.log('Message on "checkinStore" received, socketId: ' + socket.id, data);
     self.store.dispatch(data);
   })
 };
@@ -68,7 +74,7 @@ DataStore.prototype.attachSocket = function (socket) {
  * @returns {*}
  */
 DataStore.prototype.getChancellery = function () {
-  var state = this.store.getState();
+  let state = this.store.getState();
   return state.chancellery;
 };
 
@@ -77,7 +83,7 @@ DataStore.prototype.getChancellery = function () {
  * @returns {*}
  */
 DataStore.prototype.getProperties = function () {
-  var state = this.store.getState();
+  let state = this.store.getState();
   return state.properties;
 };
 
@@ -86,11 +92,11 @@ DataStore.prototype.getProperties = function () {
  * @returns {*}
  */
 DataStore.prototype.getTeamAccount = function () {
-  var state = this.store.getState();
+  let state = this.store.getState();
   return state.teamAccount;
 };
 
-var store = new DataStore();
+let store = new DataStore();
 
 module.exports = function () {
   return store;

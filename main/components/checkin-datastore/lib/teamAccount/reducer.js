@@ -3,8 +3,8 @@
  * Created by kc on 15.01.16.
  */
 
-var assign = require('lodash/assign');
-var cst    = require('../constants');
+const assign = require('lodash/assign');
+const cst    = require('../constants');
 
 function convertTransaction(t) {
   t.timestamp = new Date(t.timestamp);
@@ -28,8 +28,8 @@ module.exports = function (state, action) {
 
     case cst.SET_TEAM_ACCOUNT_TRANSACTIONS:
       // Set the transactions, convert the timestamp to dateTime
-      var transactions = [];
-      for (var i = 0; i < action.transactions.length; i++) {
+      let transactions = [];
+      for (let i = 0; i < action.transactions.length; i++) {
         transactions.push(convertTransaction(action.transactions[i]));
       }
       return assign({}, state, {entryNb: action.transactions.length, transactions: transactions});
