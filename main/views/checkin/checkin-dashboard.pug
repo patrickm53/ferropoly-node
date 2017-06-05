@@ -24,6 +24,6 @@ div(ng-controller='dashboardCtrl')
       .col-md-12
         h3 Live-Ticker
         table.table.table-condensed.table-striped
-          tr(ng-repeat="t in liveTicker | orderBy: 'ts' :true | limitTo: 5")
+          tr(ng-repeat="t in liveTicker | orderBy: 'ts' :true | limitTo: 10")
             td {{t.ts | date:'HH:mm:ss'}}
             td {{t.message}}

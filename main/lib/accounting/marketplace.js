@@ -4,21 +4,21 @@
  * Created by kc on 20.04.15.
  */
 
-var gameCache          = require('../gameCache');
-var propWrap           = require('../propertyWrapper');
-var teamAccount        = require('./teamAccount');
-var propertyAccount    = require('./propertyAccount');
-var chancelleryAccount = require('./chancelleryAccount');
-var propertyActions    = require('../../components/checkin-datastore/lib/properties/actions');
-var logger             = require('../../../common/lib/logger').getLogger('marketplace');
-var travelLog          = require('../../../common/models/travelLogModel');
-var async              = require('async');
-var moment             = require('moment');
-var EventEmitter       = require('events').EventEmitter;
-var util               = require('util');
-var _                  = require('lodash');
-var marketplace;
-var ferroSocket;
+const gameCache          = require('../gameCache');
+const propWrap           = require('../propertyWrapper');
+const teamAccount        = require('./teamAccount');
+const propertyAccount    = require('./propertyAccount');
+const chancelleryAccount = require('./chancelleryAccount');
+const propertyActions    = require('../../components/checkin-datastore/lib/properties/actions');
+const logger             = require('../../../common/lib/logger').getLogger('marketplace');
+const travelLog          = require('../../../common/models/travelLogModel');
+const async              = require('async');
+const moment             = require('moment');
+const EventEmitter       = require('events').EventEmitter;
+const util               = require('util');
+const _                  = require('lodash');
+let marketplace;
+let ferroSocket;
 /**
  * Just a logger helper
  * @param gameId
@@ -140,7 +140,7 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
  * @param callback
  */
 Marketplace.prototype.buyProperty = function (options, callback) {
-  var self = this;
+  let self = this;
   if (!options.gameId || !options.teamId || !options.propertyId) {
     return callback(new Error('At least gameId, teamId and property Id must be supplied'));
   }
@@ -160,13 +160,13 @@ Marketplace.prototype.buyProperty = function (options, callback) {
     if (!property) {
       return callback(new Error('No property for this location'), {message: 'Dieses Ort kann nicht gekauft werden'});
     }
-    gameCache.getGameData(options.gameId, function (err, res) {
+    gameCache.getGameData(options.gameId, function (err, gameData) {
       if (err) {
         logger.error(err);
         return callback(err);
       }
-      var gp   = res.gameplay;
-      var team = res.teams[options.teamId];
+      let gp   = gameData.gameplay;
+      let team = gameData.teams[options.teamId];
 
       if (!gp || !team) {
         return callback(new Error('Gameplay error or team invalid'));
@@ -192,6 +192,10 @@ Marketplace.prototype.buyProperty = function (options, callback) {
             if (err) {
               return callback(err, {message: 'Fehler beim Grundstückkauf'});
             }
+            if (ferroSocket) {
+              // Inform others that the team bought an (annonymous) village
+              ferroSocket.emitToGame(options.gameId, 'general', {teamId: options.teamId, message:`"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`});
+            }
             // that's it!
             return callback(null, {property: property, amount: info.amount});
           });
@@ -207,7 +211,17 @@ Marketplace.prototype.buyProperty = function (options, callback) {
       else {
         // CASE 3: property belongs to another team, pay the rent
         marketLog(options.gameId, property.location.name + ' is already sold to another team');
-        propertyAccount.chargeRent(gp, property, options.teamId, callback);
+        propertyAccount.chargeRent(gp, property, options.teamId, (err, info) => {
+          if (err) {
+            return callback(err, {message: 'Fehler beim Grundstückkauf'});
+          }
+          if (ferroSocket) {
+            // Inform others about paying a rent
+            let targetTeam = _.get(gameData.teams[info.owner], 'data.name', 'unbekannt');
+            ferroSocket.emitToGame(options.gameId, 'general', {teamId: options.teamId, message:`"${team.data.name}" zahlen Miete an "${targetTeam}": ${info.amount} Fr.`});
+          }
+          callback(null, info);
+        });
       }
     });
   });
@@ -221,7 +235,7 @@ Marketplace.prototype.buyProperty = function (options, callback) {
  * @param callback
  */
 Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
-  var self = this;
+  let self = this;
 
   propWrap.getTeamProperties(gameId, teamId, function (err, properties) {
     if (err) {
@@ -238,8 +252,8 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         logger.error(err);
         return callback(err);
       }
-      var gp   = res.gameplay;
-      var team = res.teams[teamId];
+      let gp   = res.gameplay;
+      let team = res.teams[teamId];
 
       if (!gp || !team) {
         return callback(new Error('Gameplay error or team invalid'));
@@ -249,11 +263,11 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         return callback(new Error('BuildHouses: Marketplace is closed'));
       }
 
-      var log     = [];
-      var handled = 0;
+      let log     = [];
+      let handled = 0;
 
       // Callback when buying building
-      var buyBuildingCallback = function (err, info) {
+      let buyBuildingCallback = function (err, info) {
         if (err) {
           marketLog(gameId, err);
         }
@@ -262,8 +276,8 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
         }
         handled++;
         if (handled === properties.length) {
-          var totalAmount = 0;
-          for (var t = 0; t < log.length; t++) {
+          let totalAmount = 0;
+          for (let t = 0; t < log.length; t++) {
             totalAmount += log[t].amount;
           }
           if (totalAmount === 0) {
@@ -288,7 +302,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
       };
 
       // Todo: use async instead of for loop
-      for (var i = 0; i < properties.length; i++) {
+      for (let i = 0; i < properties.length; i++) {
         propertyAccount.buyBuilding(gp, properties[i], team, buyBuildingCallback);
       }
     });
@@ -305,7 +319,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
  * @param callback
  */
 Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callback) {
-  var self = this;
+  let self = this;
 
   propWrap.getProperty(gameId, propertyId, function (err, property) {
     if (err) {
@@ -322,8 +336,8 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
         logger.error(err);
         return callback(err);
       }
-      var gp   = res.gameplay;
-      var team = res.teams[teamId];
+      let gp   = res.gameplay;
+      let team = res.teams[teamId];
 
       if (!gp || !team) {
         return callback(new Error('Gameplay error or team invalid'));
@@ -555,22 +569,22 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback)
  * @param callback
  */
 Marketplace.prototype.payRents = function (options, callback) {
-  var gameId    = options.gameId;
-  var tolerance = options.tolerance || 0;
+  let gameId    = options.gameId;
+  let tolerance = options.tolerance || 0;
 
   if (!gameId) {
     return callback(new Error('no gameId supplied in payRents'));
   }
 
-  var self = this;
+  let self = this;
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
       logger.error(err);
       return callback(err);
     }
-    var gp    = res.gameplay;
-    var teams = _.valuesIn(res.teams);
+    let gp    = res.gameplay;
+    let teams = _.valuesIn(res.teams);
 
     if (!gp) {
       return callback(new Error('Gameplay with id ' + gameId + ' not found (payRents)'));

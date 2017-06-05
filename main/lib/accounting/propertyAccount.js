@@ -11,16 +11,16 @@
  * Created by kc on 20.04.15.
  */
 
-var propWrap            = require('../propertyWrapper');
-var propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
-var teamAccount         = require('./teamAccount');
-var logger              = require('../../../common/lib/logger').getLogger('propertyAccount');
-var async               = require('async');
-var _                   = require('lodash');
-var moment              = require('moment');
-var propertyActions     = require('../../components/checkin-datastore/lib/properties/actions');
+const propWrap            = require('../propertyWrapper');
+const propertyTransaction = require('./../../../common/models/accounting/propertyTransaction');
+const teamAccount         = require('./teamAccount');
+const logger              = require('../../../common/lib/logger').getLogger('propertyAccount');
+const async               = require('async');
+const _                   = require('lodash');
+const moment              = require('moment');
+const propertyActions     = require('../../components/checkin-datastore/lib/properties/actions');
 
-var ferroSocket;
+let ferroSocket;
 
 /**
  * Buy a property. The property must be free, otherwise this function rises an error.
@@ -49,11 +49,11 @@ function buyProperty(gameplay, property, team, callback) {
       return callback(err);
     }
 
-    var retVal = {
+    let retVal = {
       amount: property.pricelist.price
     };
 
-    var pt         = new propertyTransaction.Model();
+    let pt         = new propertyTransaction.Model();
     pt.gameId      = gameplay.internal.gameId;
     pt.propertyId  = property.uuid;
     pt.transaction = {
@@ -98,7 +98,7 @@ function chargeRent(gp, property, teamId, callback) {
     if (err) {
       return callback(err);
     }
-    var options = {
+    let options = {
       gameId        : gp.internal.gameId,
       amount        : val.amount,
       info          : 'Miete ' + property.location.name,
@@ -112,7 +112,7 @@ function chargeRent(gp, property, teamId, callback) {
         return callback(err);
       }
       // Add entry for property (income)
-      var pt         = new propertyTransaction.Model();
+      let pt         = new propertyTransaction.Model();
       pt.gameId      = options.gameId;
       pt.propertyId  = property.uuid;
       pt.transaction = {

@@ -70,7 +70,16 @@ function dashboardCtrl($scope, $http) {
     console.log('properties', data);
     $scope.$apply();
   });
+
+  // Game info from general nature
+  ferropolySocket.on('general', function(data) {
+    console.info('General info data received', data);
+    addTicker(data.message);
+    $scope.$apply();
+  });
+
 }
+
 
 checkinApp.controller('dashboardCtrl', dashboardCtrl);
 dashboardCtrl.$inject = ['$scope', '$http'];
