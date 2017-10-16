@@ -4,13 +4,14 @@
  * Created by kc on 19.04.15.
  */
 
-var _                      = require('lodash');
-var teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
-var moment                 = require('moment');
-var logger                 = require('../../../common/lib/logger').getLogger('accounting:teamAccount');
-var teamAccountActions     = require('../../components/checkin-datastore/lib/teamAccount/actions');
+const _                      = require('lodash');
+const teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
+const moment                 = require('moment');
+const logger                 = require('../../../common/lib/logger').getLogger('accounting:teamAccount');
+const teamAccountActions     = require('../../components/checkin-datastore/lib/teamAccount/actions');
 
-var ferroSocket;
+let ferroSocket;
+
 /**
  * Pays the interest for one team
  * @param teamId
@@ -23,7 +24,7 @@ function payInterest(teamId, gameId, amount, callback) {
     callback(new Error('Parameter error in payInterest'));
     return;
   }
-  var entry                = new teamAccountTransaction.Model();
+  let entry                = new teamAccountTransaction.Model();
   entry.gameId             = gameId;
   entry.teamId             = teamId;
   entry.transaction.amount = amount;
@@ -61,9 +62,9 @@ function chargeToBankOrChancellery(options, callback) {
   }
 
   // Amount has to be negative, not concerning of the parameter value!
-  var chargedAmount = (-1) * Math.abs(options.amount);
+  const chargedAmount = (-1) * Math.abs(options.amount);
 
-  var entry                = new teamAccountTransaction.Model();
+  let entry                = new teamAccountTransaction.Model();
   entry.gameId             = options.gameId;
   entry.teamId             = options.teamId;
   entry.transaction.amount = chargedAmount;
@@ -85,6 +86,7 @@ function chargeToBankOrChancellery(options, callback) {
     callback(err, {amount: chargedAmount});
   });
 }
+
 /**
  * Charging a teams account to the bank
  * @param options with at least:
@@ -134,7 +136,7 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
       return callback(new Error('Value must not be 0'));
     }
 
-    var entry                = new teamAccountTransaction.Model();
+    let entry                = new teamAccountTransaction.Model();
     entry.gameId             = gameId;
     entry.teamId             = teamId;
     entry.transaction.amount = Math.abs(amount);
@@ -188,6 +190,7 @@ function receiveFromChancellery(teamId, gameId, amount, info, callback) {
     callback(err);
   });
 }
+
 /**
  * One team pays another one
  * @param options
@@ -204,9 +207,9 @@ function chargeToAnotherTeam(options, callback) {
   }
 
   // Amount has to be positive for us, not concerning of the parameter value!
-  var chargedAmount = Math.abs(options.amount);
+  const chargedAmount = Math.abs(options.amount);
 
-  var chargingEntry                = new teamAccountTransaction.Model();
+  let chargingEntry                = new teamAccountTransaction.Model();
   chargingEntry.gameId             = options.gameId;
   chargingEntry.teamId             = options.debitorTeamId;
   chargingEntry.user               = options.user;
@@ -217,7 +220,7 @@ function chargeToAnotherTeam(options, callback) {
   };
   chargingEntry.transaction.info   = options.info;
 
-  var receivingEntry                = new teamAccountTransaction.Model();
+  let receivingEntry                = new teamAccountTransaction.Model();
   receivingEntry.gameId             = options.gameId;
   receivingEntry.teamId             = options.creditorTeamId;
   receivingEntry.user               = options.user;
@@ -278,6 +281,7 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
     }
   });
 }
+
 /**
  * Returns the ranking list for a gameplay
  * @param gameId
@@ -288,10 +292,10 @@ function getRankingList(gameId, callback) {
     if (err) {
       return callback(err);
     }
-    var sorted = _.sortBy(_.values(data), function (n) {
+    let sorted = _.sortBy(_.values(data), function (n) {
       return n.asset * (-1);
     });
-    for (var i = 0; i < sorted.length; i++) {
+    for (let i = 0; i < sorted.length; i++) {
       sorted[i].teamId = sorted[i]._id;
       if (sorted[i - 1] && (sorted[i - 1].asset === sorted[i].asset)) {
         // Same asset, same rank
@@ -318,9 +322,9 @@ function getRankingList(gameId, callback) {
  * @param p3  Callback
  */
 function getAccountStatement(gameId, teamId, p1, p2, p3) {
-  var tsStart  = p1;
-  var tsEnd    = p2;
-  var callback = p3;
+  let tsStart  = p1;
+  let tsEnd    = p2;
+  let callback = p3;
   if (_.isFunction(p1)) {
     callback = p1;
     tsStart  = undefined;
@@ -367,7 +371,7 @@ module.exports = {
         }
         ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', teamAccountActions.setAsset(info.asset, info.count));
 
-        getAccountStatement(data.gameId, data.teamId, function(err, transactions) {
+        getAccountStatement(data.gameId, data.teamId, function (err, transactions) {
           ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', teamAccountActions.setTransactions(transactions));
           logger.info('Socket connected', info);
         });

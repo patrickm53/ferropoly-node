@@ -3,10 +3,10 @@
  * Created by kc on 17.07.15.
  */
 
-var teamAccount = require('../../lib/accounting/teamAccount');
-var teamModel = require('../../../common/models/teamModel');
-var moment = require('moment-timezone');
-var xlsx = require('node-xlsx');
+const teamAccount = require('../../lib/accounting/teamAccount');
+const teamModel = require('../../../common/models/teamModel');
+const moment = require('moment-timezone');
+const xlsx = require('node-xlsx');
 
 module.exports = {
   /**
@@ -23,8 +23,8 @@ module.exports = {
         if (err) {
           return callback(err);
         }
-        var xlist = [['Rangliste']];
-        for (var i = 0; i < ranking.length; i++) {
+        let xlist = [['Rangliste']];
+        for (let i = 0; i < ranking.length; i++) {
           xlist.push([i + 1, teams[ranking[i].teamId].data.name, ranking[i].asset]);
         }
         xlist.push(['Stand: ' + moment.tz(moment(), 'Europe/Zurich').format('D.M.YYYY HH:mm')]);
@@ -42,8 +42,8 @@ module.exports = {
       if (err) {
         return callback(err);
       }
-      var xbuffer = xlsx.build([{name: 'Rangliste', data: xlist}]);
-      var prefix = moment.tz(moment(), 'Europe/Zurich').format('YYMMDD-HHmmss');
+      let xbuffer = xlsx.build([{name: 'Rangliste', data: xlist}]);
+      let prefix = moment.tz(moment(), 'Europe/Zurich').format('YYMMDD-HHmmss');
       callback(null, {
         data: xbuffer,
         name: prefix + '-' + gameId + '-rangliste.xlsx'

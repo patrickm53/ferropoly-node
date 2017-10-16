@@ -4,25 +4,25 @@
  * Created by kc on 10.05.15.
  */
 
-var EventEmitter     = require('events').EventEmitter;
-var authTokenManager = require('./authTokenManager');
-var logger           = require('../../common/lib/logger').getLogger('ferroSocket');
-var settings         = require('../settings');
-var _                = require('lodash');
-var util             = require('util');
-var accessor         = require('./accessor');
-const uuid           = require('uuid').v4;
+const EventEmitter     = require('events').EventEmitter;
+const authTokenManager = require('./authTokenManager');
+const logger           = require('../../common/lib/logger').getLogger('ferroSocket');
+const settings         = require('../settings');
+const _                = require('lodash');
+const util             = require('util');
+const accessor         = require('./accessor');
+const uuid             = require('uuid').v4;
 
-var ferroSocket;
+let ferroSocket;
 
 /**
  * Constructor of the FerroSocket
  * @param server
  * @constructor
  */
-var FerroSocket = function (server) {
+function FerroSocket(server) {
   EventEmitter.call(this);
-  var self = this;
+  let self = this;
   this.io  = require('socket.io').listen(server);
 
   this.sockets = {};
@@ -119,7 +119,7 @@ var FerroSocket = function (server) {
       self.removeSocket(socket);
     });
   });
-};
+}
 
 util.inherits(FerroSocket, EventEmitter);
 /**
@@ -160,7 +160,7 @@ FerroSocket.prototype.removeSocket = function (socket) {
  * @param socket
  */
 FerroSocket.prototype.registerChannels = function (socket) {
-  var self = this;
+  let self = this;
 
   function registerChannel(channelName) {
     socket.on(channelName, function (data) {
@@ -201,7 +201,7 @@ FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
   logger.error(new Error('emitToClients is obsolete, refactor using the specific emitters'));
   logger.info('ferroSockets.emitToClients: ' + gameId + ' ' + channel);
   if (this.sockets[gameId]) {
-    for (var i = 0; i < this.sockets[gameId].length; i++) {
+    for (let i = 0; i < this.sockets[gameId].length; i++) {
       if (this.sockets[gameId][i].ferropoly.isAdmin) {
         // For admins all messages are sent
         this.sockets[gameId][i].emit(channel, data);

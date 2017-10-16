@@ -14,8 +14,9 @@ const _                      = require('lodash');
 const moment                 = require('moment');
 const chancelleryActions     = require('../../components/checkin-datastore/lib/chancellery/actions');
 const logger                 = require('../../../common/lib/logger').getLogger('chancelleryAccount');
-var ferroSocket;
-var jackpotFull              = {};
+let ferroSocket;
+let jackpotFull              = {};
+
 /**
  * Internal function: Books the chancellery event in the chancellery and the teams account
  * @param gameplay
@@ -94,7 +95,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
       if (err) {
         return callback(err);
       }
-      var entry         = new chancelleryTransaction.Model();
+      let entry         = new chancelleryTransaction.Model();
       entry.gameId      = gameplay.internal.gameId;
       entry.transaction = {
         origin: {
@@ -121,13 +122,13 @@ function playChancellery(gameplay, team, callback) {
   if (!gameplay || !team) {
     return callback(new Error('invalid params in playChancellery'));
   }
-  var min         = gameplay.gameParams.chancellery.minLottery || 1000;
-  var max         = gameplay.gameParams.chancellery.maxLottery || 5000;
-  var retVal      = {};
+  let min         = gameplay.gameParams.chancellery.minLottery || 1000;
+  let max         = gameplay.gameParams.chancellery.maxLottery || 5000;
+  let retVal      = {};
   retVal.amount   = Math.floor((Math.random() * (max - min + 1) + min) / 1000) * 1000;
   retVal.infoText = 'Chance/Kanzlei: ';
 
-  var actionRand = _.random(0, jackpotFull[gameplay.internal.gameId] ? 1.2 : 1, true);
+  let actionRand = _.random(0, jackpotFull[gameplay.internal.gameId] ? 1.2 : 1, true);
   if (actionRand > (gameplay.gameParams.chancellery.probabilityWin + gameplay.gameParams.chancellery.probabilityLoose)) {
     retVal.infoText = 'Parkplatzgewinn';
     retVal.jackpot  = true;
@@ -162,7 +163,7 @@ function playChancellery(gameplay, team, callback) {
 // Gambling: the team sets a value and wins it or looses it. Winning it is taken from bank,
 // loosing it goes to the chancellery
 function gamble(gameplay, team, amount, callback) {
-  var retVal = {
+  let retVal = {
     amount  : amount,
     infoText: 'Chance/Kanzlei (Gambling)'
   };
@@ -180,7 +181,7 @@ function gamble(gameplay, team, amount, callback) {
  * @param callback
  */
 function payToChancellery(gameplay, team, amount, text, callback) {
-  var retVal = {
+  let retVal = {
     amount  : Math.abs(amount) * (-1),
     infoText: text
   };

@@ -21,7 +21,6 @@ const uuid         = require('uuid');
 
 // Model includes
 const users        = require('../common/models/userModel');
-const properties   = require('../common/models/propertyModel');
 const ferropolyDb  = require('../common/lib/ferropolyDb');
 const logs         = require('../common/models/logModel');
 const teamPosition = require('./lib/teams/teamPosition');

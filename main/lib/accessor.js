@@ -5,10 +5,10 @@
  * Created by kc on 10.07.15.
  */
 
-var gamecache = require('./gameCache');
-var gameplays = require('../../common/models/gameplayModel');
-var _         = require('lodash');
-var logger    = require('../../common/lib/logger').getLogger('lib:accessor');
+const gamecache = require('./gameCache');
+const gameplays = require('../../common/models/gameplayModel');
+const _         = require('lodash');
+const logger    = require('../../common/lib/logger').getLogger('lib:accessor');
 
 const PLAYER = 1;
 const ADMIN  = 2;
@@ -88,7 +88,7 @@ module.exports = {
         return callback(err);
       }
 
-      var team = gc.teams[teamId];
+      let team = gc.teams[teamId];
       if (!team) {
         return callback(new Error('Unknown teamId'));
       }
@@ -97,7 +97,9 @@ module.exports = {
         return callback();
       }
 
-      if (_.find(team.data.members, function(m) { return m === userId; })) {
+      if (_.find(team.data.members, function (m) {
+          return m === userId;
+        })) {
         return callback();
       }
 

@@ -19,6 +19,7 @@ const util               = require('util');
 const _                  = require('lodash');
 let marketplace;
 let ferroSocket;
+
 /**
  * Just a logger helper
  * @param gameId
@@ -194,7 +195,10 @@ Marketplace.prototype.buyProperty = function (options, callback) {
             }
             if (ferroSocket) {
               // Inform others that the team bought an (annonymous) village
-              ferroSocket.emitToGame(options.gameId, 'general', {teamId: options.teamId, message:`"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`});
+              ferroSocket.emitToGame(options.gameId, 'general', {
+                teamId : options.teamId,
+                message: `"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`
+              });
             }
             // that's it!
             return callback(null, {property: property, amount: info.amount});
@@ -218,7 +222,10 @@ Marketplace.prototype.buyProperty = function (options, callback) {
           if (ferroSocket) {
             // Inform others about paying a rent
             let targetTeam = _.get(gameData.teams[info.owner], 'data.name', 'unbekannt');
-            ferroSocket.emitToGame(options.gameId, 'general', {teamId: options.teamId, message:`"${team.data.name}" zahlen Miete an "${targetTeam}": ${info.amount} Fr.`});
+            ferroSocket.emitToGame(options.gameId, 'general', {
+              teamId : options.teamId,
+              message: `"${team.data.name}" zahlen Miete an "${targetTeam}": ${info.amount} Fr.`
+            });
           }
           callback(null, info);
         });
@@ -415,7 +422,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
     }
     var gp        = res.gameplay;
     var tolerance = 10; // in minutes
-    var count = 0;
+    var count     = 0;
 
     if (gp.gameParams.interestCyclesAtEndOfGame < 1) {
       // No cycles, no interests, return

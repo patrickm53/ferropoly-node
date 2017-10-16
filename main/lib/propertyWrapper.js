@@ -5,8 +5,8 @@
  * Created by kc on 24.04.15.
  */
 
-var pm = require('../../common/models/propertyModel');
-var logger = require('../../common/lib/logger').getLogger('propertyWrapper');
+const pm     = require('../../common/models/propertyModel');
+const logger = require('../../common/lib/logger').getLogger('propertyWrapper');
 
 module.exports = {
   /**
@@ -14,7 +14,7 @@ module.exports = {
    * @param gameId
    * @param propertyId
    */
-  getProperty: function (gameId, propertyId, callback) {
+  getProperty      : function (gameId, propertyId, callback) {
     pm.getPropertyById(gameId, propertyId, function (err, prop) {
       callback(err, prop);
     });
@@ -40,7 +40,7 @@ module.exports = {
    * @param gameId
    * @param callback
    */
-  getAllProperties: function(gameId, callback) {
+  getAllProperties: function (gameId, callback) {
     pm.getPropertiesForGameplay(gameId, undefined, callback);
   },
 
@@ -59,7 +59,7 @@ module.exports = {
    * Update the property
    * @param property
    */
-  updateProperty: function (property, callback) {
+  updateProperty      : function (property, callback) {
     pm.updateProperty(property.gameId, property, function (err) {
       callback(err);
     });

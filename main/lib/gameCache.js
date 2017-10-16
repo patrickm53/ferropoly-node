@@ -8,14 +8,13 @@
  */
 
 
-var teamModel = require('../../common/models/teamModel');
-var gpModel = require('../../common/models/gameplayModel');
-var logger = require('../../common/lib/logger').getLogger('gameCache');
+const teamModel = require('../../common/models/teamModel');
+const gpModel   = require('../../common/models/gameplayModel');
+const logger    = require('../../common/lib/logger').getLogger('gameCache');
+const moment    = require('moment');
+const _         = require('lodash');
 
-var moment = require('moment');
-var _ = require('lodash');
-
-var gameCache = {};
+let gameCache = {};
 
 module.exports = {
   getGameData: function (gameId, callback) {
@@ -34,7 +33,7 @@ module.exports = {
         return callback(err);
       }
 
-      var result = {gameplay: gp};
+      let result = {gameplay: gp};
 
       teamModel.getTeams(gameId, function (err, teams) {
         if (err) {
@@ -88,9 +87,9 @@ module.exports = {
         callback(null);
         return;
       }
-      var gameplaysInCache = 0;
+      let gameplaysInCache = 0;
       logger.info('Gameplays found: ' + gameplays.length);
-      for (var i = 0; i < gameplays.length; i++) {
+      for (let i = 0; i < gameplays.length; i++) {
         if (moment().isSame(moment(gameplays[i].scheduling.gameDate), 'day')) { // Todo: game is today!!
           logger.info('adding to cache: ' + gameplays[i].internal.gameId);
           gameCache[gameplays[i].internal.gameId] = {gameplay: gameplays[i], teams: {}};
@@ -106,10 +105,10 @@ module.exports = {
         return callback();
       }
 
-      var gpHandled = 0;
-      var teamError = null;
+      let gpHandled = 0;
+      let teamError = null;
       _.forOwn(gameCache, function (cacheEntry) {
-        var gp = cacheEntry.gameplay;
+        let gp = cacheEntry.gameplay;
         // logger.info('GP value:', gp);
         if (!gp.internal) {
           logger.error('gp.internal not defined', gp);
@@ -120,7 +119,7 @@ module.exports = {
             teamError = err;
           }
           if (teams && teams.length > 0) {
-            for (var t = 0; t < teams.length; t++) {
+            for (let t = 0; t < teams.length; t++) {
               gameCache[gp.internal.gameId].teams[teams[t].uuid] = teams[t];
             }
           }

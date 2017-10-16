@@ -9,14 +9,15 @@
  */
 
 
-var eventRepo = require('../../common/models/schedulerEventModel');
-var moment = require('moment');
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
-var schedule = require('node-schedule');
-var gameCache = require('./gameCache');
-var logger = require('../../common/lib/logger').getLogger('gameScheduler');
-var settings = require('../settings');
+const eventRepo    = require('../../common/models/schedulerEventModel');
+const moment       = require('moment');
+const EventEmitter = require('events').EventEmitter;
+const util         = require('util');
+const schedule     = require('node-schedule');
+const gameCache    = require('./gameCache');
+const logger       = require('../../common/lib/logger').getLogger('gameScheduler');
+const settings     = require('../settings');
+
 /**
  * Constructor of the scheduler
  * @constructor
@@ -29,7 +30,7 @@ function Scheduler(_settings) {
   if (!this.settings.scheduler) {
     this.scheduler = {delay: 15};
   }
-  this.jobs = [];
+  this.jobs      = [];
   this.updateJob = undefined;
 
   schedule.scheduleJob('0 22 * * *', function () {
@@ -51,7 +52,7 @@ util.inherits(Scheduler, EventEmitter);
  * @param event
  */
 Scheduler.prototype.handleEvent = function (channel, event) {
-  var self = this;
+  let self = this;
   logger.info('Handling event ' + event._id + ' for ' + channel);
   eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
     if (err) {
@@ -96,14 +97,14 @@ Scheduler.prototype.handleEventCallback = function (err, event) {
  */
 Scheduler.prototype.update = function (callback) {
   logger.info('Scheduler update');
-  var self = this;
-  var i;
+  let self = this;
+  let i;
   eventRepo.getUpcomingEvents(function (err, events) {
     if (err) {
       return callback(err);
     }
 
-    logger.info('Events read: '  + events.length);
+    logger.info('Events read: ' + events.length);
 
     // Cancel all existing jobs
     for (i = 0; i < self.jobs.length; i++) {
@@ -112,15 +113,15 @@ Scheduler.prototype.update = function (callback) {
     self.jobs = [];
 
     if (events.length > 0) {
-      var now = moment();
+      const now = moment();
 
-      var handlerFunction = function (ev) {
+      let handlerFunction = function (ev) {
         logger.info('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
         self.handleEvent(ev.type, ev);
       };
 
       for (i = 0; i < events.length; i++) {
-        var event = events[i];
+        let event = events[i];
         logger.info('upcoming Event', events[i]);
 
         if (moment(event.timestamp) < now) {
@@ -129,7 +130,7 @@ Scheduler.prototype.update = function (callback) {
         }
         else {
           logger.info('Push event in joblist:' + event._id);
-          var scheduledTs = moment(event.timestamp).add({seconds: self.settings.scheduler.delay});
+          let scheduledTs = moment(event.timestamp).add({seconds: self.settings.scheduler.delay});
           self.jobs.push(schedule.scheduleJob(scheduledTs.toDate(), handlerFunction.bind(null, event)));
         }
       }
@@ -184,5 +185,5 @@ Scheduler.prototype.markEventHandled = function (event, callback) {
 
  Design it as event emitter or do we all here?
  */
-var gameScheduler = new Scheduler(settings);
-module.exports = gameScheduler;
+const gameScheduler = new Scheduler(settings);
+module.exports    = gameScheduler;

@@ -4,14 +4,14 @@
  */
 
 
-var _ = require('lodash');
-var logger = require('../../common/lib/logger').getLogger('autopilot');
-var moment = require('moment');
-var gameCache = require('./gameCache');
-var travelLog = require('../../common/models/travelLogModel');
-var properties = require('../../common/models/propertyModel');
-var marketplace = require('./accounting/marketplace');
-var settings;
+const _           = require('lodash');
+const logger      = require('../../common/lib/logger').getLogger('autopilot');
+const moment      = require('moment');
+const gameCache   = require('./gameCache');
+const travelLog   = require('../../common/models/travelLogModel');
+const properties  = require('../../common/models/propertyModel');
+const marketplace = require('./accounting/marketplace');
+let settings;
 
 /**
  * Autoplay: called by the timer
@@ -24,8 +24,8 @@ function autoplay() {
         startTimer();
         return;
       }
-      var gp = data.gameplay;
-      var teams = _.values(data.teams);
+      let gp    = data.gameplay;
+      let teams = _.values(data.teams);
 
       if (moment().isBefore(moment(gp.scheduling.gameStartTs))) {
         logger.info('Game not started yet');
@@ -67,6 +67,7 @@ function autoplay() {
     logger.error('Error in autoplay', exception);
   }
 }
+
 /**
  * Play a round, we don't care about any errors here
  * @param gp
@@ -77,7 +78,7 @@ function autoplay() {
  */
 function playRound(gameId, teamId, travelLog, properties, callback) {
   // play chancellery
-  var mp = marketplace.getMarketplace();
+  let mp = marketplace.getMarketplace();
   mp.chancellery(gameId, teamId, function () {
     mp.buildHouses(gameId, teamId, function () {
       var propertyId = selectClosestsProperty(travelLog, properties);
@@ -97,10 +98,11 @@ function playRound(gameId, teamId, travelLog, properties, callback) {
  * @returns {number}
  */
 function calculateDistance(origin, target) {
-  var a = Math.pow((origin.location.position.lat - target.location.position.lat), 2);
-  var b = Math.pow((origin.location.position.lng - target.location.position.lng), 2);
+  let a = Math.pow((origin.location.position.lat - target.location.position.lat), 2);
+  let b = Math.pow((origin.location.position.lng - target.location.position.lng), 2);
   return Math.sqrt(a + b);
 }
+
 /**
  * Calculate the distances between one property and all others
  * @param originId
@@ -108,18 +110,19 @@ function calculateDistance(origin, target) {
  * @returns {*}
  */
 function calculateDistances(originId, properties) {
-  var result = [];
-  var origin = _.find(properties, {'uuid': originId});
+  let result = [];
+  let origin = _.find(properties, {'uuid': originId});
   if (!origin) {
     logger.info(originId + ' not found in properties');
     return [];
   }
-  var i;
+  let i;
   for (i = 0; i < properties.length; i++) {
     result.push({propertyId: properties[i].uuid, distance: calculateDistance(origin, properties[i])});
   }
   return _.sortBy(result, 'distance');
 }
+
 /**
  * Select the closest property (respectively one out of 3, to avoid taking all teams the same route)
  * @param travelLog
@@ -131,12 +134,12 @@ function selectClosestsProperty(travelLog, properties) {
     // First property, just start random
     return properties[_.random(0, properties.length - 1)].uuid;
   }
-  var lastItem = _.last(travelLog);
-  var distances = calculateDistances(lastItem.propertyId, properties);
-  var i = 0;
+  let lastItem  = _.last(travelLog);
+  let distances = calculateDistances(lastItem.propertyId, properties);
+  let i         = 0;
 
-  var closestPropertyId;
-  var variant = _.random(0, 2);
+  let closestPropertyId;
+  let variant = _.random(0, 2);
   while (i < distances.length && !closestPropertyId) {
     if (!_.find(travelLog, {propertyId: distances[i].propertyId})) {
       if (variant === 0) {
@@ -148,6 +151,7 @@ function selectClosestsProperty(travelLog, properties) {
   }
   return closestPropertyId;
 }
+
 function startTimer(delay) {
   _.delay(autoplay, delay || settings.interval);
 }
@@ -167,9 +171,9 @@ module.exports = {
       logger.info('autopilot NOT ACTIVE');
       return;
     }
-    settings = options.autopilot;
+    settings          = options.autopilot;
     settings.interval = options.autopilot.interval || (5 * 60 * 1000);
-    settings.gameId = options.autopilot.gameId || 'play-a-demo-game';
+    settings.gameId   = options.autopilot.gameId || 'play-a-demo-game';
     logger.info('autopilot ACTIVE');
     startTimer();
   }

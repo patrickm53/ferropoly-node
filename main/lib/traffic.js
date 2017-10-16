@@ -22,14 +22,14 @@ settings.traffic                 = settings.traffic || {};
 settings.traffic.refreshInterval = settings.traffic.refreshInterval || 1;
 settings.traffic.simulation      = settings.traffic.simulation || false;
 
-var sampleTrafficInfo = path.join(__dirname, '..', '..', 'test', 'fixtures', 'sampleTrafficInfo.xml');
+const sampleTrafficInfo = path.join(__dirname, '..', '..', 'test', 'fixtures', 'sampleTrafficInfo.xml');
 
-var rssFeed = {
+const rssFeed = {
   'sbb': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
   'zvv': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI4'
 };
 
-var cachedData = {};
+let cachedData = {};
 
 /**
  * Extract the duration. Different kinds of durations were seen:
@@ -42,12 +42,12 @@ var cachedData = {};
  */
 function extractDuration(durationString) {
   try {
-    var elements = durationString.split('-');
-    var from     = moment(elements[0], 'DD.MM.YYYY HH:mm');
+    let elements = durationString.split('-');
+    let from     = moment(elements[0], 'DD.MM.YYYY HH:mm');
     if (elements[1].indexOf('.') < 0) {
       elements[1] = elements[0].split(' ')[0] + ' ' + elements[1];
     }
-    var to = moment(elements[1], 'DD.MM.YYYY HH:mm');
+    let to = moment(elements[1], 'DD.MM.YYYY HH:mm');
     return {from: from, to: to};
   }
   catch (e) {
@@ -69,6 +69,7 @@ function getCategory(entry) {
   }
   return 'unknown';
 }
+
 /**
  * Transforms data where neded
  * @param data
@@ -80,7 +81,7 @@ function transformData(data) {
     return {};
   }
 
-  var version = _.get(data, 'version', 'unknown');
+  let version = _.get(data, 'version', 'unknown');
   if (version !== '2.0') {
     logger.error(`TRAFFIC INFORMATION MISMATCH: found version ${version}, check for compatibility!`);
   }
@@ -94,13 +95,13 @@ function transformData(data) {
     return (!n || n.length === 0);
   }
 
-  for (var i = 0; i < data.channel.item.length; i++) {
+  for (let i = 0; i < data.channel.item.length; i++) {
     try {
       // They both use <br /> and <br/>. Split description into time element and description itself
       data.channel.item[i].description = data.channel.item[i].description.replace(/<br\/>/g, '<br>');
       data.channel.item[i].description = data.channel.item[i].description.replace(/<br \/>/g, '<br>');
 
-      var elements = data.channel.item[i].description.split('<br>');
+      let elements = data.channel.item[i].description.split('<br>');
       _.remove(elements, removeFilter);
 
       data.channel.item[i].duration    = extractDuration(elements[0]);
@@ -188,5 +189,4 @@ function getTrafficInfo(map, callback) {
 
 module.exports = {
   getTrafficInfo: getTrafficInfo
-
 };

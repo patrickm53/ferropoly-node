@@ -4,18 +4,18 @@
  * Created by kc on 10.05.15.
  */
 
-var uuid = require('uuid');
-var mongoose = require('mongoose');
-var tokens = {};
+const uuid     = require('uuid');
+const mongoose = require('mongoose');
+const tokens   = {};
 
-var tokenSchema = mongoose.Schema({
-  login: String,
-  id: String,
-  issueDate: {type: Date, default: Date.now},
+const tokenSchema = mongoose.Schema({
+  login     : String,
+  id        : String,
+  issueDate : {type: Date, default: Date.now},
   expiryDate: Date
 });
 
-var Token = mongoose.model('Token', tokenSchema);
+const Token = mongoose.model('Token', tokenSchema);
 
 function getToken(user, callback) {
   Token.find()
@@ -46,9 +46,9 @@ module.exports = {
       if (!token) {
         token = new Token();
       }
-      token.id = uuid.v4();
+      token.id    = uuid.v4();
       token.login = user;
-      token.save(function(err) {
+      token.save(function (err) {
         callback(err, token.id);
       });
     });
