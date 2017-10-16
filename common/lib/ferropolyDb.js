@@ -34,6 +34,7 @@ module.exports = {
 
     // Connect to the MongoDb
     let options = {
+      useMongoClient: true,
       server: {
         socketOptions: {keepAlive: 1},
         poolSize: poolSize

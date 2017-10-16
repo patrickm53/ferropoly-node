@@ -7,7 +7,7 @@
 
 
 const mongoose       = require('mongoose');
-const uuid           = require('node-uuid');
+const uuid           = require('uuid/v4');
 const logger         = require('../lib/logger').getLogger('propertyModel');
 const _              = require('lodash');
 const async          = require('async');
@@ -119,7 +119,7 @@ const updateProperty = function (gameId, property, callback) {
       property.gameId = gameId;
     }
     if (!property.uuid) {
-      property.uuid = uuid.v4();
+      property.uuid = uuid();
     }
     // load the existing one (if there is one) and update it
     return getPropertyByLocationId(gameId, property.location.uuid, function (err, foundProperty) {
@@ -130,7 +130,7 @@ const updateProperty = function (gameId, property, callback) {
         // this is a new one!
         let prop       = new Property();
         prop.gameId    = gameId;
-        prop.uuid      = uuid.v4();
+        prop.uuid      = uuid();
         prop.location  = property.location;
         prop.gamedata  = property.gamedata;
         prop.pricelist = property.pricelist;

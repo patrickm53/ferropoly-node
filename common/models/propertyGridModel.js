@@ -8,7 +8,6 @@
  */
 
 const mongoose = require('mongoose');
-const uuid     = require('node-uuid');
 const logger   = require('../lib/logger').getLogger('propertyGridModel');
 const _        = require('lodash');
 

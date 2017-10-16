@@ -4,12 +4,14 @@
  * Created by kc on 08.06.15.
  */
 
-var winston = require('winston');
-var moment = require('moment');
-var util = require('util');
-var _ = require('lodash');
+const winston = require('winston');
+const moment = require('moment');
+const util = require('util');
+const _ = require('lodash');
 
-var loggerSettings = {
+let testCounter = 0;
+
+let loggerSettings = {
   levels: {
     fatal: 4,
     error: 3,
@@ -26,7 +28,7 @@ var loggerSettings = {
   }
 };
 
-var logger = new winston.Logger();
+const logger = new winston.Logger();
 winston.setLevels(loggerSettings.levels);
 winston.addColors(loggerSettings.colors);
 logger.add(winston.transports.Console, {level: 'debug', colorize: true});
@@ -38,8 +40,8 @@ logger.add(winston.transports.Console, {level: 'debug', colorize: true});
  * @param message
  * @param metadata
  */
-var log = function (module, level, message, metadata) {
-  var info = moment().format() + ' ' + module + ': ';
+function log(module, level, message, metadata) {
+  let info = moment().format() + ' ' + module + ': ';
   if (_.isObject(message)) {
     info += util.inspect(message);
   }
@@ -50,7 +52,7 @@ var log = function (module, level, message, metadata) {
     info += '\n' + util.inspect(metadata);
   }
   logger.log(level, info);
-};
+}
 
 module.exports = {
   add: function (transport, options) {
@@ -77,6 +79,19 @@ module.exports = {
       },
       debug: function (message, metadata) {
         log(moduleName, 'info', message, metadata); // using info as otherwise on stderr
+      },
+      /**
+       * Outputs data from a test (if any)
+       * @param message
+       * @param metadata
+       */
+      test: function(message, metadata) {
+        if (!message) {
+          return;
+        }
+        log(moduleName, 'info', testCounter + ' ##' + _.repeat('-', 80));
+        log(moduleName, 'info', 'DEBUG: ' + message, metadata);
+        testCounter++;
       }
     };
   }

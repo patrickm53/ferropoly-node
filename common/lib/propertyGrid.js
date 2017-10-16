@@ -173,7 +173,7 @@ const evaluatePropertyAvailability = function (pge, props) {
   pge.availabilityChance = _.round(pge.availabilityChance);
 
   // Just info
-  logger.info(`${p.location.name} has a chance of ${pge.availabilityChance}`);
+  // logger.info(`${p.location.name} has a chance of ${pge.availabilityChance}`);
 };
 
 /**

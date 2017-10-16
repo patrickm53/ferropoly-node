@@ -1,0 +1,8 @@
+extends layout-error
+
+block content
+  h1= message
+  h2= error.status
+  a(href='/login') Hier geht es zur Login-Seite
+  pre #{error.stack}
+

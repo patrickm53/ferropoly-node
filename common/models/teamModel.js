@@ -4,15 +4,14 @@
  * Created by kc on 22.03.15.
  */
 
-
-var mongoose = require('mongoose');
-var uuid     = require('node-uuid');
-var logger   = require('../lib/logger').getLogger('teamModel');
+const mongoose = require('mongoose');
+const uuid     = require('uuid/v4');
+const logger   = require('../lib/logger').getLogger('teamModel');
 
 /**
  * The mongoose schema for a property
  */
-var teamSchema = mongoose.Schema({
+let teamSchema = mongoose.Schema({
   _id   : {type: String, index: true},
   gameId: String, // Gameplay this team plays with
   uuid  : {type: String, index: {unique: true}},     // UUID of this team (index)
@@ -37,7 +36,7 @@ var teamSchema = mongoose.Schema({
 /**
  * The Property model
  */
-var Team = mongoose.model('Team', teamSchema);
+let Team = mongoose.model('Team', teamSchema);
 
 /**
  * Create a new team
@@ -45,9 +44,9 @@ var Team = mongoose.model('Team', teamSchema);
  * @param gameId
  * @param callback
  */
-var createTeam = function (newTeam, gameId, callback) {
-  var team    = new Team();
-  team.uuid   = uuid.v4();
+let createTeam = function (newTeam, gameId, callback) {
+  let team    = new Team();
+  team.uuid   = uuid();
   team.gameId = gameId;
   team.data   = newTeam.data;
   team._id    = gameId + '-' + team.uuid;
@@ -61,7 +60,7 @@ var createTeam = function (newTeam, gameId, callback) {
  * @param team
  * @param callback
  */
-var updateTeam = function (team, callback) {
+let updateTeam = function (team, callback) {
   Team.find({uuid: team.uuid}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -91,7 +90,7 @@ var updateTeam = function (team, callback) {
  * @param team
  * @param callback
  */
-var deleteTeam = function (teamId, callback) {
+let deleteTeam = function (teamId, callback) {
   Team.find({uuid: teamId}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -110,7 +109,7 @@ var deleteTeam = function (teamId, callback) {
  * @param gameId
  * @param callback
  */
-var deleteAllTeams = function (gameId, callback) {
+let deleteAllTeams = function (gameId, callback) {
   logger.info('Removing all teams for ' + gameId);
   Team.find({gameId: gameId}).remove().exec(function (err) {
     callback(err);
@@ -123,7 +122,7 @@ var deleteAllTeams = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-var getTeams = function (gameId, callback) {
+let getTeams = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -142,7 +141,7 @@ var getTeams = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-var getTeam = function (gameId, teamId, callback) {
+let getTeam = function (gameId, teamId, callback) {
   Team.find({
       'uuid'  : teamId,
       'gameId': gameId
@@ -177,14 +176,14 @@ function countTeams(gameId, callback) {
  * @param gameId
  * @param callback
  */
-var getTeamsAsObject = function (gameId, callback) {
+let getTeamsAsObject = function (gameId, callback) {
   getTeams(gameId, function (err, data) {
     if (err) {
       return callback(err);
     }
     // Add all teams to the result
-    var teams = {};
-    for (var i = 0; i < data.length; i++) {
+    let teams = {};
+    for (let i = 0; i < data.length; i++) {
       teams[data[i].uuid] = data[i];
     }
     callback(null, teams);
@@ -238,15 +237,15 @@ function getMyTeam(gameId, email, callback) {
 }
 
 module.exports = {
-  Model             : Team,
-  createTeam        : createTeam,
-  updateTeam        : updateTeam,
-  deleteTeam        : deleteTeam,
-  deleteAllTeams    : deleteAllTeams,
-  getTeams          : getTeams,
-  getTeamsAsObject  : getTeamsAsObject,
-  countTeams        : countTeams,
-  getMyTeams        : getMyTeams,
-  getMyTeam         : getMyTeam,
-  getTeam           : getTeam
+  Model           : Team,
+  createTeam      : createTeam,
+  updateTeam      : updateTeam,
+  deleteTeam      : deleteTeam,
+  deleteAllTeams  : deleteAllTeams,
+  getTeams        : getTeams,
+  getTeamsAsObject: getTeamsAsObject,
+  countTeams      : countTeams,
+  getMyTeams      : getMyTeams,
+  getMyTeam       : getMyTeam,
+  getTeam         : getTeam
 };

@@ -11,7 +11,7 @@
  */
 const mongoose = require('mongoose');
 const crypto   = require('crypto');
-const uuid     = require('node-uuid');
+const uuid     = require('uuid/v4');
 const pbkdf2   = require('pbkdf2-sha256');
 const logger   = require('../lib/logger').getLogger('userModel');
 const _        = require('lodash');
@@ -75,11 +75,11 @@ var copyUser = function (source, target) {
  * @param password
  */
 var generatePasswordHash = function (user, password) {
-  var saltHash = crypto.createHash('sha256');
-  var ts       = new Date().getTime();
-  var uid      = uuid.v4();
+  let saltHash = crypto.createHash('sha256');
+  let ts       = new Date().getTime();
+  let uid      = uuid();
   saltHash.update(ts + user.email + uid);
-  var salt = saltHash.digest('hex');
+  let salt = saltHash.digest('hex');
 
   user.login.passwordSalt = salt;
   user.login.passwordHash = createPasswordHash(salt, password);

@@ -11,7 +11,7 @@ var settings         = require('../settings');
 var _                = require('lodash');
 var util             = require('util');
 var accessor         = require('./accessor');
-const uuid           = require('node-uuid').v4;
+const uuid           = require('uuid').v4;
 
 var ferroSocket;
 

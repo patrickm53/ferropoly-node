@@ -4,7 +4,6 @@
  */
 
 var mongoose = require('mongoose');
-var uuid = require('node-uuid');
 var moment = require('moment');
 var util = require('util');
 var _ = require('lodash');

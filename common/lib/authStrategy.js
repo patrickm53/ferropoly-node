@@ -28,7 +28,7 @@ module.exports = function (settings, users) {
 
   /**
    * deserialize an user
-   * @param user
+   * @param userId
    * @param done
    * @returns {*}
    */

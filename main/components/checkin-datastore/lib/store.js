@@ -5,7 +5,7 @@
 
 const redux    = require('redux');
 const reducers = require('./reducers');
-const uuid     = require('node-uuid').v4;
+const uuid     = require('uuid').v4;
 /**
  * Constructor of the DataStore
  * @constructor

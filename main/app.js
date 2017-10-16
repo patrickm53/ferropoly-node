@@ -147,8 +147,12 @@ ferropolyDb.init(settings, function (err) {
   app.use(function (req, res, next) {
     logger.debug('Page not found', req.url);
     const err    = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    res.status(401);
+
+    res.render('error/404', {
+      message: 'Nicht gefunden',
+      error  : {status: 404, stack: {}}
+    });
   });
 
   // development error handler

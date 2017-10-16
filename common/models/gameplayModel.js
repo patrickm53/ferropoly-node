@@ -11,7 +11,6 @@
 
 const mongoose = require('mongoose');
 const crypto   = require('crypto');
-const uuid     = require('node-uuid');
 const Moniker  = require('moniker');
 const _        = require('lodash');
 const moment   = require('moment-timezone');

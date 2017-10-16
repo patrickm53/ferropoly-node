@@ -19,7 +19,7 @@ const logger   = require('../lib/logger').getLogger('login');
  */
 router.get('/', function (req, res) {
   let loginController = 'loginctrl';
-  loginController = settings.minifiedjs ? '/js/min/' + loginController +'.min.js' : '/js/src/' + loginController +'.js';
+  loginController     = settings.minifiedjs ? '/js/min/' + loginController + '.min.js' : '/js/src/' + loginController + '.js';
 
   res.render('login', {
     title       : settings.appName + ' Login',
@@ -36,6 +36,8 @@ router.get('/', function (req, res) {
  * The login post route
  */
 router.post('/', function (req, res) {
+  logger.test(_.get(req, 'body.debug'));
+
   let redirectUri = req.session.targetUrl || '/';
   passport.authenticate('local', {
     successRedirect: redirectUri,
@@ -61,6 +63,7 @@ module.exports = {
       res.redirect('/login');
     });
     app.post('/logout', function (req, res) {
+      logger.test(_.get(req, 'body.debug'));
       req.session.targetUrl = undefined;
       req.logout();
       res.send({});
@@ -71,9 +74,6 @@ module.exports = {
       let uri = url.parse(req.url).pathname;
       if (_.startsWith(uri, '/signup')) {
         logger.info('Signup !');
-        return next();
-      }
-      if (uri === '/configuration.js') {
         return next();
       }
       if (_.endsWith(uri, 'jpg')) {
@@ -90,9 +90,19 @@ module.exports = {
       }
       if (!req.session.passport || !req.session.passport.user) {
         // valid user in session
-        logger.info(uri + " redirected in login.js to login");
-        req.session.targetUrl = req.url;
-        res.redirect('/login');
+        if (uri === '/') {
+          res.redirect('/login');
+        }
+        else {
+          logger.info(uri + " redirected in login.js to login");
+          req.session.targetUrl = req.url;
+          res.status(401);
+
+          res.render('error/401', {
+            message: 'Zugriff nicht erlaubt',
+            error  : {status: 401, stack: {}}
+          });
+        }
       } else {
         return next();
       }

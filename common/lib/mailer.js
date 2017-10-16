@@ -7,12 +7,12 @@
  */
 
 
-var _ = require('lodash');
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-var logger = require('./logger').getLogger('common:lib:mailer');
-var transporter;
-var options;
+const _ = require('lodash');
+const nodemailer = require('nodemailer');
+const smtpTransport = require('nodemailer-smtp-transport');
+const logger = require('./logger').getLogger('common:lib:mailer');
+let transporter;
+let options;
 
 
 module.exports = {

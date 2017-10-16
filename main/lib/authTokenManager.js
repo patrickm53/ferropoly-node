@@ -4,7 +4,7 @@
  * Created by kc on 10.05.15.
  */
 
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 var mongoose = require('mongoose');
 var tokens = {};
 

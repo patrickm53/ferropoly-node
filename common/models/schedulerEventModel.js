@@ -5,16 +5,15 @@
 
 
 
-var mongoose = require('mongoose');
-var uuid = require('node-uuid');
-var moment = require('moment');
-var _ = require('lodash');
-var logger = require('../lib/logger').getLogger('schedulerEventModel');
+const mongoose = require('mongoose');
+const moment = require('moment');
+const _ = require('lodash');
+const logger = require('../lib/logger').getLogger('schedulerEventModel');
 
 /**
  * The mongoose schema for a scheduleEvent
  */
-var scheduleEventSchema = mongoose.Schema({
+let scheduleEventSchema = mongoose.Schema({
   _id: String,
   gameId: String, // Gameplay this team plays with
   timestamp: Date, // When it is going to happen
@@ -29,13 +28,13 @@ var scheduleEventSchema = mongoose.Schema({
 /**
  * The scheduleEvent model
  */
-var scheduleEventModel = mongoose.model('schedulerEvent', scheduleEventSchema);
+let scheduleEventModel = mongoose.model('schedulerEvent', scheduleEventSchema);
 
 /**
  * Creates an event
  */
 function createEvent(gameId, timestamp, type) {
-  var event = new scheduleEventModel();
+  let event = new scheduleEventModel();
   event.gameId = gameId;
   event.timestamp = timestamp;
   event.type = type;
@@ -52,10 +51,10 @@ function saveEvents(events, callback) {
     if (err) {
       return callback(err);
     }
-    var error = undefined;
-    var nbSaved = 0;
+    let error = undefined;
+    let nbSaved = 0;
 
-    for (var i = 0; i < events.length; i++) {
+    for (let i = 0; i < events.length; i++) {
       events[i].save(function (err) {
         if (err) {
           error = err;
@@ -92,7 +91,7 @@ function dumpEvents(gameId, callback) {
  * @param callback
  */
 function getUpcomingEvents(callback) {
-  var untilTime = moment().add(4, 'h');
+  let untilTime = moment().add(4, 'h');
 
   scheduleEventModel.find()
     .where('handled').equals(false)
@@ -123,7 +122,7 @@ function requestEventSave(event, serverId, callback) {
         return callback(new Error('Event not found! ID: ' + event._id));
       }
 
-      var ev = data[0];
+      let ev = data[0];
       if (ev.handler && ev.handler.id && ev.handler.id !== serverId) {
         // Someone else is handling it, forget it
         return callback(null, null);
@@ -146,7 +145,7 @@ function requestEventSave(event, serverId, callback) {
           return;
         }
         // This delay avoids collisions between two parallel servers
-        var delay = _.random(250, 3000);
+        let delay = _.random(250, 3000);
         logger.info('requestEventSave: delay: ' + delay + ' for event ' + savedEvent._id);
         _.delay(function (_eventId, _serverId, _callback) {
             scheduleEventModel.find()
