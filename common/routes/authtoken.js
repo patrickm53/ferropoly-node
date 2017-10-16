@@ -11,12 +11,13 @@ const logger  = require('../lib/logger').getLogger('authToken');
 
 /* GET the authtoken, which you only can get when logged in */
 router.get('/', function (req, res) {
-  req.session.authToken = uuid();
+
   
   if (req.session.authToken) {
     logger.info(`Auth token REFRESH for ${req.session.passport.user}: ${req.session.authToken}`);
   }
   else {
+    req.session.authToken = uuid();
     logger.info(`NEW auth token for ${req.session.passport.user}: ${req.session.authToken}`);
   }
 

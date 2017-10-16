@@ -91,10 +91,11 @@ module.exports = {
       if (!req.session.passport || !req.session.passport.user) {
         // valid user in session
         if (uri === '/') {
+          logger.info(uri + " redirected to login");
           res.redirect('/login');
         }
         else {
-          logger.info(uri + " redirected in login.js to login");
+          logger.info(uri + " is not allowed (401)");
           req.session.targetUrl = req.url;
           res.status(401);
 
@@ -103,6 +104,7 @@ module.exports = {
             error  : {status: 401, stack: {}}
           });
         }
+
       } else {
         return next();
       }

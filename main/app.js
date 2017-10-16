@@ -17,6 +17,7 @@ const compression  = require('compression');
 const MongoStore   = require('connect-mongo')(session);
 const moment       = require('moment');
 const settings     = require('./settings');
+const uuid         = require('uuid');
 
 // Model includes
 const users        = require('../common/models/userModel');
@@ -47,7 +48,7 @@ const app = express();
 /**
  * Initialize DB connection, has to be only once for all models
  */
-ferropolyDb.init(settings, function (err) {
+ferropolyDb.init(settings, function (err, db) {
   if (err) {
     logger.warning('Failed to init ferropolyDb');
     logger.error(err);
@@ -89,12 +90,18 @@ ferropolyDb.init(settings, function (err) {
   passport.deserializeUser(authStrategy.deserializeUser);
   // required for passport: configuration
   app.use(session({
-    secret           : 'ferropolyIsAGameWithAVeryLargePlayground!',
-    resave           : false,
-    saveUninitialized: true,
-    cookie           : {secure: false}, // This is important! secure works only for https, with http no cookie is set!!!!
-    store            : new MongoStore({mongooseConnection: ferropolyDb.getDb()})
-  })); // session secret
+    secret           : 'ferropolyIsAGameWithAVeryLargePlayground',
+    resave           : true,
+    saveUninitialized: false,
+    cookie           : {
+      secure: 'auto'
+    },
+    genid            : function () {
+      return 'S_' + moment().format('YYMMDD-HHmmss-') + uuid.v4();
+    },
+    store            : new MongoStore({mongooseConnection: db, ttl: 2 * 24 * 60 * 60}),
+    name             : 'ferropoly-spiel'
+  }));
   app.use(passport.initialize());
   app.use(passport.session()); // persistent login sessions
   app.use(flash()); // use connect-flash for flash messages stored in session
@@ -146,12 +153,13 @@ ferropolyDb.init(settings, function (err) {
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
     logger.debug('Page not found', req.url);
-    const err    = new Error('Not Found');
+    const err = new Error('Not Found');
     res.status(401);
 
     res.render('error/404', {
       message: 'Nicht gefunden',
-      error  : {status: 404, stack: {}}
+      url    : req.url,
+      error  : {status: 404}
     });
   });
 
