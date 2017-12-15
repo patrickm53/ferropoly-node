@@ -82,11 +82,12 @@ const gameplaySchema = mongoose.Schema({
     level: {type: Number, default: MOBILE_NONE}
   },
   internal  : {
-    gameId          : {type: String, index: true},     // Identifier of the game
-    owner           : String,                          // Owner of the game. This is the ID of the user!
-    map             : String,                          // map to use
-    finalized       : {type: Boolean, default: false}, // finalized means no edits anymore,
-    creatingInstance: String                           // Instance creating this gameplay
+    gameId                 : {type: String, index: true},     // Identifier of the game
+    owner                  : String,                          // Owner of the game. This is the ID of the user!
+    map                    : String,                          // map to use
+    finalized              : {type: Boolean, default: false}, // finalized means no edits anymore,
+    priceListPendingChanges: {type: Boolean, default: false}, // Are there pending changes?
+    creatingInstance       : String                           // Instance creating this gameplay
   },
   joining   : {
     possibleUntil: {type: Date},
@@ -125,23 +126,23 @@ let createGameplay      = function (gpOptions, callback) {
     return callback(new Error('Missing parameter'));
   }
 
-  gp.internal.map                = gpOptions.map;
-  gp.internal.owner              = gpOptions.ownerId || gpOptions.ownerEmail;
-  gp.owner.organisatorEmail      = gpOptions.ownerEmail;
-  gp.owner.organisatorName       = gpOptions.organisatorName;
-  gp.scheduling.gameDate         = gpOptions.gameDate;
-  gp.scheduling.gameStart        = gpOptions.gameStart;
-  gp.scheduling.gameEnd          = gpOptions.gameEnd;
-  gp.scheduling.deleteTs         = moment(gpOptions.gameDate).add(30, 'd').hour(23).minute(59).toDate();
-  gp.joining.possibleUntil       = gpOptions.joiningUntilDate || moment(gp.scheduling.gameDate).subtract(5, 'days').set('hour', 20).set('minute', 0).set('second', 0).toDate();
-  gp.joining.infotext            = gpOptions.infoText;
-  gp.gamename                    = gpOptions.name;
-  gp.internal.gameId             = gpOptions.gameId || Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
-  gp.internal.creatingInstance   = gpOptions.instance;
-  gp.mobile                      = gpOptions.mobile || {level: MOBILE_NONE};
-  gp._id                         = gp.internal.gameId;
+  gp.internal.map              = gpOptions.map;
+  gp.internal.owner            = gpOptions.ownerId || gpOptions.ownerEmail;
+  gp.owner.organisatorEmail    = gpOptions.ownerEmail;
+  gp.owner.organisatorName     = gpOptions.organisatorName;
+  gp.scheduling.gameDate       = gpOptions.gameDate;
+  gp.scheduling.gameStart      = gpOptions.gameStart;
+  gp.scheduling.gameEnd        = gpOptions.gameEnd;
+  gp.scheduling.deleteTs       = moment(gpOptions.gameDate).add(30, 'd').hour(23).minute(59).toDate();
+  gp.joining.possibleUntil     = gpOptions.joiningUntilDate || moment(gp.scheduling.gameDate).subtract(5, 'days').set('hour', 20).set('minute', 0).set('second', 0).toDate();
+  gp.joining.infotext          = gpOptions.infoText;
+  gp.gamename                  = gpOptions.name;
+  gp.internal.gameId           = gpOptions.gameId || Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
+  gp.internal.creatingInstance = gpOptions.instance;
+  gp.mobile                    = gpOptions.mobile || {level: MOBILE_NONE};
+  gp._id                       = gp.internal.gameId;
 
-  gp.gameParams = _.assign(gp.gameParams, gpOptions.gameParams);
+  gp.gameParams                  = _.assign(gp.gameParams, gpOptions.gameParams);
   gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
 
   checkIfGameIdExists(gp.internal.gameId, function (err, isExisting) {
@@ -322,6 +323,7 @@ function finalizeTime(date, time) {
     return new Date();
   }
 }
+
 /**
  * Finalizes the gameplay, it can't be edited afterwards
  * @param gameId
@@ -342,6 +344,9 @@ let finalize = function (gameId, ownerId, callback) {
     }
     if (gp.log.priceListVersion === 0) {
       return callback(new Error('Can only finalize gameplays with pricelist'));
+    }
+    if (gp.internal.priceListPendingChanges) {
+      return callback(new Error('Pricelist params changed, list not up to date!'))
     }
     gp.internal.finalized     = true;
     gp.scheduling.gameStartTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameStart);
@@ -450,6 +455,27 @@ let setAdmins = function (gameId, ownerId, logins, callback) {
 };
 
 /**
+ * Sets the flag priceListPendingChanges to true: the price list can not be finalized without
+ * being built before
+ * @param gameId
+ * @param ownerId
+ * @param callback
+ */
+let invalidatePricelist = function (gameId, ownerId, callback) {
+  getGameplay(gameId, ownerId, function (err, gameplay) {
+    if (err) {
+      return callback(err);
+    }
+    if (!gameplay.internal.priceListPendingChanges) {
+      // Save only if the value was false before
+      gameplay.internal.priceListPendingChanges = true;
+      return gameplay.save(callback);
+    }
+    callback();
+  });
+};
+
+/**
  * Just updates the gamplay 'last saved' field
  * @param ownerId
  * @param gameId
@@ -467,7 +493,7 @@ let updateGameplayLastChangedField = function (ownerId, gameId, callback) {
     if (docs.length === 0) {
       return callback();
     }
-    var gp = docs[0];
+    let gp = docs[0];
     if (gp.internal.finalized) {
       // We can't save it, it is finalized!
       return callback(new Error('already finalized'));
@@ -497,7 +523,7 @@ function updateRules(gameId, ownerId, info, callback) {
     if (docs.length === 0) {
       return callback(new Error(`Gameplay ${gameId} not found for user ${ownerId}`));
     }
-    var gp = docs[0];
+    let gp = docs[0];
 
     if (!gp.rules || gp.rules.version < 0) {
       gp.rules = {
@@ -530,7 +556,9 @@ let saveNewPriceListRevision = function (gameplay, callback) {
     // We can't save it, it is finalized!
     return callback(new Error('already finalized'));
   }
-  gameplay.log.priceListCreated = new Date();
+  // This is the action which makes a price list valid
+  gameplay.internal.priceListPendingChanges = false;
+  gameplay.log.priceListCreated             = new Date();
   if (!gameplay.log.priceListVersion) {
     gameplay.log.priceListVersion = 1;
   }
@@ -565,6 +593,7 @@ module.exports = {
   checkIfGameIdExists           : checkIfGameIdExists,
   finalize                      : finalize,
   getAllGameplays               : getAllGameplays,
+  invalidatePricelist           : invalidatePricelist,
   // Constants
   MOBILE_NONE                   : MOBILE_NONE,
   MOBILE_BASIC                  : MOBILE_BASIC,

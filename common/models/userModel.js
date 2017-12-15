@@ -18,7 +18,7 @@ const _        = require('lodash');
 /**
  * The mongoose schema for an user
  */
-var userSchema = mongoose.Schema({
+let userSchema = mongoose.Schema({
   _id         : {type: String, index: true},
   id          : String,
   personalData: {
@@ -62,19 +62,20 @@ const User = mongoose.model('User', userSchema);
  * @param source
  * @param target
  */
-var copyUser = function (source, target) {
-  target.personalData = _.clone(source.personalData);
-  target.roles        = _.clone(source.roles);
-  target.info         = _.clone(source.info);
-  target.login        = _.clone(source.login);
-};
+function copyUser(source, target) {
+  let src = source.toObject();
+  target.personalData = _.clone(src.personalData);
+  target.roles        = _.clone(src.roles);
+  target.info         = _.clone(src.info);
+  target.login        = _.clone(src.login);
+}
 
 /**
  * Generate a NEW password hash
  * @param user
  * @param password
  */
-var generatePasswordHash = function (user, password) {
+function generatePasswordHash(user, password) {
   let saltHash = crypto.createHash('sha256');
   let ts       = new Date().getTime();
   let uid      = uuid();
@@ -83,7 +84,7 @@ var generatePasswordHash = function (user, password) {
 
   user.login.passwordSalt = salt;
   user.login.passwordHash = createPasswordHash(salt, password);
-};
+}
 
 /**
  * Verify the entered password for a user
@@ -91,9 +92,9 @@ var generatePasswordHash = function (user, password) {
  * @param enteredPassword
  * @returns {boolean}
  */
-var verifyPassword = function (user, enteredPassword) {
+function verifyPassword(user, enteredPassword) {
   return (user.login.passwordHash === createPasswordHash(user.login.passwordSalt, enteredPassword));
-};
+}
 
 /**
  * Create a password hash with a given salt and password
@@ -101,24 +102,24 @@ var verifyPassword = function (user, enteredPassword) {
  * @param password
  * @returns {*}
  */
-var createPasswordHash = function (salt, password) {
+function createPasswordHash(salt, password) {
   if (!_.isString(salt) || !_.isString(password)) {
     logger.error(new Error('Invalid params supplied', salt, password));
     return 'not-a-valid-hash-' + _.random(0, 100000000);
   }
   return pbkdf2(password, salt, 1, 64).toString('base64');
-};
+}
 
 /**
  * Removes a user from the DB
  * @param emailAddress
  * @param callback
  */
-var removeUser = function (emailAddress, callback) {
+function removeUser(emailAddress, callback) {
   User.remove({'personalData.email': emailAddress}, function (err) {
     callback(err);
   });
-};
+}
 
 /**
  * Update a user: update if it exists, otherwise create it
@@ -126,7 +127,7 @@ var removeUser = function (emailAddress, callback) {
  * @param password
  * @param callback
  */
-var updateUser = function (user, password, callback) {
+function updateUser(user, password, callback) {
   User.find({_id: user._id}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -158,7 +159,7 @@ var updateUser = function (user, password, callback) {
 
     }
     else {
-      var editedUser = docs[0];
+      let editedUser = docs[0];
       copyUser(user, editedUser);
       // Update User
       logger.info('Update user:' + user.personalData.email);
@@ -173,14 +174,14 @@ var updateUser = function (user, password, callback) {
       });
     }
   });
-};
+}
 
 /**
  * Get a user by its email address
  * @param emailAddress
  * @param callback
  */
-var getUserByMailAddress = function (emailAddress, callback) {
+function getUserByMailAddress(emailAddress, callback) {
   User.find({'personalData.email': emailAddress}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -190,7 +191,7 @@ var getUserByMailAddress = function (emailAddress, callback) {
     }
 
     // Verify if this user already has an ID or not. If not, upgrade to new model
-    var foundUser = docs[0];
+    let foundUser = docs[0];
     if (!_.isString(foundUser._id)) {
       foundUser._id = foundUser.personalData.email;
       foundUser.save(function (err) {
@@ -204,14 +205,14 @@ var getUserByMailAddress = function (emailAddress, callback) {
       callback(null, foundUser);
     }
   });
-};
+}
 
 /**
  * Get a user by its ID
  * @param id
  * @param callback, providing the complete user information when found
  */
-var getUser = function (id, callback) {
+function getUser(id, callback) {
   User.find({'_id': id}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -228,7 +229,7 @@ var getUser = function (id, callback) {
  * @param profileId
  * @param callback
  */
-var getFacebookUser = function (profileId, callback) {
+function getFacebookUser(profileId, callback) {
   User.find({'login.facebookProfileId': profileId}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -238,14 +239,14 @@ var getFacebookUser = function (profileId, callback) {
     }
     callback(null, docs[0]);
   });
-};
+}
 
 /**
  * Returns a user by its google profile
  * @param profileId
  * @param callback
  */
-var getGoogleUser = function (profileId, callback) {
+function getGoogleUser(profileId, callback) {
   User.find({'login.googleProfileId': profileId}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -255,14 +256,15 @@ var getGoogleUser = function (profileId, callback) {
     }
     callback(null, docs[0]);
   });
-};
+}
+
 
 /**
  * Returns a user by its Dropbox profile
  * @param profileId
  * @param callback
  */
-var getDropboxUser = function (profileId, callback) {
+function getDropboxUser(profileId, callback) {
   User.find({'login.dropboxProfileId': profileId}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -272,13 +274,13 @@ var getDropboxUser = function (profileId, callback) {
     }
     callback(null, docs[0]);
   });
-};
+}
 
 /**
  * Gets all users
  * @param callback
  */
-var getAllUsers = function (callback) {
+function getAllUsers(callback) {
   User.find({}, function (err, docs) {
     if (err) {
       return callback(err);
@@ -288,20 +290,21 @@ var getAllUsers = function (callback) {
     }
     callback(null, docs);
   });
-};
+}
 
 /**
  * Counts all users
  * @param callback
  */
-var countUsers = function (callback) {
+function countUsers  (callback) {
   User.count({}, function (err, nb) {
     if (err) {
       return callback(err);
     }
     callback(null, nb);
   });
-};
+}
+
 
 /**
  * Gets a user signing in with facebook. If the user does not exist, it will be created
@@ -345,7 +348,7 @@ function findOrCreateFacebookUser(profile, callback) {
     }
     if (!user) {
       // The user is not here, try to find him with the email-address
-      var emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
+      let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
 
       function createNewFacebookUser() {
         newUser                         = new User();
@@ -530,11 +533,15 @@ function findOrCreateDropboxUser(profile, callback) {
         let newUser                    = new User();
         newUser._id                    = emailAddress || profile.id;
         newUser.login.dropboxProfileId = profile.id;
-        newUser.info.dropbox           = profile;
+        newUser.info.dropbox           = {
+          emails     : _.get(profile, 'emails', []),
+          name       : _.get(profile, 'name', {}),
+          displayName: _.get(profile, 'displayName', '?')
+        };
         newUser.info.registrationDate  = new Date();
         newUser.login.verifiedEmail    = true; // Dropbox does not need verification
-        newUser.personalData.forename  = _.get(profile, '_json.name_details.given_name', '');
-        newUser.personalData.surname   = _.get(profile, '_json.name_details.surname', profile.displayName);
+        newUser.personalData.forename  = _.get(profile, 'name.givenName', '');
+        newUser.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
         newUser.personalData.email     = emailAddress ? emailAddress : profile.id; // using profile id as email alternative
         newUser.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
         newUser.save(function (err, savedUser) {
@@ -554,18 +561,22 @@ function findOrCreateDropboxUser(profile, callback) {
           }
           if (user) {
             // Ok, we know this user. Update profile for dropbox access
-            user.info.dropbox           = profile;
+            user.info.dropbox           = {
+              emails     : _.get(profile, 'emails', []),
+              name       : _.get(profile, 'name', {}),
+              displayName: _.get(profile, 'displayName', '?')
+            };
             user.info.registrationDate  = new Date();
             user.login.verifiedEmail    = true; // Dropbox does not need verification
-            user.personalData.forename  = _.get(profile, '_json.name_details.given_name', '');
-            user.personalData.surname   = _.get(profile, '_json.name_details.surename', profile.displayName);
+            user.personalData.forename  = _.get(profile, 'name.givenName', '');
+            user.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
             user.login.dropboxProfileId = profile.id;
             user.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
             user.save(function (err) {
               if (err) {
                 return callback(err);
               }
-              logger.info('Upgraded user ' + emailAddress + ' for microsoft access');
+              logger.info('Upgraded user ' + emailAddress + ' for dropbox access');
               // Recursive call, now we'll find this user
               return findOrCreateDropboxUser(profile, callback);
             });
@@ -582,11 +593,16 @@ function findOrCreateDropboxUser(profile, callback) {
     }
 
     // User found, update
-    user.info.dropbox        = profile;
+    user.info.dropbox        = {
+      emails     : _.get(profile, 'emails', []),
+      name       : _.get(profile, 'name', {}),
+      displayName: _.get(profile, 'displayName', '?')
+    };
     user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
     updateUser(user, null, callback);
   });
 }
+
 module.exports = {
   Model: User,
 

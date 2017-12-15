@@ -9,7 +9,7 @@
 const LocalStrategy    = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy   = require('passport-google-oauth20').Strategy;
-const DropboxStrategy  = require('passport-dropbox').Strategy;
+const DropboxStrategy  = require('passport-dropbox-oauth2').Strategy;
 const crypto           = require('crypto');
 const logger           = require('./logger').getLogger('authStrategy');
 const util             = require('util');
@@ -112,8 +112,9 @@ module.exports = function (settings, users) {
    * Dropbox Strategy
    */
   const dropboxStrategy = new DropboxStrategy({
-      consumerKey      : settings.oAuth.dropbox.clientId,
-      consumerSecret   : settings.oAuth.dropbox.clientSecret,
+      apiVersion       : '2',
+      clientID         : settings.oAuth.dropbox.clientId,
+      clientSecret     : settings.oAuth.dropbox.clientSecret,
       callbackURL      : settings.oAuth.dropbox.callbackURL,
       passReqToCallback: true
     },

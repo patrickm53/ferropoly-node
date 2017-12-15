@@ -50,13 +50,13 @@ module.exports = function (app) {
    * Authentication Route for Dropbox
    */
   app.get('/auth/dropbox',
-    passport.authenticate('dropbox'));
+    passport.authenticate('dropbox-oauth2'));
 
   /**
    * Callback for Dropbox
    */
   app.get('/auth/dropbox/callback',
-    passport.authenticate('dropbox', {failureRedirect: '/login'}),
+    passport.authenticate('dropbox-oauth2', {failureRedirect: '/login'}),
     function (req, res) {
       // Successful authentication, redirect home.
       console.log('SUCCESSFUL LOGGED IN WITH DROPBOX ------------------------------------');

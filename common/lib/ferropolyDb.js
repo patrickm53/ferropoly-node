@@ -6,9 +6,9 @@
  */
 
 const mongoose = require('mongoose');
-const logger = require('./logger').getLogger('ferropolyDb');
+const logger   = require('./logger').getLogger('ferropolyDb');
 
-let db = undefined;
+let db           = undefined;
 let mongooseThis = undefined;
 
 // Needed for the new mongoose, using the ES6 native promises
@@ -33,18 +33,13 @@ module.exports = {
     }
 
     // Connect to the MongoDb
-    let options = {
+    let options  = {
       useMongoClient: true,
-      server: {
-        socketOptions: {keepAlive: 1},
-        poolSize: poolSize
-      },
-      replset: {
-        socketOptions: {keepAlive: 1}
-      }
+      poolSize     : poolSize
+
     };
     mongooseThis = mongoose.connect(settings.locationDbSettings.mongoDbUrl, options);
-    db = mongoose.connection;
+    db           = mongoose.connection;
 
     db.on('error', function (err) {
       logger.error('MongoDb Connection Error:', err);
