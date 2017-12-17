@@ -79,7 +79,6 @@ router.get('/:gameId', function (req, res) {
       });
     });
   });
-
 });
 
 

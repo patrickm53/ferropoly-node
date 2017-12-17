@@ -14,7 +14,7 @@ router.get('/:gameId', function (req, res) {
     if (err) {
       return res.status(400).send(err.message);
     }
-    var rules = gp.toObject().rules;
+    let rules = gp.toObject().rules;
     res.send(rules);
   });
 });

@@ -7,7 +7,7 @@
 const express = require('express');
 const router  = express.Router();
 
-const settings                  = require('../settings');
+const settings                    = require('../settings');
 const gameplayModel               = require('../../common/models/gameplayModel');
 const chancelleryTransactionModel = require('../../common/models/accounting/chancelleryTransaction');
 const teamAccountTransactionModel = require('../../common/models/accounting/teamAccountTransaction');

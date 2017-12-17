@@ -265,7 +265,7 @@ function managecallCtrl($scope, $http) {
       $scope.callLog.push({
         class  : 'list-group-item-danger',
         title  : 'Gambling',
-        message: 'Fehler: ' + status,
+        message: 'Fehler: ' + status + ' ' + data.message,
         ts     : new Date()
       });
       console.log(data);

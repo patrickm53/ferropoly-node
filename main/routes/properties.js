@@ -3,8 +3,8 @@
  * Created by kc on 26.05.15.
  */
 
-const express = require('express');
-const router = express.Router();
+const express  = require('express');
+const router   = express.Router();
 const propWrap = require('../lib/propertyWrapper');
 const accessor = require('../lib/accessor');
 

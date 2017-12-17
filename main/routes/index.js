@@ -3,12 +3,10 @@
  * Created by kc on 14.04.15.
  */
 
-const express = require('express');
-const router  = express.Router();
-
+const express      = require('express');
+const router       = express.Router();
 const settings     = require('../settings');
 const users        = require('../../common/models/userModel');
-const logger       = require('../../common/lib/logger').getLogger('routes:index');
 const errorHandler = require('../lib/errorHandler');
 
 let ngFile = '/js/indexmctrl.js';

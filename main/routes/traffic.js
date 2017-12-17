@@ -5,10 +5,10 @@
 
 
 const trafficLib = require('../lib/traffic');
-var express = require('express');
-var router = express.Router();
-var accessor = require('../lib/accessor');
-var gameCache = require('../lib/gameCache');
+const express    = require('express');
+const router     = express.Router();
+const accessor   = require('../lib/accessor');
+const gameCache  = require('../lib/gameCache');
 
 /**
  * Get the traffic info
@@ -19,20 +19,20 @@ router.get('/:gameId', function (req, res) {
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(500).send({message: err.message});
     }
-    gameCache.getGameData(req.params.gameId, function(err, gameData) {
+    gameCache.getGameData(req.params.gameId, function (err, gameData) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: err.message});
       }
       if (!gameData || !gameData.gameplay) {
-        return res.send({status:'error', message:'Gameplay not found'});
+        return res.status(500).send({message: 'Gameplay not found'});
       }
       trafficLib.getTrafficInfo(gameData.gameplay.internal.map, function (err, data) {
         if (err) {
-          return res.send({status: 'error', message: err.message});
+          return res.status(500).send({message: err.message});
         }
-        res.send({status: 'ok', trafficInfo: data});
+        res.send({trafficInfo: data});
       });
     });
   });

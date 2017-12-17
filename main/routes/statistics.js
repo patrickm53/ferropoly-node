@@ -19,15 +19,15 @@ const _               = require('lodash');
  */
 router.get('/rankingList/:gameId', function (req, res) {
   if (!req.params.gameId) {
-    return res.send({status: 'error', message: 'No gameId supplied'});
+    return res.status(400).send({message: 'No gameId supplied'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.status(401).send({status: 'error', message: err.message});
+      return res.status(401).send({message: err.message});
     }
     teamAccount.getRankingList(req.params.gameId, function (err, ranking) {
       if (err) {
-        return res.status(500).send({status: 'error', message: err.message});
+        return res.status(500).send({message: err.message});
       }
       res.send({ranking: ranking});
     });
@@ -42,12 +42,12 @@ router.get('/income/:gameId', function (req, res) {
 
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.status(401).send({status: 'error', message: err.message});
+      return res.status(401).send({message: err.message});
     }
     gameCache.getGameData(req.params.gameId, function (err, data) {
       if (err) {
         logger.error(err);
-        return res.status(500).send({status: 'error', message: err.message});
+        return res.status(500).send({message: err.message});
       }
       let gp    = data.gameplay;
       let teams = _.values(data.teams);
@@ -65,7 +65,7 @@ router.get('/income/:gameId', function (req, res) {
         },
         function (err) {
           if (err) {
-            return res.status(500).send({status: 'error', message: err.message});
+            return res.status(500).send({message: err.message});
           }
           res.send({info: info});
         });
@@ -81,17 +81,17 @@ router.get('/income/:gameId/:teamId', function (req, res) {
 
   accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, function (err) {
     if (err) {
-      return res.status(401).send({status: 'error', message: err.message});
+      return res.status(401).send({message: err.message});
     }
     gameCache.getGameData(req.params.gameId, function (err, data) {
       if (err) {
         logger.error(err);
-        return res.status(500).send({status: 'error', message: err.message});
+        return res.status(500).send({message: err.message});
       }
 
       propertyAccount.getRentRegister(data.gameplay, data.teams[req.params.teamId], function (err, result) {
         if (err) {
-          return res.status(500).send({status: 'error', message: err.message});
+          return res.status(500).send({message: err.message});
         }
         return res.send({info: result});
       });

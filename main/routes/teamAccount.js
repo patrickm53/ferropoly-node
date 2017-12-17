@@ -4,12 +4,12 @@
  */
 
 
-const express = require('express');
-const router = express.Router();
+const express     = require('express');
+const router      = express.Router();
 const teamAccount = require('../lib/accounting/teamAccount');
-const _ = require('lodash');
-const accessor = require('../lib/accessor');
-const moment = require('moment');
+const _           = require('lodash');
+const accessor    = require('../lib/accessor');
+const moment      = require('moment');
 
 router.get('/get/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
@@ -20,16 +20,16 @@ router.get('/get/:gameId/:teamId', function (req, res) {
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(401).send({message: err.message});
     }
     let teamBalance = {};
-    let query = req.query || {};
-    let tsStart = query.start ? moment(query.start) : undefined;
-    let tsEnd = query.end ? moment(query.end) : undefined;
+    let query       = req.query || {};
+    let tsStart     = query.start ? moment(query.start) : undefined;
+    let tsEnd       = query.end ? moment(query.end) : undefined;
 
     teamAccount.getAccountStatement(req.params.gameId, req.params.teamId, tsStart, tsEnd, function (err, data) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: err.message});
       }
 
       for (let i = 0; i < data.length; i++) {
@@ -46,7 +46,7 @@ router.get('/get/:gameId/:teamId', function (req, res) {
         //  data[i].transaction = _.omit(data[i].transaction, 'origin');
         data[i] = _.omit(data[i], ['_id', 'gameId', '__v']);
       }
-      res.send({status: 'ok', accountData: data});
+      res.send({accountData: data});
     });
   });
 });

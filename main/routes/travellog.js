@@ -3,26 +3,26 @@
  * Created by kc on 11.06.15.
  */
 
-const express = require('express');
-const router = express.Router();
+const express   = require('express');
+const router    = express.Router();
 const travelLog = require('../../common/models/travelLogModel');
-const logger = require('../../common/lib/logger').getLogger('routes:travellog');
-const accessor = require('../lib/accessor');
-const _ = require('lodash');
+const logger    = require('../../common/lib/logger').getLogger('routes:travellog');
+const accessor  = require('../lib/accessor');
+const _         = require('lodash');
 
 /**
  * Get the ranking list
  */
 router.get('/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
-    return res.send({status: 'error', message: 'No gameId supplied'});
+    return res.status(400).send({message: 'No gameId supplied'});
   }
   if (!req.params.teamId) {
-    return res.send({status: 'error', message: 'No teamId supplied'});
+    return res.status(400).send({message: 'No teamId supplied'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(401).send({message: err.message});
     }
     logger.info('Request for ' + req.params.teamId + ' @ ' + req.params.gameId);
     let teamId = req.params.teamId;
@@ -31,7 +31,7 @@ router.get('/:gameId/:teamId', function (req, res) {
     }
     travelLog.getAllLogEntries(req.params.gameId, teamId, function (err, log) {
       if (err) {
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: err.message});
       }
       for (let i = 0; i < log.length; i++) {
         log[i] = _.omit(log[i], ['_id', '__v', 'gameId']);

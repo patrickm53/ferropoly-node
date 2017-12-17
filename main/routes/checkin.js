@@ -3,18 +3,18 @@
  * Created by kc on 08.01.16.
  */
 
-var express          = require('express');
-var router           = express.Router();
-var _                = require('lodash');
-var settings         = require('../settings');
-var pricelist        = require('../../common/lib/pricelist');
-var authTokenManager = require('../lib/authTokenManager');
-var gamecache        = require('../lib/gameCache');
-var errorHandler     = require('../lib/errorHandler');
+const express          = require('express');
+const router           = express.Router();
+const _                = require('lodash');
+const settings         = require('../settings');
+const pricelist        = require('../../common/lib/pricelist');
+const authTokenManager = require('../lib/authTokenManager');
+const gamecache        = require('../lib/gameCache');
+const errorHandler     = require('../lib/errorHandler');
 
 /* GET the checkin of a game */
 router.get('/:gameId', function (req, res) {
-  var gameId = req.params.gameId;
+  let gameId = req.params.gameId;
 
   gamecache.refreshCache(function (err) {
     if (err) {
@@ -25,10 +25,10 @@ router.get('/:gameId', function (req, res) {
       if (err) {
         return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
       }
-      var gp    = gamedata.gameplay;
-      var teams = gamedata.teams;
+      let gp    = gamedata.gameplay;
+      let teams = gamedata.teams;
 
-      var team = _.find(_.values(teams), function (t) {
+      let team = _.find(_.values(teams), function (t) {
         if (t.data.teamLeader.email === req.session.passport.user) {
           return true;
         }

@@ -87,36 +87,36 @@ router.get('/play/:gameId/:teamId', function (req, res) {
 router.post('/gamble/:gameId/:teamId', function (req, res) {
   logger.info(req.body);
   if (!req.body.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (1)'});
+    return res.status(401).send({message: 'Permission denied (1)'});
   }
   if (req.body.authToken !== req.session.ferropolyToken) {
-    return res.send({status: 'error', message: 'Permission denied (2)'});
+    return res.status(401).send({message: 'Permission denied (2)'});
   }
   if (!req.params.gameId || !req.params.teamId || !req.body.amount) {
-    return res.send({status: 'error', message: 'No gameId, teamId or amount supplied'});
+    return res.status(400).send({message: 'No gameId, teamId or amount supplied'});
   }
 
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.send({status: 'error', message: err.message});
+      return res.status(500).send({message: err.message});
     }
     let amount = parseInt(req.body.amount);
     if (!_.isNumber(amount)) {
-      return res.send({status: 'error', message: 'amount is not a number'});
+      return res.status(500).send({message: 'amount is not a number'});
     }
     gameCache.getGameData(req.params.gameId, function (err, data) {
       if (err) {
         logger.error(err);
-        return res.send({status: 'error', message: err.message});
+        return res.status(500).send({message: err.message});
       }
       let gp   = data.gameplay;
       let team = data.teams[req.params.teamId];
 
       chancellery.gamble(gp, team, amount, function (err, data) {
         if (err) {
-          return res.send({status: 'error', message: err.message});
+          return res.status(500).send({message: err.message});
         }
-        res.send({status: 'ok', result: data});
+        res.send({result: data});
       });
     });
   });
