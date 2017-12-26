@@ -34,6 +34,7 @@
     "tests"
   ],
   "resolutions": {
-    "angular": "1.6.6"
+    "angular": "1.6.8",
+    "jquery": "3.2.1"
   }
 }
