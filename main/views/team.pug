@@ -36,32 +36,32 @@ block content
                   button.btn.btn-primary(ng-click='addMember()') hinzufügen
                   .well.well-sm.well-ok#info-ok(ng-show='successMessage') {{successMessage}}
                   .well.well-sm.well-error#info-error(ng-show='errorMessage') {{errorMessage}}
-       .row
-         .col-xs-12.col-sm-12.col-md-12
-           .panel.panel.panel-default
-             .panel-heading
-               h3.panel-title Team-Mitglieder
-             .panel-body
-               #no-teams(ng-show='!members.length')
-                 p Bisher wurden noch keine Team-Mitglieder erfasst.
-               #team-list(ng-show='members.length')
-                 table.table
-                   thead
-                     tr
-                       th Login
-                       th Name
-                       th Avatar
-                       th Löschen
-                   tbody
-                     tr(ng-repeat='m in members')
-                       td {{m.login}}
-                       td
-                         span(ng-show='!m.personalData') Dieser Benutzer hat noch kein Login
-                         span(ng-show='m.personalData') {{m.personalData.forename}} {{m.personalData.surname}}
-                       td
-                         span(ng-show='m.personalData')
-                           img(ng-src='{{m.personalData.avatar}}')
-                       td
-                         i.delete-user.fa.fa-trash(data-toggle="modal" data-target="#delete-modal" ng-click='deleteMember(m)')
+      .row
+        .col-xs-12.col-sm-12.col-md-12
+          .panel.panel.panel-default
+            .panel-heading
+              h3.panel-title Team-Mitglieder
+            .panel-body
+              #no-teams(ng-show='!members.length')
+                p Bisher wurden noch keine Team-Mitglieder erfasst.
+              #team-list(ng-show='members.length')
+                table.table
+                  thead
+                    tr
+                      th Login
+                      th Name
+                      th Avatar
+                      th Löschen
+                  tbody
+                    tr(ng-repeat='m in members')
+                      td {{m.login}}
+                      td
+                        span(ng-show='!m.personalData') Dieser Benutzer hat noch kein Login
+                        span(ng-show='m.personalData') {{m.personalData.forename}} {{m.personalData.surname}}
+                      td
+                        span(ng-show='m.personalData')
+                          img(ng-src='{{m.personalData.avatar}}')
+                      td
+                        i.delete-user.fa.fa-trash(data-toggle="modal" data-target="#delete-modal" ng-click='deleteMember(m)')
 
 
