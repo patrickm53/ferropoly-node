@@ -6,12 +6,10 @@
  * Created by kc on 16.12.15.
  */
 
-
-
-var maps = require('./maps.json');
-var locationModel = require('../models/locationModel');
-var async = require('async');
-var _ = require('lodash');
+const maps          = require('./maps.json');
+const locationModel = require('../models/locationModel');
+const async         = require('async');
+const _             = require('lodash');
 
 module.exports = {
   /**
@@ -27,6 +25,7 @@ module.exports = {
    * /maps                   => just the maps with descriptions, this is the fastest options
    * /maps?count=true        => adds the number of locations for each map and over all
    * /maps?locations=true    => adds all locations and the number over all
+   * &json=true              => output as json
    * @param req
    * @param res
    */
@@ -37,20 +36,25 @@ module.exports = {
         if (err) {
           return res.status(500).send(err.message);
         }
+        if (req.query.json) {
+          return res.send(info);
+        }
         return res.send('var ferropolyMaps = ' + JSON.stringify(info) + ';');
       });
     }
     else if (req.query.locations) {
-      var retVal = _.clone(maps, true);
+      let retVal = _.clone(maps, true);
 
       async.each(retVal.maps,
         function (m, cb) {
-          locationModel.getAllLocationsForMap(m.map, function(err, locs) {
+          locationModel.getAllLocationsForMap(m.map, function (err, locs) {
             if (err) {
               return cb(err);
             }
 
-            locs.forEach(function(loc) {
+            locs = _.sortBy(locs, 'name');
+
+            locs.forEach(function (loc) {
               delete loc._id;
               delete loc.position;
               delete loc.maps;
@@ -66,11 +70,17 @@ module.exports = {
           if (err) {
             return res.status(500).send(err.message);
           }
+          if (req.query.json) {
+            return res.send(retVal);
+          }
           res.send('var ferropolyMaps = ' + JSON.stringify(retVal) + ';');
         }
       );
     }
     else {
+      if (req.query.json) {
+        return res.send(retVal);
+      }
       res.send('var ferropolyMaps = ' + JSON.stringify(maps) + ';');
     }
   }
