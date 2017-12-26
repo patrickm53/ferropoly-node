@@ -4,13 +4,13 @@
  */
 
 
-const express = require('express');
-const router = express.Router();
+const express  = require('express');
+const router   = express.Router();
 const settings = require('../settings');
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  res.render('about', {title: 'Ferropoly Info', versionInfo: settings.version});
+  res.render('about', {title: 'Ferropoly Info', versionInfo: settings.version, nodeVersion: process.version});
 });
 
 module.exports = router;
