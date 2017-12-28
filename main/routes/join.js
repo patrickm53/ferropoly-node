@@ -14,7 +14,7 @@ const logger    = require('../../common/lib/logger').getLogger('routes:join');
 const mailer    = require('../../common/lib/mailer');
 let ngFile      = '/js/joinctrl.js';
 if (settings.minifiedjs) {
-  ngFile = '/js/joinctrl.min.js';
+  ngFile = '/js/min/joinctrl.min.js';
 }
 
 

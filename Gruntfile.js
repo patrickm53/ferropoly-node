@@ -109,7 +109,8 @@ module.exports = function (grunt) {
           './main/public/js/min/checkin.min.js'    : ['./main/public/js/checkin.js'],
           './main/public/js/min/teamctrl.min.js'   : ['./main/public/js/teamctrl.js'],
           './main/public/js/min/indexmctrl.min.js' : ['./main/public/js/indexmctrl.js'],
-          './main/public/js/min/summaryctrl.min.js': ['./main/public/js/summaryctrl.js']
+          './main/public/js/min/summaryctrl.min.js': ['./main/public/js/summaryctrl.js'],
+          './main/public/js/min/joinctrl.min.js'   : ['./main/public/js/joinctrl.js']
         }
       },
       options: {
