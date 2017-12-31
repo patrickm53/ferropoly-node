@@ -50,9 +50,11 @@ indexControl.controller('indexCtrl', ['$scope', '$http', function ($scope, $http
    */
   $scope.isGameRunning = function (gp) {
     if (moment(gp.scheduling.gameEndTs).isBefore(moment())) {
+      // game already over (gameEndTs is written only in finalized games)
       return -1;
     }
-    if (moment(gp.scheduling.gameStartTs).isAfter(moment())) {
+    if (moment(gp.scheduling.gameDate).isAfter(moment())) {
+      // game is in future
       return 1;
     }
     // Is running
