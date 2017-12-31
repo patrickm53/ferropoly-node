@@ -83,13 +83,12 @@ block content
                       div(ng-hide='gameplay.internal.finalized')
                         .alert.alert-warning Die Preisliste wurde noch nicht finalisiert, es sind noch Änderungen möglich.
                       p Die Spieldaten werden am {{gameplay.scheduling.deleteTs | date:'d.M.yyyy'}} automatisch gelöscht.
-                      div(ng-show='gameplay.internal.finalized')
-                        p
-                          a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
-                          a.btn.btn-primary.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0) && gameplay.mobile.level') Spielen
-                          a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level) || (gameplay.internal.finalized && (isGameRunning(gameplay) === 0))') Spiel ansehen
-                          a.btn.btn-primary.btn-sm(href='/summary/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && isGameOver(gameplay)') Zusammenfassung
-                          a.btn.btn-default.btn-sm(href='/team/edit/{{gameplay.internal.gameId}}/{{gameplay.team.uuid}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level || !isTeamleader(gameplay))') Team-Mitglieder
+                      p
+                        a.btn.btn-default.btn-sm(href='/info/{{gameplay.internal.gameId}}') Preislistenansicht
+                        a.btn.btn-primary.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && (isGameRunning(gameplay) === 0) && gameplay.mobile.level') Spielen
+                        a.btn.btn-default.btn-sm(href='/checkin/{{gameplay.internal.gameId}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level) || (gameplay.internal.finalized && (isGameRunning(gameplay) === 0))') Spiel ansehen
+                        a.btn.btn-primary.btn-sm(href='/summary/{{gameplay.internal.gameId}}' ng-show='gameplay.internal.finalized && isGameOver(gameplay)') Zusammenfassung
+                        a.btn.btn-default.btn-sm(href='/team/edit/{{gameplay.internal.gameId}}/{{gameplay.team.uuid}}' ng-hide='(!gameplay.mobile || !gameplay.mobile.level || !isTeamleader(gameplay))') Team-Mitglieder
                       p(class='gameplay-id') ID: {{gameplay.internal.gameId}}
                     .panel-footer
                       p {{getGpInfo(gameplay)}}
