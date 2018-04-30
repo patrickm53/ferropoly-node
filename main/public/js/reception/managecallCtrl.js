@@ -5,7 +5,7 @@
 'use strict';
 
 ferropolyApp.controller('managecallCtrl', managecallCtrl);
-function managecallCtrl($scope, $http) {
+function managecallCtrl($scope) {
 
   // Pagination
   $scope.itemsPerPage            = 6;
@@ -128,7 +128,11 @@ function managecallCtrl($scope, $http) {
 
     if (playChancellery) {
       // Play chancellery in every standard call
-      $http.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid).success(function (data) {
+      $.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid,
+        function() {
+          console.log('done')
+        }
+      ).done(function (data) {
         console.log(data);
 
         var infoClass = 'list-group-item-success';
@@ -144,7 +148,7 @@ function managecallCtrl($scope, $http) {
 
         $scope.callPanel = 2;
         $scope.showCallPanel('buy');
-      }).error(function (data, status) {
+      }).fail(function (data, status) {
         console.log(data);
         $scope.callPanel = 2;
         $scope.showCallPanel('buy');
@@ -179,9 +183,9 @@ function managecallCtrl($scope, $http) {
    * Buy houses for all properties of this team
    */
   $scope.buyHouses = function () {
-    $http.post('/marketplace/buildHouses/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
+    $.post('/marketplace/buildHouses/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
       authToken: dataStore.getAuthToken()
-    }).success(function (data) {
+    }).done(function (data) {
       console.log(data);
       var msg;
       if (data.result.amount === 0) {
@@ -194,7 +198,7 @@ function managecallCtrl($scope, $http) {
         }
       }
       $scope.callLog.push({class: 'list-group-item-success', title: 'Hausbau', message: msg, ts: new Date()});
-    }).error(function (data, status) {
+    }).fail(function (data, status) {
       $scope.callLog.push({
         class  : 'list-group-item-danger',
         title  : 'Hausbau',
@@ -208,9 +212,9 @@ function managecallCtrl($scope, $http) {
    * Buy a house for a specific property
    */
   $scope.buyHouse = function (property) {
-    $http.post('/marketplace/buildHouse/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
+    $.post('/marketplace/buildHouse/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
       authToken: dataStore.getAuthToken()
-    }).success(function (data) {
+    }).done(function (data) {
       console.log(data);
       property = dataStore.getPropertyById(property.uuid);
       var msg;
@@ -226,7 +230,7 @@ function managecallCtrl($scope, $http) {
         message: msg,
         ts     : new Date()
       });
-    }).error(function (data, status) {
+    }).fail(function (data, status) {
       $scope.callLog.push({
         class  : 'list-group-item-danger',
         title  : 'Hausbau',
@@ -246,10 +250,10 @@ function managecallCtrl($scope, $http) {
       return;
     }
 
-    $http.post('/chancellery/gamble/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
+    $.post('/chancellery/gamble/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid, {
       authToken: dataStore.getAuthToken(),
       amount   : Math.abs($scope.gambleAmount) * factor
-    }).success(function (data) {
+    }).done(function (data) {
       console.log(data);
       var infoClass = 'list-group-item-success';
       if (data.result.amount < 0) {
@@ -261,7 +265,7 @@ function managecallCtrl($scope, $http) {
         message: data.result.amount.toLocaleString('de-CH'),
         ts     : new Date()
       });
-    }).error(function (data, status) {
+    }).fail(function (data, status) {
       $scope.callLog.push({
         class  : 'list-group-item-danger',
         title  : 'Gambling',
@@ -347,9 +351,9 @@ function managecallCtrl($scope, $http) {
     }
     property.isBeingBought = true;
 
-    $http.post('/marketplace/buyProperty/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
+    $.post('/marketplace/buyProperty/' + dataStore.getGameplay().internal.gameId + '/' + activeCall.getCurrentTeam().uuid + '/' + property.uuid, {
       authToken: dataStore.getAuthToken()
-    }).success(function (data) {
+    }).done(function (data) {
       property.isBeingBought = false; // Request is over, reset flag
 
       console.log(data);
@@ -379,7 +383,7 @@ function managecallCtrl($scope, $http) {
         redrawMap();
       });
 
-    }).error(function (data, status) {
+    }).fail(function (data, status) {
       property.isBeingBought = false; // Request is over, reset flag
       console.log('ERROR in buyProperty/', data, status);
       $scope.callLog.push({class: 'list-group-item-danger', title: 'Grundstückkauf', message: data, ts: new Date()});
@@ -620,4 +624,4 @@ function managecallCtrl($scope, $http) {
   $(document).ready(initializeMap);
 }
 
-managecallCtrl.$inject = ['$scope', '$http'];
+managecallCtrl.$inject = ['$scope'];
