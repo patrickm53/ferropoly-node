@@ -5,7 +5,7 @@
 'use strict';
 
 ferropolyApp.controller('dashboardCtrl', dashboardCtrl);
-function dashboardCtrl($scope, $http) {
+function dashboardCtrl($scope) {
   ///// RANKING LIST
   $scope.rankingList        = [];
   $scope.teamIdToTeamName   = dataStore.teamIdToTeamName;
@@ -94,5 +94,5 @@ function dashboardCtrl($scope, $http) {
   });
 }
 
-dashboardCtrl.$inject = ['$scope', '$http'];
+dashboardCtrl.$inject = ['$scope'];
 

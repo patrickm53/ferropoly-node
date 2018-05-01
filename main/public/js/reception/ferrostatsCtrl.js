@@ -5,7 +5,7 @@
 'use strict';
 
 ferropolyApp.controller('ferrostatsCtrl', ferrostatsCtrl);
-function ferrostatsCtrl($scope, $http) {
+function ferrostatsCtrl($scope) {
   $scope.rankingList = [];
   $scope.incomeList = [];
   $scope.refreshHandler = $scope.showStatsIncome;
@@ -127,5 +127,5 @@ function ferrostatsCtrl($scope, $http) {
   $scope.showStatsPanel('stats-possessions');
 }
 
-ferrostatsCtrl.$inject = ['$scope', '$http'];
+ferrostatsCtrl.$inject = ['$scope'];
 

@@ -9,7 +9,7 @@
  * The angular controller for the chancellery
  */
 ferropolyApp.controller('chanceCtrl', chanceCtrl);
-function chanceCtrl($scope, $http) {
+function chanceCtrl($scope) {
   $scope.entries = [];
   $scope.teams = dataStore.getTeams();
   $scope.chancelleryAsset = 0;
@@ -34,4 +34,4 @@ function chanceCtrl($scope, $http) {
 }
 
 
-chanceCtrl.$inject = ['$scope', '$http'];
+chanceCtrl.$inject = ['$scope'];

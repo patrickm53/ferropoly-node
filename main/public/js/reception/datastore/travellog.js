@@ -12,8 +12,8 @@ DataStore.prototype.updateTravelLog = function (teamId, callback) {
   console.log('update travel log for ' + teamId);
   var self = this;
   // see https://api.jquery.com/jquery.get/
-  $.get('/travellog/' + this.getGameplay().internal.gameId + '/' + teamId,
-    function (data) {
+  $.getJSON('/travellog/' + this.getGameplay().internal.gameId + '/' + teamId)
+    .done(function (data) {
       console.log('/travellog ok');
       if (!teamId) {
         // All entries were retrieved, replace them completely

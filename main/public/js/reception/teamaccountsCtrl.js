@@ -4,7 +4,7 @@
  */
 'use strict';
 
-ferropolyApp.controller('teamAccountsCtrl', ['$scope', '$http', function ($scope, $http) {
+ferropolyApp.controller('teamAccountsCtrl', ['$scope', function ($scope) {
   $scope.teams = dataStore.getTeams();
   $scope.currentTeamId = 'undefined';
 

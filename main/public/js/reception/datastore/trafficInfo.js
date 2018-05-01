@@ -10,8 +10,8 @@
 DataStore.prototype.updateTrafficInfo = function (callback) {
   var self = this;
 
-  $.get('/traffic/' + this.getGameplay().internal.gameId,
-    function (data) {
+  $.getJSON('/traffic/' + this.getGameplay().internal.gameId)
+    .done(function (data) {
       // Convert times
       for (var i = 0; i < data.trafficInfo.data.item.length; i++) {
         data.trafficInfo.data.item[i].publishDate   = moment(data.trafficInfo.data.item[i].publishDate);
@@ -22,7 +22,6 @@ DataStore.prototype.updateTrafficInfo = function (callback) {
       if (callback) {
         callback(null, self.data.trafficInfo);
       }
-
     })
     .fail(function (error) {
 

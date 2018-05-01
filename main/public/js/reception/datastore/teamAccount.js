@@ -25,8 +25,8 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
     }
   }
   // see https://api.jquery.com/jquery.get/
-  $.get('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId + query,
-    function (data) {
+  $.getJSON('/teamAccount/get/' + this.getGameplay().internal.gameId + '/' + teamId + query)
+    .done(function (data) {
 
       console.log('/teamAccount ok, entries: ' + data.accountData.length);
       if (!teamId) {
@@ -52,8 +52,7 @@ DataStore.prototype.updateTeamAccountEntries = function (teamId, callback) {
           self.data.teamAccountEntries[teamId].push(newEntry);
         }
       }
-    }
-  )
+    })
     .fail(function (data) {
       console.error('ERROR when getting accountData (2):');
       console.log(data);

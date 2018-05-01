@@ -11,16 +11,14 @@ DataStore.prototype.getRankingList = function (callback) {
   var self = this;
   console.log('start query for ranking list');
   // see https://api.jquery.com/jquery.get/
-  $.get('/statistics/rankingList/' + this.getGameplay().internal.gameId, function (data) {
-
-    for (var i = 0; i < data.ranking.length; i++) {
-      data.ranking[i].teamName = self.teamIdToTeamName(data.ranking[i].teamId);
-    }
-    self.data.rankingList = data.ranking;
-    return callback(null, self.data.rankingList);
-
-
-  })
+  $.getJSON('/statistics/rankingList/' + this.getGameplay().internal.gameId)
+    .done(function (data) {
+      for (var i = 0; i < data.ranking.length; i++) {
+        data.ranking[i].teamName = self.teamIdToTeamName(data.ranking[i].teamId);
+      }
+      self.data.rankingList = data.ranking;
+      return callback(null, self.data.rankingList);
+    })
     .fail(function (error) {
       self.data.rankingList = [];
       callback(error);
@@ -34,15 +32,14 @@ DataStore.prototype.getRankingList = function (callback) {
 DataStore.prototype.getIncomeList = function (callback) {
   var self = this;
   console.log('start query for ranking list');
-  $.get('/statistics/income/' + this.getGameplay().internal.gameId, function (data) {
-
-    for (var i = 0; i < data.info.length; i++) {
-      data.info[i].teamName = self.teamIdToTeamName(data.info[i].teamId);
-    }
-    self.data.incomeList = data.info;
-    return callback(null, self.data.incomeList);
-
-  })
+  $.getJSON('/statistics/income/' + this.getGameplay().internal.gameId)
+    .done(function (data) {
+      for (var i = 0; i < data.info.length; i++) {
+        data.info[i].teamName = self.teamIdToTeamName(data.info[i].teamId);
+      }
+      self.data.incomeList = data.info;
+      return callback(null, self.data.incomeList);
+    })
     .fail(function (error) {
       self.data.incomeList = [];
       callback(error);

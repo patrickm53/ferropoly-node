@@ -184,7 +184,7 @@ function createFreePropertyMarker(property) {
  * The angular controller for the maps
  */
 ferropolyApp.controller('mapCtrl', mapCtrl);
-function mapCtrl($scope, $http) {
+function mapCtrl($scope) {
 
   $scope.travelLogAll     = false;
   $scope.travelLogMarkers = [];

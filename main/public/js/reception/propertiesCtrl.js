@@ -8,7 +8,7 @@
  * The angular controller for the properties statistics
  */
 ferropolyApp.controller('propertiesCtrl', propertiesCtrl);
-function propertiesCtrl($scope, $http) {
+function propertiesCtrl($scope) {
   var travelLogLoaded = false;
 
   $scope.properties = [];
@@ -56,4 +56,4 @@ function resizePropertyList() {
 $(window).resize(resizePropertyList);
 $(document).ready(resizePropertyList);
 
-propertiesCtrl.$inject = ['$scope', '$http'];
+propertiesCtrl.$inject = ['$scope'];

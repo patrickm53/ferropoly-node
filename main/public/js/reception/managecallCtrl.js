@@ -128,10 +128,7 @@ function managecallCtrl($scope) {
 
     if (playChancellery) {
       // Play chancellery in every standard call
-      $.get('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid,
-        function() {
-          console.log('done')
-        }
+      $.getJSON('/chancellery/play/' + dataStore.getGameplay().internal.gameId + '/' + $scope.selectedTeam.uuid
       ).done(function (data) {
         console.log(data);
 

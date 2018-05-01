@@ -11,13 +11,14 @@ DataStore.prototype.updateChancellery = function (callback) {
   console.log('update chancellery');
 
   // see https://api.jquery.com/jquery.get/
-  $.get('/chancellery/account/statement/' + this.getGameplay().internal.gameId,
-    function (data) {
-      self.data.chancelleryEntries = data.entries;
-      if (callback) {
-        callback();
+  $.getJSON('/chancellery/account/statement/' + this.getGameplay().internal.gameId,)
+    .done(function (data) {
+        self.data.chancelleryEntries = data.entries;
+        if (callback) {
+          callback();
+        }
       }
-    })
+    )
     .fail(function (data) {
       console.log('ERROR when getting chancellery data (2):');
       console.log(data);
@@ -53,16 +54,17 @@ DataStore.prototype.updateProperties = function (teamId, callback) {
   console.log('update pricelist for ' + teamId);
 
   // see https://api.jquery.com/jquery.get/
-  $.get('/properties/get/' + this.getGameplay().internal.gameId + '/' + teamId, function (data) {
+  $.getJSON('/properties/get/' + this.getGameplay().internal.gameId + '/' + teamId)
+    .done(function (data) {
 
-    for (var i = 0; i < data.properties.length; i++) {
-      self.updatePropertyInPricelist(data.properties[i]);
-    }
+      for (var i = 0; i < data.properties.length; i++) {
+        self.updatePropertyInPricelist(data.properties[i]);
+      }
 
-    if (callback) {
-      callback();
-    }
-  })
+      if (callback) {
+        callback();
+      }
+    })
     .fail(function (data) {
       console.log('ERROR when getting properties (2):');
       console.log(data);
