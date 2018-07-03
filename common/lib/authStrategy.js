@@ -76,7 +76,7 @@ module.exports = function (settings, users) {
       clientSecret : settings.oAuth.facebook.secret,
       callbackURL  : settings.oAuth.facebook.callbackURL,
       enableProof  : false,
-      profileFields: ['id', 'about', 'website', 'cover', 'picture', 'email', 'gender', 'name']
+      profileFields: ['id', 'cover', 'picture', 'email', 'name']
     },
     function (accessToken, refreshToken, profile, done) {
       //console.log('ACCESS-TOKEN  ' + util.inspect(accessToken));

@@ -99,20 +99,10 @@ module.exports = {
           req.session.targetUrl = req.url;
           res.status(401);
 
-          if (_.startsWith(uri, '/anmelden')) {
-            // a more friendly page when registering
-            res.render('join/join-error', {
-              message: 'Zugriff nicht erlaubt',
-              error  : {status: 401, stack: {}}
-            });
-          }
-          else {
-            res.render('error/401', {
-              message: 'Zugriff nicht erlaubt',
-              error  : {status: 401, stack: {}}
-            });
-          }
-
+          res.render('error/401', {
+            message: 'Zugriff nicht erlaubt',
+            error  : {status: 401, stack: {}}
+          });
         }
 
       } else {
