@@ -16,7 +16,8 @@ div(ng-controller='propertiesCtrl')
           .panel-body
             p Kaufzeit: {{p.gamedata.boughtTs | date:'HH:mm'}}
             p Anzahl Häuser: {{p.gamedata.buildings}}
-            p Hausbau möglich:&nbsp;
-              span(ng-show='p.gamedata.buildingEnabled && p.gamedata.buildings < 5') Ja
-              span(ng-show='!p.gamedata.buildingEnabled || p.gamedata.buildings < 4') Nein
+            p(ng-show='p.gamedata.buildings < 5') Hausbau möglich:&nbsp;
+              span(ng-show='p.gamedata.buildingEnabled') Ja
+              span(ng-show='!p.gamedata.buildingEnabled') Nein
+            p(ng-show='p.gamedata.buildings > 4') Maximale Anzahl Häuser
 
