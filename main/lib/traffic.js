@@ -156,7 +156,8 @@ function updateTrafficInfo(url, callback) {
     if (err) {
       return callback(err);
     }
-    callback(null, transformData(pixlXml.parse(data)));
+    let str = data.toString('utf8');
+    callback(null, transformData(pixlXml.parse(str)));
   });
 }
 
