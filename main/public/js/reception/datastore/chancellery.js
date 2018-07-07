@@ -11,7 +11,7 @@ DataStore.prototype.updateChancellery = function (callback) {
   console.log('update chancellery');
 
   // see https://api.jquery.com/jquery.get/
-  $.getJSON('/chancellery/account/statement/' + this.getGameplay().internal.gameId,)
+  $.getJSON('/chancellery/account/statement/' + this.getGameplay().internal.gameId)
     .done(function (data) {
         self.data.chancelleryEntries = data.entries;
         if (callback) {
