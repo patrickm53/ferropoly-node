@@ -136,7 +136,7 @@ function getRssFeed(url, callback) {
     return;
   }
 
-  needle.get(url, function (error, response) {
+  needle.get(url, {parse_response: false}, function (error, response) {
     if (!error && response.statusCode === 200) {
       callback(null, response.body);
     }
