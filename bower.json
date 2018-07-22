@@ -14,8 +14,8 @@
     "node"
   ],
   "dependencies": {
-    "angular": "1.6.8",
-    "angular-sanitize": "1.6.8",
+    "angular": "1.7.2",
+    "angular-sanitize": "1.7.2",
     "jquery": "3.2.1",
     "lodash": "4.17.4",
     "c3": "0.4.18",
@@ -34,7 +34,7 @@
     "tests"
   ],
   "resolutions": {
-    "angular": "1.6.8",
+    "angular": "1.7.2",
     "jquery": "3.2.1"
   }
 }
