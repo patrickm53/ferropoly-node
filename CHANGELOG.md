@@ -1,9 +1,5 @@
 # Changelog Ferropoly Spiel
 
-
-* Update auf Angular.js 1.7
-* Bugfix: Eingabe Wert in Chance/Kanzlei geht wieder (Bug in Angular.js) #68
-
 ## v2.2.1 22.7.18
 
 * Keine Neuregistrierung über Benutzername/Passwort mehr möglich (alte Logins funktionieren weiterhin), Google- oder Facebook-Account ist für Login notwendig.
