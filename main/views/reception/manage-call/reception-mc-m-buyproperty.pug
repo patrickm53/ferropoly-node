@@ -43,7 +43,7 @@
         .panel-heading
           h3.panel-title Gambling
         .panel-body
-          input(type="number" inputmode="numeric" min=0 step=500 max=250000 ng-model="gambleAmount")
+          input(id="gambleAmount" type="number" inputmode="numeric" min=0 step=500 max=250000 ng-model="gambleAmount")
           p
           p
             button.btn.btn-success(type="button"  ng-click="gamble(1)" ng-disabled='!isGameActive()') Gewinn

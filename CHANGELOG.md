@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## V2.2.2 4.8.18
+* Bugfix (Workaround) für Inputfelder mit numerischen Werten (angular.js)
+
 ## v2.2.1 22.7.18
 
 * Keine Neuregistrierung über Benutzername/Passwort mehr möglich (alte Logins funktionieren weiterhin), Google- oder Facebook-Account ist für Login notwendig.

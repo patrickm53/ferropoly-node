@@ -617,6 +617,30 @@ function managecallCtrl($scope) {
   };
 
 
+  /* This is a workaround for numeric input controls: Angular.js does not allow values outside
+     the 'steps' interval. If you enter such a value, _undefined_ is the result. This workaround
+     sets the data when angular would reject it.
+  */
+  var numericControls = [
+    {id: '#gambleAmount', name: 'gambleAmount'}
+  ];
+
+  function numericControlCorrection(controls) {
+    controls.forEach(function (control) {
+      $(control.id).focusout(function () {
+        if (!$scope[control.name]) {
+          $scope[control.name] = parseFloat($(control.id).val());
+          console.info('Undefined value corrected for "' + control.name + '" :' + $scope[control.name]);
+        }
+      });
+    });
+  }
+
+  numericControlCorrection(numericControls);
+
+
+
+
   // Init the map when the document is ready
   $(document).ready(initializeMap);
 }
