@@ -26,6 +26,11 @@ const sampleTrafficInfo = path.join(__dirname, '..', '..', 'test', 'fixtures', '
 
 const rssFeed = {
   'sbb': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
+  'ostwind': 'http://fahrplan.sbb.ch/bin/help.exe/dnl?tpl=rss_feed_custom&icons=47&regions=BVI5',
+  'libero': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
+  'tva': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
+  'tvlu': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
+  'tnw': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
   'zvv': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI4'
 };
 
@@ -57,7 +62,8 @@ function extractDuration(durationString) {
 }
 
 function getCategory(entry) {
-  switch (entry.category['_Data']) {
+  let category = entry.category[0]['_Data'];
+  switch (category) {
     case '1':
       return 'construction';
 

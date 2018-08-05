@@ -1,6 +1,9 @@
 # Changelog Ferropoly Spiel
 
-## V2.2.2 4.8.18
+## v2.2.3 5.8.18
+* Bugfix Verkehrsinfo: Filter und Ostwind-Infos #67
+
+## v2.2.2 4.8.18
 * Bugfix (Workaround) für Inputfelder mit numerischen Werten (angular.js)
 
 ## v2.2.1 22.7.18
