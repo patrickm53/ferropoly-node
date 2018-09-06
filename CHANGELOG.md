@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+* Bugfix: Bei zu langen Spielnamen stürzte der Editor beim Laden der Preisliste ab
+
+
 ## v2.2.3 5.8.18
 * Bugfix Verkehrsinfo: Filter und Ostwind-Infos #67
 

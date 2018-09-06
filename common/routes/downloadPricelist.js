@@ -9,10 +9,10 @@
 
 
 
-var express = require('express');
-var router = express.Router();
+var express   = require('express');
+var router    = express.Router();
 var pricelist = require('../lib/pricelist');
-var xlsx = require('node-xlsx');
+var xlsx      = require('node-xlsx');
 
 /**
  * Handler for priceslist download
@@ -20,17 +20,18 @@ var xlsx = require('node-xlsx');
  * @param res
  */
 function handler(req, res) {
-  pricelist.getArray(req.params.gameId, function(err, report) {
+  pricelist.getArray(req.params.gameId, function (err, report) {
     if (err) {
       return res.send({status: 'error', message: err.message});
     }
-    var buffer = xlsx.build([{name: report.name, data: report.data}]);
+
+    var buffer = xlsx.build([{name: report.sheetName, data: report.data}]);
 
     res.set({
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Type'       : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'Content-Description': 'File Transfer',
-      'Content-Disposition': 'attachment; filename=' + report.name,
-      'Content-Length': buffer.length
+      'Content-Disposition': 'attachment; filename=' + report.fileName,
+      'Content-Length'     : buffer.length
     });
     res.send(buffer);
   })
@@ -39,6 +40,6 @@ function handler(req, res) {
 router.get('/:gameId', handler);
 
 module.exports = {
-  router: router,
+  router : router,
   handler: handler
 };
