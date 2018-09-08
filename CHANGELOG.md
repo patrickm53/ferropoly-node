@@ -1,7 +1,9 @@
 # Changelog Ferropoly Spiel
 
-* Bugfix: Bei zu langen Spielnamen stürzte der Editor beim Laden der Preisliste ab
-
+## v2.2.4 8.9.18
+Danke Soraya (Pfadi Wulp) für das ausgiebige Testen, diese Bugs wurden Dank Dir behoben:
+* Bugfix: Bei zu langen Spielnamen stürzte das Programm beim Laden der Preisliste ab
+* Bugfix: Bei zu langen Teamnamen stürzte das Program beim Laden ab
 
 ## v2.2.3 5.8.18
 * Bugfix Verkehrsinfo: Filter und Ostwind-Infos #67

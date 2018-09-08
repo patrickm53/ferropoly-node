@@ -94,7 +94,7 @@ module.exports = {
               sheets.push({name: 'Alle Teams', data: xlist});
               return cb(err);
             }
-            sheets.push({name: teams[team].data.name, data: xlist});
+            sheets.push({name: teams[team].data.name.substring(0,30), data: xlist});
             return cb(err);
           });
         },
