@@ -105,8 +105,7 @@ function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
       .exec(function (err, data) {
         callback(err, data);
       })
-  }
-  else {
+  } else {
     // all teams
     TeamAccountTransaction.find({gameId: gameId})
       .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
@@ -139,7 +138,7 @@ function dumpAccounts(gameId, callback) {
  * @param callback
  */
 function getRankingList(gameId, callback) {
-  TeamAccountTransaction.aggregate({
+  TeamAccountTransaction.aggregate([{
     $match: {
       gameId: gameId,
     }
@@ -148,7 +147,7 @@ function getRankingList(gameId, callback) {
       _id  : '$teamId',
       asset: {$sum: "$transaction.amount"}
     }
-  }, callback);
+  }], callback);
 }
 
 
@@ -161,17 +160,20 @@ function getBalance(gameId, teamId, callback) {
 
   var retVal = {};
 
-  TeamAccountTransaction.aggregate({
-    $match: {
-      gameId: gameId,
-      teamId: teamId
+  TeamAccountTransaction.aggregate([
+    {
+      $match: {
+        gameId: gameId,
+        teamId: teamId
+      }
     }
-  }, {
-    $group: {
-      _id  : 'balance',
-      asset: {$sum: "$transaction.amount"}
+    , {
+      $group: {
+        _id  : 'balance',
+        asset: {$sum: "$transaction.amount"}
+      }
     }
-  }, function (err, data) {
+  ], function (err, data) {
     if (err) {
       return callback(err);
     }

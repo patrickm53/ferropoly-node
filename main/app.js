@@ -5,9 +5,15 @@
  * Created by kc on 14.04.15.
  */
 
+// Logging has highest prio
+const settings     = require('./settings');
+const logging      = require('../common/lib/logger');
+logging.init({debugLevel: settings.logger.debugLevel});
+const logger       = logging.getLogger('editor-app');
+
+
 const express      = require('express');
 const path         = require('path');
-const morgan       = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
 const passport     = require('passport');
@@ -16,7 +22,6 @@ const session      = require('express-session');
 const compression  = require('compression');
 const MongoStore   = require('connect-mongo')(session);
 const moment       = require('moment');
-const settings     = require('./settings');
 const uuid         = require('uuid');
 
 // Model includes
@@ -31,7 +36,6 @@ const joinRoute    = require('./routes/join');
 const authtoken    = require('./routes/authtoken');
 const ferroSocket  = require('./lib/ferroSocket');
 const autopilot    = require('./lib/autopilot');
-const logger       = require('../common/lib/logger').getLogger('main:app');
 const authStrategy = require('../common/lib/authStrategy')(settings, users);
 
 
@@ -62,10 +66,7 @@ ferropolyDb.init(settings, function (err, db) {
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'pug');
 
-  morgan.token('prefix', function getId() {
-    return 'http: ' + moment().format();
-  });
-  app.use(morgan(':prefix :method :status :remote-addr :url'));
+  logging.setExpressLogger(app);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
   app.use(cookieParser());

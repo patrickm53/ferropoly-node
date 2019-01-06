@@ -1,59 +1,33 @@
 /**
- * Ferropoly Logging Module
+ * Ferropoly Logging Module, requires Winston 3.x
  *
  * Created by kc on 08.06.15.
  */
 
-const winston = require('winston');
-const moment = require('moment');
-const util = require('util');
-const _ = require('lodash');
+const util                                = require('util');
+const _                                   = require('lodash');
+const {createLogger, format, transports}  = require('winston');
+const {combine, timestamp, label, printf} = format;
+const expressWinston                      = require('express-winston');
+
+let settings = {
+  debugLevel: 'info'
+};
 
 let testCounter = 0;
 
-let loggerSettings = {
-  levels: {
-    fatal: 4,
-    error: 3,
-    info: 2,
-    warn: 1,
-    debug: 0
-  },
-  colors: {
-    fatal: 'blue',
-    error: 'red',
-    info: 'green',
-    warn: 'yellow',
-    debug: 'grey'
-  }
-};
-
-const logger = new winston.Logger();
-winston.setLevels(loggerSettings.levels);
-winston.addColors(loggerSettings.colors);
-logger.add(winston.transports.Console, {level: 'debug', colorize: true});
+/**
+ * Formatter for the logger
+ * @type {never}
+ */
+const logFormat = printf(info => {
+  return `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`;
+});
 
 /**
- * Core logging function
- * @param module
- * @param level
- * @param message
- * @param metadata
+ * Exports
+ * @type {{add: module.exports.add, getLogger: (function(*=): {warn: warn, debug: debug, test: test, error: error, fatal: fatal, info: info}), remove: module.exports.remove, setExpressLogger: module.exports.setExpressLogger}}
  */
-function log(module, level, message, metadata) {
-  let info = moment().format() + ' ' + module + ': ';
-  if (_.isObject(message)) {
-    info += util.inspect(message);
-  }
-  else {
-    info += message;
-  }
-  if (metadata) {
-    info += '\n' + util.inspect(metadata);
-  }
-  logger.log(level, info);
-}
-
 module.exports = {
   add: function (transport, options) {
     logger.add(transport, options);
@@ -63,34 +37,97 @@ module.exports = {
     logger.remove(transport);
   },
 
+  /**
+   * First time initialisation for an instance
+   * @param options
+   */
+  init: function(options) {
+    settings.debugLevel = _.get(options, 'debugLevel', settings.debugLevel);
+  },
+
+  /**
+   * Sets the logger for express
+   */
+  setExpressLogger: function (app) {
+    app.use(expressWinston.logger({
+      transports   : [
+        new transports.Console()
+      ],
+      format       : combine(
+        label({label: 'HTTP'}),
+        timestamp(),
+        logFormat
+      ),
+      meta         : true, // optional: control whether you want to log the meta data about the request (default to true)
+      msg          : "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
+      expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
+      colorize     : false, // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
+    }));
+  },
+
+  /**
+   * Gets a logger for a module
+   * @param moduleName
+   * @returns {{warn: warn, debug: debug, test: test, error: error, fatal: fatal, info: info}}
+   */
   getLogger: function (moduleName) {
+    const logger = createLogger({
+      format    : combine(
+        label({label: moduleName}),
+        timestamp(),
+        logFormat
+      ),
+      transports: [new transports.Console({level: settings.debugLevel})]
+    });
+
+
+    /**
+     * Core logging function
+     * @param module
+     * @param level
+     * @param message
+     * @param metadata
+     */
+    function log(level, message, metadata) {
+      let info = '';
+      if (_.isObject(message)) {
+        info += util.inspect(message);
+      } else {
+        info += message;
+      }
+      if (metadata) {
+        info += '\n' + util.inspect(metadata);
+      }
+      logger.log(level, info);
+    }
+
     return {
       fatal: function (message, metadata) {
-        log(moduleName, 'fatal', message, metadata);
+        log('fatal', message, metadata);
       },
       error: function (message, metadata) {
-        log(moduleName, 'error', message, metadata);
+        log('error', message, metadata);
       },
-      info: function (message, metadata) {
-        log(moduleName, 'info', message, metadata);
+      info : function (message, metadata) {
+        log('info', message, metadata);
       },
-      warn: function (message, metadata) {
-        log(moduleName, 'warn', message, metadata);
+      warn : function (message, metadata) {
+        log('warn', message, metadata);
       },
       debug: function (message, metadata) {
-        log(moduleName, 'info', message, metadata); // using info as otherwise on stderr
+        log('debug', message, metadata); // using info as otherwise on stderr
       },
       /**
        * Outputs data from a test (if any)
        * @param message
        * @param metadata
        */
-      test: function(message, metadata) {
+      test : function (message, metadata) {
         if (!message) {
           return;
         }
-        log(moduleName, 'info', testCounter + ' ##' + _.repeat('-', 80));
-        log(moduleName, 'info', 'DEBUG: ' + message, metadata);
+        logger.log('info', testCounter + ' ##' + _.repeat('-', 80));
+        logger.log('info', 'DEBUG: ' + message, metadata);
         testCounter++;
       }
     };

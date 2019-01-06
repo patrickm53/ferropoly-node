@@ -47,5 +47,10 @@ module.exports = function (settings) {
   settings.oAuth.dropbox.callbackURL = 'http://localhost:3004/auth/dropbox/callback';
 
 
+  // Logger
+  settings.logger = {
+    debugLevel: 'silly'
+  };
+
   return settings;
 };

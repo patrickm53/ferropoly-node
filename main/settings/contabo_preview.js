@@ -44,6 +44,10 @@ module.exports = function (settings) {
   // Dropbox settings
   settings.oAuth.dropbox.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/dropbox/callback';
 
+  // Logger
+  settings.logger = {
+    debugLevel: 'debug'
+  };
 
   return settings;
 };

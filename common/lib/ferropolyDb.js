@@ -34,9 +34,8 @@ module.exports = {
 
     // Connect to the MongoDb
     let options  = {
-      useMongoClient: true,
-      poolSize     : poolSize
-
+      poolSize       : poolSize,
+      useNewUrlParser: true
     };
     mongooseThis = mongoose.connect(settings.locationDbSettings.mongoDbUrl, options);
     db           = mongoose.connection;
@@ -74,7 +73,7 @@ module.exports = {
   close: function (callback) {
     logger.info('Disconnecting MongoDb');
     if (mongooseThis) {
-      mongooseThis.disconnect(function (err) {
+      mongoose.disconnect(function (err) {
         db = undefined;
         callback(err);
       })
