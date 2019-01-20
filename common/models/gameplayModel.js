@@ -191,7 +191,7 @@ let getGameplaysForUser = function (email, callback) {
  * @param callback
  */
 let checkIfGameIdExists = function (gameId, callback) {
-  Gameplay.count({'internal.gameId': gameId}, function (err, nb) {
+  Gameplay.countDocuments({'internal.gameId': gameId}, function (err, nb) {
     if (err) {
       return callback(err);
     }
@@ -224,7 +224,7 @@ function createNewGameId(callback) {
  * @param callback
  */
 let countGameplaysForUser = function (ownerId, callback) {
-  Gameplay.count({'internal.owner': ownerId}, function (err, nb) {
+  Gameplay.countDocuments({'internal.owner': ownerId}, function (err, nb) {
     if (err) {
       return callback(err);
     }
@@ -237,7 +237,7 @@ let countGameplaysForUser = function (ownerId, callback) {
  * @param callback
  */
 let countGameplays = function (callback) {
-  Gameplay.count({}, function (err, nb) {
+  Gameplay.countDocuments({}, function (err, nb) {
     if (err) {
       return callback(err);
     }

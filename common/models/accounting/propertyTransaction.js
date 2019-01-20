@@ -123,14 +123,14 @@ function getSummary(gameId, propertyId, callback) {
     match['propertyId'] = propertyId;
   }
 
-  PropertyAccountTransaction.aggregate({
+  PropertyAccountTransaction.aggregate([{
     $match: match
   }, {
     $group: {
       _id    : '$propertyId',
       balance: {$sum: "$transaction.amount"}
     }
-  }, callback);
+  }], callback);
 }
 
 module.exports = {

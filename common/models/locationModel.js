@@ -107,7 +107,7 @@ function getLocationByUuid(uuid, callback) {
 function countLocations(callback) {
   let retVal = _.clone(mapinfo, true);
 
-  Location.count({}, function (err, nb) {
+  Location.countDocuments({}, function (err, nb) {
     if (err) {
       retVal.all = 0;
     }
@@ -122,7 +122,7 @@ function countLocations(callback) {
         let query    = {};
         query[index] = true;
 
-        Location.count(query, function (err, nb) {
+        Location.countDocuments(query, function (err, nb) {
           m.locationNb = nb;
           cb(err);
         });

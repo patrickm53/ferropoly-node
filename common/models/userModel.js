@@ -297,7 +297,7 @@ function getAllUsers(callback) {
  * @param callback
  */
 function countUsers  (callback) {
-  User.count({}, function (err, nb) {
+  User.countDocuments({}, function (err, nb) {
     if (err) {
       return callback(err);
     }

@@ -138,16 +138,18 @@ function dumpAccounts(gameId, callback) {
  * @param callback
  */
 function getRankingList(gameId, callback) {
-  TeamAccountTransaction.aggregate([{
-    $match: {
-      gameId: gameId,
+  TeamAccountTransaction.aggregate([
+    {
+      $match: {
+        gameId: gameId,
+      }
+    }, {
+      $group: {
+        _id  : '$teamId',
+        asset: {$sum: "$transaction.amount"}
+      }
     }
-  }, {
-    $group: {
-      _id  : '$teamId',
-      asset: {$sum: "$transaction.amount"}
-    }
-  }], callback);
+  ], callback);
 }
 
 
@@ -166,8 +168,7 @@ function getBalance(gameId, teamId, callback) {
         gameId: gameId,
         teamId: teamId
       }
-    }
-    , {
+    }, {
       $group: {
         _id  : 'balance',
         asset: {$sum: "$transaction.amount"}
@@ -182,7 +183,7 @@ function getBalance(gameId, teamId, callback) {
     }
     retVal.asset = data[0].asset;
 
-    TeamAccountTransaction.count({
+    TeamAccountTransaction.countDocuments({
       gameId: gameId,
       teamId: teamId
     }, function (err, result) {

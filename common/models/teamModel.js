@@ -168,7 +168,7 @@ function countTeams(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Team.count({gameId: gameId}, callback);
+  Team.countDocuments({gameId: gameId}, callback);
 };
 
 /**

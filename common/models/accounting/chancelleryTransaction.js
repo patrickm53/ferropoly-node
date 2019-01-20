@@ -92,18 +92,16 @@ function getEntries(gameId, tsStart, tsEnd, callback) {
  */
 function getBalance(gameId, callback) {
 
-  ChancelleryTransaction.aggregate([
-    {
-      $match: {
-        gameId: gameId
-      }
-    }, {
-      $group: {
-        _id    : 'balance',
-        balance: {$sum: "$transaction.amount"}
-      }
+  ChancelleryTransaction.aggregate([{
+    $match: {
+      gameId: gameId
     }
-  ], function (err, data) {
+  }, {
+    $group: {
+      _id    : 'balance',
+      balance: {$sum: "$transaction.amount"}
+    }
+  }], function (err, data) {
     if (err) {
       return callback(err);
     }
