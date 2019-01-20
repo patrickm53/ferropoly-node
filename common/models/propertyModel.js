@@ -362,7 +362,7 @@ const allowBuilding = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Property.update({
+  Property.updateOne({
     gameId          : gameId,
     'gamedata.owner': {'$exists': true, '$ne': ''}
   }, {'gamedata.buildingEnabled': true}, {multi: true}, function (err, numAffected) {
