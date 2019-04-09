@@ -8,7 +8,7 @@ const _                      = require('lodash');
 const teamAccountTransaction = require('./../../../common/models/accounting/teamAccountTransaction');
 const moment                 = require('moment');
 const logger                 = require('../../../common/lib/logger').getLogger('accounting:teamAccount');
-const teamAccountActions     = require('../../components/checkin-datastore/lib/teamAccount/actions');
+const teamAccountActions     = require('../../../components/checkin-datastore/lib/teamAccount/actions');
 
 let ferroSocket;
 

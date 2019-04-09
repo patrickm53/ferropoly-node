@@ -18,7 +18,7 @@ const logger              = require('../../../common/lib/logger').getLogger('pro
 const async               = require('async');
 const _                   = require('lodash');
 const moment              = require('moment');
-const propertyActions     = require('../../components/checkin-datastore/lib/properties/actions');
+const propertyActions     = require('../../../components/checkin-datastore/lib/properties/actions');
 
 let ferroSocket;
 

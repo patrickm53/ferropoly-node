@@ -1,4 +1,4 @@
-extends ../layout
+extends layout
 
 block head
   script
@@ -14,53 +14,48 @@ block head
     != pricelist
     | };
 
-
-
-  if minifiedjs
-    script(src='/js/min/checkin.min.js')
-  else
-    script(src='/socket.io/socket.io.js')
-    script(src='/js/checkin/index.js')
-    script(src='/js/checkin/geolocation.js')
-    script(src='/js/checkin/datastore.js')
-    script(src='/js/checkin/checkinsocket.js')
-    script(src='/js/checkin/dashboardctrl.js')
-    script(src='/js/checkin/mapctrl.js')
-    script(src='/js/checkin/propertiesctrl.js')
-    script(src='/js/checkin/pricelistctrl.js')
-    script(src='/js/checkin/accountctrl.js')
-
+  script(src='/js/check-in/app.js')
   link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
 
-block navbar-right
-  li
-    a(href='#' onclick='activateView("#view-dashboard")') Dashboard
-  li
-    a(href='#' onclick='activateView("#view-map")') Karte
-  li
-    a(href='#' onclick='activateView("#view-pricelist")') Preisliste
-  li
-    a(href='#' onclick='activateView("#view-properties")') Besitz
-  li
-    a(href='#' onclick='activateView("#view-teamaccount")') Kontobuch
-
-  li#online
-    i.fa.fa-cloud.online
-    | &nbsp;online
-  li#offline
-    i.fa.fa-cloud.offline
-    | &nbsp;offline
 
 block content
+  div(ng-app='checkinApp')
 
-  .container-fluid(ng-app='checkinApp')
-    #view-dashboard.ng-cloak
-      include ./checkin-dashboard
-    #view-map.ng-cloak
-      include ./checkin-map
-    #view-teamaccount.ng-cloak
-      include ./checkin-teamaccount
-    #view-properties.ng-cloak
-      include ./checkin-properties
-    #view-pricelist.ng-cloak
-      include ./checkin-pricelist
+    nav#ferropoly-navbar.navbar.navbar-expand-md.navbar-dark.bg-dark
+      a.navbar-brand.mb-0.h1(href='/') Ferropoly
+      button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+
+      #navbarCollapse.collapse.navbar-collapse
+        ul.navbar-nav
+          li.nav-item
+            a.nav-link(href='#' onclick='activateView("#view-dashboard")') Dashboard
+          li.nav-item
+            a.nav-link(href='#' onclick='activateView("#view-map")') Karte
+          li.nav-item
+            a.nav-link(href='#' onclick='activateView("#view-pricelist")') Preisliste
+          li.nav-item
+            a.nav-link(href='#' onclick='activateView("#view-properties")') Besitz
+          li.nav-item
+            a.nav-link(href='#' onclick='activateView("#view-teamaccount")') Kontobuch
+
+          li#online
+            i.fa.fa-cloud.online
+            | &nbsp;online
+          li#offline
+            i.fa.fa-cloud.offline
+            | &nbsp;offline
+
+    .container-fluid
+
+
+      #view-dashboard.ng-cloak
+        include ./checkin-dashboard
+      #view-map.ng-cloak
+        //include ./checkin-map
+      #view-teamaccount.ng-cloak
+        //#include ./checkin-teamaccount
+      #view-properties.ng-cloak
+        //include ./checkin-properties
+      #view-pricelist.ng-cloak
+        //include ./checkin-pricelist

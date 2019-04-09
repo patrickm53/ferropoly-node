@@ -12,7 +12,7 @@ const chancelleryTransaction = require('../../../common/models/accounting/chance
 const teamAccount            = require('./teamAccount');
 const _                      = require('lodash');
 const moment                 = require('moment');
-const chancelleryActions     = require('../../components/checkin-datastore/lib/chancellery/actions');
+const chancelleryActions     = require('../../../components/checkin-datastore/lib/chancellery/actions');
 const logger                 = require('../../../common/lib/logger').getLogger('chancelleryAccount');
 let ferroSocket;
 let jackpotFull              = {};
