@@ -1,11 +1,11 @@
 /**
  * The checkin app
  */
-import $ from 'jquery'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'angular';
 import isNumber from 'lodash/isNumber'
+import {initDashboard} from './dashboard.js'
 
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
@@ -37,20 +37,4 @@ checkinApp.filter('amount', function () {
   }
 });
 
-/**
- * The dashboard controller
- * @param $scope
- * @param $http
- */
-function dashboardCtrl($scope, $http) {
-  // Initializing
-  $(document).ready(() => {
-    console.log('Index page intitialized');
-
-  });
-}
-
-checkinApp.controller('dashboardCtrl', dashboardCtrl);
-dashboardCtrl.$inject = ['$scope', '$http'];
-
-
+initDashboard(checkinApp);

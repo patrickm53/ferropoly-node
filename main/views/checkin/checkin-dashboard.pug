@@ -7,19 +7,20 @@ div(ng-controller='dashboardCtrl')
 
     .row
       .col-md-4.col-sm-4.col-xs-12
-        .dashboard-tile.tile-asset
-          p.dashboard-title Vermögen
-          p.dashboard-value {{teamAccount.asset | amount}}
+        .card
+          .card-body
+            h5.card-title Vermögen
+            p.card-text {{teamAccount.asset | amount}}
 
-      .col-md-4.col-sm-4.col-xs-6
-        .dashboard-tile.tile-propertynb
-          p.dashboard-title Anzahl Orte
-          p.dashboard-value {{properties.length}}
+        .card
+          .card-body
+            h5.card-title Anzahl Orte
+            p.card-text {{properties.length}}
 
-      .col-md-4.col-sm-4.col-xs-6
-        .dashboard-tile.tile-chancellery
-          p.dashboard-title Parkplatz
-          p.dashboard-value {{chancelleryAsset | amount}}
+        .card
+          .card-body
+            h5.card-title Parkplatz
+            p.card-text {{chancelleryAsset | amount}}
     .row
       .col-md-12
         h3 Live-Ticker
