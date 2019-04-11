@@ -7,6 +7,9 @@ import 'angular';
 import isNumber from 'lodash/isNumber'
 import {initDashboard} from './dashboard.js'
 import {initMap} from './map.js'
+import {initPricelist} from './pricelist.js'
+import {initProperties} from './properties.js'
+import {initAccounts} from './teamaccount.js'
 import {viewHandler} from './viewHandler.js'
 
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
@@ -42,9 +45,11 @@ checkinApp.filter('amount', function () {
 // Init the controllers
 initDashboard(checkinApp);
 initMap(checkinApp);
-
+initPricelist(checkinApp);
+initProperties(checkinApp);
+initAccounts(checkinApp);
 
 // Handlers for basic actions in the app
-window.activateView = function(v) {
+window.activateView = function (v) {
   viewHandler.activateView(v);
 };

@@ -3,7 +3,7 @@
  * Created by kc on 25.01.16.
  */
 
-'use strict';
+const checkinDatastore = require('../../components/checkin-datastore/')
 
 /**
  * The Checkin properties controller
@@ -21,6 +21,11 @@ function propertiesCtrl($scope, $http) {
   });
 }
 
-checkinApp.controller('propertiesCtrl', propertiesCtrl);
-propertiesCtrl.$inject = ['$scope', '$http'];
+
+const initProperties = function (app) {
+  app.controller('propertiesCtrl', propertiesCtrl);
+  propertiesCtrl.$inject = ['$scope'];
+};
+export {initProperties}
+
 
