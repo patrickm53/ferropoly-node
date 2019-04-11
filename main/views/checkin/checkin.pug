@@ -14,9 +14,12 @@ block head
     != pricelist
     | };
 
-  script(src='/js/check-in/app.js')
-  link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
-
+  if minifiedjs
+    script(src='/js/min/checkin.min.js')
+    link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
+  else
+    script(src='/js/checkin.js')
+    link(rel='stylesheet', href='/css/checkin.css',  type='text/css')
 
 block content
   div(ng-app='checkinApp')

@@ -25,8 +25,9 @@
  * Created by kc on 14.04.15.
  */
 'use strict';
-const webpackConfig = require('./webpack.config.js');
-module.exports = function (grunt) {
+const webpackDevConfig  = require('./webpack.dev.js');
+const webpackProdConfig = require('./webpack.prod.js');
+module.exports          = function (grunt) {
 
   grunt.initConfig({
     pkg   : grunt.file.readJSON('package.json'),
@@ -223,8 +224,8 @@ module.exports = function (grunt) {
       options: {
         stats: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
       },
-      prod: webpackConfig,
-      dev: Object.assign({ watch: true }, webpackConfig)
+      prod   : webpackProdConfig,
+      dev    : Object.assign({watch: true}, webpackDevConfig)
     }
   });
 
