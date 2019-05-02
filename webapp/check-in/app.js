@@ -5,6 +5,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../main/public/css/ferropoly.css'
 import '../../main/public/css/checkin.css'
+
 import 'angular';
 import isNumber from 'lodash/isNumber'
 import {initDashboard} from './dashboard.js'
@@ -16,13 +17,14 @@ import {viewHandler} from './viewHandler.js'
 
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
+import {faCloud} from "@fortawesome/free-solid-svg-icons/faCloud";
 import {faCheckCircle} from "@fortawesome/free-solid-svg-icons/faCheckCircle";
 import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
 import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
 
 
-library.add(faCircle, faCheckCircle, faCheck);
+library.add(faCircle, faCheckCircle, faCheck, faCloud);
 library.add(faExclamationCircle, faDownload);
 dom.watch();
 
