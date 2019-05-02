@@ -29,12 +29,7 @@ html(lang='de')
     meta(name='author' content='Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch')
     meta(name='viewport' content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Open+Sans',  type='text/css')
-    link(rel='stylesheet', href='/modules/components-font-awesome/css/font-awesome.min.css', type='text/css')
-    if minifiedjs
-      link(rel='stylesheet', href='/css/ferropoly.min.css',  type='text/css' )
-    else
-      link(rel='stylesheet', href='/css/ferropoly.min.css',  type='text/css' )
-    endif
+
 
 
     block head
@@ -50,10 +45,6 @@ html(lang='de')
     script(src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js")
 
   body
-
-
-
-    include ../generic-modals.pug
     block content
 
 

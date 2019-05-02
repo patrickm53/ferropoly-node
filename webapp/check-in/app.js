@@ -3,6 +3,8 @@
  */
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../main/public/css/ferropoly.css'
+import '../../main/public/css/checkin.css'
 import 'angular';
 import isNumber from 'lodash/isNumber'
 import {initDashboard} from './dashboard.js'
