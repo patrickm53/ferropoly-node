@@ -6,21 +6,23 @@ div(ng-controller='dashboardCtrl')
     h2 {{team.data.name}}
 
     .row
-      .col-md-4.col-sm-4.col-xs-12
-        .card
-          .card-body
-            h5.card-title Vermögen
-            p.card-text {{teamAccount.asset | amount}}
-
-        .card
-          .card-body
-            h5.card-title Anzahl Orte
-            p.card-text {{properties.length}}
-
-        .card
-          .card-body
-            h5.card-title Parkplatz
-            p.card-text {{chancelleryAsset | amount}}
+      .col-md-12.col-sm-12.col-xs-12
+        .shadow.p-3.mb-5.bg-white.rounded
+          .row
+            .col-7.col-sm-7.col-md-7
+              .checkin-info Vermögen
+            .col-5.col-sm-5.col-md-5
+              .checkin-amount {{teamAccount.asset | amount}}
+          .row
+            .col-7.col-sm-7.col-md-7
+              .checkin-info Orte
+            .col-5.col-sm-5.col-md-5
+              .checkin-amount {{properties.length}}
+          .row
+            .col-7.col-sm-7.col-md-7
+              .checkin-info Parkplatz
+            .col-5.col-sm-5.col-md-5
+              .checkin-amount {{chancelleryAsset | amount}}
     .row
       .col-md-12
         h3 Live-Ticker

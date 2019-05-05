@@ -63,3 +63,11 @@
     font-size: 19px;
     font-weight: normal;
 }
+
+.checkin-info {
+    font-size: 18px;
+}
+.checkin-amount {
+    font-size: 18px;
+    text-align: right;
+}
