@@ -7,14 +7,13 @@ module.exports = merge(common, {
   devtool: 'source-map',
   output      : {
     filename: '[name].min.js',
-    chunkFilename: '[name].bundle.js',
-    path    : path.resolve(__dirname, 'main', 'public', 'js', 'min')
+    chunkFilename: '[name].bundle.js'
   },
   optimization: {
     splitChunks: {
-      chunks                : 'all',
+      chunks                : 'async',
       minSize               : 30000,
-      maxSize               : 200000,
+      maxSize               : 0,
       minChunks             : 1,
       maxAsyncRequests      : 5,
       maxInitialRequests    : 3,

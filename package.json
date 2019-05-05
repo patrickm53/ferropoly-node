@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "postinstall": "bower install"
+    "postinstall": "bower install && webpack --config webpack.dev.js && webpack --config webpack.prod.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "1.2.17",
