@@ -362,12 +362,23 @@ const allowBuilding = function (gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Property.updateOne({
-    gameId          : gameId,
-    'gamedata.owner': {'$exists': true, '$ne': ''}
-  }, {'gamedata.buildingEnabled': true}, {multi: true}, function (err, numAffected) {
-    callback(err, numAffected);
-  });
+  Property.updateMany(
+    {
+      gameId          : gameId,
+      'gamedata.owner': {
+        '$exists': true,   // must exist
+        '$ne'    : ''      // not equal empty
+      }
+    },
+    {
+      'gamedata.buildingEnabled': true
+    },
+    {
+      //  'multi': true // DOES NOT WORK WITH updateMany!
+    },
+    function (err, numAffected) {
+      callback(err, _.get(numAffected, 'nModified', 0));
+    });
 };
 
 /**
