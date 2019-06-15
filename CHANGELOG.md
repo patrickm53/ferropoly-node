@@ -1,7 +1,9 @@
 # Changelog Ferropoly Spiel
 
+## v2.3.0 15.6.19
 * Mobile Version für Spieler aktualisiert (keine Features, nur Fixes)
 * Dependency Updates
+* Verschiedene Bugfixes und Verbesserungen
 
 ## v2.2.4 8.9.18
 Danke Soraya (Pfadi Wulp) für das ausgiebige Testen, diese Bugs wurden Dank Dir behoben:
