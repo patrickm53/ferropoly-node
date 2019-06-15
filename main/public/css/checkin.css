@@ -71,3 +71,12 @@
     font-size: 18px;
     text-align: right;
 }
+
+.flag-property {
+    color: green;
+}
+
+.star-building-enabled {
+    color: red;
+
+}

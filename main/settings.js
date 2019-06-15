@@ -18,19 +18,16 @@ var debug      = process.env.DEBUG || false;
 if (process.env.OPENSHIFT_NODEJS_IP) {
   deployType = 'openshift';
   preview    = false;
-}
-else if (process.env.DEPLOY_TYPE === 'contabo') {
+} else if (process.env.DEPLOY_TYPE === 'contabo') {
   // check which instance
   var rootPath = path.join(__dirname, '..');
   console.log('Root path: ' + rootPath);
   if (_.endsWith(rootPath, 'preview')) {
     deployType = 'contabo_preview';
     debug      = true;
-  }
-  else if (_.endsWith(rootPath, 'rc')) {
+  } else if (_.endsWith(rootPath, 'rc')) {
     deployType = 'contabo_rc';
-  }
-  else {
+  } else {
     preview = false;
   }
 }
@@ -62,9 +59,15 @@ var settings = {
     },
 
     dropbox: {
-      clientId: process.env.FERROPOLY_DROPBOX_CLIENT_ID || 'none',
+      clientId    : process.env.FERROPOLY_DROPBOX_CLIENT_ID || 'none',
       clientSecret: process.env.FERROPOLY_DROPBOX_CLIENT_SECRET || 'no_secret',
-      callbackURL: 'none' // is set in settings file for environment
+      callbackURL : 'none' // is set in settings file for environment
+    },
+
+    twitter: {
+      consumerKey   : process.env.FERROPOLY_TWITTER_CONSUMER_KEY || 'none',
+      consumerSecret: process.env.FERROPOLY_TWITTER_CONSUMER_SECRET || 'no_secret',
+      callbackURL   : 'none' // is set in settings file for environment
     }
   }
 };
@@ -84,8 +87,7 @@ if (debug) {
   logger.debug('DEBUG Settings used');
   // Use minified javascript files wherever available
   settings.minifiedjs = false;
-}
-else {
+} else {
   logger.debug('DIST Settings with minified js files used');
   // Use minified javascript files wherever available
   settings.minifiedjs = true;

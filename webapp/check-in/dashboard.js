@@ -1,6 +1,7 @@
 const checkinDatastore = require('../../components/checkin-datastore/')
 import ferropolySocket from './socket'
 import geograph from './geograph'
+import get from 'lodash/get'
 
 /**
  * The dashboard controller
@@ -35,8 +36,8 @@ function dashboardCtrl($scope) {
   // Chancellery Updates
   checkinDatastore.dataStore.subscribe('chancellery', function (data) {
     console.log('chancellery', data);
-    $scope.chancelleryAsset = data.asset;
-    addTicker('Neuer Kontostand auf dem Parkplatz: ' + data.asset.toLocaleString('de-CH'));
+    $scope.chancelleryAsset = get(data, 'asset', 0);
+    addTicker('Neuer Kontostand auf dem Parkplatz: ' + $scope.chancelleryAsset.toLocaleString('de-CH'));
     $scope.$apply();
   });
 
@@ -45,8 +46,9 @@ function dashboardCtrl($scope) {
     console.log('teamAccount !!!!!!!!', data);
     $scope.teamAccount = data;
     if (data.transactions.length > 0) {
-      var tr = data.transactions[data.transactions.length - 1];
-      addTicker('Kontobuchung ' + tr.transaction.info + ': ' + tr.transaction.amount.toLocaleString('de-CH'));
+      let tr = data.transactions[data.transactions.length - 1];
+      let amount = get(tr, 'transaction.amount', 0);
+      addTicker('Kontobuchung ' + tr.transaction.info + ': ' + amount.toLocaleString('de-CH'));
     }
     $scope.$apply();
   });

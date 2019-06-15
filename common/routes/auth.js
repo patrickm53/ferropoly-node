@@ -63,6 +63,23 @@ module.exports = function (app) {
       res.redirect(req.session.targetUrl || '/');
     });
 
+  /**
+   * Authentication Route for Twitter
+   */
+  app.get('/auth/twitter',
+    passport.authenticate('twitter'));
+
+  /**
+   * Callback for Twitter
+   */
+  app.get('/auth/twitter/callback',
+    passport.authenticate('twitter', {failureRedirect: '/login'}),
+    function (req, res) {
+      // Successful authentication, redirect home.
+      console.log('SUCCESSFUL LOGGED IN WITH TWITTER ------------------------------------');
+      res.redirect(req.session.targetUrl || '/');
+    });
+
 };
 
 

@@ -436,8 +436,8 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
     }
 
     async.whilst(
-      function () {
-        return count < gp.gameParams.interestCyclesAtEndOfGame;
+      function (cb) {
+        return cb(null, count < gp.gameParams.interestCyclesAtEndOfGame);
       },
       function (cb) {
         count++;

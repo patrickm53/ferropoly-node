@@ -39,7 +39,8 @@ let userSchema = mongoose.Schema({
     verificationText : String,
     facebookProfileId: String,
     googleProfileId  : String,
-    dropboxProfileId : String
+    dropboxProfileId : String,
+    twitterUserName  : String
   },
   info        : {
     registrationDate: Date,
@@ -63,7 +64,7 @@ const User = mongoose.model('User', userSchema);
  * @param target
  */
 function copyUser(source, target) {
-  let src = source.toObject();
+  let src             = source.toObject();
   target.personalData = _.clone(src.personalData);
   target.roles        = _.clone(src.roles);
   target.info         = _.clone(src.info);
@@ -157,8 +158,7 @@ function updateUser(user, password, callback) {
         });
       });
 
-    }
-    else {
+    } else {
       let editedUser = docs[0];
       copyUser(user, editedUser);
       // Update User
@@ -277,6 +277,23 @@ function getDropboxUser(profileId, callback) {
 }
 
 /**
+ * Returns a user by its Twitter profile
+ * @param profileId
+ * @param callback
+ */
+function getTwitterUser(profileId, callback) {
+  User.find({'login.twitterUserName': profileId}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback();
+    }
+    callback(null, docs[0]);
+  });
+}
+
+/**
  * Gets all users
  * @param callback
  */
@@ -296,7 +313,7 @@ function getAllUsers(callback) {
  * Counts all users
  * @param callback
  */
-function countUsers  (callback) {
+function countUsers(callback) {
   User.countDocuments({}, function (err, nb) {
     if (err) {
       return callback(err);
@@ -516,8 +533,8 @@ function findOrCreateDropboxUser(profile, callback) {
 
 
   if (profile.provider !== 'dropbox') {
-    logger.info('This is not a windowslive account: ' + profile.provider);
-    callback(new Error('not a windowslive account: ' + profile.provider));
+    logger.info('This is not a dropbox account: ' + profile.provider);
+    callback(new Error('not a dropbox account: ' + profile.provider));
   }
 
   // Try to get the user
@@ -603,6 +620,109 @@ function findOrCreateDropboxUser(profile, callback) {
   });
 }
 
+/**
+ * Find or create a user logging in with Twitter. The username is the key for twitter profiles, we don't have
+ * an email address!
+ * @param profile
+ * @param callback
+ * @returns {*}
+ */
+function findOrCreateTwitterUser(profile, callback) {
+  logger.info('findOrCreateTwitterUser', profile);
+  if (!_.isObject(profile) || !_.isString(profile.username)) {
+    return callback(new Error('invalid profile supplied'));
+  }
+
+  if (profile.provider !== 'twitter') {
+    logger.info('This is not a twitter account: ' + profile.provider);
+    callback(new Error('not a twitter account: ' + profile.provider));
+  }
+
+
+  // This is the twitter user name
+  let username = '@' + profile.username;
+
+
+  // Try to get the user
+  getTwitterUser(username, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      // The user is not here, try to find him with the email-address
+      let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
+
+      function saveNewTwitterUser() {
+        let newUser                    = new User();
+        newUser._id                    = emailAddress || username;
+        newUser.login.twitterUserName  = username;
+        newUser.info.twitter           = {
+          username   : _.get(profile, 'username', []),
+          displayName: _.get(profile, 'displayName', '?')
+        };
+        newUser.info.registrationDate  = new Date();
+        newUser.login.verifiedEmail    = true; // Twitter does not need verification
+        newUser.personalData.forename  = _.get(profile, 'name.givenName', '');
+        newUser.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
+        newUser.personalData.email     = emailAddress ? emailAddress : username; // using profile id as email alternative
+        newUser.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.save(function (err, savedUser) {
+          if (err) {
+            return callback(err);
+          }
+          logger.info('Created twitter user', savedUser);
+          // Recursive call, now we'll find this user
+          return findOrCreateTwitterUser(profile, callback);
+        });
+      }
+
+      if (username) {
+        getUserByMailAddress(username, function (err, user) {
+          if (err) {
+            return callback(err);
+          }
+          if (user) {
+            // Ok, we know this user. Update profile for twitter access
+            user.info.twitter           = {
+              username   : _.get(profile, 'username', []),
+              displayName: _.get(profile, 'displayName', '?')
+            };
+            user.info.registrationDate  = new Date();
+            user.login.verifiedEmail    = true; // Twitter does not need verification
+            user.personalData.forename  = _.get(profile, 'name.givenName', '');
+            user.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
+            user.login.twitterUserName  = username;
+            user.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.save(function (err) {
+              if (err) {
+                return callback(err);
+              }
+              logger.info('Upgraded user ' + emailAddress + ' for twitter access');
+              // Recursive call, now we'll find this user
+              return findOrCreateTwitterUser(profile, callback);
+            });
+            return;
+          }
+
+          // We do not know this user. Add him/her to the list.
+          saveNewTwitterUser();
+        });
+        return;
+      }
+      // No email address (somehow an annonymous drobox user). Add as new User
+      return saveNewTwitterUser();
+    }
+
+    // User found, update
+    user.info.twitter        = {
+      username   : _.get(profile, 'username', []),
+      displayName: _.get(profile, 'displayName', '?')
+    };
+    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+    updateUser(user, null, callback);
+  });
+}
+
 module.exports = {
   Model: User,
 
@@ -616,5 +736,6 @@ module.exports = {
   countUsers              : countUsers,
   findOrCreateFacebookUser: findOrCreateFacebookUser,
   findOrCreateGoogleUser  : findOrCreateGoogleUser,
-  findOrCreateDropboxUser : findOrCreateDropboxUser
+  findOrCreateDropboxUser : findOrCreateDropboxUser,
+  findOrCreateTwitterUser : findOrCreateTwitterUser
 };

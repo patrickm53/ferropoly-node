@@ -10,6 +10,7 @@ const LocalStrategy    = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy   = require('passport-google-oauth20').Strategy;
 const DropboxStrategy  = require('passport-dropbox-oauth2').Strategy;
+const TwitterStrategy  = require('passport-twitter').Strategy;
 const crypto           = require('crypto');
 const logger           = require('./logger').getLogger('authStrategy');
 const util             = require('util');
@@ -59,8 +60,7 @@ module.exports = function (settings, users) {
           users.updateUser(foundUser, null, function () {
             return done(null, foundUser);
           });
-        }
-        else {
+        } else {
           logger.info('invalid password supplied for ' + foundUser);
           return done(null, false);
         }
@@ -110,6 +110,7 @@ module.exports = function (settings, users) {
 
   /**
    * Dropbox Strategy
+   * Not applicable right now, not registered in dropbox
    */
   const dropboxStrategy = new DropboxStrategy({
       apiVersion       : '2',
@@ -129,12 +130,29 @@ module.exports = function (settings, users) {
     }
   );
 
+  /**
+   * Twitter strategy
+   * They do not supply an email address when logging in. Breaks the code so far as the email address is the
+   * key identification element in ferropoly. Don't use it therefore.
+   */
+  const twitterStrategy = new TwitterStrategy({
+      consumerKey   : settings.oAuth.twitter.consumerKey,
+      consumerSecret: settings.oAuth.twitter.consumerSecret,
+      callbackURL   : settings.oAuth.twitter.callbackURL
+    },
+    function (token, tokenSecret, profile, cb) {
+      users.findOrCreateTwitterUser(profile, function (err, user) {
+        return cb(err, user);
+      });
+    });
+
 
   return {
     localStrategy   : localStrategy,
     facebookStrategy: facebookStrategy,
     googleStrategy  : googleStrategy,
     dropboxStrategy : dropboxStrategy,
+    twitterStrategy : twitterStrategy,
     deserializeUser : deserializeUser,
     serializeUser   : serializeUser
   }

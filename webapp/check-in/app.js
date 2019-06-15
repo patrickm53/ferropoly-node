@@ -22,10 +22,14 @@ import {faCheckCircle} from "@fortawesome/free-solid-svg-icons/faCheckCircle";
 import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
 import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
+import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
+import {faFlag} from "@fortawesome/free-solid-svg-icons/faFlag";
+import {faStarHalfAlt} from "@fortawesome/free-solid-svg-icons/faStarHalfAlt";
 
 
-library.add(faCircle, faCheckCircle, faCheck, faCloud);
+library.add(faCircle, faCheckCircle, faCheck, faCloud, faStar, faFlag, faStarHalfAlt);
 library.add(faExclamationCircle, faDownload);
+
 dom.watch();
 
 

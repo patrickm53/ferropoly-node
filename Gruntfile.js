@@ -20,7 +20,8 @@
  *   grunt bump-commit
  *
  *
- * Build Webpack:  grunt webpack:dev
+ * Build Webpack for development:  grunt webpack:dev
+ * Build Webpack for release:  grunt webpack:prod
  *
  * Created by kc on 14.04.15.
  */
@@ -243,7 +244,7 @@ module.exports          = function (grunt) {
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-webpack');
   grunt.registerTask('default', ['browserify']);
-  grunt.registerTask('minify', ['browserify', 'concat', 'uglify:js']);
+  grunt.registerTask('minify', ['browserify', 'concat', 'uglify:js', 'webpack:prod']);
   grunt.registerTask('v:patch', ['bump-only:patch']);
   grunt.registerTask('v:minor', ['bump-only:minor']);
   grunt.registerTask('v:major', ['bump-only:major']);

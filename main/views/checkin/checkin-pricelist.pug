@@ -13,7 +13,8 @@ div(ng-controller='pricelistCtrl')
     tbody
       tr(ng-repeat='p in pricelist')
         td {{p.pricelist.position + 1}}&nbsp;
-          i.fa.fa-flag(ng-show='p.gamedata.owner')
+          span(ng-show='p.gamedata.owner')
+            i.fa.fa-flag.flag-property
         td {{p.location.name}} &nbsp;
           span(ng-show='p.gamedata.buildings > 0')
             i.fa.fa-star
@@ -26,6 +27,6 @@ div(ng-controller='pricelistCtrl')
           span(ng-show='p.gamedata.buildings > 4')
             i.fa.fa-star
           span(ng-show='p.gamedata.buildingEnabled && p.gamedata.buildings < 5')
-            i.fa.fa-star-o
+            i.fa.fa-star-half-alt.star-building-enabled
         td {{p.pricelist.propertyGroup}}
         td {{p.pricelist.price | amount}}
