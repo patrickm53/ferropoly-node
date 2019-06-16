@@ -127,9 +127,7 @@ function dumpAccounts(gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing all account information for ' + gameId);
-  TeamAccountTransaction.remove({gameId: gameId}, function (err) {
-    callback(err);
-  })
+  TeamAccountTransaction.deleteMany({gameId: gameId}, callback)
 }
 
 /**

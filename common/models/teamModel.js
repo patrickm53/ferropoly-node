@@ -98,7 +98,7 @@ let deleteTeam = function (teamId, callback) {
     if (!docs || docs.length !== 1) {
       return callback(new Error('not found'));
     }
-    docs[0].remove(function (err) {
+    docs[0].delete(function (err) {
       return callback(err);
     })
   })
@@ -111,9 +111,7 @@ let deleteTeam = function (teamId, callback) {
  */
 let deleteAllTeams = function (gameId, callback) {
   logger.info('Removing all teams for ' + gameId);
-  Team.find({gameId: gameId}).remove().exec(function (err) {
-    callback(err);
-  });
+  Team.deleteMany({gameId: gameId}, callback);
 };
 
 /**

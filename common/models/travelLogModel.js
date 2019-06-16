@@ -114,7 +114,7 @@ var addPositionEntry = function (gameId, teamId, user, position, callback) {
  */
 var deleteAllEntries = function (gameId, callback) {
   logger.info('Removing all entries in the log');
-  TravelLog.find({gameId: gameId}).remove().exec(callback);
+  TravelLog.deleteMany({gameId: gameId}, callback);
 };
 
 

@@ -41,7 +41,12 @@ function autoplay() {
       }
 
       // Choose a team (random)
-      var team = teams[_.random(0, teams.length - 1)];
+      if (!teams || teams.length === 0) {
+        // happens only when the creation of the demo gameplay failed
+        logger.info('There is no team in the autoplay game!');
+        return;
+      }
+      let team = teams[_.random(0, teams.length - 1)];
       travelLog.getAllLogEntries(settings.gameId, team.uuid, function (err, log) {
         if (err) {
           logger.error(err);
@@ -81,7 +86,7 @@ function playRound(gameId, teamId, travelLog, properties, callback) {
   let mp = marketplace.getMarketplace();
   mp.chancellery(gameId, teamId, function () {
     mp.buildHouses(gameId, teamId, function () {
-      var propertyId = selectClosestsProperty(travelLog, properties);
+      let propertyId = selectClosestsProperty(travelLog, properties);
       mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, function () {
         callback();
       });

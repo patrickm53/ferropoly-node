@@ -295,7 +295,7 @@ let removeGameplay = function (gp, callback) {
     return callback(new Error('Invalid gameplay'));
   }
   logger.info('Removing gameplay ' + gp.internal.gameId + ' (' + gp.gamename + ')');
-  Gameplay.remove({'internal.gameId': gp.internal.gameId}, function (err) {
+  Gameplay.deleteMany({'internal.gameId': gp.internal.gameId}, function (err) {
     callback(err);
   });
 };

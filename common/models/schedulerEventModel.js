@@ -6,41 +6,42 @@
 
 
 const mongoose = require('mongoose');
-const moment = require('moment');
-const _ = require('lodash');
-const logger = require('../lib/logger').getLogger('schedulerEventModel');
+const moment   = require('moment');
+const _        = require('lodash');
+const logger   = require('../lib/logger').getLogger('schedulerEventModel');
 
 /**
  * The mongoose schema for a scheduleEvent
  */
 let scheduleEventSchema = mongoose.Schema({
-  _id: String,
-  gameId: String, // Gameplay this team plays with
+  _id      : String,
+  gameId   : String, // Gameplay this team plays with
   timestamp: Date, // When it is going to happen
-  type: String, // What it is about
-  handled: {type: Boolean, default: false},
-  handler: {
-    id: String, // ID of the handler
+  type     : String, // What it is about
+  handled  : {type: Boolean, default: false},
+  handler  : {
+    id      : String, // ID of the handler
     reserved: Date,
-    handled: Date
+    handled : Date
   }
 });
 /**
  * The scheduleEvent model
  */
-let scheduleEventModel = mongoose.model('schedulerEvent', scheduleEventSchema);
+let scheduleEventModel  = mongoose.model('schedulerEvent', scheduleEventSchema);
 
 /**
  * Creates an event
  */
 function createEvent(gameId, timestamp, type) {
-  let event = new scheduleEventModel();
-  event.gameId = gameId;
+  let event       = new scheduleEventModel();
+  event.gameId    = gameId;
   event.timestamp = timestamp;
-  event.type = type;
-  event._id = gameId + '-'+ moment(timestamp).format('YYMMDD-HHmm') + '-' + type;
+  event.type      = type;
+  event._id       = gameId + '-' + moment(timestamp).format('YYMMDD-HHmm') + '-' + type;
   return event;
 }
+
 /**
  * Save all events. Dumps them all before adding new ones
  * @param events
@@ -51,7 +52,7 @@ function saveEvents(events, callback) {
     if (err) {
       return callback(err);
     }
-    let error = undefined;
+    let error   = undefined;
     let nbSaved = 0;
 
     for (let i = 0; i < events.length; i++) {
@@ -81,9 +82,7 @@ function dumpEvents(gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing all existing scheduler event information for ' + gameId);
-  scheduleEventModel.remove({gameId: gameId}, function (err) {
-    callback(err);
-  });
+  scheduleEventModel.deleteMany({gameId: gameId}, callback);
 }
 
 /**
@@ -128,7 +127,7 @@ function requestEventSave(event, serverId, callback) {
         return callback(null, null);
       }
       ev.handler = {
-        id: serverId,
+        id      : serverId,
         reserved: new Date()
       };
 
@@ -181,7 +180,7 @@ function saveAfterHandling(event, callback) {
     return callback(new Error('This event is not properly handled, can not save it!'));
   }
   event.handler.handled = new Date();
-  event.handled = true;
+  event.handled         = true;
 
   event.save(function (err, savedEvent) {
     if (err) {
@@ -200,11 +199,11 @@ function saveAfterHandling(event, callback) {
 }
 
 module.exports = {
-  Model: scheduleEventModel,
-  createEvent: createEvent,
-  saveEvents: saveEvents,
-  dumpEvents: dumpEvents,
+  Model            : scheduleEventModel,
+  createEvent      : createEvent,
+  saveEvents       : saveEvents,
+  dumpEvents       : dumpEvents,
   getUpcomingEvents: getUpcomingEvents,
-  requestEventSave: requestEventSave,
+  requestEventSave : requestEventSave,
   saveAfterHandling: saveAfterHandling
 };

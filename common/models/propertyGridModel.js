@@ -58,7 +58,7 @@ const removeAllPropertyGridsFromGameplay = function (gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing all propertyGrids for ' + gameId);
-  PropertyGrid.find({gameId: gameId}).remove(callback);
+  PropertyGrid.deleteMany({gameId: gameId}, callback);
 };
 
 /**

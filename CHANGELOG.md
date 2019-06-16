@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## v2.3.1 16.6.19
+* Update und Bugfixes Datenbankzugriff
+
 ## v2.3.0 15.6.19
 * Mobile Version für Spieler aktualisiert (keine Features, nur Fixes)
 * Dependency Updates

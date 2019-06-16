@@ -55,9 +55,7 @@ function dumpAccounts(gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing all account information for ' + gameId);
-  PropertyAccountTransaction.remove({gameId: gameId}, function (err) {
-    callback(err);
-  })
+  PropertyAccountTransaction.deleteMany({gameId: gameId}, callback)
 }
 
 

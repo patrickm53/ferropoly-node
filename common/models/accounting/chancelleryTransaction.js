@@ -52,9 +52,7 @@ function dumpChancelleryData(gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing all chancellery information for ' + gameId);
-  ChancelleryTransaction.remove({gameId: gameId}, function (err) {
-    callback(err);
-  })
+  ChancelleryTransaction.deleteMany({gameId: gameId}, callback)
 }
 
 
@@ -92,16 +90,18 @@ function getEntries(gameId, tsStart, tsEnd, callback) {
  */
 function getBalance(gameId, callback) {
 
-  ChancelleryTransaction.aggregate([{
-    $match: {
-      gameId: gameId
+  ChancelleryTransaction.aggregate([
+    {
+      $match: {
+        gameId: gameId
+      }
+    }, {
+      $group: {
+        _id    : 'balance',
+        balance: {$sum: "$transaction.amount"}
+      }
     }
-  }, {
-    $group: {
-      _id    : 'balance',
-      balance: {$sum: "$transaction.amount"}
-    }
-  }], function (err, data) {
+  ], function (err, data) {
     if (err) {
       return callback(err);
     }

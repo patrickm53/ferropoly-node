@@ -117,7 +117,7 @@ function createPasswordHash(salt, password) {
  * @param callback
  */
 function removeUser(emailAddress, callback) {
-  User.remove({'personalData.email': emailAddress}, function (err) {
+  User.delete({'personalData.email': emailAddress}, function (err) {
     callback(err);
   });
 }

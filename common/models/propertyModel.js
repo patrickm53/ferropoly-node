@@ -318,9 +318,7 @@ const removePropertyFromGameplay = function (gameId, locationId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing one property for ' + gameId);
-  Property.remove({gameId: gameId, 'location.uuid': locationId}, function (err) {
-    callback(err);
-  })
+  Property.deleteMany({gameId: gameId, 'location.uuid': locationId}, callback)
 };
 
 /**
@@ -334,10 +332,11 @@ const finalizeProperties              = function (gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
 
-  Property.find()
-    .where('pricelist.priceRange').equals(-1)
-    .where('gameId').equals(gameId)
-    .remove(callback);
+  Property.deleteMany({
+    gameId: gameId,
+    'pricelist.priceRange': -1
+  },
+    callback);
 };
 /**
  * Removes ALL properties from the gameplay
@@ -349,7 +348,7 @@ const removeAllPropertiesFromGameplay = function (gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing all properties for ' + gameId);
-  Property.find({gameId: gameId}).remove(callback);
+  Property.deleteMany({gameId: gameId}, callback);
 };
 
 /**
