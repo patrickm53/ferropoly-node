@@ -60,7 +60,13 @@ function autoplay() {
             startTimer();
             return;
           }
-          playRound(settings.gameId, team.uuid, log, props, function () {
+          playRound(settings.gameId, team.uuid, log, props, function (err, info) {
+            if (err) {
+              logger.error(err);
+              startTimer();
+              return;
+            }
+            logger.debug('bought location', _.get(info, 'amount' ,0));
             startTimer();
           });
         });
@@ -87,9 +93,7 @@ function playRound(gameId, teamId, travelLog, properties, callback) {
   mp.chancellery(gameId, teamId, function () {
     mp.buildHouses(gameId, teamId, function () {
       let propertyId = selectClosestsProperty(travelLog, properties);
-      mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, function () {
-        callback();
-      });
+      mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, callback);
     });
   });
   // build houses

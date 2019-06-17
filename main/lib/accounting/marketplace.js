@@ -277,8 +277,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
       let buyBuildingCallback = function (err, info) {
         if (err) {
           marketLog(gameId, err);
-        }
-        else {
+        } else {
           log.push(info);
         }
         handled++;
@@ -290,8 +289,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
           if (totalAmount === 0) {
             // fine, we tried to build but there was nothing to build
             return callback(null, {amount: 0});
-          }
-          else {
+          } else {
             teamAccount.chargeToBank({
               teamId: teamId,
               gameId: gameId,
@@ -510,11 +508,11 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback
 
     async.each(teams, function (team, cb) {
       teamAccount.negativeBalanceHandling(gameId, team.uuid, gp.gameParams.debtInterest, function (err, info) {
-        marketLog(gameId, 'negativeBalanceHandlingResult', info);
         if (err) {
           return cb(err);
         }
         if (info && info.amount !== 0) {
+          marketLog(gameId, 'negativeBalanceHandlingResult', info);
           chancelleryAccount.payToChancellery(gp, team, info.amount, 'Strafzins (negatives Guthaben)', cb);
           return;
         }
@@ -559,8 +557,7 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback)
         }, function (err) {
           return callback(err);
         });
-      }
-      else {
+      } else {
         return callback(err);
       }
     });
@@ -722,8 +719,7 @@ Marketplace.prototype.manipulateTeamAccount = function (gameId, teamId, amount, 
     teamAccount.receiveFromBank(teamId, gameId, amount, 'Manuelle Gutschrift: ' + reason, function (err) {
       callback(err);
     });
-  }
-  else {
+  } else {
     teamAccount.chargeToBank({
       teamId: teamId,
       gameId: gameId,

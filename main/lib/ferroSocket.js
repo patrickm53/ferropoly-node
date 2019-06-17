@@ -222,7 +222,7 @@ FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
  * @param data
  */
 FerroSocket.prototype.emitToAdmins = function (gameId, channel, data) {
-  logger.info('ferroSockets.emitToAdmins: ' + gameId + ' ' + channel);
+  logger.debug('ferroSockets.emitToAdmins: ' + gameId + ' ' + channel);
   if (this.sockets[gameId]) {
     this.sockets[gameId].forEach(function (socket) {
       if (socket.ferropoly.isAdmin) {
@@ -239,7 +239,7 @@ FerroSocket.prototype.emitToAdmins = function (gameId, channel, data) {
  * @param data
  */
 FerroSocket.prototype.emitToTeam = function (gameId, teamId, channel, data) {
-  logger.info('ferroSockets.emitToTeam: ' + gameId + ' ' + teamId + ' ' + channel);
+  logger.debug('ferroSockets.emitToTeam: ' + gameId + ' ' + teamId + ' ' + channel);
   data.msgId = uuid();
   if (this.sockets[gameId]) {
     this.sockets[gameId].forEach(function (socket) {

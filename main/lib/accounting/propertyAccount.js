@@ -254,13 +254,13 @@ function payInterest(gameplay, register, callback) {
 
   if (register.length === 0) {
     // nothing to pay
-    logger.info('nothing to pay');
+    logger.debug('nothing to pay');
     return callback(null);
   }
 
   async.each(register,
     function (prop, cb) {
-      console.log('Book propertyAccount transaction for property', prop);
+      logger.info('Book propertyAccount transaction for property', prop);
       var pt         = new propertyTransaction.Model();
       pt.gameId      = gameplay.internal.gameId;
       pt.propertyId  = prop.uuid;
