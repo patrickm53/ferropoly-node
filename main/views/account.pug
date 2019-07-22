@@ -28,7 +28,7 @@ block content
             | {{getRegistrationDate()}}
             div
               h4 Avatar
-              img(ng-src='{{getAvatarUrl(0)}}')
+              img.avatar(ng-src='{{getAvatarUrl(0)}}')
               p Als Avatar wird entweder Dein Facebook- oder Google-Profilbild verwendet. Wenn dies nicht vorhanden ist, dann wird der Service von&nbsp;
                 a(href='https://de.gravatar.com/' target='_blank') Gravatar
                 | &nbsp;verwendet. Melde Dich dort an und hinterlege dort Dein Profilbild falls gewünscht.
@@ -44,7 +44,7 @@ block content
               h4 Email-Adresse
               | {{data.info.facebook.emails[0].value}}
               h4 Avatar
-              img(ng-src='{{getAvatarUrl(1)}}')
+              img.avatar(ng-src='{{getAvatarUrl(1)}}')
             div(ng-hide='isFacebookActive()')
               | Dein Zugang mit Facebook wurde noch nicht aktiviert. Die bei Facebook hinterlegte Email-Adresse muss identisch mit dem Benutzernamen sein, sonst kann das Konto nicht zusammengeführt werden.
       .col-md-4
@@ -58,7 +58,7 @@ block content
               h4 Email-Adresse
               | {{data.info.google.emails[0].value}}
               h4 Avatar
-              img(ng-src='{{getAvatarUrl(2)}}')
+              img.avatar(ng-src='{{getAvatarUrl(2)}}')
             div(ng-hide='isGoogleActive()')
               | Dein Zugang mit Google wurde noch nicht aktiviert. Die bei Google hinterlegte Email-Adresse muss identisch mit dem Benutzernamen sein, sonst kann das Konto nicht zusammengeführt werden.
 
