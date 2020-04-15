@@ -27,7 +27,6 @@ const uuid         = require('uuid');
 // Model includes
 const users        = require('../common/models/userModel');
 const ferropolyDb  = require('../common/lib/ferropolyDb');
-const logs         = require('../common/models/logModel');
 const teamPosition = require('./lib/teams/teamPosition');
 
 // Routes includes
@@ -58,9 +57,7 @@ ferropolyDb.init(settings, function (err, db) {
     return;
   }
 
-  logs.init(settings);
-
-  var server = require('http').Server(app);
+  let server = require('http').Server(app);
 
   // view engine setup
   app.set('views', path.join(__dirname, 'views'));

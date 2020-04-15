@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Dependency Updates
+
 ## v2.3.2 25.7.19
 * Weniger Logausgaben
 * Bugfix Avatar Darstellung
