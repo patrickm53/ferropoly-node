@@ -1,6 +1,7 @@
 # Changelog Ferropoly Spiel
 
 * Dependency Updates
+* Game-Log neu
 
 ## v2.3.2 25.7.19
 * Weniger Logausgaben

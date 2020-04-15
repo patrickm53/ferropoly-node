@@ -9,16 +9,16 @@
  * 17.1.15 KC
  *
  */
-const mongoose = require('mongoose');
-const crypto   = require('crypto');
-const uuid     = require('uuid/v4');
-const pbkdf2   = require('pbkdf2-sha256');
-const logger   = require('../lib/logger').getLogger('userModel');
-const _        = require('lodash');
+const mongoose   = require('mongoose');
+const crypto     = require('crypto');
+const pbkdf2     = require('pbkdf2-sha256');
+const logger     = require('../lib/logger').getLogger('userModel');
+const _          = require('lodash');
+const {v4: uuid} = require('uuid');
 /**
  * The mongoose schema for an user
  */
-let userSchema = mongoose.Schema({
+let userSchema   = mongoose.Schema({
   _id         : {type: String},
   id          : String,
   personalData: {
@@ -653,19 +653,19 @@ function findOrCreateTwitterUser(profile, callback) {
       let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
 
       function saveNewTwitterUser() {
-        let newUser                    = new User();
-        newUser._id                    = emailAddress || username;
-        newUser.login.twitterUserName  = username;
-        newUser.info.twitter           = {
+        let newUser                   = new User();
+        newUser._id                   = emailAddress || username;
+        newUser.login.twitterUserName = username;
+        newUser.info.twitter          = {
           username   : _.get(profile, 'username', []),
           displayName: _.get(profile, 'displayName', '?')
         };
-        newUser.info.registrationDate  = new Date();
-        newUser.login.verifiedEmail    = true; // Twitter does not need verification
-        newUser.personalData.forename  = _.get(profile, 'name.givenName', '');
-        newUser.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
-        newUser.personalData.email     = emailAddress ? emailAddress : username; // using profile id as email alternative
-        newUser.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.info.registrationDate = new Date();
+        newUser.login.verifiedEmail   = true; // Twitter does not need verification
+        newUser.personalData.forename = _.get(profile, 'name.givenName', '');
+        newUser.personalData.surname  = _.get(profile, 'name.familyName', profile.displayName);
+        newUser.personalData.email    = emailAddress ? emailAddress : username; // using profile id as email alternative
+        newUser.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -683,16 +683,16 @@ function findOrCreateTwitterUser(profile, callback) {
           }
           if (user) {
             // Ok, we know this user. Update profile for twitter access
-            user.info.twitter           = {
+            user.info.twitter          = {
               username   : _.get(profile, 'username', []),
               displayName: _.get(profile, 'displayName', '?')
             };
-            user.info.registrationDate  = new Date();
-            user.login.verifiedEmail    = true; // Twitter does not need verification
-            user.personalData.forename  = _.get(profile, 'name.givenName', '');
-            user.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
-            user.login.twitterUserName  = username;
-            user.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.info.registrationDate = new Date();
+            user.login.verifiedEmail   = true; // Twitter does not need verification
+            user.personalData.forename = _.get(profile, 'name.givenName', '');
+            user.personalData.surname  = _.get(profile, 'name.familyName', profile.displayName);
+            user.login.twitterUserName = username;
+            user.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
             user.save(function (err) {
               if (err) {
                 return callback(err);

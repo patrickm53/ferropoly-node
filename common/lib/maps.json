@@ -42,6 +42,12 @@
       "name":"Tarifverbund Nordostschwez",
       "description": "Rund um Basel",
       "enabled": false
+    },
+    {
+      "map" :"zvv110",
+      "name":"Stadt Zürich, ZVV Zone 110",
+      "description": "Für ein schnelles Spiel in der Stadt",
+      "enabled": true
     }
   ]
 }

@@ -339,7 +339,7 @@ let finalize = function (gameId, ownerId, callback) {
       // nothing to do, is already finalized
       return callback(null, gp);
     }
-    if (gp.owner.organisatorEmail !== ownerId) {
+    if (gp.internal.owner !== ownerId) {
       return callback(new Error('Wrong user, not allowed to finalize'));
     }
     if (gp.log.priceListVersion === 0) {

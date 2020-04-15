@@ -11,7 +11,7 @@ const settings         = require('../settings');
 const _                = require('lodash');
 const util             = require('util');
 const accessor         = require('./accessor');
-const uuid             = require('uuid').v4;
+const {v4: uuid}       = require('uuid');
 
 let ferroSocket;
 
@@ -205,8 +205,7 @@ FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
       if (this.sockets[gameId][i].ferropoly.isAdmin) {
         // For admins all messages are sent
         this.sockets[gameId][i].emit(channel, data);
-      }
-      else if (_.startsWith(channel, this.sockets[gameId][i].ferropoly.teamId)) {
+      } else if (_.startsWith(channel, this.sockets[gameId][i].ferropoly.teamId)) {
         // forward only messages to a teams channel.
         // The channel name is formatted as follows:  'teamId-channelName'
         this.sockets[gameId][i].emit(channel, data);

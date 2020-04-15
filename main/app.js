@@ -6,10 +6,10 @@
  */
 
 // Logging has highest prio
-const settings     = require('./settings');
-const logging      = require('../common/lib/logger');
+const settings = require('./settings');
+const logging  = require('../common/lib/logger');
 logging.init({debugLevel: settings.logger.debugLevel});
-const logger       = logging.getLogger('editor-app');
+const logger = logging.getLogger('editor-app');
 
 
 const express      = require('express');
@@ -22,7 +22,7 @@ const session      = require('express-session');
 const compression  = require('compression');
 const MongoStore   = require('connect-mongo')(session);
 const moment       = require('moment');
-const uuid         = require('uuid');
+const {v4: uuid}   = require('uuid');
 
 // Model includes
 const users        = require('../common/models/userModel');
@@ -94,7 +94,7 @@ ferropolyDb.init(settings, function (err, db) {
       secure: 'auto'
     },
     genid            : function () {
-      return 'S_' + moment().format('YYMMDD-HHmmss-') + uuid.v4();
+      return 'S_' + moment().format('YYMMDD-HHmmss-') + uuid();
     },
     store            : new MongoStore({mongooseConnection: db, ttl: 2 * 24 * 60 * 60}),
     name             : 'ferropoly-spiel'

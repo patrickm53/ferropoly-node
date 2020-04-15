@@ -4,9 +4,9 @@
  * Created by kc on 10.05.15.
  */
 
-const uuid     = require('uuid');
-const mongoose = require('mongoose');
-const tokens   = {};
+const {v4: uuid} = require('uuid');
+const mongoose   = require('mongoose');
+const tokens     = {};
 
 const tokenSchema = mongoose.Schema({
   login     : String,
@@ -46,7 +46,7 @@ module.exports = {
       if (!token) {
         token = new Token();
       }
-      token.id    = uuid.v4();
+      token.id    = uuid();
       token.login = user;
       token.save(function (err) {
         callback(err, token.id);

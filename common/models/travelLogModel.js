@@ -4,14 +4,14 @@
  */
 
 
-var mongoose        = require('mongoose');
-var logger          = require('../lib/logger').getLogger('travelLogModel');
-var moment          = require('moment');
-var _               = require('lodash');
+const mongoose        = require('mongoose');
+const logger          = require('../lib/logger').getLogger('travelLogModel');
+const moment          = require('moment');
+const _               = require('lodash');
 /**
  * The mongoose schema for an user
  */
-var travelLogSchema = mongoose.Schema({
+let travelLogSchema = mongoose.Schema({
   _id       : String,
   gameId    : String,
   teamId    : String,
@@ -29,7 +29,7 @@ var travelLogSchema = mongoose.Schema({
 /**
  * The Travel-Log model
  */
-var TravelLog = mongoose.model('TravelLog', travelLogSchema);
+let TravelLog = mongoose.model('TravelLog', travelLogSchema);
 
 /**
  * Creates a new log entry and saves it
@@ -39,14 +39,14 @@ var TravelLog = mongoose.model('TravelLog', travelLogSchema);
  * @param callback
  * @returns {*}
  */
-var addEntry = function (gameId, teamId, propertyId, callback) {
+let addEntry = function (gameId, teamId, propertyId, callback) {
   if (!gameId || !teamId || !propertyId) {
     return callback(new Error('all params in addEntry must be set'));
   }
   if (!_.isString(gameId) || !_.isString(teamId) || !_.isString(propertyId)) {
     return callback(new Error('all params in createEntry must be strings'));
   }
-  var logEntry        = new TravelLog();
+  let logEntry        = new TravelLog();
   logEntry.gameId     = gameId;
   logEntry.teamId     = teamId;
   logEntry.propertyId = propertyId;
@@ -58,18 +58,18 @@ var addEntry = function (gameId, teamId, propertyId, callback) {
  * Adds an entry by its property
  * @param gameId
  * @param teamId
- * @param propertyId
+ * @param property
  * @param callback
  * @returns {*}
  */
-var addPropertyEntry = function (gameId, teamId, property, callback) {
+let addPropertyEntry = function (gameId, teamId, property, callback) {
   if (!gameId || !teamId || !property) {
     return callback(new Error('all params in addEntry must be set'));
   }
   if (!_.isString(gameId) || !_.isString(teamId)) {
     return callback(new Error('teamId and gameId params in createEntry must be strings'));
   }
-  var logEntry        = new TravelLog();
+  let logEntry        = new TravelLog();
   logEntry.gameId     = gameId;
   logEntry.teamId     = teamId;
   logEntry.propertyId = property.uuid;
@@ -87,18 +87,19 @@ var addPropertyEntry = function (gameId, teamId, property, callback) {
  * Adds an entry by its position
  * @param gameId
  * @param teamId
+ * @param user
  * @param position
  * @param callback
  * @returns {*}
  */
-var addPositionEntry = function (gameId, teamId, user, position, callback) {
+let addPositionEntry = function (gameId, teamId, user, position, callback) {
   if (!gameId || !teamId || !user || !position) {
     return callback(new Error('all params in addEntry must be set'));
   }
   if (!_.isString(gameId) || !_.isString(teamId)) {
     return callback(new Error('teamId and gameId params in createEntry must be strings'));
   }
-  var logEntry      = new TravelLog();
+  let logEntry      = new TravelLog();
   logEntry.gameId   = gameId;
   logEntry.teamId   = teamId;
   logEntry.position = position;
@@ -112,7 +113,7 @@ var addPositionEntry = function (gameId, teamId, user, position, callback) {
  * @param gameId
  * @param callback
  */
-var deleteAllEntries = function (gameId, callback) {
+let deleteAllEntries = function (gameId, callback) {
   logger.info('Removing all entries in the log');
   TravelLog.deleteMany({gameId: gameId}, callback);
 };
@@ -121,10 +122,13 @@ var deleteAllEntries = function (gameId, callback) {
 /**
  * Get all log entries for a gameplay
  * @param gameId
+ * @param teamId
+ * @param tsStart
+ * @param tsEnd
  * @param callback
  * @returns {*}
  */
-var getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
+let getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -154,9 +158,10 @@ var getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
 /**
  * Just a convenicence function
  * @param gameId
+ * @param teamId
  * @param callback
  */
-var getAllLogEntries = function (gameId, teamId, callback) {
+let getAllLogEntries = function (gameId, teamId, callback) {
   getLogEntries(gameId, teamId, undefined, undefined, callback);
 };
 

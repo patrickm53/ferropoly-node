@@ -4,14 +4,13 @@
  * Created by kc on 22.03.15.
  */
 
-const mongoose = require('mongoose');
-const uuid     = require('uuid/v4');
-const logger   = require('../lib/logger').getLogger('teamModel');
-
+const mongoose   = require('mongoose');
+const logger     = require('../lib/logger').getLogger('teamModel');
+const {v4: uuid} = require('uuid');
 /**
  * The mongoose schema for a property
  */
-let teamSchema = mongoose.Schema({
+let teamSchema   = mongoose.Schema({
   _id   : {type: String},
   gameId: String, // Gameplay this team plays with
   uuid  : {type: String, index: {unique: true}},     // UUID of this team (index)
@@ -75,8 +74,7 @@ let updateTeam = function (team, callback) {
         }
         return callback(null, newTeam);
       });
-    }
-    else {
+    } else {
       docs[0].data = team.data;
       docs[0].save(function (err, team) {
         callback(err, team);

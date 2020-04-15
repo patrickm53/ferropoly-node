@@ -12,6 +12,7 @@ const chancelleryAccount = require('./chancelleryAccount');
 const propertyActions    = require('../../../components/checkin-datastore/lib/properties/actions');
 const logger             = require('../../../common/lib/logger').getLogger('marketplace');
 const travelLog          = require('../../../common/models/travelLogModel');
+const gameLog            = require('../../../common/models/gameLogModel');
 const async              = require('async');
 const moment             = require('moment');
 const EventEmitter       = require('events').EventEmitter;
@@ -81,7 +82,13 @@ function Marketplace(scheduler) {
      */
     this.scheduler.on('start', function (event) {
       marketLog(event.gameId, 'Marketplace: onStart');
-      event.callback(null, event);
+      gameLog.addEntry(event.gameId, gameLog.CAT_GENERAL, 'Spielstart', {}, err => {
+        if (err) {
+          // log only, no consequences
+          logger.error(err);
+        }
+        event.callback(null, event);
+      })
     });
     /**
      * This is the 'end' event launched by the gameScheduler. Pay the final rents & interests
@@ -95,7 +102,13 @@ function Marketplace(scheduler) {
           return;
         }
         marketLog(event.gameId, 'Timed interests paid');
-        event.callback(null, event);
+        gameLog.addEntry(event.gameId, gameLog.CAT_GENERAL, 'Spielende', {}, err => {
+          if (err) {
+            // log only, no consequences
+            logger.error(err);
+          }
+          event.callback(null, event);
+        })
       });
     });
   }
@@ -200,8 +213,19 @@ Marketplace.prototype.buyProperty = function (options, callback) {
                 message: `"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`
               });
             }
-            // that's it!
-            return callback(null, {property: property, amount: info.amount});
+            // Add a log entry
+            gameLog.addEntry(options.gameId,
+              gameLog.CAT_PROPERTY,
+              `Die Gruppe ${team.data.name} kaufen ${property.location.name} für ${info.amount} Fr.`,
+              {teamId: team.uuid},
+              err => {
+                if (err) {
+                  // not critical, log only
+                  logger.error(err);
+                }
+                // that's it!
+                return callback(null, {property: property, amount: info.amount});
+              });
           });
         });
       }
@@ -219,15 +243,27 @@ Marketplace.prototype.buyProperty = function (options, callback) {
           if (err) {
             return callback(err, {message: 'Fehler beim Grundstückkauf'});
           }
+          let targetTeam = _.get(gameData.teams[info.owner], 'data.name', 'unbekannt');
           if (ferroSocket) {
             // Inform others about paying a rent
-            let targetTeam = _.get(gameData.teams[info.owner], 'data.name', 'unbekannt');
             ferroSocket.emitToGame(options.gameId, 'general', {
               teamId : options.teamId,
               message: `"${team.data.name}" zahlen Miete an "${targetTeam}": ${info.amount} Fr.`
             });
           }
-          callback(null, info);
+          // Add a log entry
+          gameLog.addEntry(options.gameId,
+            gameLog.CAT_PROPERTY,
+            `Die Gruppe ${team.data.name} zahlen für ${property.location.name} ${info.amount} Fr. Miete an ${targetTeam}`,
+            {teamId: team.uuid},
+            err => {
+              if (err) {
+                // not critical, log only
+                logger.error(err);
+              }
+              // that's it!
+              return callback(null, info);
+            });
         });
       }
     });

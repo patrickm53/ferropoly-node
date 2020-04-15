@@ -9,6 +9,7 @@
  */
 
 const chancelleryTransaction = require('../../../common/models/accounting/chancelleryTransaction');
+const gameLog                = require('../../../common/models/gameLogModel');
 const teamAccount            = require('./teamAccount');
 const _                      = require('lodash');
 const moment                 = require('moment');
@@ -44,8 +45,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         if (info.balance > gameplay.gameParams.chancellery.maxJackpotSize) {
           logger.info('Jackpot for ' + gameplay.internal.gameId + ' is to large, increased chance for winning!');
           jackpotFull[gameplay.internal.gameId] = true;
-        }
-        else {
+        } else {
           jackpotFull[gameplay.internal.gameId] = false;
         }
         if (ferroSocket) {
@@ -77,14 +77,12 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
           return bookCallback(err);
         });
       });
-    }
-    else {
+    } else {
       return teamAccount.receiveFromBank(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
         return bookCallback(err);
       });
     }
-  }
-  else {
+  } else {
     // Negative amount: team is charged, amount goes to chancellery
     return teamAccount.chargeToChancellery({
       teamId: team.uuid,
@@ -142,16 +140,24 @@ function playChancellery(gameplay, team, callback) {
       }
       retVal.amount = info.balance;
       bookChancelleryEvent(gameplay, team, retVal, function (err) {
-        return callback(err, retVal);
+        if (err) {
+          return callback(err, retVal);
+        }
+        return gameLog.addEntry(gameplay.internal.gameId,
+          gameLog.CAT_CHANCELLERY,
+          'Parkplatzgewinn',
+          {
+            message: `Die Gruppe ${_.get(team, 'data.name', 'unbekannt')} gewinnt den Parkplatz: ${info.balance} Fr.`,
+            teamId : team.uuid
+          },
+          callback);
       });
     });
-  }
-  else {
+  } else {
     if (actionRand < gameplay.gameParams.chancellery.probabilityLoose) {
       retVal.amount *= (-1);
       retVal.infoText += ' Verlust';
-    }
-    else {
+    } else {
       retVal.infoText += 'Gewinn';
     }
     bookChancelleryEvent(gameplay, team, retVal, function (err) {

@@ -7,10 +7,10 @@
 
 
 const mongoose       = require('mongoose');
-const uuid           = require('uuid/v4');
 const logger         = require('../lib/logger').getLogger('propertyModel');
 const _              = require('lodash');
 const async          = require('async');
+const {v4: uuid}     = require('uuid');
 /**
  * The mongoose schema for a property
  */
@@ -112,8 +112,7 @@ const updateProperty = function (gameId, property, callback) {
     return updateProperty(gameId, newProperty, function (err, prop) {
       return callback(err, prop);
     })
-  }
-  else {
+  } else {
     // This is a Property object, save it
     if (!property.gameId) {
       property.gameId = gameId;
@@ -138,8 +137,7 @@ const updateProperty = function (gameId, property, callback) {
         return prop.save(function (err, savedProp) {
           return callback(err, savedProp);
         })
-      }
-      else {
+      } else {
         // we found the property and do not touch gameId and location data
         foundProperty.gamedata  = property.gamedata;
         foundProperty.pricelist = property.pricelist;
@@ -250,16 +248,14 @@ const getPropertiesForGameplay = function (gameId, options, callback) {
       .exec(function (err, docs) {
         return callback(err, docs);
       });
-  }
-  else if (options && options.propertyGroup) {
+  } else if (options && options.propertyGroup) {
     return Property.find()
       .where('gameId').equals(gameId)
       .where('pricelist.propertyGroup').equals(options.propertyGroup)
       .exec(function (err, docs) {
         return callback(err, docs);
       });
-  }
-  else {
+  } else {
     return Property.find()
       .where('gameId').equals(gameId)
       .exec(function (err, docs) {
@@ -333,9 +329,9 @@ const finalizeProperties              = function (gameId, callback) {
   }
 
   Property.deleteMany({
-    gameId: gameId,
-    'pricelist.priceRange': -1
-  },
+      gameId                : gameId,
+      'pricelist.priceRange': -1
+    },
     callback);
 };
 /**

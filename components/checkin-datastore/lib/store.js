@@ -3,9 +3,10 @@
  * Created by kc on 12.01.16.
  */
 
-const redux    = require('redux');
-const reducers = require('./reducers');
-const uuid     = require('uuid').v4;
+const redux      = require('redux');
+const reducers   = require('./reducers');
+const {v4: uuid} = require('uuid');
+
 /**
  * Constructor of the DataStore
  * @constructor
