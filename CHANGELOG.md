@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+## v.2.4.0 16.4.20
 * Email mit Summary wird Mitternacht nach Spiel an alle Teams versendet
 * Summary: neu Log mit wesentlichen Ereignissen des Spiels
 * Dependency Updates
