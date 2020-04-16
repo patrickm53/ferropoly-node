@@ -21,8 +21,7 @@
     "c3": "0.4.18",
     "components-font-awesome": "4.7.0",
     "bootstrap": "3.3.7",
-    "moment": "2.22.2",
-    "wiz-markdown": "1.3.0"
+    "moment": "2.22.2"
   },
   "private": true,
   "ignore": [
