@@ -6,7 +6,7 @@ block head
     != info
     | ;
   script(src=ngFile)
-  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU&callback=initMap')
+  script(src='https://maps.googleapis.com/maps/api/js?key=' + mapApiKey + '&callback=initMap')
   link(rel='stylesheet', href='/css/summary.css',  type='text/css')
 
 block navbar

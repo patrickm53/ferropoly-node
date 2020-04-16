@@ -87,6 +87,11 @@ settings.mailer = {
 // This is a secret for debugging routes
 settings.debugSecret = process.env.FERROPOLY_DEBUG_SECRET || uuid();
 
+// Maps settings
+settings.maps = {
+  apiKey: process.env.FERROPOLY_GOOGLE_MAPS_API_KEY || 'none'
+};
+
 if (debug) {
   logger.debug('DEBUG Settings used');
   // Use minified javascript files wherever available

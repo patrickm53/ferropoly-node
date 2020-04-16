@@ -100,7 +100,8 @@ router.get('/:gameId', function (req, res) {
         title     : 'Ferropoly',
         ngFile    : '/js/summaryctrl.js',
         hideLogout: true,
-        info      : JSON.stringify(info)
+        info      : JSON.stringify(info),
+        mapApiKey : settings.maps.apiKey
       });
     }
   );

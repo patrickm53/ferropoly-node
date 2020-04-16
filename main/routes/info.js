@@ -58,7 +58,8 @@ router.get('/:gameId', function (req, res) {
           gameId    : gameId,
           gameplay  : JSON.stringify(gp),
           pricelist : JSON.stringify(pl),
-          teams     : JSON.stringify(teams)
+          teams     : JSON.stringify(teams),
+          mapApiKey : settings.maps.apiKey
         });
       });
     });

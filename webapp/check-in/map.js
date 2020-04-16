@@ -49,14 +49,18 @@ function checkinMapController($scope, $http) {
    * @returns {*}
    */
   function loadGoogleMapsApi() {
-    var options = {
+    let options = {
       dataType: "script",
       cache   : true,
       url     : 'https://maps.googleapis.com/maps/api/js?key=AIzaSyClFIdi03YvYPvLikNwLSZ748yw1tfDVXU&signed_in=true' /*&signed_in=true'*/
+      // ToDo: url     : `https://maps.googleapis.com/maps/api/js?key=${process.env.FERROPOLY_GOOGLE_MAPS_API_KEY}&signed_in=true`  /*&signed_in=true'*/
     };
     return jQuery.ajax(options);
   }
 
+  /**
+   *
+   */
   function drawPricelistMarkers() {
     $scope.markers.forEach(function (m) {
       m.setMap(null);

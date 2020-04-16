@@ -4,14 +4,14 @@
  */
 
 
-const express = require('express');
-const router = express.Router();
-const _ = require('lodash');
-const settings = require('../settings');
-const pricelist = require('../../common/lib/pricelist');
+const express          = require('express');
+const router           = express.Router();
+const _                = require('lodash');
+const settings         = require('../settings');
+const pricelist        = require('../../common/lib/pricelist');
 const authTokenManager = require('../lib/authTokenManager');
-const gamecache = require('../lib/gameCache');
-const errorHandler = require('../lib/errorHandler');
+const gamecache        = require('../lib/gameCache');
+const errorHandler     = require('../lib/errorHandler');
 
 /* GET the reception of all games */
 router.get('/:gameId', function (req, res) {
@@ -26,7 +26,7 @@ router.get('/:gameId', function (req, res) {
       if (err) {
         return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
       }
-      let gp = gamedata.gameplay;
+      let gp    = gamedata.gameplay;
       let teams = gamedata.teams;
 
       if (!gp || !gamedata) {
@@ -37,8 +37,8 @@ router.get('/:gameId', function (req, res) {
       if (gp.internal.owner !== req.session.passport.user) {
         // Check if declared as additional admin
         if (gp.admins && gp.admins.logins && !_.find(gp.admins.logins, function (n) {
-            return n === req.session.passport.user;
-          })) {
+          return n === req.session.passport.user;
+        })) {
           return errorHandler(res, 'Keine Berechtigung für dieses Spiel vorhanden.', new Error('Access denied'), 403);
         }
       }
@@ -61,19 +61,20 @@ router.get('/:gameId', function (req, res) {
           req.session.ferropolyToken = token;
 
           res.render('reception/reception', {
-            title: 'Ferropoly',
-            minifiedjs: settings.minifiedjs,
-            ngFile: '/js/infoctrl.js',
-            hideLogout: true,
-            authToken: token,
-            user: req.session.passport.user,
-            err: errMsg1,
-            err2: errMsg2,
-            socketUrl: 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
-            gameplay: JSON.stringify(gp),
-            pricelist: JSON.stringify(pl),
-            teams: JSON.stringify(_.values(teams)),
-            currentGameId: gameId
+            title        : 'Ferropoly',
+            minifiedjs   : settings.minifiedjs,
+            ngFile       : '/js/infoctrl.js',
+            hideLogout   : true,
+            authToken    : token,
+            user         : req.session.passport.user,
+            err          : errMsg1,
+            err2         : errMsg2,
+            socketUrl    : 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
+            gameplay     : JSON.stringify(gp),
+            pricelist    : JSON.stringify(pl),
+            teams        : JSON.stringify(_.values(teams)),
+            currentGameId: gameId,
+            mapApiKey    : settings.maps.apiKey
           });
         });
       });
