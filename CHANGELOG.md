@@ -1,10 +1,15 @@
 # Changelog Ferropoly Spiel
 
+
 ## v.2.4.0 16.4.20
 * Email mit Summary wird Mitternacht nach Spiel an alle Teams versendet
 * Summary: neu Log mit wesentlichen Ereignissen des Spiels
 * Dependency Updates
 * Game-Log neu
+
+## 2.3.3 16.4.20
+* Google Plus von Authentisierung entfernt
+
 
 ## v2.3.2 25.7.19
 * Weniger Logausgaben
