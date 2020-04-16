@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## 2.3.3 16.4.20
+* Google Plus von Authentisierung entfernt
+
 ## v2.3.2 25.7.19
 * Weniger Logausgaben
 * Bugfix Avatar Darstellung
