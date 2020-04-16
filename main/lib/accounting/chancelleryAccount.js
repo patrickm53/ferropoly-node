@@ -145,9 +145,8 @@ function playChancellery(gameplay, team, callback) {
         }
         return gameLog.addEntry(gameplay.internal.gameId,
           gameLog.CAT_CHANCELLERY,
-          'Parkplatzgewinn',
+          `"${_.get(team, 'data.name', 'unbekannt')}" gewinnt den Parkplatz: ${info.balance} Fr.`,
           {
-            message: `Die Gruppe ${_.get(team, 'data.name', 'unbekannt')} gewinnt den Parkplatz: ${info.balance} Fr.`,
             teamId : team.uuid
           },
           callback);

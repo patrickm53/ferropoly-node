@@ -4,12 +4,12 @@
  */
 
 
-
 module.exports = function (settings) {
 
   settings.server = {
     port    : 3004,
     host    : '0.0.0.0',
+    url     : 'http://localhost:3004',
     serverId: 'localhost-main'
   };
 
@@ -44,7 +44,7 @@ module.exports = function (settings) {
   // Google Settings
   settings.oAuth.google.callbackURL   = 'http://localhost:3004/auth/google/callback';
   // Dropbox settings
-  settings.oAuth.dropbox.callbackURL = 'http://localhost:3004/auth/dropbox/callback';
+  settings.oAuth.dropbox.callbackURL  = 'http://localhost:3004/auth/dropbox/callback';
 
 
   // Logger

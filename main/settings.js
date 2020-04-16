@@ -3,11 +3,12 @@
  * Created by kc on 14.04.15.
  */
 
-const pkg    = require('./../package.json')
-const fs     = require('fs');
-const _      = require('lodash');
-const path   = require('path');
-const logger = require('../common/lib/logger').getLogger('settings');
+const pkg        = require('./../package.json')
+const fs         = require('fs');
+const _          = require('lodash');
+const path       = require('path');
+const logger     = require('../common/lib/logger').getLogger('settings');
+const {v4: uuid} = require('uuid');
 
 // Set default
 var deployType = process.env.DEPLOY_TYPE || 'local';
@@ -75,13 +76,16 @@ var settings = {
 settings.mailer = {
   senderAddress: process.env.MAILER_SENDER,
   host         : process.env.MAILER_HOST,
-  port         : 465,
+  port         : process.env.MAILER_PORT || 465,
   secure       : true,
   auth         : {
     pass: process.env.MAILER_PASS,
     user: process.env.MAILER_USER
   }
 };
+
+// This is a secret for debugging routes
+settings.debugSecret = process.env.FERROPOLY_DEBUG_SECRET || uuid();
 
 if (debug) {
   logger.debug('DEBUG Settings used');

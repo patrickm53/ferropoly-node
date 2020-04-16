@@ -1,0 +1,13 @@
+h1 Spiel-Log
+
+p Auf dieser Seite sind die wesentlichen Ereignisse des Spiels aufgelistet.
+
+table.table.table-striped(ng-cloak)
+  thead
+    tr
+      th Zeit
+      th Aktion
+  tbody
+    tr(ng-repeat='t in info.gameLog | orderBy:"timestamp"')
+      td {{t.timestamp | date:'HH:mm:ss'}}
+      td {{t.title}}

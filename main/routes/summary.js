@@ -13,10 +13,12 @@ const chancelleryTransactionModel = require('../../common/models/accounting/chan
 const teamAccountTransactionModel = require('../../common/models/accounting/teamAccountTransaction');
 const travelLogModel              = require('../../common/models/travelLogModel');
 const propertyModel               = require('../../common/models/propertyModel');
+const gameLogModel                = require('../../common/models/gameLogModel');
 const pricelist                   = require('../../common/lib/pricelist');
 const teamModel                   = require('../../common/models/teamModel');
 const errorHandler                = require('../lib/errorHandler');
 const logger                      = require('../../common/lib/logger').getLogger('routes:summary');
+const summaryMailer               = require('../lib/summaryMailer');
 const async                       = require('async');
 const moment                      = require('moment');
 const _                           = require('lodash');
@@ -80,6 +82,10 @@ router.get('/:gameId', function (req, res) {
       },
       function (properties, cb) {
         info.properties = properties;
+        gameLogModel.getAllLogEntries(gameId, null, cb);
+      },
+      function (gameLog, cb) {
+        info.gameLog = gameLog;
         cb();
       }
     ],
@@ -87,8 +93,7 @@ router.get('/:gameId', function (req, res) {
       if (err) {
         logger.error(err);
         info = {error: err.message};
-      }
-      else if (moment(_.get(info, 'gameplay.scheduling.gameDate')).isSame(new Date(), 'day')) {
+      } else if (moment(_.get(info, 'gameplay.scheduling.gameDate')).isSame(new Date(), 'day')) {
         info = {error: 'Die Spieldaten stehen ab Mitternacht zur Verfügung!'};
       }
       res.render('summary/summary', {
@@ -99,7 +104,25 @@ router.get('/:gameId', function (req, res) {
       });
     }
   );
+});
 
+/**
+ * Sends a mail to all teams with the summary (debug purposes only)
+ * Looks something like this: localhost:3004/summary/game-id-here/sendmail?auth=demo
+ */
+router.post('/:gameId/sendmail', function (req, res) {
+  let mailer = summaryMailer.getMailer();
+
+  if (req.query.auth !== settings.debugSecret) {
+    return res.status(403).send({message: 'Not allowed'});
+  }
+
+  mailer.sendInfo(req.params.gameId, (err, info) => {
+    if (err) {
+      return res.status(500).send({message: err.message});
+    }
+    res.status(200).send(info);
+  })
 });
 
 module.exports = router;

@@ -216,7 +216,7 @@ Marketplace.prototype.buyProperty = function (options, callback) {
             // Add a log entry
             gameLog.addEntry(options.gameId,
               gameLog.CAT_PROPERTY,
-              `Die Gruppe ${team.data.name} kaufen ${property.location.name} für ${info.amount} Fr.`,
+              `"${team.data.name}" kaufen ${property.location.name} für ${info.amount} Fr.`,
               {teamId: team.uuid},
               err => {
                 if (err) {
@@ -254,7 +254,7 @@ Marketplace.prototype.buyProperty = function (options, callback) {
           // Add a log entry
           gameLog.addEntry(options.gameId,
             gameLog.CAT_PROPERTY,
-            `Die Gruppe ${team.data.name} zahlen für ${property.location.name} ${info.amount} Fr. Miete an ${targetTeam}`,
+            `"${team.data.name}" zahlen für ${property.location.name} Miete an "${targetTeam}": ${info.amount} Fr.`,
             {teamId: team.uuid},
             err => {
               if (err) {

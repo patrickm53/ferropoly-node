@@ -141,6 +141,8 @@ ferropolyDb.init(settings, function (err, db) {
   // Now it is time to start the scheduler (after initializing ferroSocket, is required by marketplace)
   const gameScheduler = require('./lib/gameScheduler');
   const marketplace   = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
+  const summaryMailer = require('./lib/summaryMailer').createMailer(gameScheduler);
+
   gameScheduler.update(err => {
     if (err) {
       logger.info('Error while updating scheduler');

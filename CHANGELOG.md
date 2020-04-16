@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Email mit Summary wird Mitternacht nach Spiel an alle Teams versendet
+* Summary: neu Log mit wesentlichen Ereignissen des Spiels
 * Dependency Updates
 * Game-Log neu
 

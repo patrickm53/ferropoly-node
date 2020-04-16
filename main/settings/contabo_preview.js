@@ -9,6 +9,7 @@ module.exports = function (settings) {
   settings.server = {
     port: 3104,
     host: 'app.ferropoly.ch',
+    url: 'https://spiel-preview.ferropoly.ch',
     serverId: 'spiel.ferropoly.ch-v' + settings.version
   };
 

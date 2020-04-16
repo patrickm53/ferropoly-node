@@ -14,6 +14,8 @@ block navbar
     a(href='#' onclick="showPanel('#panel-main');") Übersicht
   li
     a(href='#' onclick="showPanel('#panel-chancellery');") Chance/Kanzlei
+  li
+    a(href='#' onclick="showPanel('#panel-log');") Spiel-Log
 
 block content
   .container-fluid(ng-app='summaryApp' ng-controller='summaryCtrl')
@@ -26,3 +28,5 @@ block content
         include summary-team
       #panel-chancellery
         include summary-chancellery
+      #panel-log
+        include summary-log
