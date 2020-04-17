@@ -8,7 +8,7 @@
 /**
  * Panel handling
  */
-var panels = ['#panel-main', '#panel-team', '#panel-chancellery'];
+var panels = ['#panel-main', '#panel-team', '#panel-chancellery', '#panel-log'];
 function showPanel(panel) {
   panels.forEach(function (p) {
     $(p).hide();
