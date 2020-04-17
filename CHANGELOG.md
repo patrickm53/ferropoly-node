@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+* API für Abfragen aus Webseite und Überwachung #41
 
 ## v.2.4.0 16.4.20
 * Email mit Summary wird Mitternacht nach Spiel an alle Teams versendet

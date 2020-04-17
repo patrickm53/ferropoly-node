@@ -36,7 +36,7 @@ const authtoken    = require('./routes/authtoken');
 const ferroSocket  = require('./lib/ferroSocket');
 const autopilot    = require('./lib/autopilot');
 const authStrategy = require('../common/lib/authStrategy')(settings, users);
-
+const infoRoute    = require('../common/routes/info');
 
 require('../common/lib/mailer').init(settings);
 
@@ -75,6 +75,7 @@ ferropolyDb.init(settings, function (err, db) {
   app.use('/info', require('./routes/info'));
   app.use('/summary', require('./routes/summary'));
   app.use('/rules', require('./routes/rules'));
+  app.use('/appinfo', infoRoute(settings));
 
   // Define Strategy, login
   passport.use(authStrategy.facebookStrategy);
