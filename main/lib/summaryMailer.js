@@ -32,6 +32,7 @@ function SummaryMailer(scheduler) {
         if (err) {
           return logger.error(err);
         }
+        event.callback(err, event);
       })
     });
   }
