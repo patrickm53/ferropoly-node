@@ -23,7 +23,7 @@ let ferroSocket;
 function FerroSocket(server) {
   EventEmitter.call(this);
   let self = this;
-  this.io  = require('socket.io').listen(server);
+  this.io  = require('socket.io')(server);
 
   this.sockets = {};
 

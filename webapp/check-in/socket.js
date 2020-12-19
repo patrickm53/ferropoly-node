@@ -4,12 +4,12 @@
 
 const checkinDatastore = require('../../components/checkin-datastore/')
 import $ from 'jquery'
-import io from 'socket.io-client'
+import { io } from 'socket.io-client';
 
 $('#offline').show();
 $('#online').hide();
 
-const ferropolySocket = io.connect();
+const ferropolySocket = io();
 
 ferropolySocket.on('disconnect', function () {
   console.log('disconnected');
