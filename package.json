@@ -97,9 +97,9 @@
     "redux": "4.0.5",
     "sandboxed-module": "2.0.4",
     "style-loader": "2.0.0",
-    "webpack": "5.11.0",
+    "webpack": "4.44.2",
     "webpack-cli": "4.2.0",
-    "webpack-merge": "5.7.2"
+    "webpack-merge": "4.2.2"
   },
   "bundleDependencies": [],
   "private": true,

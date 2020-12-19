@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## v2.4.2 19.12.2020
+* Webpack Downgrade
+
 ## v2.4.1 19.12.2020
 * API für Abfragen aus Webseite und Überwachung #41
 * Kein Summary Email bei Demo Games
