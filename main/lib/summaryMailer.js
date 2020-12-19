@@ -50,12 +50,19 @@ SummaryMailer.prototype.sendInfo = function (gameId, callback) {
         return callback(err);
       }
 
+      // Do not send any information for Demo games!
+      if (gameData.internal.isDemo) {
+        logger.info(`NOT sending Summary Email, ${gameId} is a demo game!`);
+        return callback();
+      }
+
       let teams = _.valuesIn(gameData.teams);
 
       let bccString = '';
       teams.forEach(t => {
         bccString += _.get(t, 'data.teamLeader.email', '') + ',';
       });
+      bccString += 'info@ferropoly.ch'
 
       let html = '';
       let text = '';
@@ -79,11 +86,11 @@ SummaryMailer.prototype.sendInfo = function (gameId, callback) {
         subject: 'Ferropoly Spielinfo',
         html   : html,
         text   : text
-      }, (err, info) => {
+      }, err => {
         if (err) {
           return callback(err)
         }
-        logger.info(`Summary Email for ${gameId} sent`, info);
+        logger.info(`Summary Email for ${gameId} sent`);
         callback();
       })
     });

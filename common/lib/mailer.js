@@ -30,7 +30,7 @@ module.exports = {
   /**
    * Sends a message to a receiver
    * @param mailContents : data to send
-   * @param callback : callback after mail was sent
+   * @param callback : function(*=, *=): (*|undefined) after mail was sent
    */
   send: function (mailContents, callback) {
     if (!mailContents || !mailContents.to || !mailContents.subject || !mailContents.text) {
