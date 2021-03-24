@@ -20,7 +20,7 @@ const passport     = require('passport');
 const flash        = require('connect-flash');
 const session      = require('express-session');
 const compression  = require('compression');
-const MongoStore   = require('connect-mongo')(session);
+const MongoStore   = require('connect-mongo');
 const moment       = require('moment');
 const {v4: uuid}   = require('uuid');
 
@@ -97,7 +97,7 @@ ferropolyDb.init(settings, function (err, db) {
     genid            : function () {
       return 'S_' + moment().format('YYMMDD-HHmmss-') + uuid();
     },
-    store            : new MongoStore({mongooseConnection: db, ttl: 2 * 24 * 60 * 60}),
+    store            : MongoStore.create({mongoUrl: settings.locationDbSettings.mongoDbUrl, ttl: 2 * 24 * 60 * 60}),
     name             : 'ferropoly-spiel'
   }));
   app.use(passport.initialize());

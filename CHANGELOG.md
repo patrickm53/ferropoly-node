@@ -1,5 +1,13 @@
 # Changelog Ferropoly Spiel
 
+* Dependency Updates. Wichtigste Änderungen
+    * Webpack bewusst auf V4 belassen
+    * Socket.io: 4.0 
+    * Grunt-browserify: 6
+    * Grund-contrib-css-min: 4.0  
+    * Kleine Updates u.a.: jquery, Pug, nodemailer, node-xlsx, needle, mongodb, moongose
+    * moment und moment-timezone ebenfalls upgedated, Ablösung planen!
+  
 ## v2.4.2 19.12.2020
 * Webpack Downgrade
 
