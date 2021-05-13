@@ -13,6 +13,7 @@ const teamModel         = require('../../common/models/teamModel');
 const errorHandler      = require('../lib/errorHandler');
 const logger            = require('../../common/lib/logger').getLogger('routes:info');
 const priceListDownload = require('../../common/routes/downloadPricelist');
+const settings          = require('../settings');
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
