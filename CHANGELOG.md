@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## 2.3.5 8.8.21
+* Minify Reception schlug aus irgend einem Grund fehl
+
 ## 2.3.4 8.8.21
 * Bugfix RSS Feed SBB
 

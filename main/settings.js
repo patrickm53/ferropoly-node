@@ -84,16 +84,16 @@ settings.mailer = {
 };
 
 if (debug) {
-  logger.debug('DEBUG Settings used');
+  logger.info('DEBUG Settings used');
   // Use minified javascript files wherever available
   settings.minifiedjs = false;
 } else {
-  logger.debug('DIST Settings with minified js files used');
+  logger.info('DIST Settings with minified js files used');
   // Use minified javascript files wherever available
   settings.minifiedjs = true;
 }
 
-logger.debug('DEPLOY_TYPE: ' + deployType);
+logger.info('DEPLOY_TYPE: ' + deployType);
 
 if (deployType && fs.existsSync(path.join(__dirname, 'settings/' + deployType + '.js'))) {
   module.exports = require('./settings/' + deployType + '.js')(settings);
