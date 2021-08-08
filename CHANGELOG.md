@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## 2.3.4 8.8.21
+* Bugfix RSS Feed SBB
+
 ## 2.3.3 16.4.20
 * Google Plus von Authentisierung entfernt
 
