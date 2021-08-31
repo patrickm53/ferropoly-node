@@ -111,7 +111,7 @@ const updateProperty = function (gameId, property, callback) {
     // recursive call
     return updateProperty(gameId, newProperty, function (err, prop) {
       return callback(err, prop);
-    })
+    });
   }
   else {
     // This is a Property object, save it
@@ -137,7 +137,7 @@ const updateProperty = function (gameId, property, callback) {
         prop._id       = createPropertyId(gameId, property.location);
         return prop.save(function (err, savedProp) {
           return callback(err, savedProp);
-        })
+        });
       }
       else {
         // we found the property and do not touch gameId and location data
@@ -145,11 +145,8 @@ const updateProperty = function (gameId, property, callback) {
         foundProperty.pricelist = property.pricelist;
         return foundProperty.save(function (err, savedProp) {
           return callback(err, savedProp);
-        })
+        });
       }
-    });
-    return property.save(function (err, savedProp) {
-      return callback(err, savedProp);
     });
   }
 };
@@ -176,7 +173,7 @@ const updatePositionInPriceList = function (gameId, propertyId, position, callba
     }
     docs[0].pricelist.positionInPriceRange = position;
     docs[0].save(function (err, savedProperty) {
-      logger.info(savedProperty.location.name + ' updated');
+      logger.info(savedProperty.location.name + ' updated' + ` v: ${savedProperty.pricelist.positionInPriceRange}` );
       callback(err, savedProperty);
     });
   });
