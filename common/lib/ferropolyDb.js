@@ -13,9 +13,6 @@ let mongooseThis = undefined;
 
 // Needed for the new mongoose, using the ES6 native promises
 mongoose.Promise = global.Promise;
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
 
 module.exports = {
   /**
@@ -37,7 +34,7 @@ module.exports = {
 
     // Connect to the MongoDb
     let options  = {
-      poolSize          : poolSize,
+      maxPoolSize       : poolSize,
       useNewUrlParser   : true,
       useUnifiedTopology: true
     };
@@ -80,7 +77,7 @@ module.exports = {
       mongoose.disconnect(function (err) {
         db = undefined;
         callback(err);
-      })
+      });
     }
   }
 };

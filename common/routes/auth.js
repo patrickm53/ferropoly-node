@@ -47,6 +47,23 @@ module.exports = function (app) {
     });
 
   /**
+   * Authentication Route for Microsoft
+   */
+  app.get('/auth/microsoft',
+    passport.authenticate('microsoft'));
+
+  /**
+   * Callback for google
+   */
+  app.get('/auth/microsoft/callback',
+    passport.authenticate('microsoft', {failureRedirect: '/login'}),
+    function (req, res) {
+      // Successful authentication, redirect home.
+      console.log('SUCCESSFUL LOGGED IN WITH MICROSOFT ------------------------------------');
+      res.redirect(req.session.targetUrl || '/');
+    });
+
+  /**
    * Authentication Route for Dropbox
    */
   app.get('/auth/dropbox',

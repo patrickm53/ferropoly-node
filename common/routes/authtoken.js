@@ -5,14 +5,15 @@
 
 const express    = require('express');
 const router     = express.Router();
-const session    = require('express-session');
 const logger     = require('../lib/logger').getLogger('authToken');
 const {v4: uuid} = require('uuid');
 
 /* GET the authtoken, which you only can get when logged in */
 router.get('/', function (req, res) {
+  let t = req.session || 'none';
+  logger.info('session', t);
 
-
+  req.session.test = {wtf: true, t: 1};
   if (req.session.authToken) {
     logger.info(`Auth token REFRESH for ${req.session.passport.user}: ${req.session.authToken}`);
   } else {
@@ -20,7 +21,15 @@ router.get('/', function (req, res) {
     logger.info(`NEW auth token for ${req.session.passport.user}: ${req.session.authToken}`);
   }
 
-  res.send({authToken: req.session.authToken, user: req.session.passport.user});
+  req.session.save(err => {
+    if (err) {
+      logger.error(err);
+    }
+    logger.debug('SESSION', req.session);
+    res.send({authToken: req.session.authToken, user: req.session.passport.user});
+  });
+
+
 });
 
 

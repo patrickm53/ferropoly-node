@@ -12,24 +12,13 @@ const router   = express.Router();
 let settings;
 const _        = require('lodash');
 const logger   = require('../lib/logger').getLogger('login');
-
+const path     = require('path');
 
 /**
  * Get the login page
  */
 router.get('/', function (req, res) {
-  let loginController = 'loginctrl';
-  loginController     = settings.minifiedjs ? '/js/min/' + loginController + '.min.js' : '/js/src/' + loginController + '.js';
-
-  res.render('login', {
-    title       : settings.appName + ' Login',
-    hideLogout  : true,
-    versionInfo : settings.version,
-    preview     : settings.preview,
-    ngController: 'loginCtrl',
-    ngApp       : 'loginApp',
-    ngFile      : loginController
-  });
+  res.sendFile(path.join(__dirname, '..', '..', 'editor', 'public', 'html', 'login.html'));
 });
 
 /**
@@ -93,8 +82,7 @@ module.exports = {
         if (uri === '/') {
           logger.info(uri + " redirected to login");
           res.redirect('/login');
-        }
-        else {
+        } else {
           logger.info(uri + " is not allowed (401)");
           req.session.targetUrl = req.url;
           res.status(401);

@@ -88,6 +88,22 @@ const updateProperties = function (properties, callback) {
 };
 
 /**
+ * Updates a property only using some data supplied. Internal usage only
+ * @param gameId
+ * @param property
+ * @param callback
+ */
+const updatePropertyPartial = function (gameId, property, callback) {
+  getPropertyById(gameId, property.uuid, (err, loadedProperty) => {
+    if (err) {
+      return callback(err);
+    }
+    _.merge(loadedProperty, property);
+    loadedProperty.save(callback);
+  });
+};
+
+/**
  * Updates a property, if not existing, creates a new one
  * @param gameId
  * @param property
@@ -103,15 +119,13 @@ const updateProperty = function (gameId, property, callback) {
   }
 
   if (!(property instanceof Property)) {
-    // This is not an instance of a property, create a new one
-    let newProperty       = new Property();
-    newProperty.gamedata  = property.gamedata;
-    newProperty.pricelist = property.pricelist;
-    newProperty.location  = property.location;
-    // recursive call
-    return updateProperty(gameId, newProperty, function (err, prop) {
+    /* In the original version, we created here a new property object.
+       This could have been important for the admin, but this was not
+       the best solution
+    */
+    updatePropertyPartial(gameId, property, (err, prop) => {
       return callback(err, prop);
-    })
+    });
   } else {
     // This is a Property object, save it
     if (!property.gameId) {
@@ -136,18 +150,15 @@ const updateProperty = function (gameId, property, callback) {
         prop._id       = createPropertyId(gameId, property.location);
         return prop.save(function (err, savedProp) {
           return callback(err, savedProp);
-        })
+        });
       } else {
         // we found the property and do not touch gameId and location data
         foundProperty.gamedata  = property.gamedata;
         foundProperty.pricelist = property.pricelist;
         return foundProperty.save(function (err, savedProp) {
           return callback(err, savedProp);
-        })
+        });
       }
-    });
-    return property.save(function (err, savedProp) {
-      return callback(err, savedProp);
     });
   }
 };
@@ -174,7 +185,8 @@ const updatePositionInPriceList = function (gameId, propertyId, position, callba
     }
     docs[0].pricelist.positionInPriceRange = position;
     docs[0].save(function (err, savedProperty) {
-      logger.info(savedProperty.location.name + ' updated');
+      logger.info(savedProperty.location.name + ' updated' + ` v: ${savedProperty.pricelist.positionInPriceRange}`);
+
       callback(err, savedProperty);
     });
   });
@@ -314,7 +326,7 @@ const removePropertyFromGameplay = function (gameId, locationId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing one property for ' + gameId);
-  Property.deleteMany({gameId: gameId, 'location.uuid': locationId}, callback)
+  Property.deleteMany({gameId: gameId, 'location.uuid': locationId}, callback);
 };
 
 /**
@@ -377,6 +389,19 @@ const allowBuilding = function (gameId, callback) {
 };
 
 /**
+ * Count the properties of a given game
+ * @param gameId
+ * @param callback
+ * @returns {*}
+ */
+function countProperties(gameId, callback) {
+  if (!gameId) {
+    return callback(new Error('No gameId supplied'));
+  }
+  Property.countDocuments({gameId: gameId}, callback);
+}
+
+/**
  * The Exports
  * @type {{Model: (*|Model)}}
  */
@@ -394,5 +419,6 @@ module.exports = {
   updateProperties               : updateProperties,
   finalizeProperties             : finalizeProperties,
   allowBuilding                  : allowBuilding,
-  getPropertiesIdsForTeam        : getPropertiesIdsForTeam
+  getPropertiesIdsForTeam        : getPropertiesIdsForTeam,
+  countProperties                : countProperties
 };
