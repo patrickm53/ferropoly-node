@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## 2.3.6 1.10.21
+* Bugfix Rangliste Download
+
 ## 2.3.5 8.8.21
 * Minify Reception schlug aus irgend einem Grund fehl
 
