@@ -14,6 +14,15 @@
 * Dependency Updates
 * Game-Log neu
 
+## 2.3.6 1.10.21
+* Bugfix Rangliste Download
+
+## 2.3.5 8.8.21
+* Minify Reception schlug aus irgend einem Grund fehl
+
+## 2.3.4 8.8.21
+* Bugfix RSS Feed SBB
+
 ## 2.3.3 16.4.20
 * Google Plus von Authentisierung entfernt
 
