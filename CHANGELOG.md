@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Bugfix RSS Feed zvv110
+
 ## 2.3.6 1.10.21
 * Bugfix Rangliste Download
 
