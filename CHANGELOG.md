@@ -1,6 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## v2.3.7 8.10.21
 * Bugfix RSS Feed zvv110
+* Bugfix wenn Team-Kontakt aus Anmeldung fehlt
 
 ## 2.3.6 1.10.21
 * Bugfix Rangliste Download
