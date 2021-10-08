@@ -31,7 +31,8 @@ const rssFeed = {
   'tva': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
   'tvlu': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
   'tnw': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI1,BVI2,BVI3,BVI4,BVI5',
-  'zvv': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI4'
+  'zvv': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI4',
+  'zvv110': 'http://fahrplan.sbb.ch/bin//help.exe/dnl?tpl=rss_feed_custom&icons=46&regions=BVI4'
 };
 
 let cachedData = {};
