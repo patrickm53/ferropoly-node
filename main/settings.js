@@ -39,6 +39,7 @@ var settings = {
   version: pkg.version,
   debug  : debug,
   preview: preview,
+  appPath: 'main', // folder where the app resides
 
   oAuth: {
     facebook: {

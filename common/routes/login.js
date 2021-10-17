@@ -9,16 +9,17 @@ const express  = require('express');
 const passport = require('passport');
 const url      = require('url');
 const router   = express.Router();
-let settings;
 const _        = require('lodash');
 const logger   = require('../lib/logger').getLogger('login');
 const path     = require('path');
+let   settings = {};
 
 /**
  * Get the login page
  */
 router.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '..', '..', 'editor', 'public', 'html', 'login.html'));
+  let appPath = _.get(settings, 'appPath', 'none');
+  res.sendFile(path.join(__dirname, '..', '..', appPath, 'public', 'html', 'login.html'));
 });
 
 /**
@@ -41,6 +42,8 @@ router.post('/', function (req, res) {
  */
 module.exports = {
   init: function (app, _settings) {
+
+    settings = _settings;
 
     // The login page
     app.use('/login', router);

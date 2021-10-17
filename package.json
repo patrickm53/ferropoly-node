@@ -24,8 +24,7 @@
     "npm": ">= 2.14.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "postinstall": "bower install && webpack --config webpack.dev.js && webpack --config webpack.prod.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "1.2.36",
@@ -44,6 +43,7 @@
     "express": "4.17.1",
     "express-session": "1.17.2",
     "express-winston": "4.2.0",
+    "grunt-contrib-copy": "^1.0.0",
     "jquery": "3.6.0",
     "lodash": "4.17.21",
     "moment": "2.29.1",
@@ -77,9 +77,13 @@
   "devDependencies": {
     "@googlemaps/js-api-loader": "1.12.3",
     "@googlemaps/ogc": "1.0.0",
+    "bootstrap": "4.6.0",
+    "bootstrap-vue": "2.21.2",
     "css-loader": "6.3.0",
     "eslint": "7.32.0",
     "expect.js": "0.3.1",
+    "favicons": "6.2.2",
+    "favicons-webpack-plugin": "5.0.2",
     "grunt": "1.4.1",
     "grunt-bump": "0.8.0",
     "grunt-eslint": "23.0.0",
