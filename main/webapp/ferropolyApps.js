@@ -8,6 +8,10 @@ module.exports = [
     name    : 'login',
     entry   : path.join(__dirname, 'login', 'app.js'),
     htmlFile: 'login.html'
+  }, {
+    name    : 'test',
+    entry   : path.join(__dirname, 'test', 'app.js'),
+    htmlFile: 'test.html'
   },
   {
     name    : 'game-selector',

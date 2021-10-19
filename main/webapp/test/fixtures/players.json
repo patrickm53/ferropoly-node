@@ -1,0 +1,223 @@
+[
+  {
+    "_id": "local-demo-game-c36386d2-5653-4049-9228-636fcd95443e",
+    "data": {
+      "name": "Ferropoly Riders",
+      "organization": "Pfadi Züri Oberland",
+      "teamLeader": {
+        "name": "Nora Reichle",
+        "email": "team1@ferropoly.ch",
+        "phone": "079 000 00 01"
+      }
+    },
+    "uuid": "c36386d2-5653-4049-9228-636fcd95443e",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Nora",
+        "surname": "Reichle",
+        "email": "team1@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/44f753bd3869df692d159e65e55af04f?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 3,
+        "registrationDate": "2021-04-09T18:08:25.072Z",
+        "lastLogin": "2021-05-01T17:29:05.951Z"
+      }
+    }
+  },
+  {
+    "_id": "local-demo-game-50d94533-02e7-4cbe-b3d7-74c4b4a0855c",
+    "data": {
+      "onlineRegistration": true,
+      "name": "Bahnschwellen",
+      "organization": "Sek Hinwil",
+      "teamLeader": {
+        "name": "Sylvia Balmer",
+        "email": "team3@ferropoly.ch",
+        "phone": "079 000 00 03"
+      }
+    },
+    "uuid": "50d94533-02e7-4cbe-b3d7-74c4b4a0855c",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Sylvia",
+        "surname": "Balmer",
+        "email": "team3@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/609a6e232ba6e71ac01fc7d6c281ce19?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 3,
+        "registrationDate": "2021-04-09T18:08:25.077Z",
+        "lastLogin": "2021-04-11T09:08:30.505Z"
+      }
+    }
+  },
+  {
+    "_id": "local-demo-game-064b7302-07b0-4df4-82b2-7a004248968c",
+    "data": {
+      "name": "Bahnfreaks",
+      "organization": "Cevi Bern",
+      "teamLeader": {
+        "name": "Marius Garatti",
+        "email": "team2@ferropoly.ch",
+        "phone": "079 000 00 02"
+      }
+    },
+    "uuid": "064b7302-07b0-4df4-82b2-7a004248968c",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Marius",
+        "surname": "Garatti",
+        "email": "team2@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/cdd5f079ff1b67fcead623d3f9acdb4d?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 3,
+        "registrationDate": "2021-04-09T18:08:25.075Z",
+        "lastLogin": "2021-04-18T09:58:09.175Z"
+      }
+    }
+  },
+  {
+    "_id": "local-demo-game-adb307f5-7638-4c70-9549-7b6ba063d27e",
+    "data": {
+      "name": "Schmalspurfans",
+      "organization": "Gewerbeschule Chur",
+      "teamLeader": {
+        "name": "Jonas Tobler",
+        "email": "team4@ferropoly.ch",
+        "phone": "079 000 00 04"
+      },
+      "remarks": "Siegerteam letztes Jahr"
+    },
+    "uuid": "adb307f5-7638-4c70-9549-7b6ba063d27e",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Jonas",
+        "surname": "Tobler",
+        "email": "team4@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/f38f15024dafd29e3376783a770dd4f6?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 0,
+        "registrationDate": "2021-04-09T18:08:25.086Z"
+      }
+    }
+  },
+  {
+    "_id": "local-demo-game-42bb6841-2cd0-44f0-9235-b60308121139",
+    "data": {
+      "name": "Pufferbillies",
+      "organization": "Oberstufe Basel",
+      "teamLeader": {
+        "name": "Christine Huber",
+        "email": "team5@ferropoly.ch",
+        "phone": "079 000 00 05"
+      }
+    },
+    "uuid": "42bb6841-2cd0-44f0-9235-b60308121139",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Christine",
+        "surname": "Huber",
+        "email": "team5@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/b974fc754fba7897bb204401c8398536?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 0,
+        "registrationDate": "2021-04-09T18:08:25.079Z"
+      }
+    }
+  },
+  {
+    "_id": "local-demo-game-7240d371-dd6b-438b-862e-a4c1095ba982",
+    "data": {
+      "name": "Mecaronis",
+      "organization": "Mechatronik Team",
+      "teamLeader": {
+        "name": "Martin Schiess",
+        "email": "team6@ferropoly.ch",
+        "phone": "079 000 00 06"
+      }
+    },
+    "uuid": "7240d371-dd6b-438b-862e-a4c1095ba982",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Martin",
+        "surname": "Schiess",
+        "email": "team6@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/d70f4aad1428103fc971cf1349ceb32d?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 0,
+        "registrationDate": "2021-04-09T18:08:25.082Z"
+      }
+    }
+  },
+  {
+    "_id": "local-demo-game-11627478-2733-4b27-a7a1-fda6d2def030",
+    "data": {
+      "name": "Ticketeria",
+      "organization": "Team Kriens",
+      "teamLeader": {
+        "name": "Lea Kuster",
+        "email": "team7@ferropoly.ch",
+        "phone": "079 000 00 07"
+      }
+    },
+    "uuid": "11627478-2733-4b27-a7a1-fda6d2def030",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Lea",
+        "surname": "Kuster",
+        "email": "team7@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/05bf3a7f482e47063674af18c679b87e?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 0,
+        "registrationDate": "2021-04-09T18:08:25.088Z"
+      }
+    }
+  },
+  {
+    "_id": "local-demo-game-8e1ae583-5afd-4e38-a516-ea3383528c72",
+    "data": {
+      "name": "Sackbahnhof",
+      "organization": "Jungwacht St. Gallen",
+      "teamLeader": {
+        "name": "Thomas Kunz",
+        "email": "team8@ferropoly.ch",
+        "phone": "079 000 00 08"
+      }
+    },
+    "uuid": "8e1ae583-5afd-4e38-a516-ea3383528c72",
+    "gameId": "local-demo-game",
+    "__v": 0,
+    "login": {
+      "personalData": {
+        "forename": "Thomas",
+        "surname": "Kunz",
+        "email": "team8@ferropoly.ch",
+        "avatar": "https://www.gravatar.com/avatar/ebe576605e5dff7e56a9a90d50b5e8d2?d=wavatar"
+      },
+      "info": {
+        "agbAccepted": 0,
+        "registrationDate": "2021-04-09T18:08:25.084Z"
+      }
+    }
+  }
+]
