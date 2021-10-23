@@ -7,7 +7,7 @@ import Vue from 'vue';
 import {BootstrapVue} from 'bootstrap-vue';
 import $ from 'jquery';
 import VueRouter from 'vue-router';
-
+import storeGameSelector from './store';
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -47,6 +47,7 @@ Vue.filter('formatDate', function (value) {
   return DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
 });
 
+
 /**
  * Startpoint of the game-selector view
  */
@@ -58,6 +59,7 @@ $(document).ready(function () {
     created: function () {
       console.log('created');
     },
+    store  : storeGameSelector,
     data   : {
       user   : {
         name: ''

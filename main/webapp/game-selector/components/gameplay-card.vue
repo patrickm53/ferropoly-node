@@ -5,9 +5,6 @@
   div
     ferro-card(:title="getGpProperty('gamename')")
       b-row
-        b-col Organisation
-        b-col {{organisator}}
-      b-row
         b-col Spieldatum
         b-col {{getGpProperty('scheduling.gameDate') | formatDate}}
       b-row
@@ -27,10 +24,8 @@
       b-row
         b-col
           b-button.btn-gameplay(size="sm" variant="primary" v-if="gameRunning" :href="url.play") Spielen
-          b-button.btn-gameplay(size="sm" v-if="gameOver" :href="url.play") Spiele ansehen
+          b-button.btn-gameplay(size="sm" v-if="gameOver" :href="url.play") Spiel ansehen
           b-button.btn-gameplay(size="sm" v-if="getGpProperty('internal.finalized')" :href="url.viewPricelist") Preisliste
-          b-button.btn-gameplay(size="sm" :href="url.editTeam") Team Mitglieder &nbsp;
-            b-icon-people
           b-button.btn-gameplay(size="sm" variant="info" v-if="gameOver" :href="url.summary") Zusammenfassung
 
 </template>
@@ -43,7 +38,7 @@ import FerroCard from '../../common/components/ferro-card/ferro-card.vue';
 import {DateTime} from 'luxon';
 
 export default {
-  name      : 'game-card',
+  name      : 'gameplay-card',
   props     : {
     gameplay: {
       type   : Object,
@@ -55,9 +50,8 @@ export default {
   data      : function () {
     return {
       url: {
-        play         : `/checkin/${this.gameplay.internal.gameId}`,
+        play         : `/reception/${this.gameplay.internal.gameId}`,
         viewPricelist: `/info/${this.gameplay.internal.gameId}`,
-        editTeam     : `/team/edit/${this.gameplay.internal.gameId}/${this.gameplay.team.uuid}`,
         summary      : `/summary/${this.gameplay.internal.gameId}`,
       }
     };
@@ -80,15 +74,6 @@ export default {
     }
   },
   computed  : {
-    organisator() {
-      let name   = this.getGpProperty('owner.organisatorName');
-      let org    = this.getGpProperty('owner.organisation');
-      let retVal = name;
-      if (org.length > 0) {
-        retVal += ` (${org})`
-      }
-      return retVal;
-    },
     /**
      * Is the game running?
      */

@@ -7,7 +7,7 @@
   #game-selector
     modal-agb()
     menu-bar(:elements-right="menuElementsRight" show-user-box=true)
-    welcome-bar(:user-name="userName")
+    welcome-bar(:user-name="userDisplayName")
     b-container(fluid=true)
       b-row
         b-col
@@ -16,55 +16,47 @@
             | .
       b-row
         b-col
-          my-games(v-on:gameplays-changed="gameplaysChanged")
+          my-gameplays(:gameplays="gameplays")
+          my-games(:gameplays="games")
 </template>
 
 <script>
 import WelcomeBar from './welcome-bar.vue'
 import MyGames from './my-games.vue'
+import MyGameplays from './my-gameplays.vue'
 import ModalAgb from '../../common/components/modal-agb/modal-agb.vue';
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
-import {readUserInfo} from "../adapter/userInfo";
-
+import {mapFields} from 'vuex-map-fields';
 
 export default {
-  name      : 'game-selector',
-  props     : [],
-  data      : function () {
+  name : 'game-selector',
+  props: [],
+  data : function () {
     return {
-      gamePlays   : {},
-      menuElementsRight: [
-        {title: 'Hilfe / Info', href: '/about', hide: false},
-        {title: 'Admin Dashboard', href: '/dashboard', hide: true}
-      ],
-      userName: '',
-      isAdmin: false
+
+      menuElementsRight:
+          [
+            {title: 'Hilfe / Info', href: '/about', hide: false},
+            {title: 'Admin Dashboard', href: '/dashboard', hide: true}
+          ]
     };
   },
-  model     : {
-  },
+  model: {},
   created() {
-    let self = this;
-    // Get the User Info
-    readUserInfo((err, info) => {
-      if (!err) {
-        self.userName = info.personalData.forename // + ' ' + info.personalData.surname;
-        self.isAdmin = info.roles.admin;
-        self.menuElements[1].hide = !self.isAdmin;
-      }
-    });
+    this.$store.dispatch('fetchGames');
+    this.$store.dispatch('fetchUserData');
   },
-  methods   : {
-    /**
-     * Event handler when the gameplays changed
-     * @param gps
-     */
-    gameplaysChanged: function (gps) {
-      this.gamePlays            = gps;
-      this.menuElements[0].hide = gps.length > 2;
-    }
+  mounted() {
   },
-  components: {WelcomeBar, MyGames, ModalAgb, MenuBar}
+  computed  : {
+    ...mapFields([
+      'games',
+      'gameplays',
+      'userDisplayName'
+    ]),
+  },
+  methods   : {},
+  components: {WelcomeBar, MyGames, ModalAgb, MenuBar, MyGameplays}
 }
 </script>
 
