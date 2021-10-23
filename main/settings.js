@@ -3,7 +3,7 @@
  * Created by kc on 14.04.15.
  */
 
-const pkg        = require('./../package.json')
+const pkg        = require('./../package.json');
 const fs         = require('fs');
 const _          = require('lodash');
 const path       = require('path');
@@ -54,12 +54,6 @@ var settings = {
       callbackURL : 'none' // is set in settings file for environment
     },
 
-    microsoft: {
-      appId      : process.env.FERROPOLY_MICROSOFT_APP_ID || 'nodos',
-      secret     : process.env.FERROPOLY_MICROSOFT_APP_SECRET || 'no_secret',
-      callbackURL: 'none' // is set in settings file for environment
-    },
-
     dropbox: {
       clientId    : process.env.FERROPOLY_DROPBOX_CLIENT_ID || 'none',
       clientSecret: process.env.FERROPOLY_DROPBOX_CLIENT_SECRET || 'no_secret',
@@ -100,16 +94,16 @@ settings.maps = {
 };
 
 if (debug) {
-  logger.debug('DEBUG Settings used');
+  logger.info('DEBUG Settings used');
   // Use minified javascript files wherever available
   settings.minifiedjs = false;
 } else {
-  logger.debug('DIST Settings with minified js files used');
+  logger.info('DIST Settings with minified js files used');
   // Use minified javascript files wherever available
   settings.minifiedjs = true;
 }
 
-logger.debug('DEPLOY_TYPE: ' + deployType);
+logger.info('DEPLOY_TYPE: ' + deployType);
 
 if (deployType && fs.existsSync(path.join(__dirname, 'settings/' + deployType + '.js'))) {
   module.exports = require('./settings/' + deployType + '.js')(settings);

@@ -13,7 +13,7 @@ const teamModel         = require('../../common/models/teamModel');
 const errorHandler      = require('../lib/errorHandler');
 const logger            = require('../../common/lib/logger').getLogger('routes:info');
 const priceListDownload = require('../../common/routes/downloadPricelist');
-const settings          = require('../settings');
+const _                 = require('lodash');
 
 /* GET home page. */
 router.get('/:gameId', function (req, res) {
@@ -46,9 +46,9 @@ router.get('/:gameId', function (req, res) {
         let teams = [];
         for (let i = 0; i < foundTeams.length; i++) {
           teams.push({
-            name          : foundTeams[i].data.name,
-            organization  : foundTeams[i].data.organization,
-            teamLeaderName: foundTeams[i].data.teamLeader.name
+            name          : _.get(foundTeams[i], 'data.name', 'no-name'),
+            organization  : _.get(foundTeams[i], 'data.organization', ''),
+            teamLeaderName: _.get(foundTeams[i], 'data.teamLeader.name', '')
           });
         }
 
@@ -59,8 +59,7 @@ router.get('/:gameId', function (req, res) {
           gameId    : gameId,
           gameplay  : JSON.stringify(gp),
           pricelist : JSON.stringify(pl),
-          teams     : JSON.stringify(teams),
-          mapApiKey : settings.maps.apiKey
+          teams     : JSON.stringify(teams)
         });
       });
     });

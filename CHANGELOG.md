@@ -14,9 +14,21 @@
 * Dependency Updates
 * Game-Log neu
 
+## v2.3.7 8.10.21
+* Bugfix RSS Feed zvv110
+* Bugfix wenn Team-Kontakt aus Anmeldung fehlt
+
+## 2.3.6 1.10.21
+* Bugfix Rangliste Download
+
+## 2.3.5 8.8.21
+* Minify Reception schlug aus irgend einem Grund fehl
+
+## 2.3.4 8.8.21
+* Bugfix RSS Feed SBB
+
 ## 2.3.3 16.4.20
 * Google Plus von Authentisierung entfernt
-
 
 ## v2.3.2 25.7.19
 * Weniger Logausgaben
