@@ -27,8 +27,8 @@
       b-row
         b-col
           b-button.btn-gameplay(size="sm" variant="primary" v-if="gameRunning" :href="url.play") Spielen
-          b-button.btn-gameplay(size="sm" v-if="gameOver" :href="url.play") Spiele ansehen
-          b-button.btn-gameplay(size="sm" v-if="getGpProperty('internal.finalized')" :href="url.viewPricelist") Preisliste
+          b-button.btn-gameplay(size="sm" v-if="gameOver" :href="url.play") Spiel ansehen
+          b-button.btn-gameplay(size="sm" :href="url.viewPricelist") Spielinfo
           b-button.btn-gameplay(size="sm" :href="url.editTeam") Team Mitglieder &nbsp;
             b-icon-people
           b-button.btn-gameplay(size="sm" variant="info" v-if="gameOver" :href="url.summary") Zusammenfassung
