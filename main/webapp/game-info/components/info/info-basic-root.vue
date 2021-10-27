@@ -1,5 +1,5 @@
 <!---
-
+  Basic root view
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 24.10.21
 -->
@@ -9,14 +9,14 @@
       b-col
         h1 {{gamename}}
     b-row
-      b-col
+      b-col(col lg="6" sm="12")
         b-row
           b-col
             basic-gameinfo
         b-row
           b-col
             basic-pricelist
-      b-col
+      b-col(col lg="6" sm="12")
         basic-teams
 
 </template>
