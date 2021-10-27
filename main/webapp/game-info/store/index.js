@@ -22,7 +22,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state    : {
     gameplay : {
-      owner: {}
+      owner     : {},
+      scheduling: {}
     },
     pricelist: {},
     teams    : []
