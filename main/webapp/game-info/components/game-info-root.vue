@@ -25,7 +25,6 @@ import InfoRulesRoot from './rules/info-rules-root.vue'
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
 import {last, split} from 'lodash';
 
-
 export default {
   name      : 'game-info-root',
   props     : {},
@@ -33,7 +32,12 @@ export default {
     return {
       menuElements: [
         /* 0 */  {title: 'Info', href: '#', event: 'panel-change', eventParam: 'info'},
-        /* 1 */  {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'pricelist'},
+        /* 1 */{
+          title     : 'Preisliste',
+          href      : '#',
+          event     : 'panel-change',
+          eventParam: 'pricelist'
+        },
         /* 2 */  {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'map'},
         /* 3 */  {title: 'Spielregeln', href: '#', event: 'panel-change', eventParam: 'rules'},
       ],
@@ -47,6 +51,7 @@ export default {
     this.$store.dispatch('fetchData', {gameId});
   },
   computed  : {
+
   },
   methods   : {
     onPanelChange(panel) {

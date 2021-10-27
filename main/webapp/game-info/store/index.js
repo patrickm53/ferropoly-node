@@ -23,9 +23,10 @@ const store = new Vuex.Store({
   state    : {
     gameplay : {
       owner     : {},
-      scheduling: {}
+      scheduling: {},
+      internal  : {}
     },
-    pricelist: {},
+    pricelist: [],
     teams    : []
   },
   getters  : {getField},
