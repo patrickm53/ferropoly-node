@@ -14,6 +14,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
 import $ from 'jquery';
+import PricelistProperty from '../components/lib/pricelistProperty';
 
 
 Vue.use(Vuex);
@@ -27,7 +28,13 @@ const store = new Vuex.Store({
       internal  : {}
     },
     pricelist: [],
-    teams    : []
+    teams    : [],
+    map: {
+      center: {
+        lat: 46.6,
+        lng: 8.5
+      }
+    }
   },
   getters  : {getField},
   mutations: {updateField},
@@ -44,8 +51,12 @@ const store = new Vuex.Store({
         .done(function (data) {
           console.log(data);
           state.gameplay  = data.gameplay;
-          state.pricelist = data.pricelist;
+          state.pricelist = [];
           state.teams     = data.teams;
+          data.pricelist.forEach(p => {
+            state.pricelist.push(new PricelistProperty(p));
+          });
+
         })
         .fail(function (err) {
           console.error(err);
