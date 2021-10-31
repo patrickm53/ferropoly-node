@@ -5,13 +5,15 @@
 -->
 <template lang="pug">
   div
-    ferropoly-map(:map-options="mapOptions")
+    ferropoly-map(
+      ref="map"
+      :map-options="mapOptions"
+      @map="onNewMap")
 
 </template>
 
 <script>
 import FerropolyMap from '../../../common/components/ferropoly-map/ferropoly-map.vue'
-import geograph from '../../../../../../ferropoly_editor/editor/webapp/common/lib/geograph';
 import {mapFields} from 'vuex-map-fields';
 
 export default {
@@ -28,13 +30,25 @@ export default {
   model     : {},
   created   : function () {
   },
-  computed  : {...mapFields([
+  computed  : {
+    ...mapFields([
       'gameplay.internal.finalized',
       'gameplay.internal.gameId',
       'pricelist',
-      'map.center'
-    ])},
-  methods   : {},
+      'mapSettings.center',
+      'map'
+    ])
+  },
+  methods   : {
+    /**
+     * A new map instance was created, we're using this one now
+     */
+    onNewMap(map) {
+      console.log('new Map!', map);
+      this.map = map;
+      this.$store.dispatch({type: 'updateMarkers'});
+    },
+  },
   components: {FerropolyMap},
   filters   : {},
   mixins    : []

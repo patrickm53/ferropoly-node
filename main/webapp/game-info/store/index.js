@@ -22,19 +22,22 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state    : {
-    gameplay : {
+    gameplay        : {
       owner     : {},
       scheduling: {},
       internal  : {}
     },
-    pricelist: [],
-    teams    : [],
-    map: {
+    pricelist       : [],
+    teams           : [],
+    mapOptions: {
       center: {
         lat: 46.6,
         lng: 8.5
-      }
-    }
+      },
+      zoom  : 10
+    },
+    map             : {},
+    selectedProperty: null
   },
   getters  : {getField},
   mutations: {updateField},
@@ -62,7 +65,32 @@ const store = new Vuex.Store({
           console.error(err);
         });
     },
-
+    /**
+     * Update all markers
+     * @param state
+     * @param commit
+     * @param rootState
+     */
+    updateMarkers({state, commit, rootState}) {
+      console.log('Updating markers', state.pricelist.length);
+      state.pricelist.forEach(p => {
+        p.setMap(state.map);
+      });
+    },
+    /**
+     * Select a property, bring it to front
+     * @param state
+     * @param commit
+     * @param rootState
+     * @param options
+     */
+    selectProperty({state, commit, rootState}, options) {
+      if (state.selectedProperty) {
+        state.selectedProperty.setMarkerIcon(false);
+      }
+      state.selectedProperty = options.property;
+      state.selectedProperty.setMarkerIcon(true);
+    },
   }
 });
 

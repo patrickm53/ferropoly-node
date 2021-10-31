@@ -70,6 +70,7 @@ export default {
     },
     onLocationClick(e) {
       console.log('clicked', e);
+      this.$emit('property-selected', e);
     }
   },
   components: {},

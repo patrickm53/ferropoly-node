@@ -10,19 +10,7 @@
 import {merge, get} from 'lodash';
 import EventEmitter from '../../common/lib/eventEmitter';
 
-const ICON_EDIT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png';
-const ICON_TRAIN_LOCATION    = 'https://maps.gstatic.com/mapfiles/ms2/micons/green.png';
-const ICON_BUS_LOCATION      = 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow.png';
-const ICON_BOAT_LOCATION     = 'https://maps.gstatic.com/mapfiles/ms2/micons/blue.png';
-const ICON_CABLECAR_LOCATION = 'https://maps.gstatic.com/mapfiles/ms2/micons/purple.png';
-const ICON_OTHER_LOCATION    = 'https://maps.gstatic.com/mapfiles/ms2/micons/pink.png';
 
-const iconPriceLabels             = ['A.png', 'B.png', 'C.png', 'D.png', 'E.png', 'F.png'];
-const ICON_TRAIN_LOCATION_USED    = '/images/markers/letters/green_Marker';
-const ICON_BUS_LOCATION_USED      = '/images/markers/letters/yellow_Marker';
-const ICON_BOAT_LOCATION_USED     = '/images/markers/letters/blue_Marker';
-const ICON_CABLECAR_LOCATION_USED = '/images/markers/letters/purple_Marker';
-const ICON_OTHER_LOCATION_USED    = '/images/markers/letters/pink_Marker';
 
 class Property extends EventEmitter {
 
@@ -35,6 +23,21 @@ class Property extends EventEmitter {
     merge(this, p);
     this.marker          = null;
     this.isVisibleInList = true; // Flag indicating if the property is in the list or not
+
+    // The Icons to use
+    this.ICON_EDIT_LOCATION     = '/images/markers/red-dot.png';
+    this.ICON_TRAIN_LOCATION    = '/images/markers/green.png';
+    this.ICON_BUS_LOCATION      = '/images/markers/yellow.png';
+    this.ICON_BOAT_LOCATION     = '/images/markers/blue.png';
+    this.ICON_CABLECAR_LOCATION = '/images/markers/purple.png';
+    this.ICON_OTHER_LOCATION    = '/images/markers/pink.png';
+
+    this.iconPriceLabels             = ['A.png', 'B.png', 'C.png', 'D.png', 'E.png', 'F.png'];
+    this.ICON_TRAIN_LOCATION_USED    = '/images/markers/letters/green_Marker';
+    this.ICON_BUS_LOCATION_USED      = '/images/markers/letters/yellow_Marker';
+    this.ICON_BOAT_LOCATION_USED     = '/images/markers/letters/blue_Marker';
+    this.ICON_CABLECAR_LOCATION_USED = '/images/markers/letters/purple_Marker';
+    this.ICON_OTHER_LOCATION_USED    = '/images/markers/letters/pink_Marker';
   }
 
   /**
@@ -101,8 +104,6 @@ class Property extends EventEmitter {
       lng: parseFloat(lng)
     };
   }
-
-
 }
 
 export default Property;
