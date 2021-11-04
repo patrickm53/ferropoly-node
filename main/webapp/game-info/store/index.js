@@ -25,7 +25,10 @@ const store = new Vuex.Store({
     gameplay        : {
       owner     : {},
       scheduling: {},
-      internal  : {}
+      internal  : {},
+      rules: {
+        text: '<em>not yet</em>'
+      }
     },
     pricelist       : [],
     teams           : [],
