@@ -6,9 +6,8 @@
 <template lang="pug">
   div
     menu-bar(:elements="menuElements"
-      :show-user-box=false
+      show-user-box=true
     )
-    game-not-found(v-if="showGameNotFoundPage")
     join-not-allowed(v-if="showNotAllowedPage")
     join-game(v-if="showJoiningPage")
 
@@ -17,7 +16,6 @@
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
-import GameNotFound from './game-not-found.vue';
 import JoinNotAllowed from './join-not-allowed.vue';
 import JoinGame from './join-game.vue';
 import {mapFields} from 'vuex-map-fields';
@@ -53,7 +51,7 @@ export default {
     }
   },
   methods   : {},
-  components: {MenuBar, GameNotFound, JoinNotAllowed, JoinGame},
+  components: {MenuBar, JoinNotAllowed, JoinGame},
   filters   : {},
   mixins    : []
 }

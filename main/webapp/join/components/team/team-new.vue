@@ -34,12 +34,23 @@
       :state="$store.getters.phoneValid"
       feedback="Gib bitte deine Telefonnummer an"
     )
+    input-textarea(
+      label="Bemerkungen"
+      v-model="remarks"
+      rows="4"
+      max-rows="8"
+    )
+    b-button(variant="primary"
+      :disabled="!$store.getters.joiningEnabled"
+      v-on:click="joinGame") Anmelden
 
 </template>
 
 <script>
 import InputText from '../../../common/components/form-controls/input-text.vue';
 import InputPhone from '../../../common/components/form-controls/input-phone.vue';
+import InputTextarea from '../../../common/components/form-controls/input-textarea.vue';
+
 import {mapFields} from 'vuex-map-fields';
 
 
@@ -63,8 +74,12 @@ export default {
       remarks     : 'teamInfo.remarks'
     }),
   },
-  methods   : {},
-  components: {InputText, InputPhone},
+  methods   : {
+    joinGame() {
+      console.log('join the game');
+    }
+  },
+  components: {InputText, InputPhone, InputTextarea},
   filters   : {},
   mixins    : []
 }

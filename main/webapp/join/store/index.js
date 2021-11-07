@@ -26,7 +26,8 @@ const store = new Vuex.Store({
       },
       joining   : {
         infotext: ''
-      }
+      },
+      gamename  : ''
     },
     user    : {
       personalData: {},
@@ -53,8 +54,11 @@ const store = new Vuex.Store({
     organizationValid: state => {
       return checkNames(state.teamInfo.organization);
     },
-    phoneValid: state => {
+    phoneValid       : state => {
       return checkPhone(state.teamInfo.phone);
+    },
+    joiningEnabled   : (state, getters) => {
+      return (getters.nameValid && getters.organizationValid && getters.phoneValid);
     }
 
   },
