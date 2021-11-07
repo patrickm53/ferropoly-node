@@ -6,7 +6,17 @@
 
 module.exports = function(res, message, err, status) {
   res.status(status);
-  res.render('error', {
+  if (status === 401) {
+    return res.render('error/401');
+  }
+  if (status === 403) {
+    return res.render('error/403');
+  }
+  if (status === 404) {
+    return res.render('error/404');
+  }
+  return res.render('error/generic', {
+    status: `Status ${status}`,
     message: message,
     error: err
   });

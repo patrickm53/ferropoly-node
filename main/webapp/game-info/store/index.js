@@ -4,12 +4,6 @@
  * Created: 24.10.21
  **/
 
-/**
- *
- * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
- * Created: 23.10.21
- **/
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';

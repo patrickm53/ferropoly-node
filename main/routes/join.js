@@ -4,21 +4,79 @@
  */
 
 
-const express   = require('express');
-const router    = express.Router();
-const gameCache = require('../lib/gameCache');
-const settings  = require('../settings');
-const users     = require('../../common/models/userModel');
-const teams     = require('../../common/models/teamModel');
-const logger    = require('../../common/lib/logger').getLogger('routes:join');
-const mailer    = require('../../common/lib/mailer');
-let ngFile      = '/js/joinctrl.js';
+const express      = require('express');
+const router       = express.Router();
+const gameCache    = require('../lib/gameCache');
+const settings     = require('../settings');
+const users        = require('../../common/models/userModel');
+const teams        = require('../../common/models/teamModel');
+const logger       = require('../../common/lib/logger').getLogger('routes:join');
+const mailer       = require('../../common/lib/mailer');
+const errorHandler = require('../lib/errorHandler');
+const path         = require('path');
+let ngFile         = '/js/joinctrl.js';
 if (settings.minifiedjs) {
   ngFile = '/js/min/joinctrl.min.js';
 }
 
+/**
+ * Send HTML Page
+ */
+router.get('/:gameId', function (req, res) {
+  gameCache.getGameData(req.params.gameId, (err, gameData) => {
+    if (err || !gameData) {
+      return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
+    }
+    res.sendFile(path.join(__dirname, '..', 'public', 'html', 'join.html'));
+  });
+});
 
-router.get('/:gameId', (req, res) => {
+router.get('/data/:gameId', function (req, res) {
+  gameCache.getGameData(req.params.gameId, (err, gameData) => {
+    if (err) {
+      return res.status(500).send({message: err.message});
+    }
+    if (!gameData) {
+      return res.status(404).send({message: 'Game not found'});
+    }
+
+    let gameplay = {};
+    if (gameData && gameData.gameplay) {
+      gameplay = gameData.gameplay;
+    }
+
+    users.getUserByMailAddress(req.session.passport.user, (err, userInfo) => {
+      if (err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
+      }
+      if (!userInfo) {
+        return res.status(404).send({message: 'User not found'});
+      }
+      teams.getMyTeam(req.params.gameId, req.session.passport.user, (err, team) => {
+          if (err) {
+            logger.error(err);
+            return res.status(500).send(err.message);
+          }
+          let teamInfo = {};
+          if (team) {
+            teamInfo.name             = team.data.name;
+            teamInfo.organization     = team.data.organization;
+            teamInfo.phone            = team.data.teamLeader.phone;
+            teamInfo.remarks          = team.data.remarks;
+            teamInfo.confirmed        = team.data.confirmed;
+            teamInfo.id               = team.id;
+            teamInfo.registrationDate = team.data.registrationDate;
+            teamInfo.changedDate      = team.data.changedDate;
+          }
+          res.send({gameplay, user: {personalData: userInfo.personalData, id: userInfo._id}, teamInfo: teamInfo});
+        }
+      );
+    });
+  });
+});
+
+router.get('/old/:gameId', (req, res) => {
   gameCache.getGameData(req.params.gameId, (err, gameData) => {
     if (err) {
       return res.status(500).send({message: err.message});
@@ -164,7 +222,9 @@ router.post('/:gameId', (req, res) => {
 
 /**
  * Sends the signup mail
- * @param user
+ * @param gameplay
+ * @param team
+ * @param options
  * @param callback
  */
 function sendInfoMail(gameplay, team, options, callback) {
@@ -179,9 +239,8 @@ function sendInfoMail(gameplay, team, options, callback) {
     html += '<p>Bite bestätige diese Anmeldung in der Ferropoly Editor App.</p>';
 
     text += `${team.data.teamLeader.name} meldet sich mit dem Team "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" an.\n`;
-    text += `Bite bestätige diese Anmeldung in der Ferropoly Editor App.\n`;
-  }
-  else {
+    text += 'Bitte bestätige diese Anmeldung in der Ferropoly Editor App.\n';
+  } else {
     subject = 'Bearbeitete Ferropoly Anmeldung';
     html += '<h1>Bearbeitete Ferropoly Anmeldung</h1>';
     html += `<p>${team.data.teamLeader.name} hat die Anmeldung des Teams "${team.data.name}" für Dein Ferropoly "${gameplay.gamename}" bearbeitet.</p>`;
