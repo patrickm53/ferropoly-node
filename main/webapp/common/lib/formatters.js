@@ -130,4 +130,17 @@ function formatMap(map) {
   return (m.name);
 }
 
-export {formatMap, formatGameTime, formatGameDate, formatDateTime, formatPrice, formatAccessibility, formatPriceRange};
+
+/**
+ * True is Ja, false is Nein
+ * @param b
+ * @returns {string}
+ */
+function booleanYesNo(b) {
+  if (b) {
+    return 'Ja';
+  }
+  return 'Nein';
+}
+
+export {formatMap, formatGameTime, formatGameDate, formatDateTime, formatPrice, formatAccessibility, formatPriceRange, booleanYesNo};

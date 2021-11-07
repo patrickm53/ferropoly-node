@@ -10,8 +10,10 @@ import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
 import $ from 'jquery';
 import {checkNames, checkPhone} from '../../common/lib/playerValidator';
-import {assign} from 'lodash';
-
+import {assign, get} from 'lodash';
+import {getAuthToken} from '../../common/adapter/authToken';
+import axios from 'axios';
+import {DateTime} from 'luxon';
 
 Vue.use(Vuex);
 
@@ -25,7 +27,8 @@ const store = new Vuex.Store({
         text: '<em>not yet</em>'
       },
       joining   : {
-        infotext: ''
+        infotext: '',
+        possibleUntil: '2121-12-21T00:00:00'
       },
       gamename  : ''
     },
@@ -43,6 +46,14 @@ const store = new Vuex.Store({
       id              : null,
       registrationDate: null,
       changedDate     : null
+    },
+    api     : {
+      error         : {
+        message : null,
+        infoText: null,
+        active  : false
+      },
+      requestPending: false
     }
 
   },
@@ -57,18 +68,37 @@ const store = new Vuex.Store({
     phoneValid       : state => {
       return checkPhone(state.teamInfo.phone);
     },
-    joiningEnabled   : (state, getters) => {
-      return (getters.nameValid && getters.organizationValid && getters.phoneValid);
+    /**
+     * True, when button shall be enabled
+     * @param state
+     * @param getters
+     * @returns {any}
+     */
+    joiningButtonEnabled   : (state, getters) => {
+      return (getters.nameValid && getters.organizationValid && getters.phoneValid && !state.api.requestPending );
+    },
+    /**
+     * True if you still can join the game, false if it is too late
+     * @param state
+     */
+    joiningPossible: (state) => {
+        let deadline = DateTime.fromISO(state.gameplay.joining.possibleUntil);
+        return DateTime.now() < deadline;
     }
 
   },
   mutations: {
     updateField,
-    testy(state, payload) {
-      console.log('commit', payload);
-      state.teamInfo.name = payload.text;
-      console.log(state.teamInfo);
-    }
+    /**
+     * Resets the API error from the last call, used when closing the modal dialog
+     * @param state
+     */
+    resetApiError(state) {
+      console.log('resetting api error');
+      state.api.error.active   = false;
+      state.api.error.infoText = '';
+      state.api.error.message  = '';
+    },
   },
   actions  : {
     /**
@@ -94,6 +124,43 @@ const store = new Vuex.Store({
           console.error(err);
         });
     },
+    /**
+     * Joins the game
+     * @param state
+     * @param options
+     */
+    joinGame({state}, options) {
+      state.api.requestPending = true;
+      getAuthToken((err, authToken) => {
+        if (err) {
+          console.error(err);
+          state.api.error.message  = err.message;
+          state.api.error.infoText = 'Es gibt einen Fehler mit der Berechtigung, bitte neu einloggen.';
+          state.api.error.active   = true;
+          return;
+        }
+        axios.post(`/join/${state.gameplay.internal.gameId}`,
+          {
+            authToken   : authToken,
+            teamName    : state.teamInfo.name,
+            organization: state.teamInfo.organization,
+            phone       : state.teamInfo.phone,
+            remarks     : state.teamInfo.remarks
+          })
+          .then(function () {
+            console.log('saved, ok');
+          })
+          .catch(function (err) {
+            console.error(err);
+            state.api.error.message = get(err, 'response.data.message', err);
+            state.api.error.infoText = 'Es gab ein Problem mit der Anmeldung.';
+            state.api.error.active   = true;
+          })
+          .finally(function() {
+            state.api.requestPending = false;
+          });
+      });
+    }
 
   }
 });

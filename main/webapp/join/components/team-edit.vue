@@ -1,5 +1,5 @@
 <!---
-
+  Editor for a team
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 06.11.21
 -->
@@ -41,21 +41,24 @@
       max-rows="8"
     )
     b-button(variant="primary"
-      :disabled="!$store.getters.joiningEnabled"
-      v-on:click="joinGame") Anmelden
+      :disabled="!$store.getters.joiningButtonEnabled"
+      v-on:click="joinGame" v-if="!teamExists") Anmelden
+    b-button(variant="primary"
+      :disabled="!$store.getters.joiningButtonEnabled"
+      v-on:click="joinGame" v-if="teamExists") Änderungen speichern
 
 </template>
 
 <script>
-import InputText from '../../../common/components/form-controls/input-text.vue';
-import InputPhone from '../../../common/components/form-controls/input-phone.vue';
-import InputTextarea from '../../../common/components/form-controls/input-textarea.vue';
+import InputText from '../../common/components/form-controls/input-text.vue';
+import InputPhone from '../../common/components/form-controls/input-phone.vue';
+import InputTextarea from '../../common/components/form-controls/input-textarea.vue';
 
 import {mapFields} from 'vuex-map-fields';
 
 
 export default {
-  name      : 'team-new',
+  name      : 'team-edit',
   props     : {},
   data      : function () {
     return {};
@@ -71,12 +74,20 @@ export default {
       contact     : 'user.name',
       email       : 'user.personalData.email',
       phone       : 'teamInfo.phone',
-      remarks     : 'teamInfo.remarks'
+      remarks     : 'teamInfo.remarks',
+      id          : 'teamInfo.id'
     }),
+    teamExists() {
+      if (!this.id) {
+        return false;
+      }
+      return this.id.length > 0;
+    }
   },
   methods   : {
     joinGame() {
       console.log('join the game');
+      this.$store.dispatch('joinGame', {});
     }
   },
   components: {InputText, InputPhone, InputTextarea},

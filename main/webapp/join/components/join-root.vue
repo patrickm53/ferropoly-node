@@ -8,15 +8,21 @@
     menu-bar(:elements="menuElements"
       show-user-box=true
     )
-    join-not-allowed(v-if="showNotAllowedPage")
-    join-game(v-if="showJoiningPage")
+    modal-error(
+      :visible="apiErrorActive"
+      title="Fehler"
+      :info="apiErrorText"
+      :message="apiErrorMessage"
+      @close="apiErrorActive=false"
+    )
+    join-game
 
 
 </template>
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
-import JoinNotAllowed from './join-not-allowed.vue';
+import ModalError from '../../common/components/modal-error/modal-error.vue';
 import JoinGame from './join-game.vue';
 import {mapFields} from 'vuex-map-fields';
 import {last, split} from 'lodash';
@@ -40,18 +46,27 @@ export default {
       'gameplay.joining.possibleUntil',
       'gameplay.joining.infotext'
     ]),
-    showJoiningPage() {
-      return true;
+    apiErrorActive : {
+      get() {
+        return this.$store.state.api.error.active;
+      },
+      set() {
+        this.$store.commit('resetApiError');
+      }
     },
-    showGameNotFoundPage() {
-      return false;
+    apiErrorText   : {
+      get() {
+        return this.$store.state.api.error.infoText;
+      }
     },
-    showNotAllowedPage() {
-      return false;
+    apiErrorMessage: {
+      get() {
+        return this.$store.state.api.error.message;
+      }
     }
   },
   methods   : {},
-  components: {MenuBar, JoinNotAllowed, JoinGame},
+  components: {MenuBar, JoinGame, ModalError},
   filters   : {},
   mixins    : []
 }
