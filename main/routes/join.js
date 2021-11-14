@@ -3,21 +3,15 @@
  * Created by kc on 05.02.16.
  */
 
-
 const express      = require('express');
 const router       = express.Router();
 const gameCache    = require('../lib/gameCache');
-const settings     = require('../settings');
 const users        = require('../../common/models/userModel');
 const teams        = require('../../common/models/teamModel');
 const logger       = require('../../common/lib/logger').getLogger('routes:join');
 const mailer       = require('../../common/lib/mailer');
 const errorHandler = require('../lib/errorHandler');
 const path         = require('path');
-let ngFile         = '/js/joinctrl.js';
-if (settings.minifiedjs) {
-  ngFile = '/js/min/joinctrl.min.js';
-}
 
 /**
  * Send HTML Page
@@ -31,6 +25,9 @@ router.get('/:gameId', function (req, res) {
   });
 });
 
+/**
+ * Returns the data displayed on the joining page
+ */
 router.get('/data/:gameId', function (req, res) {
   gameCache.getGameData(req.params.gameId, (err, gameData) => {
     if (err) {
@@ -73,57 +70,6 @@ router.get('/data/:gameId', function (req, res) {
         }
       );
     });
-  });
-});
-
-router.get('/old/:gameId', (req, res) => {
-  gameCache.getGameData(req.params.gameId, (err, gameData) => {
-    if (err) {
-      return res.status(500).send({message: err.message});
-    }
-    if (!gameData) {
-      return res.status(404).send({message: 'Game not found'});
-    }
-
-    let gameplay = {};
-    if (gameData && gameData.gameplay) {
-      gameplay = gameData.gameplay;
-    }
-
-    users.getUserByMailAddress(req.session.passport.user, (err, userInfo) => {
-        if (err) {
-          logger.error(err);
-          return res.status(500).send(err.message);
-        }
-        if (!userInfo) {
-          return res.status(404).send({message: 'User not found'});
-        }
-        teams.getMyTeam(req.params.gameId, req.session.passport.user, (err, team) => {
-          if (err) {
-            logger.error(err);
-            return res.status(500).send(err.message);
-          }
-          let teamInfo = {};
-          if (team) {
-            teamInfo.name             = team.data.name;
-            teamInfo.organization     = team.data.organization;
-            teamInfo.phone            = team.data.teamLeader.phone;
-            teamInfo.remarks          = team.data.remarks;
-            teamInfo.confirmed        = team.data.confirmed;
-            teamInfo.id               = team.id;
-            teamInfo.registrationDate = team.data.registrationDate;
-            teamInfo.changedDate      = team.data.changedDate;
-          }
-          res.render('join/join', {
-            title   : 'Ferropoly Spielauswertung',
-            ngFile  : ngFile,
-            gameplay: JSON.stringify(gameplay),
-            user    : JSON.stringify({personalData: userInfo.personalData, id: userInfo._id}),
-            team    : JSON.stringify(teamInfo)
-          });
-        });
-      }
-    );
   });
 });
 
