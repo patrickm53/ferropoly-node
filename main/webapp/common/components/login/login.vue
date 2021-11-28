@@ -9,7 +9,7 @@
         h3 {{appName}} &nbsp; Login
         #login-with-password(v-if='passwordLogin')
           form(action='login' method='post')
-            label(for='inputUserName' class='sr-only') Benutzername
+            label(for='inputUserName' class='sr-only') Loginname
             input(type='text' name='username' id='inputUserName' class='form-control' placeholder='Benutzername' required autofocus)
             label(for='inputPassword' class='sr-only') Passwort
             input(type='password' name='password' id='inputPassword' class='form-control' placeholder='Passwort' required)

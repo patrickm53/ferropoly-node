@@ -7,10 +7,10 @@
       b-card-header.title Allgemein
       b-card-body
         b-card-text
-          h4 Benutzername
+          h4 Loginname
           b-form-input(v-model="info.email" size="sm" disabled=true)
-          p Teile diesen Benutzernamen einem Spielleiter mit, damit Du mit Deinem Login auf sein Spiel zugreifen kannst.
-          h4 Zugang mit Benutzername / Passwort
+          p Teile diesen Loginname der Spielleitung mit, damit Du mit Deinem Login auf sein Spiel zugreifen kannst.
+          h4 Zugang mit Loginname / Passwort
           div(v-if="!getElement('socialMediaActive')")
             | Aktiv. Gegenwärtig kann das Passwort leider nicht geändert werden.
           div(v-if="getElement('socialMediaActive')")
