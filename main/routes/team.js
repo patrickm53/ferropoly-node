@@ -3,11 +3,9 @@
  * Created by kc on 07.04.16.
  */
 
-
 const express = require('express');
 const router  = express.Router();
 
-const settings     = require('../settings');
 const errorHandler = require('../lib/errorHandler');
 const teams        = require('../../common/models/teamModel');
 const users        = require('../../common/models/userModel');
@@ -16,10 +14,6 @@ const accessor     = require('../lib/accessor');
 const async        = require('async');
 const gameCache    = require('../lib/gameCache');
 const path         = require('path');
-let ngFile         = '/js/teamctrl.js';
-if (settings.minifiedjs) {
-  ngFile = '/js/min/teamctrl.min.js';
-}
 
 
 /**
@@ -38,28 +32,6 @@ router.get('/edit/:gameId/:teamId', function (req, res) {
         return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
       }
       res.sendFile(path.join(__dirname, '..', 'public', 'html', 'team.html'));
-    });
-  });
-});
-
-/* GET the page where the team leader can add / remove other team members. Make sure
- * that the user logged in is really the team leader
- */
-router.get('/edit/old/:gameId/:teamId', (req, res) => {
-  teams.getTeam(req.params.gameId, req.params.teamId, (err, team) => {
-    if (err) {
-      return errorHandler(res, 'Interner Fehler beim Laden des Users.', err, 500);
-    }
-    if (_.get(team, 'data.teamLeader.email', 'x') !== req.session.passport.user) {
-      return errorHandler(res, 'Nicht berechtigt.', new Error('Not authorized or not found'), 404);
-    }
-    res.render('team', {
-      title       : 'Teamverwaltung',
-      ngController: 'teamCtrl',
-      ngApp       : 'teamApp',
-      gameId      : req.params.gameId,
-      teamId      : req.params.teamId,
-      ngFile      : ngFile
     });
   });
 });
@@ -137,7 +109,13 @@ router.post('/members/:gameId/:teamId', (req, res) => {
         return errorHandler(res, 'Internes Problem .', err, 500);
       }
       team.data.members = team.data.members || [];
-      team.data.members.push(req.body.newMemberLogin);
+
+      // Add only if not already in team
+      if (!_.find(team.data.members, m => {
+        return (m === req.body.newMemberLogin) ;
+      })) {
+        team.data.members.push(req.body.newMemberLogin);
+      }
 
       teams.updateTeam(team, (err) => {
         if (err) {
@@ -160,10 +138,10 @@ router.post('/members/:gameId/:teamId', (req, res) => {
  */
 router.delete('/members/:gameId/:teamId', (req, res) => {
   if (!req.body.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (1)'});
+    return res.status(401).send({status: 'error', message: 'Permission denied (1)'});
   }
   if (req.body.authToken !== req.session.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (2)'});
+    return res.status(401).send({status: 'error', message: 'Permission denied (2)'});
   }
 
   teams.getTeam(req.params.gameId, req.params.teamId, (err, team) => {

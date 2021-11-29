@@ -35,16 +35,29 @@ function addTeamMember(gameId, teamId, memberId, callback) {
         let message = get(error, 'response.data.message', error);
         callback({message});
       });
-    callback();
   });
 }
 
 function deleteTeamMember(gameId, teamId, memberId, callback) {
-  getAuthToken((err, token) => {
+  getAuthToken((err, authToken) => {
     if (err) {
       return callback(err);
     }
-    callback();
+    console.log(`deleting ${memberId} in ${gameId}`);
+    axios.delete(`/team/members/${gameId}/${teamId}`,
+      {
+        data: {
+          memberToDelete: memberId,
+          authToken
+        }
+      })
+      .then(function (resp) {
+        callback(null, resp.data.members);
+      })
+      .catch(function (error) {
+        let message = get(error, 'response.data.message', error);
+        callback({message});
+      });
   });
 }
 

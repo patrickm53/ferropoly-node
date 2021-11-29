@@ -12,10 +12,11 @@ import store from './store';
 // See: https://github.com/FortAwesome/vue-fontawesome
 // Icons:
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(faExclamationCircle);
+library.add(faTrashAlt);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 

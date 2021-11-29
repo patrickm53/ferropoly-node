@@ -6,8 +6,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
-import {set} from 'lodash';
-import {addTeamMember, getTeamMembers} from '../adapter/teamMembers';
+import {set, get, sortBy} from 'lodash';
+import {addTeamMember, getTeamMembers, deleteTeamMember} from '../adapter/teamMembers';
 
 Vue.use(Vuex);
 
@@ -27,7 +27,7 @@ const store = new Vuex.Store({
           console.error(err);
           return;
         }
-        set(state, 'members', members);
+        set(state, 'members', sortBy(members, ['login']));
         console.log('members read', members);
       });
     },
@@ -39,6 +39,16 @@ const store = new Vuex.Store({
         }
         state.newMember = '';
         dispatch('fetchTeamMembers');
+      });
+    },
+    removeMember({state}, options) {
+      deleteTeamMember(state.gameId, state.teamId, get(options, 'member.login', 'nobody'), (err, members) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        set(state, 'members', sortBy(members, ['login']));
+        console.log(`${options.member.login} deleted. Updated members:`, members);
       });
     }
   }
