@@ -1,4 +1,4 @@
-<!---
+<!--
   The TOP-Tag of the game selector
 
   11.4.2021 KC
@@ -16,6 +16,7 @@
             | .
       b-row
         b-col
+          p(v-if="noGamesAtAll") Du hast Dich noch an keinem Spiel angemeldet und auch keines selbst erstellt. Sobald Du angemeldet bist oder selbst ein Spiel erstellt hast, dann erscheinen diese Spiele hier.
           my-gameplays(:gameplays="gameplays")
           my-games(:gameplays="games")
 </template>
@@ -54,6 +55,9 @@ export default {
       'gameplays',
       'userDisplayName'
     ]),
+    noGamesAtAll() {
+      return ((this.games.length === 0) && (this.gameplays.length === 0));
+    }
   },
   methods   : {},
   components: {WelcomeBar, MyGames, ModalAgb, MenuBar, MyGameplays}
