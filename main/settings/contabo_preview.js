@@ -44,6 +44,8 @@ module.exports = function (settings) {
   settings.oAuth.google.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/google/callback';
   // Dropbox settings
   settings.oAuth.dropbox.callbackURL = 'https://spiel-preview.ferropoly.ch/auth/dropbox/callback';
+  // Microsoft settings
+  settings.oAuth.microsoft.callbackURL  = 'https://spiel-preview.ferropoly.ch/auth/microsoft/callback';
 
   // Logger
   settings.logger = {

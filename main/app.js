@@ -82,6 +82,7 @@ ferropolyDb.init(settings, function (err) {
   passport.use(authStrategy.googleStrategy);
   passport.use(authStrategy.dropboxStrategy);
   passport.use(authStrategy.localStrategy);
+  passport.use(authStrategy.microsoftStrategy);
   // Session serializing of the user
   passport.serializeUser(authStrategy.serializeUser);
   // Session deserialisation of the user

@@ -45,6 +45,8 @@ module.exports = function (settings) {
   settings.oAuth.google.callbackURL   = 'http://localhost:3004/auth/google/callback';
   // Dropbox settings
   settings.oAuth.dropbox.callbackURL  = 'http://localhost:3004/auth/dropbox/callback';
+  // Microsoft settings
+  settings.oAuth.microsoft.callbackURL  = 'http://localhost:3004/auth/microsoft/callback';
 
 
   // Logger
