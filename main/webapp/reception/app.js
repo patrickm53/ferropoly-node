@@ -34,6 +34,7 @@ console.log('Webapp initializing');
 
 // Ferropoly Style!
 import '../common/style/app.scss';
+import {last, split} from 'lodash';
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
 
@@ -47,6 +48,10 @@ $(document).ready(function () {
     el     : '#reception-app',
     created: function () {
       console.log('created');
+      // Retrieve GameId for this page
+      const elements = split(window.location.pathname, '/');
+      let gameId     = last(elements);
+      this.$store.dispatch({type: 'fetchStaticData', gameId: gameId});
     },
     store  : store
   });

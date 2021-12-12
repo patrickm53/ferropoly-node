@@ -9,17 +9,24 @@
       show-user-box=false
       @panel-change="onPanelChange"
       :help-url="helpUrl")
+    modal-error(
+      :visible="apiErrorActive"
+      title="Fehler"
+      :info="apiErrorText"
+      :message="apiErrorMessage"
+      @close="apiErrorActive=false"
+    )
     h1 {{panel}}
 </template>
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
-import {last, split} from 'lodash';
+import ModalError from '../../common/components/modal-error/modal-error.vue';
 import {mapFields} from 'vuex-map-fields';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar},
+  components: {MenuBar, ModalError},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -50,19 +57,32 @@ export default {
   },
   computed  : {
     ...mapFields([
-      'gameId',
-      'panel'
+      'panel',
+      'api.error'
     ]),
-    helpUrl        : {
+    apiErrorActive: {
+      get() {
+        return this.error.active;
+      },
+      set() {
+        this.$store.commit('resetApiError');
+      }
+    },
+    apiErrorText() {
+      return this.error.infoText;
+    },
+    apiErrorMessage() {
+      return this.error.message;
+    },
+
+    helpUrl: {
       get() {
         return this.helpUrls[this.panel];
       }
     }
   },
   created   : function () {
-    // Retrieve GameId for this page
-    const elements = split(window.location.pathname, '/');
-    this.gameId    = last(elements);
+
   },
   methods   : {
     /**
