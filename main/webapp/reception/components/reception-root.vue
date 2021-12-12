@@ -16,7 +16,7 @@
       :message="apiErrorMessage"
       @close="apiErrorActive=false"
     )
-    h1 {{panel}}
+    h1 {{panel}} {{organisatorName}}
 </template>
 
 <script>
@@ -58,6 +58,7 @@ export default {
   computed  : {
     ...mapFields([
       'panel',
+      'gameplay.owner.organisatorName',
       'api.error'
     ]),
     apiErrorActive: {

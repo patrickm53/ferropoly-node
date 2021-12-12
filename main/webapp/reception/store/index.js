@@ -6,7 +6,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
-import {get} from 'lodash';
+import {get, forIn, isPlainObject, set} from 'lodash';
 import axios from 'axios';
 import gameplay from './modules/gameplay';
 import pricelist from './modules/pricelist';
@@ -17,6 +17,25 @@ import teams from './modules/teams';
 import travelLog from './modules/travelLog';
 
 Vue.use(Vuex);
+
+/**
+ * Assigns the members of an object step by step to the state object with the same path
+ * @param state
+ * @param obj
+ * @param name
+ */
+function assignObject(state, obj, name) {
+  let src = get(obj, name, undefined);
+  if (isPlainObject(src)) {
+    forIn(src, (val, key) => {
+      assignObject(state, obj, `${name}.${key}`);
+    })
+  }
+  else {
+    console.log('set', name, get(obj, name));
+    set(state, name, get(obj, name, undefined));
+  }
+}
 
 const store = new Vuex.Store({
   state    : {
@@ -54,6 +73,7 @@ const store = new Vuex.Store({
           state.authToken = get(resp.data, 'authToken', 'none');
           state.socketUrl = get(resp.data, 'socketUrl', '/');
           state.gameId    = resp.data.currentGameId;
+          assignObject(state, resp.data, 'gameplay');
         })
         .catch(err => {
           console.log('xx', err.toJSON());
