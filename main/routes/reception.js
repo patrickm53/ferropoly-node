@@ -76,7 +76,8 @@ router.get('/static/:gameId', function (req, res) {
               pricelist    : pl,
               teams        : _.values(teams),
               currentGameId: gameId,
-              mapApiKey    : settings.maps.apiKey
+              mapApiKey    : settings.maps.apiKey,
+              user         : req.session.passport.user
             });
           }
         );

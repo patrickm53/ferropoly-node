@@ -34,18 +34,32 @@
 
         b-nav-item(v-if="helpUrl.length > 0" :href="helpUrl" target="_blank")
           b-icon-question-circle-fill
-        b-nav-item-dropdown(right='' v-if="showUserBox")
+        b-nav-item-dropdown(right='' v-if="showUserBox && !showOnlineStatus")
           template(#button-content='')
             b-icon-person-circle
           b-dropdown-item(href='/account') Mein Account
           b-dropdown-item(href='/logout') Abmelden
+        b-nav-item(right='' v-if="showOnlineStatus")
+          span(v-if="online").online
+            font-awesome-icon(:icon="['fas', 'cloud']")
+            span &nbsp;online
+          span(v-if="!online").offline
+            font-awesome-icon(:icon="['fas', 'cloud']")
+            span &nbsp;offline
 </template>
 
 <script>
 import {BIconQuestionCircleFill, BIconPersonCircle} from 'bootstrap-vue';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCloud } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faCloud);
 
 export default {
   name      : "menu-bar",
+  model     : {},
+  components: {BIconQuestionCircleFill, BIconPersonCircle,FontAwesomeIcon},
   props     : {
     favicon    : {
       // Fav-Icon displayed in the menu bar
@@ -79,12 +93,21 @@ export default {
       // show logout box / about user
       type   : Boolean,
       default: false
+    },
+    showOnlineStatus: {
+      // show cloud symbol
+      type: Boolean,
+      default: false
+    },
+    online: {
+      // Status of the connection if online
+      type: Boolean,
+      default: false
     }
   },
   data      : function () {
     return {};
   },
-  model     : {},
   methods   : {
     /**
      * Click handler for a menu
@@ -119,10 +142,15 @@ export default {
       return element.type === 'dropdown'
     }
   },
-  components: {BIconQuestionCircleFill, BIconPersonCircle}
+
 }
 </script>
 
 <style scoped>
-
+.online {
+  color: green;
+}
+.offline {
+  color: red;
+}
 </style>

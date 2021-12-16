@@ -8,7 +8,9 @@
     menu-bar(:elements="menuElements"
       show-user-box=false
       @panel-change="onPanelChange"
-      :help-url="helpUrl")
+      :help-url="helpUrl"
+      show-online-status=true
+      :online="online")
     modal-error(
       :visible="apiErrorActive"
       title="Fehler"
@@ -58,6 +60,7 @@ export default {
   computed  : {
     ...mapFields([
       'panel',
+      'online',
       'gameplay.owner.organisatorName',
       'api.error'
     ]),

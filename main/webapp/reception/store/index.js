@@ -7,7 +7,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
 import {get, forIn, isPlainObject, set} from 'lodash';
-import axios from 'axios';
 import gameplay from './modules/gameplay';
 import pricelist from './modules/pricelist';
 import propertyAccount from './modules/propertyAccount';
@@ -43,6 +42,7 @@ const store = new Vuex.Store({
     gameId   : 'none',
     authToken: 'none',
     socketUrl: '/none',
+    online   : false,
     api      : {
       error         : {
         active  : false,
@@ -55,7 +55,15 @@ const store = new Vuex.Store({
   modules  : {gameplay, pricelist, propertyAccount, rankingList, teamAccount, teams, travelLog},
   getters  : {getField},
   mutations: {
-    updateField
+    updateField,
+    // Socket.io connection is here
+    connected(state) {
+      state.online = true;
+    },
+    // socket.io connection has gone
+    disconnected(state) {
+      state.online = false;
+    }
   },
   actions  : {
     /**
@@ -66,25 +74,17 @@ const store = new Vuex.Store({
      * @param options
      */
     fetchStaticData({state, commit, rootState}, options) {
-      state.api.requestPending = true;
-      axios.get(`/reception/static/${options.gameId}`)
-        .then(resp => {
-          console.log(resp.data);
-          state.authToken = get(resp.data, 'authToken', 'none');
-          state.socketUrl = get(resp.data, 'socketUrl', '/');
-          state.gameId    = resp.data.currentGameId;
-          assignObject(state, resp.data, 'gameplay');
-        })
-        .catch(err => {
-          console.log('xx', err.toJSON());
-          console.log(err.response.data);
-          state.api.error.message  = get(err, 'response.data.message', null) || err.message;
-          state.api.error.infoText = 'Es gab einen Fehler beim Laden der Spieldaten:';
-          state.api.error.active   = true;
-        })
-        .then(() => {
-          state.api.requestPending = false;
-        })
+      if (options.err) {
+        console.error(options.err);
+        state.api.error.message  = options.err;
+        state.api.error.infoText = 'Es gab einen Fehler beim Laden der Spieldaten:';
+        state.api.error.active   = true;
+        return;
+      }
+      state.authToken = get(options.data, 'authToken', 'none');
+      state.socketUrl = get(options.data, 'socketUrl', '/');
+      state.gameId    = options.data.currentGameId;
+      assignObject(state, options.data, 'gameplay');
     },
     /**
      * Resets the API error from the last call, used when closing the modal dialog
