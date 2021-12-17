@@ -57,7 +57,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faCloud);
 
 export default {
-  name      : "menu-bar",
+  name      : "MenuBar",
+  components: {BIconQuestionCircleFill, BIconPersonCircle,FontAwesomeIcon},
+  model     : {},
   props     : {
     favicon    : {
       // Fav-Icon displayed in the menu bar
@@ -106,7 +108,6 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
   methods   : {
     /**
      * Click handler for a menu
@@ -140,8 +141,7 @@ export default {
       }
       return element.type === 'dropdown'
     }
-  },
-  components: {BIconQuestionCircleFill, BIconPersonCircle,FontAwesomeIcon}
+  }
 }
 </script>
 
