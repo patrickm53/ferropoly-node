@@ -6,7 +6,10 @@
 <template lang="pug">
   #ferro-card
     b-card(no-body).ferro-card
-      b-card-header.title(:class="{'sm-title': isSm}") {{title}}
+      b-card-header.title(:class="{'sm-title': isSm}")
+        p.alignleft {{title}}
+        p.alignright
+          slot(name="controls")
       b-card-body(:class="{'sm-card-body': isSm}")
         b-card-text
           b-container(fluid="true")
@@ -16,7 +19,10 @@
 
 <script>
 export default {
-  name      : 'ferro-card',
+  name      : 'FerroCard',
+  components: {},
+  filters   : {},
+  model     : {},
   props     : {
     title: {
       type   : String,
@@ -34,9 +40,6 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
-  created   : function () {
-  },
   computed  : {
     isMd() {
       return this.size === 'md';
@@ -45,9 +48,9 @@ export default {
       return this.size === 'sm';
     }
   },
-  methods   : {},
-  components: {},
-  filters   : {}
+  created   : function () {
+  },
+  methods   : {}
 }
 </script>
 
@@ -58,21 +61,31 @@ export default {
 
 // Small Title
 .sm-title {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 6px 10px;
 }
 
 // Small Card Body
 .sm-card-body {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 6px 10px;
 }
 
 .ferro-card {
   margin-bottom: 10px;
+}
+
+.header-right {
+  text-align: end;
+  width: 100%;
+  display: inline;
+}
+
+.alignleft {
+  float: left;
+  margin: 0;
+}
+
+.alignright {
+  float: right;
+  margin: 0;
 }
 </style>

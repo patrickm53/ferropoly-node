@@ -29,8 +29,7 @@ function assignObject(state, obj, name) {
     forIn(src, (val, key) => {
       assignObject(state, obj, `${name}.${key}`);
     })
-  }
-  else {
+  } else {
     console.log('set', name, get(obj, name));
     set(state, name, get(obj, name, undefined));
   }
@@ -38,12 +37,13 @@ function assignObject(state, obj, name) {
 
 const store = new Vuex.Store({
   state    : {
-    panel    : 'panel-overview', // panel displayed
-    gameId   : 'none',
-    authToken: 'none',
-    socketUrl: '/none',
-    online   : false,
-    api      : {
+    gameDataLoaded: false, // becomes true when static data was loaded
+    panel         : 'panel-overview', // panel displayed
+    gameId        : 'none',
+    authToken     : 'none',
+    socketUrl     : '/none',
+    online        : false,
+    api           : {
       error         : {
         active  : false,
         infoText: '',
@@ -53,7 +53,9 @@ const store = new Vuex.Store({
     }
   },
   modules  : {gameplay, pricelist, propertyAccount, rankingList, teamAccount, teams, travelLog},
-  getters  : {getField},
+  getters  : {
+    getField
+  },
   mutations: {
     updateField,
     // Socket.io connection is here
@@ -85,6 +87,8 @@ const store = new Vuex.Store({
       state.socketUrl = get(options.data, 'socketUrl', '/');
       state.gameId    = options.data.currentGameId;
       assignObject(state, options.data, 'gameplay');
+      state.teams.list     = options.data.teams;
+      state.gameDataLoaded = true;
     },
     /**
      * Resets the API error from the last call, used when closing the modal dialog

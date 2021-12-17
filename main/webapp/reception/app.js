@@ -68,6 +68,8 @@ $(document).ready(function () {
           gameId   : gameId,
           store    : this.$store
         });
+        this.$store.dispatch({type: 'fetchRankingList'});
+
       })
     },
     store  : store

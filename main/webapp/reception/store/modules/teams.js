@@ -4,18 +4,27 @@
  * Created: 12.12.21
  **/
 import {createHelpers} from 'vuex-map-fields';
+import {result, find} from 'lodash';
 
 const {getTeamField, updateTeamField} = createHelpers({
-  getterType: 'getTeamField',
+  getterType  : 'getTeamField',
   mutationType: 'updateTeamField'
 });
 
 const module = {
-  state: () => ({
-
+  state    : () => ({
+    list: []
   }),
-  getters: {
+  getters  : {
     getTeamField,
+    /**
+     * Converts a teamId to the name of the team
+     * @param state
+     * @returns {function(*): unknown}
+     */
+    teamIdToTeamName: (state) => (id) => {
+      return result(find(state.list, {uuid: id}), 'data.name');
+    }
   },
   mutations: {
     updateTeamField

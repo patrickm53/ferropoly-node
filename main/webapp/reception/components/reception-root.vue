@@ -18,17 +18,19 @@
       :message="apiErrorMessage"
       @close="apiErrorActive=false"
     )
-    h1 {{panel}} {{organisatorName}}
+    overview-root(v-if="panel==='panel-overview'")
+
 </template>
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
 import ModalError from '../../common/components/modal-error/modal-error.vue';
 import {mapFields} from 'vuex-map-fields';
+import OverviewRoot from './overview/overview-root.vue';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError},
+  components: {MenuBar, ModalError, OverviewRoot},
   filters   : {},
   mixins    : [],
   model     : {},

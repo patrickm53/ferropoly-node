@@ -58,8 +58,6 @@ library.add(faCloud);
 
 export default {
   name      : "menu-bar",
-  model     : {},
-  components: {BIconQuestionCircleFill, BIconPersonCircle,FontAwesomeIcon},
   props     : {
     favicon    : {
       // Fav-Icon displayed in the menu bar
@@ -108,6 +106,7 @@ export default {
   data      : function () {
     return {};
   },
+  model     : {},
   methods   : {
     /**
      * Click handler for a menu
@@ -142,7 +141,7 @@ export default {
       return element.type === 'dropdown'
     }
   },
-
+  components: {BIconQuestionCircleFill, BIconPersonCircle,FontAwesomeIcon}
 }
 </script>
 
