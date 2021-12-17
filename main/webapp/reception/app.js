@@ -61,20 +61,14 @@ $(document).ready(function () {
         // Set the static data
         this.$store.dispatch({type: 'fetchStaticData', err, data});
         // Connect to Ferropoly Instance
-        let fs = new FerropolySocket({
+        this.fsocket = new FerropolySocket({
           url      : get(data, 'socketUrl', '/'),
           authToken: get(data, 'authToken', 'none'),
           user     : get(data, 'user', 'none'),
-          gameId   : gameId
-        });
-        fs.on('connected', () => {
-          this.$store.commit('connected');
-        });
-        fs.on('disconnected', () => {
-          this.$store.commit('disconnected');
+          gameId   : gameId,
+          store    : this.$store
         });
       })
-
     },
     store  : store
   });

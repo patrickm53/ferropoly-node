@@ -13,6 +13,7 @@ class FerropolySocket extends EventEmitter {
     super();
     let self    = this;
     this.socket = io(options.url);
+    this.store  = options.store;
     console.log('Socket created');
 
     this.socket.on('connect', () => {
@@ -21,9 +22,10 @@ class FerropolySocket extends EventEmitter {
 
     this.socket.on('disconnect', () => {
       console.log('disconnect', self.socket.id); // undefined
-      self.emit('disconnected');
+      self.store.commit('disconnected');
     });
 
+    // Initialization procedure
     this.socket.on('identify', () => {
       console.log('identify', options);
       self.socket.emit('identify', {
@@ -31,15 +33,35 @@ class FerropolySocket extends EventEmitter {
         authToken: options.authToken,
         gameId   : options.gameId
       })
-    })
-
+    });
     this.socket.on('welcome', () => {
       console.log('welcome');
-    })
+    });
     this.socket.on('initialized', () => {
-      console.log('initialized');
-      self.emit('connected');
-    })
+      console.log('socket fully initialized');
+      self.store.commit('connected');
+    });
+
+    // Team Account messages
+    this.socket.on('admin-teamAccount', msg => {
+      console.log('Unhandled message admin-teamAccount', msg)
+    });
+    // Incoming Property Account Messages
+    this.socket.on('admin-propertyAccount', msg => {
+      console.log('Unhandled message admin-propertyAccount', msg)
+    });
+    // Chancellery Messages
+    this.socket.on('admin-chancelleryAccount', msg => {
+      console.log('Unhandled message admin-chancelleryAccount', msg)
+    });
+    // Incoming Properties messages
+    this.socket.on('admin-properties', msg => {
+      console.log('Unhandled message admin-properties', msg)
+    });
+    // Incoming marketplace messages
+    this.socket.on('admin-marketplace', msg => {
+      console.log('Unhandled message admin-marketplace', msg)
+    });
   }
 }
 
