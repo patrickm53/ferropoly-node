@@ -8,10 +8,14 @@
     ferro-card(title="Rangliste")
       template(v-slot:controls)
         a(:href="downloadUrl")
-          font-awesome-icon.no-url(:icon="['fas', 'download']" @click="download")
-        span &nbsp;&nbsp;
-        font-awesome-icon(:icon="['fas', 'sync-alt']" @click="reload")
-      b-table(striped hover :items="rankingList" :fields="fields")
+          font-awesome-icon.no-url(:icon="['fas', 'download']")
+      b-table(
+        striped
+        borderless
+        hover
+        small
+        :items="rankingList"
+        :fields="fields")
         template(#cell(asset)="data") {{data.item.asset | formatPrice}}
 
 </template>
@@ -20,12 +24,12 @@
 import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
 import {formatPrice} from '../../../common/lib/formatters';
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faSyncAlt, faDownload} from '@fortawesome/free-solid-svg-icons'
+import {faDownload} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {mapFields} from 'vuex-map-fields';
 
-library.add(faSyncAlt);
 library.add(faDownload);
+
 export default {
   name      : 'RankingList',
   components: {FerroCard, FontAwesomeIcon},
@@ -55,19 +59,10 @@ export default {
   created   : function () {
     console.log('creating ranking list');
     if (this.gameDataLoaded) {
-      this.$store.dispatch({type: 'fetchRankingList'});
+      this.$store.dispatch({type: 'fetchRankingList', forcedUpdate: true});
     }
   },
-  methods   : {
-    download() {
-      console.log('download')
-    },
-    reload() {
-      console.log('refresh');
-      this.$store.dispatch({type: 'fetchRankingList'});
-
-    }
-  }
+  methods   : {}
 }
 </script>
 
