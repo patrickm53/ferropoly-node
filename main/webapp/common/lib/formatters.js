@@ -32,6 +32,20 @@ function formatGameTime(value) {
   }
   return DateTime.fromISO(value).toLocaleString(DateTime.TIME_24_SIMPLE);
 }
+/**
+ * Formatter for time only:
+ *
+ * 8:00:00
+ *
+ * @param value
+ * @returns {string}
+ */
+function formatTime(value) {
+  if (!value) {
+    return '';
+  }
+  return DateTime.fromISO(value).toLocaleString(DateTime.TIME_24_WITH_SECONDS);
+}
 
 /**
  * Formatter for the Date and time when the price list was created:
@@ -143,4 +157,4 @@ function booleanYesNo(b) {
   return 'Nein';
 }
 
-export {formatMap, formatGameTime, formatGameDate, formatDateTime, formatPrice, formatAccessibility, formatPriceRange, booleanYesNo};
+export {formatMap, formatTime, formatGameTime, formatGameDate, formatDateTime, formatPrice, formatAccessibility, formatPriceRange, booleanYesNo};

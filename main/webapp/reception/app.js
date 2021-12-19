@@ -69,6 +69,7 @@ $(document).ready(function () {
           store    : this.$store
         });
         this.$store.dispatch({type: 'fetchRankingList'});
+        this.$store.dispatch({type: 'updateTeamAccountEntries'});
 
       })
     },

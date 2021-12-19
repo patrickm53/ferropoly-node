@@ -38,7 +38,7 @@ function assignObject(state, obj, name) {
 const store = new Vuex.Store({
   state    : {
     gameDataLoaded: false, // becomes true when static data was loaded
-    panel         : 'panel-overview', // panel displayed
+    panel         : 'panel-accounting', // panel displayed
     gameId        : 'none',
     authToken     : 'none',
     socketUrl     : '/none',

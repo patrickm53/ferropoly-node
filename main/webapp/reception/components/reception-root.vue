@@ -19,6 +19,7 @@
       @close="apiErrorActive=false"
     )
     overview-root(v-if="panel==='panel-overview'")
+    accounting-root(v-if="panel==='panel-accounting'")
 
 </template>
 
@@ -27,10 +28,11 @@ import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
 import ModalError from '../../common/components/modal-error/modal-error.vue';
 import {mapFields} from 'vuex-map-fields';
 import OverviewRoot from './overview/overview-root.vue';
+import AccountingRoot from './accounting/accounting-root.vue';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError, OverviewRoot},
+  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot},
   filters   : {},
   mixins    : [],
   model     : {},
