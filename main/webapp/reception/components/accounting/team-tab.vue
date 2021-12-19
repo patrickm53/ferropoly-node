@@ -4,9 +4,10 @@
   Created: 18.12.21
 -->
 <template lang="pug">
-  b-tab(:title="teamName")
+  b-tab(:title="titleText")
     b-pagination(
       v-model="currentPage"
+      limit="10"
       :total-rows="rows"
       :per-page="perPage"
       aria-controls="accounting-table"
@@ -17,19 +18,15 @@
       borderless
       hover
       small
-      :filter-function="filterEntries",
-      :filter="teamId"
       :per-page="perPage"
       :current-page="currentPage"
-      :items="accountingList"
-      :fields="fields"
-      @filtered="onFiltered")
+      :items="transactions"
+      :fields="fields")
       template(#cell(transaction)="data") {{data.item.transaction | formatInfo}}
       template(#cell(timestamp)="data") {{data.item.timestamp | formatTime}}
       template(#cell(transaction.amount)="data") {{data.item.transaction.amount | formatPrice}}
       template(#cell(balance)="data") {{data.item.balance | formatPrice}}
       template(#cell(transaction.parts)="data") {{data.item.transaction.parts | formatTransaction}}
-
 
 </template>
 
@@ -54,8 +51,17 @@ function formatTransaction(transactions) {
   return retVal;
 }
 
+/**
+ * Formatter for the info about the tramsactopm
+ * @param transaction
+ * @returns {string}
+ */
 function formatInfo(transaction) {
-  return '** ' + transaction.info
+  let retVal = transaction.info
+  if (transaction.origin.category === 'team') {
+    retVal += ' (' + transaction.origin.teamName + ')';
+  }
+  return retVal;
 }
 
 
@@ -69,6 +75,11 @@ export default {
     teamId: {
       type   : String,
       default: 'none'
+    },
+    title : {
+      // Optional title, team is used if not set
+      type   : String,
+      default: undefined
     }
   },
   data      : function () {
@@ -79,24 +90,39 @@ export default {
       fields     : [
         {key: 'timestamp', label: 'Zeit'},
         {key: 'transaction', label: 'Buchungstext'},
-        {key: 'transaction.amount', label: 'Betrag', thClass:'text-right', tdClass:'text-right'},
-        {key: 'balance', label: 'Saldo', thClass:'text-right', tdClass:'text-right'},
-        {key: 'transaction.parts', label: 'Teiltransaktionen'}
+        {key: 'transaction.amount', label: 'Betrag', thClass: 'text-right', tdClass: 'text-right'},
+        {key: 'balance', label: 'Saldo', thClass: 'text-right', tdClass: 'text-right'},
+        {key: 'transaction.parts', label: 'Teiltransaktionen', thStyle: {width: '50% !important'}}
       ]
     };
   },
   computed  : {
-    ...mapFields({
-      accountingList: 'teamAccount.list'
-    }),
+    ...mapFields({}),
     rows() {
       return this.elementNb
+    },
+    transactions() {
+      let transactions = this.$store.getters.teamAccountData(this.teamId);
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.elementNb   = transactions.length;
+      return transactions;
     },
     teamName() {
       return this.$store.getters.teamIdToTeamName(this.teamId)
     },
+    /**
+     * Title text of the tab
+     * @returns {*}
+     */
+    titleText() {
+      if (this.title) {
+        return title;
+      }
+      return this.teamName;
+    }
   },
   created   : function () {
+    console.log('created tab');
   },
   methods   : {
     onFiltered(list, nb) {

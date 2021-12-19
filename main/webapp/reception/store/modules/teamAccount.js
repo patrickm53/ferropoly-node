@@ -4,7 +4,7 @@
  * Created: 12.12.21
  **/
 import {createHelpers} from 'vuex-map-fields';
-import {get, last, forIn, sortBy} from 'lodash';
+import {get, last, findLast, forEach} from 'lodash';
 import axios from 'axios';
 
 const {getTeamAccountField, updateTeamAccountField} = createHelpers({
@@ -14,10 +14,36 @@ const {getTeamAccountField, updateTeamAccountField} = createHelpers({
 
 const module = {
   state    : () => ({
-    list: []
+    accounts          : {
+      team01: [], // Arrays with the internal names of the teams => track changes
+      team02: [],
+      team03: [],
+      team04: [],
+      team05: [],
+      team06: [],
+      team07: [],
+      team08: [],
+      team09: [],
+      team10: [],
+      team11: [],
+      team12: [],
+      team13: [],
+      team14: [],
+      team15: [],
+      team16: [],
+      team17: [],
+      team18: [],
+      team19: [],
+      team20: [],
+    },
+    id2accounts       : {}, // object with teamId as property, containing the account names
+    lastValidTimestamp: '2020-07-06T12:00'
   }),
   getters  : {
     getTeamAccountField,
+    teamAccountData: (state) => (id) => {
+      return state.accounts[state.id2accounts[id]];
+    }
   },
   mutations: {
     updateTeamAccountField
@@ -31,34 +57,38 @@ const module = {
      * @param options
      */
     updateTeamAccountEntries({state, commit, rootState}, options) {
-
-      let query = '';
       console.log('update team');
-
-      if (state.list.length > 0) {
-        query = '?start=' + last(state.list).timestamp;
-      }
+      let query = '?start=' + state.lastValidTimestamp;
 
       axios.get(`/teamAccount/get/${rootState.gameId}/all${query}`)
         .then(resp => {
           console.log('teamAccount', resp.data);
-          let data = resp.data;
-          console.log('/teamAccount ok, entries: ' + data.accountData.length);
-          let balance = {};
-          for (let i = 0; i < state.list.length; i++) {
-            let teamBalance               = balance[state.list[i].teamId] || 0;
-            state.list[i].balance         = teamBalance + state.list[i].transaction.amount;
-            balance[state.list[i].teamId] = state.list[i].balance;
+
+          forEach(resp.data.accountData, entry => {
+            let account = state.accounts[state.id2accounts[entry.teamId]];
+
+            if (!findLast(account, {_id: entry._id})) {
+              let teamBalanceEntry = last(account);
+              let teamBalance      = 0;
+              if (teamBalanceEntry) {
+                teamBalance = teamBalanceEntry.balance;
+              }
+              entry.balance = teamBalance + entry.transaction.amount;
+              if (entry.transaction.origin.category === 'team') {
+                entry.transaction.origin.teamName = this.getters.teamIdToTeamName(entry.transaction.origin.uuid);
+              }
+              account.push(entry)
+
+              if (resp.data.accountData.length < 50) {
+                console.log('team account info', entry);
+              }
+            }
+          });
+          if (resp.data.accountData.length > 0) {
+            state.lastValidTimestamp = resp.data.accountData[resp.data.accountData.length - 1].timestamp;
           }
-          console.log('Balances', balance);
-          let newData = resp.data.accountData;
-          for (let i = 0; i < newData.length; i++) {
-            let teamBalance            = balance[newData[i].teamId] || 0;
-            newData[i].balance         = teamBalance + newData[i].transaction.amount;
-            balance[newData[i].teamId] = newData[i].balance;
-            state.list.push(newData[i]);
-          }
-          console.log('finished', state.list.length, state.list);
+
+          console.log('finished', state.lastValidTimestamp, state.accounts);
         })
         .catch(err => {
           console.error(err);

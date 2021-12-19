@@ -38,7 +38,7 @@ function assignObject(state, obj, name) {
 const store = new Vuex.Store({
   state    : {
     gameDataLoaded: false, // becomes true when static data was loaded
-    panel         : 'panel-accounting', // panel displayed
+    panel         : 'panel-overview', // panel displayed
     gameId        : 'none',
     authToken     : 'none',
     socketUrl     : '/none',
@@ -87,7 +87,17 @@ const store = new Vuex.Store({
       state.socketUrl = get(options.data, 'socketUrl', '/');
       state.gameId    = options.data.currentGameId;
       assignObject(state, options.data, 'gameplay');
-      state.teams.list     = options.data.teams;
+      // Init teams, assign indexes to them, also create associated tables in other store modules
+      let i = 1;
+      options.data.teams.forEach(t => {
+        t.index = i;
+        t.internalName = 'team' +  i.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping:false});
+        state.teams.list.push(t);
+        // Team account needs this mapping for speeding things up
+        state.teamAccount.id2accounts[t.uuid] = t.internalName;
+        i++;
+      });
+      console.log('teams', state.teams, state.teamAccount);
       state.gameDataLoaded = true;
     },
     /**

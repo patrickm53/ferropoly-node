@@ -24,6 +24,22 @@ const module = {
      */
     teamIdToTeamName: (state) => (id) => {
       return result(find(state.list, {uuid: id}), 'data.name');
+    },
+    /**
+     * Returns the internal name of a team
+     * @param state
+     * @returns {function(*): unknown}
+     */
+    teamIdToInternalName: (state) => (id) => {
+      return result(find(state.list, {uuid: id}), 'internalName');
+    },
+    /**
+     * Returns the internal (frontend internal) index of a team
+     * @param state
+     * @returns {function(*): unknown}
+     */
+    teamIdToIndex: (state) => (id) => {
+      return result(find(state.list, {uuid: id}), 'index');
     }
   },
   mutations: {
