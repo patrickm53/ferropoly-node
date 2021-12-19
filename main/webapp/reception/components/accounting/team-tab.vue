@@ -1,5 +1,5 @@
 <!---
-  A single tab with data
+  A single tab with data about all transactions of a team
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 18.12.21
 -->
@@ -26,8 +26,16 @@
       template(#cell(timestamp)="data") {{data.item.timestamp | formatTime}}
       template(#cell(transaction.amount)="data") {{data.item.transaction.amount | formatPrice}}
       template(#cell(balance)="data") {{data.item.balance | formatPrice}}
-      template(#cell(transaction.parts)="data") {{data.item.transaction.parts | formatTransaction}}
-
+      template(#cell(transaction.parts)="row")
+        b-button(v-if="row.item.transaction.parts.length > 0" size="sm" @click="row.toggleDetails") Details ({{row.item.transaction.parts.length}})  {{ row.detailsShowing ? 'verbergen' : 'anzeigen' }}
+      template(#row-details="row")
+        b-card
+          b-table-simple(small)
+            b-tbody
+              b-tr(v-for="(value, key) in row.item.transaction.parts" :key="key")
+                b-td {{ value.propertyName }}
+                b-td(v-if="value.buildingNb") {{ value.buildingNb }} {{value.buildingNb > 4 ? 'Hotel' : '. Haus'}}
+                b-td {{ value.amount | formatPrice}}
 </template>
 
 <script>
@@ -36,30 +44,16 @@ import {formatPrice, formatTime} from '../../../common/lib/formatters'
 
 
 /**
- * Formats the transaction field
- * @param transactions
- * @returns {string}
- */
-function formatTransaction(transactions) {
-  let retVal = '';
-  transactions.forEach(t => {
-    if (retVal.length > 0) {
-      retVal += '; '
-    }
-    retVal += `${t.propertyName}: ${formatPrice(t.amount)}`
-  });
-  return retVal;
-}
-
-/**
- * Formatter for the info about the tramsactopm
+ * Formatter for the info about the transaction
  * @param transaction
  * @returns {string}
  */
 function formatInfo(transaction) {
   let retVal = transaction.info
   if (transaction.origin.category === 'team') {
-    retVal += ' (' + transaction.origin.teamName + ')';
+    retVal += ' (';
+    retVal += transaction.amount < 0 ? 'an ' : 'von ';
+    retVal += transaction.origin.teamName + ')';
   }
   return retVal;
 }
@@ -68,7 +62,7 @@ function formatInfo(transaction) {
 export default {
   name      : 'TeamTab',
   components: {},
-  filters   : {formatPrice, formatTime, formatTransaction, formatInfo},
+  filters   : {formatPrice, formatTime, formatInfo},
   mixins    : [],
   model     : {},
   props     : {
