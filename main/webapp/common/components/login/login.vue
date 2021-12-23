@@ -6,7 +6,7 @@
     #wrap
       menu-bar(show-user-box=false :elements-right="menuElementsRight")
       .login-box.ls-box-shape
-        h3 {{appName}} &nbsp; Login
+        h3 {{appName}} Login
         #login-with-password(v-if='passwordLogin')
           form(action='login' method='post')
             label(for='inputUserName' class='sr-only') Loginname
@@ -29,7 +29,8 @@
             b-icon-facebook
             | &nbsp;Login mit Facebook
           b-button(href='/auth/microsoft' block large variant="success")
-            | Login mit Microsoft
+            font-awesome-icon.no-url(:icon="['fab', 'windows']")
+            | &nbsp;Login mit Microsoft
           //a#button-twitter.btn.btn-lg.btn-primary.btn-block(href='/auth/twitter')
             i.fa.fa-twitter
             | &nbsp;Login mit Twitter
@@ -42,9 +43,18 @@
 import $ from 'jquery'
 import MenuBar from '../menu-bar/menu-bar.vue'
 import {BIconGoogle, BIconFacebook} from 'bootstrap-vue';
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {faWindows} from '@fortawesome/free-brands-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+
+library.add(faWindows);
 
 export default {
-  name      : 'login',
+  // eslint-disable-next-line vue/multi-word-component-names
+  name      : 'Login',
+  components: {MenuBar, BIconGoogle, BIconFacebook, FontAwesomeIcon},
+  filters   : {},
+  model     : {},
   props     : {
     appName: {
       type   : String,
@@ -61,7 +71,6 @@ export default {
       passwordLogin    : false
     };
   },
-  model     : {},
   created   : function () {
     // Set background randomly
     let i = Math.floor(((new Date().getMilliseconds() / 10) % 14) + 1);
@@ -75,9 +84,7 @@ export default {
     enableSocialMediaLogin: function () {
       this.passwordLogin = false;
     }
-  },
-  components: {MenuBar, BIconGoogle, BIconFacebook},
-  filters   : {}
+  }
 }
 </script>
 
@@ -98,36 +105,8 @@ body {
   padding: 0 0 20px;
 }
 
-/* Set the fixed height of the footer here */
-#footer {
-  height: 20px;
-  background-color: black;
-  color: white;
-  z-index: 100;
-}
-
-#footer-time {
-  text-align: right;
-}
-
 .login-box {
   max-width: 330px;
-}
-
-.signup-box {
-  max-width: 600px;
-}
-
-.agb-box {
-  max-width: 80%;
-  overflow: auto;
-
-}
-
-.agb-contents {
-  height: inherit;
-  margin-bottom: 10px;
-  padding-bottom: 20px;
 }
 
 .ls-box-shape {
@@ -138,26 +117,7 @@ body {
   margin-top: 30px;
 }
 
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-  margin-bottom: 10px;
-}
-
-.form-signin .checkbox {
-  font-weight: normal;
-}
-
-.form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.form-signin .form-control:focus {
+.form-signin :focus {
   z-index: 2;
 }
 
