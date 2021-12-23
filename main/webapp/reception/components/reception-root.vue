@@ -20,6 +20,7 @@
     )
     overview-root(v-if="panel==='panel-overview'")
     accounting-root(v-if="panel==='panel-accounting'")
+    chance-root(v-if="panel==='panel-chancellery'")
 
 </template>
 
@@ -29,10 +30,11 @@ import ModalError from '../../common/components/modal-error/modal-error.vue';
 import {mapFields} from 'vuex-map-fields';
 import OverviewRoot from './overview/overview-root.vue';
 import AccountingRoot from './accounting/accounting-root.vue';
+import ChanceRoot from './chance/chance-root.vue';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot},
+  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -45,19 +47,19 @@ export default {
         {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map'},
         {title: 'Statistik', href: '#', event: 'panel-change', eventParam: 'panel-statistic'},
         {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting'},
-        {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chance'},
+        {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chancellery'},
         {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-pricelist'},
         {title: 'Spielregeln', href: '#', event: 'panel-change', eventParam: 'panel-rules'}
       ],
       helpUrls    : {
-        'panel-overview'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-call'      : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-map'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-statistic' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-accounting': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-chance'    : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-pricelist' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-rules'     : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/'
+        'panel-overview'   : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
+        'panel-call'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
+        'panel-map'        : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
+        'panel-statistic'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
+        'panel-accounting' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
+        'panel-chancellery': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
+        'panel-pricelist'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
+        'panel-rules'      : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/'
       }
     };
   },

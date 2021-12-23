@@ -45,7 +45,7 @@ class FerropolySocket extends EventEmitter {
     // Team Account messages
     this.socket.on('admin-teamAccount', msg => {
       self.store.dispatch({type: 'fetchRankingList'});
-      self.store.dispatch({type:'updateTeamAccountEntries', teamId: msg.data.teamId});
+      self.store.dispatch({type: 'updateTeamAccountEntries', teamId: msg.data.teamId});
     });
     // Incoming Property Account Messages
     this.socket.on('admin-propertyAccount', msg => {
@@ -53,9 +53,9 @@ class FerropolySocket extends EventEmitter {
       console.log('Unhandled message admin-propertyAccount', msg)
     });
     // Chancellery Messages
-    this.socket.on('admin-chancelleryAccount', msg => {
+    this.socket.on('admin-chancelleryAccount', () => {
       self.store.dispatch({type: 'fetchRankingList'});
-      console.log('Unhandled message admin-chancelleryAccount', msg)
+      self.store.dispatch({type: 'updateChancellery'});
     });
     // Incoming Properties messages
     this.socket.on('admin-properties', msg => {

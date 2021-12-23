@@ -14,6 +14,7 @@ import rankingList from './modules/rankingList';
 import teamAccount from './modules/teamAccount';
 import teams from './modules/teams';
 import travelLog from './modules/travelLog';
+import chancellery from './modules/chancellery';
 
 Vue.use(Vuex);
 
@@ -52,7 +53,7 @@ const store = new Vuex.Store({
       requestPending: false
     }
   },
-  modules  : {gameplay, pricelist, propertyAccount, rankingList, teamAccount, teams, travelLog},
+  modules  : {gameplay, pricelist, propertyAccount, rankingList, teamAccount, teams, travelLog, chancellery},
   getters  : {
     getField
   },
