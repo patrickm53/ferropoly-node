@@ -6,7 +6,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
-import {get, forIn, isPlainObject, set} from 'lodash';
+import {get, forIn, isPlainObject, set, sortBy} from 'lodash';
 import gameplay from './modules/gameplay';
 import pricelist from './modules/pricelist';
 import propertyAccount from './modules/propertyAccount';
@@ -90,7 +90,9 @@ const store = new Vuex.Store({
       assignObject(state, options.data, 'gameplay');
       // Init teams, assign indexes to them, also create associated tables in other store modules
       let i = 1;
-      options.data.teams.forEach(t => {
+      let teams = sortBy(options.data.teams, 'data.name');
+      console.log('SORTING', teams, options.data.teams);
+      teams.forEach(t => {
         t.index = i;
         t.internalName = 'team' +  i.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping:false});
         state.teams.list.push(t);
@@ -98,6 +100,7 @@ const store = new Vuex.Store({
         state.teamAccount.id2accounts[t.uuid] = t.internalName;
         i++;
       });
+
       console.log('teams', state.teams, state.teamAccount);
       state.gameDataLoaded = true;
     },
@@ -112,7 +115,6 @@ const store = new Vuex.Store({
       state.api.error.message  = '';
     },
   }
-
 });
 
 export default store;

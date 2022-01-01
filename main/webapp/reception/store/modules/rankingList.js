@@ -38,7 +38,7 @@ const module = {
         return;
       }
       if (rootState.panel !== 'panel-overview') {
-        console.log('wrong panel, not loading ranking list');
+        // console.log('wrong panel, not loading ranking list');
         return;
       }
       if (state.nextUpdate > DateTime.now() && !options.forcedUpdate) {
