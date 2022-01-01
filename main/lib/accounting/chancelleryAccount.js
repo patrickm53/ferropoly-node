@@ -50,6 +50,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         }
         if (ferroSocket) {
           ferroSocket.emitToGame(gameplay.internal.gameId, 'checkinStore', chancelleryActions.setAsset(info.balance));
+          ferroSocket.emitToAdmins(gameplay.internal.gameId, 'admin-chancelleryAccount', {balance: info.balance});
         }
       }
       callback();

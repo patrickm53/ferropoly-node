@@ -54,6 +54,7 @@ class FerropolySocket extends EventEmitter {
     });
     // Chancellery Messages
     this.socket.on('admin-chancelleryAccount', () => {
+      console.log('admin-chancelleryAccount info')
       self.store.dispatch({type: 'fetchRankingList'});
       self.store.dispatch({type: 'updateChancellery'});
     });

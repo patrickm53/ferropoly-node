@@ -5,26 +5,24 @@
 -->
 <template lang="pug">
   div
-    ferro-card(title="Übersicht")
-      b-table-simple(small)
-        b-tbody
-          b-tr
-            b-td Anzahl Einträge
-            b-td {{list.length}}
-          b-tr
-            b-td Kontostand
-            b-td {{asset | formatPrice}}
+    b-table-simple(small)
+      b-tbody
+        b-tr
+          b-td Anzahl Einträge
+          b-td {{list.length}}
+        b-tr
+          b-td Parkplatz
+          b-td {{asset | formatPrice}}
 
 
 </template>
 
 <script>
-import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
 import {mapFields} from 'vuex-map-fields';
 import {formatPrice} from '../../../common/lib/formatters';
 export default {
   name      : 'ChanceSummary',
-  components: {FerroCard},
+  components: {},
   filters   : {formatPrice},
   mixins    : [],
   model     : {},
