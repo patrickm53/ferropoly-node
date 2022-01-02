@@ -21,6 +21,7 @@
     overview-root(v-if="panel==='panel-overview'")
     accounting-root(v-if="panel==='panel-accounting'")
     chance-root(v-if="panel==='panel-chancellery'")
+    properties-root(v-if="panel==='panel-properties'")
 
 </template>
 
@@ -31,10 +32,11 @@ import {mapFields} from 'vuex-map-fields';
 import OverviewRoot from './overview/overview-root.vue';
 import AccountingRoot from './accounting/accounting-root.vue';
 import ChanceRoot from './chance/chance-root.vue';
+import PropertiesRoot from './properties/properties-root.vue';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot},
+  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -48,7 +50,7 @@ export default {
         {title: 'Statistik', href: '#', event: 'panel-change', eventParam: 'panel-statistic'},
         {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting'},
         {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chancellery'},
-        {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-pricelist'},
+        {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-properties'},
         {title: 'Spielregeln', href: '#', event: 'panel-change', eventParam: 'panel-rules'}
       ],
       helpUrls    : {

@@ -8,7 +8,7 @@ import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
 import {get, forIn, isPlainObject, set, sortBy} from 'lodash';
 import gameplay from './modules/gameplay';
-import pricelist from './modules/pricelist';
+import properties from './modules/properties';
 import propertyAccount from './modules/propertyAccount';
 import rankingList from './modules/rankingList';
 import teamAccount from './modules/teamAccount';
@@ -53,7 +53,7 @@ const store = new Vuex.Store({
       requestPending: false
     }
   },
-  modules  : {gameplay, pricelist, propertyAccount, rankingList, teamAccount, teams, travelLog, chancellery},
+  modules  : {gameplay, properties, propertyAccount, rankingList, teamAccount, teams, travelLog, chancellery},
   getters  : {
     getField
   },
@@ -89,19 +89,20 @@ const store = new Vuex.Store({
       state.gameId    = options.data.currentGameId;
       assignObject(state, options.data, 'gameplay');
       // Init teams, assign indexes to them, also create associated tables in other store modules
-      let i = 1;
+      let i     = 1;
       let teams = sortBy(options.data.teams, 'data.name');
       console.log('SORTING', teams, options.data.teams);
       teams.forEach(t => {
-        t.index = i;
-        t.internalName = 'team' +  i.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping:false});
+        t.index        = i;
+        t.internalName = 'team' + i.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping: false});
         state.teams.list.push(t);
         // Team account needs this mapping for speeding things up
         state.teamAccount.id2accounts[t.uuid] = t.internalName;
         i++;
       });
+      // Properties
+      state.properties.list = options.data.pricelist;
 
-      console.log('teams', state.teams, state.teamAccount);
       state.gameDataLoaded = true;
     },
     /**
