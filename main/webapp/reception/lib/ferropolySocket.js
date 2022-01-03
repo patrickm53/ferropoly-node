@@ -50,7 +50,7 @@ class FerropolySocket extends EventEmitter {
     // Incoming Property Account Messages
     this.socket.on('admin-propertyAccount', msg => {
       self.store.dispatch({type: 'fetchRankingList'});
-      self.store.dispatch({type: 'updatePropertyInPricelist'}, msg.property);
+      self.store.dispatch({type: 'updatePropertyInPricelist', property: msg.property});
       console.log('Unhandled message admin-propertyAccount', msg)
     });
     // Chancellery Messages

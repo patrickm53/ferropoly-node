@@ -15,6 +15,7 @@
       // eslint-disable-next-line vue/valid-v-slot
       template(#cell(pricelist.position)="data") {{data.item.pricelist.position + 1}}
       template(#cell(pricelist.price)="data") {{data.item.pricelist.price | formatPrice}}
+      template(#cell(gamedata.owner)="data") {{teamName(data.item.gamedata.owner)}}
 
 </template>
 
@@ -43,6 +44,7 @@ export default {
         {key: 'location.name', label: 'Ort', sortable: true},
         {key: 'pricelist.propertyGroup', label: 'Gruppe', sortable: true},
         {key: 'pricelist.price', label: 'Kaufpreis', sortable: true},
+        {key: 'gamedata.owner', label: 'Besitzer', sortable: true},
       ]
     };
   },
@@ -52,6 +54,9 @@ export default {
   methods   : {
     onRowClicked(item, index, event) {
       this.$emit('property-selected', item);
+    },
+    teamName(id) {
+      return this.$store.getters.teamIdToTeamName(id);
     }
   }
 }

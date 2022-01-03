@@ -4,7 +4,7 @@
  * Created: 12.12.21
  **/
 import {createHelpers} from 'vuex-map-fields';
-import {find, findIndex, get} from 'lodash';
+import {find, findIndex, get, assign} from 'lodash';
 import axios from 'axios';
 
 const {getPricelistField, updatePricelistField} = createHelpers({
@@ -40,11 +40,11 @@ const module = {
      */
     updatePropertyInPricelist({state, commit, rootState}, options) {
       let property = get(options, 'property', null);
-
       if (property && property.uuid) {
         let i = findIndex(state.list, {uuid: property.uuid});
         if (i > -1) {
-          state.list[i] = property;
+          assign(state.list[i], property);
+          console.log(`updated ${property.location.name}`);
         }
       }
     },
@@ -59,17 +59,16 @@ const module = {
     updateProperties({state, commit, rootState}, options) {
       axios.get(`/properties/get/${rootState.gameId}/${options.teamId}`)
         .then(resp => {
-          console.log('Building ranking list', resp.data);
-          resp.data.properties.forEach(p=>{
+          resp.data.properties.forEach(p => {
             let i = findIndex(state.list, {uuid: p.uuid});
             if (i > -1) {
+              assign(state.list[i], p);
               state.list[i] = p;
-            }
-            else {
+            } else {
               console.error('Did not find property', p);
             }
-
           });
+          console.log('Properties read', resp.data, state.list);
         })
         .catch(err => {
           console.error(err);

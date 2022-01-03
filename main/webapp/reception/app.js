@@ -60,6 +60,7 @@ $(document).ready(function () {
       getStaticData(gameId, (err, data) => {
         // Set the static data
         this.$store.dispatch({type: 'fetchStaticData', err, data});
+        this.$store.dispatch({type:'updateProperties'});
         // Connect to Ferropoly Instance
         this.fsocket = new FerropolySocket({
           url      : get(data, 'socketUrl', '/'),
