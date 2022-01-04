@@ -11,8 +11,8 @@
           :properties="properties"
           @property-selected="onPropertySelected")
       b-col(sm="12" md="6")
-        ferro-card(title="Transaktionen")
-          property-info
+        ferro-card(:title="selectedProperty.location.name" size="sm")
+          property-info(:property="selectedProperty")
 
 
 </template>
@@ -31,7 +31,24 @@ export default {
   model     : {},
   props     : {},
   data      : function () {
-    return {};
+    return {
+      selectedProperty: {
+        location: {
+          name: '',
+          accessibility: ''
+        },
+        pricelist: {
+          rents: {
+            noHouse    : 0,
+            oneHouse   : 0,
+            twoHouses  : 0,
+            threeHouses: 0,
+            fourHouses : 0,
+            hotel      : 0
+          }
+        }
+      }
+    };
   },
   computed  : {
     ...mapFields({
@@ -39,10 +56,12 @@ export default {
     }),
   },
   created   : function () {
+    this.selectedProperty = this.properties[0];
   },
   methods   : {
     onPropertySelected(property) {
       console.log('Property selected', property);
+      this.selectedProperty = property;
     }
   }
 }

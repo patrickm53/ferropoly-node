@@ -5,18 +5,36 @@
 -->
 <template lang="pug">
   div
-    h1 property-info
-  
+    div(v-if="property")
+      h3 Allgemeines
+      b-table-simple(small)
+        b-tr
+          b-td Erreichbarkeit
+          b-td {{property.location.accessibility}}
+          b-td Miete unbebaut
+          b-td {{property.pricelist.rents.noHouse}}
+        b-tr
+          b-td Position in Preisliste
+          b-td 22
+          b-td Miete 1 Haus
+          b-td
+
+
 </template>
 
 <script>
 export default {
-  name: "PropertyInfo",
+  name      : 'PropertyInfo',
   components: {},
   filters   : {},
   mixins    : [],
   model     : {},
-  props     : {},
+  props     : {
+    property: {
+      type    : Object,
+      required: true
+    }
+  },
   data      : function () {
     return {};
   },
