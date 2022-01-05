@@ -32,6 +32,7 @@ function formatGameTime(value) {
   }
   return DateTime.fromISO(value).toLocaleString(DateTime.TIME_24_SIMPLE);
 }
+
 /**
  * Formatter for time only:
  *
@@ -157,4 +158,45 @@ function booleanYesNo(b) {
   return 'Nein';
 }
 
-export {formatMap, formatTime, formatGameTime, formatGameDate, formatDateTime, formatPrice, formatAccessibility, formatPriceRange, booleanYesNo};
+/**
+ * Returns the status of the building process
+ * @param bs
+ * @returns {string}
+ */
+function buildingStatus(bs) {
+  switch (bs) {
+    case 0:
+      return 'unbebaut';
+
+    case 1:
+      return '1 Haus';
+
+    case 2:
+      return '2 Häuser';
+
+    case 3:
+      return '3 Häuser';
+
+    case 4:
+      return '4 Häuser';
+
+    case 5:
+      return 'Hotel';
+
+    default:
+      return '?';
+  }
+}
+
+export {
+  formatMap,
+  formatTime,
+  formatGameTime,
+  formatGameDate,
+  formatDateTime,
+  formatPrice,
+  formatAccessibility,
+  formatPriceRange,
+  booleanYesNo,
+  buildingStatus
+};

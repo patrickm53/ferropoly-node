@@ -69,6 +69,11 @@ class FerropolySocket extends EventEmitter {
       self.store.dispatch({type: 'fetchRankingList'});
       console.log('Unhandled message admin-marketplace', msg)
     });
+    // Incoming info that rent was paid
+    this.socket.on('admin-rents-paid', msg => {
+      self.store.dispatch({type: 'updateProperties'});
+      console.log('Unhandled message admin-rents-paid', msg)
+    });
   }
 }
 

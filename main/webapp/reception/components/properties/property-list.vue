@@ -102,7 +102,7 @@ export default {
       return (buildings < 5) && (buildings > 3);
     },
     showBuildingEnabled(gamedata) {
-      return (gamedata.buildingEnabled && (gamedata.buildings < 5) && (gamedata.buildings > 0));
+      return (gamedata.buildingEnabled && (gamedata.buildings < 5) && (gamedata.buildings > -1));
     },
     /**
      * Creates the maximum Size of the list

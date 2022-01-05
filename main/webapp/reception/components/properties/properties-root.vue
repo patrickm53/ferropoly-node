@@ -33,9 +33,15 @@ export default {
   data      : function () {
     return {
       selectedProperty: {
-        location: {
-          name: '',
+        location : {
+          name         : '',
           accessibility: ''
+        },
+        gamedata : {
+          owner          : undefined,
+          boughtTs       : undefined,
+          buildings      : 0,
+          buildingEnabled: false
         },
         pricelist: {
           rents: {

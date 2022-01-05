@@ -487,6 +487,9 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
 /**
  * Pay Interest (this is the fix value) for all teams.
  * Money: bank->team
+ *
+ * @param gameId
+ * @param tolerance
  * @param callback
  */
 Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
@@ -521,6 +524,7 @@ Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
 /**
  * Checks for a negative asset and pays to the chancellery if so
  * @param gameId
+ * @param tolerance
  * @param callback
  */
 Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback) {
@@ -564,6 +568,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback
  * Pays the rents (each hour) for a team
  * @param gp
  * @param team
+ * @param tolerance
  * @param callback
  */
 Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback) {
@@ -659,6 +664,10 @@ Marketplace.prototype.payRents = function (options, callback) {
               self.payRentsForTeam(gp, team, tolerance, callback);
             },
             function (err) {
+              if (ferroSocket) {
+                // Inform clients that the can build again
+                ferroSocket.emitToGame(gameId, 'admin-rents-paid');
+              }
               callback(err);
             }
           );

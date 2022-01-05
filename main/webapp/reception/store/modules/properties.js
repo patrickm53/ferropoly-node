@@ -40,6 +40,7 @@ const module = {
      */
     updatePropertyInPricelist({state, commit, rootState}, options) {
       let property = get(options, 'property', null);
+      console.log('updatePropertyInPricelist', property, options.property);
       if (property && property.uuid) {
         let i = findIndex(state.list, {uuid: property.uuid});
         if (i > -1) {
@@ -57,7 +58,8 @@ const module = {
      * @param options teamId: id of the team or undefined for all
      */
     updateProperties({state, commit, rootState}, options) {
-      axios.get(`/properties/get/${rootState.gameId}/${options.teamId}`)
+      let teamId = get(options, 'teamId', 'undefined');
+      axios.get(`/properties/get/${rootState.gameId}/${teamId}`)
         .then(resp => {
           resp.data.properties.forEach(p => {
             let i = findIndex(state.list, {uuid: p.uuid});
