@@ -22,6 +22,7 @@
     accounting-root(v-if="panel==='panel-accounting'")
     chance-root(v-if="panel==='panel-chancellery'")
     properties-root(v-if="panel==='panel-properties'")
+    rules-root(v-if="panel==='panel-rules'")
 
 </template>
 
@@ -33,10 +34,11 @@ import OverviewRoot from './overview/overview-root.vue';
 import AccountingRoot from './accounting/accounting-root.vue';
 import ChanceRoot from './chance/chance-root.vue';
 import PropertiesRoot from './properties/properties-root.vue';
+import RulesRoot from './rules/rules-root.vue';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot},
+  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot, RulesRoot},
   filters   : {},
   mixins    : [],
   model     : {},

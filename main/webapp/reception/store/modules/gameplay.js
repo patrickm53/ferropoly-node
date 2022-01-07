@@ -7,73 +7,76 @@ import {createHelpers} from 'vuex-map-fields';
 import {DateTime} from 'luxon';
 
 const {getGameplayField, updateGameplayField} = createHelpers({
-  getterType: 'getGameplayField',
+  getterType  : 'getGameplayField',
   mutationType: 'updateGameplayField'
 });
 
 const gameplay = {
-  state: () => ({
-    gamename: '',
-    owner: {
-      organisatorName: '',
-      organisation: '',
+  state    : () => ({
+    gamename  : '',
+    owner     : {
+      organisatorName : '',
+      organisation    : '',
       organisatorEmail: '',
       organisatorPhone: ''
     },
     scheduling: {
-      gameDate: DateTime.now(),
+      gameDate : DateTime.now(),
       gameStart: '',
-      gameEnd: '',
-      deleteTs: ''
+      gameEnd  : '',
+      deleteTs : ''
     },
     gameParams: {
-      startCapital: 0,
-      interestInterval: 0,
-      interest: 0,
+      startCapital             : 0,
+      interestInterval         : 0,
+      interest                 : 0,
       interestCyclesAtEndOfGame: 0,
-      debtInterest: 0,
-      housePrices: 0,
-      properties: {
-        lowestPrice: 0,
-        highestPrice: 0,
-        numberOfPriceLevels: 0,
+      debtInterest             : 0,
+      housePrices              : 0,
+      properties               : {
+        lowestPrice               : 0,
+        highestPrice              : 0,
+        numberOfPriceLevels       : 0,
         numberOfPropertiesPerGroup: 0
       },
-      rentFactors: {
-        noHouse: 0,
-        oneHouse: 0,
-        twoHouses: 0,
-        threeHouses: 0,
-        fourHouses: 0,
-        hotel: 0,
+      rentFactors              : {
+        noHouse             : 0,
+        oneHouse            : 0,
+        twoHouses           : 0,
+        threeHouses         : 0,
+        fourHouses          : 0,
+        hotel               : 0,
         allPropertiesOfGroup: 0
       },
-      chancellery: {
-        minLottery: 0,
-        maxLottery: 0,
-        maxJackpotSize: 0,
-        probabilityWin: 0,
+      chancellery              : {
+        minLottery      : 0,
+        maxLottery      : 0,
+        maxJackpotSize  : 0,
+        probabilityWin  : 0,
         probabilityLoose: 0
       }
     },
-    log: {
-      created: '',
+    log       : {
+      created   : '',
       lastEdited: ''
     },
-    internal: {
+    internal  : {
       gameId: '',
-      map: '',
-      owner: ''
+      map   : '',
+      owner : ''
     },
-    joining: {
+    joining   : {
       possibleUntil: '',
-      infotext: ''
+      infotext     : ''
     },
-    mobile: {
+    mobile    : {
       level: 0
+    },
+    rules     : {
+      text: ''
     }
   }),
-  getters: {
+  getters  : {
     getGameplayField,
   },
   mutations: {
