@@ -10,6 +10,9 @@
         v-model="gamblingValue"
         type="number"
         number=true
+        step="500"
+        :min="min"
+        :max="max"
       )
       b-input-group-append
         b-button(variant="success" @click="onWinning") Gewinn
@@ -24,10 +27,19 @@ export default {
   filters   : {},
   mixins    : [],
   model     : {},
-  props     : {},
+  props     : {
+    min: {
+      type: String,
+      default: '1'
+    },
+    max: {
+      type: String,
+      default: '5000'
+    }
+  },
   data      : function () {
     return {
-      gamblingValue: 0
+      gamblingValue: this.min
     };
   },
   computed  : {},
@@ -37,16 +49,16 @@ export default {
     onWinning() {
       if (this.gamblingValue > 0) {
         console.log('luckily wins', this.gamblingValue);
-        this.$emit('win')
+        this.$emit('win', this.gamblingValue)
       }
-      this.gamblingValue = 0;
+      this.gamblingValue = this.min;
     },
     onLoosing() {
       if (this.gamblingValue > 0) {
         console.log('poor sod looses', this.gamblingValue);
-        this.$emit('loose')
+        this.$emit('loose', this.gamblingValue)
       }
-      this.gamblingValue = 0;
+      this.gamblingValue = this.min;
     }
   }
 }
