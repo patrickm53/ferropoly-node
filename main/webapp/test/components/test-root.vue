@@ -15,12 +15,14 @@
       div(v-if="panel==='top'")
         h1 Ferropoly Component Tests
       test-property-selector(v-if="panel==='propertySelector'")
+      test-gambling-controls(v-if="panel==='gamblingControls'")
 </template>
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
 import {getItem, setItem} from '../../common/lib/sessionStorage';
 import TestPropertySelector from './test-property-selector.vue';
+import TestGamblingControls from './test-gambling-controls.vue'
 
 // EASY START
 const defaultPanel = getItem('test-panel', 'top');
@@ -29,7 +31,8 @@ export default {
   name      : 'TestRoot',
   components: {
     MenuBar,
-    TestPropertySelector
+    TestPropertySelector,
+    TestGamblingControls
   },
   filters   : {},
   model     : {},
@@ -42,7 +45,8 @@ export default {
         /* 1 */  {
           title   : 'Spiel-Components', href: '#', type: 'dropdown',
           elements: [
-            {title: 'Property Selector', href: '#', event: 'panel-change', eventParam: 'propertySelector'}
+            {title: 'Property Selector', href: '#', event: 'panel-change', eventParam: 'propertySelector'},
+            {title: 'Gambling Controls / Call Log', href: '#', event: 'panel-change', eventParam: 'gamblingControls'},
           ]
         },
       ],
