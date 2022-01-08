@@ -12,14 +12,14 @@ function getGameplay() {
 }
 
 function getProperties(nb = 5000) {
-  let nbOfProperties = Math.min(nb, gameInfo.properties.length);
-  return slice(gameInfo.properties, 0, nbOfProperties);
+  let nbOfProperties = Math.min(nb, gameInfo.pricelist.length);
+  return slice(gameInfo.pricelist, 0, nbOfProperties);
 }
 
 function getOrdererdProperties(nb = 5000) {
   let i              = 0;
-  let nbOfProperties = Math.min(nb, gameInfo.properties.length);
-  let props          = slice(gameInfo.properties, 0, nbOfProperties);
+  let nbOfProperties = Math.min(nb, gameInfo.pricelist.length);
+  let props          = slice(gameInfo.pricelist, 0, nbOfProperties);
   props.forEach(p => {
     p.pricelist.positionInPriceRange = i++;
   });
