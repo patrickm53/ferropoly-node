@@ -16,21 +16,21 @@
       b-navbar-nav
         div(v-for="el in elements" :key="el.title" v-if="!el.hide")
           // Ordinary Navbar Item
-          b-nav-item(v-if="isNavbarItem(el)" :href="el.href" v-on:click="onClick(el.event, el.eventParam)") {{el.title}}
+          b-nav-item(v-if="isNavbarItem(el)" :href="el.href" :active="el.active" v-on:click="onClick(el)") {{el.title}}
           // Dropdown Item
           b-nav-item-dropdown(v-if="isNavbarDropdown(el)"
             :href="el.href"
             :text="el.title"
-            v-on:click="onClick(el.event, el.eventParam)")
+            v-on:click="onClick(el)")
             b-dropdown-item(v-for="eld in el.elements"
               :href="eld.href"
-              v-on:click="onClick(eld.event, eld.eventParam)"
+              v-on:click="onClick(eld)"
               :key="eld.title"
               v-if="!eld.hide") {{eld.title}}
       // Right aligned nav items
       b-navbar-nav.ml-auto
         b-navbar-nav(v-for="el in elementsRight" :key="el.title" v-if="!el.hide")
-          b-nav-item(:href="el.href" v-on:click="onClick(el.event)") {{el.title}}
+          b-nav-item(:href="el.href" v-on:click="onClick(el)") {{el.title}}
 
         b-nav-item(v-if="helpUrl.length > 0" :href="helpUrl" target="_blank")
           b-icon-question-circle-fill
@@ -111,12 +111,12 @@ export default {
   methods   : {
     /**
      * Click handler for a menu
-     * @param event
-     * @param data
+     * @param element
      */
-    onClick: function (event, data) {
-      if (event) {
-        this.$emit(event, data);
+    onClick: function (element) {
+      console.log(element);
+      if (element.event) {
+        this.$emit(element.event, element.eventParam);
       }
     },
     /**
