@@ -16,13 +16,15 @@
         h1 Ferropoly Component Tests
       test-property-selector(v-if="panel==='propertySelector'")
       test-gambling-controls(v-if="panel==='gamblingControls'")
+      test-team-selector(v-if="panel==='teamSelector'")
 </template>
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
 import {getItem, setItem} from '../../common/lib/sessionStorage';
 import TestPropertySelector from './test-property-selector.vue';
-import TestGamblingControls from './test-gambling-controls.vue'
+import TestGamblingControls from './test-gambling-controls.vue';
+import TestTeamSelector from './test-team-selector.vue';
 
 // EASY START
 const defaultPanel = getItem('test-panel', 'top');
@@ -32,7 +34,8 @@ export default {
   components: {
     MenuBar,
     TestPropertySelector,
-    TestGamblingControls
+    TestGamblingControls,
+    TestTeamSelector
   },
   filters   : {},
   model     : {},
@@ -47,6 +50,7 @@ export default {
           elements: [
             {title: 'Property Selector', href: '#', event: 'panel-change', eventParam: 'propertySelector'},
             {title: 'Gambling Controls / Call Log', href: '#', event: 'panel-change', eventParam: 'gamblingControls'},
+            {title: 'Team Selector', href: '#', event: 'panel-change', eventParam: 'teamSelector'},
           ]
         },
       ],
