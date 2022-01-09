@@ -31,11 +31,14 @@ import {get} from 'lodash'
 import {formatDateTime} from '../../lib/formatters'
 
 export default {
-  name      : 'account-general',
+  name      : 'AccountGeneral',
+  components: {},
+  filters   : {formatDateTime},
+  model     : {},
   props     : {
     info: {
       type: Object,
-      default: {}
+      default: () => {return {};}
     },
     avatarUrl: {
       type: String,
@@ -45,7 +48,6 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
   computed  : {
 
   },
@@ -53,9 +55,7 @@ export default {
     getElement: function (e) {
       return get(this.info, e, '');
     }
-  },
-  components: {},
-  filters   : {formatDateTime}
+  }
 }
 </script>
 

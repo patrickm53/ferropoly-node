@@ -34,7 +34,10 @@ import {getUserInfo} from '../../adapters/userInfo'
 import {get} from 'lodash';
 
 export default {
-  name      : 'account-root',
+  name      : 'AccountRoot',
+  components: {MenuBar, AccountGeneral, AccountFacebook, AccountGoogle, AccountMicrosoft},
+  filters   : {},
+  model     : {},
   props     : {},
   data      : function () {
     return {
@@ -44,7 +47,17 @@ export default {
       errorMessage: ''
     };
   },
-  model     : {},
+  computed  : {
+    showGoogle() {
+      return get(this.userInfo, 'google.valid', false);
+    },
+    showFacebook() {
+      return get(this.userInfo, 'facebook.valid', false);
+    },
+    showMicrosoft() {
+      return get(this.userInfo, 'microsoft.valid', false);
+    }
+  },
   created   : function () {
     getUserInfo((err, info) => {
       if (err) {
@@ -63,25 +76,12 @@ export default {
       console.log(info);
     })
   },
-  computed  : {
-    showGoogle() {
-      return get(this.userInfo, 'google.valid', false);
-    },
-    showFacebook() {
-      return get(this.userInfo, 'facebook.valid', false);
-    },
-    showMicrosoft() {
-      return get(this.userInfo, 'microsoft.valid', false);
-    }
-  },
   methods   : {
     getElement: function (e, def) {
       let d = def || '';
       return get(this.userInfo, e, d);
     }
-  },
-  components: {MenuBar, AccountGeneral, AccountFacebook, AccountGoogle, AccountMicrosoft},
-  filters   : {}
+  }
 }
 </script>
 

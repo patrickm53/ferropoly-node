@@ -19,21 +19,27 @@
 import {get} from "lodash";
 
 export default {
-  name      : "account-google",
-  props     : {info: Object, default: {}},
+  name      : "AccountGoogle",
+  components: {},
+  filters   : {},
+  model     : {},
+  props: {
+    info: {
+      type: Object, default: () => {
+        return {};
+      }
+    }
+  },
   data      : function () {
     return {};
   },
-  model     : {},
   methods   : {
     getElement: function (e, def) {
       console.log(this.info);
       let d = def || '';
       return get(this.info, e, d);
     }
-  },
-  components: {},
-  filters   : {}
+  }
 }
 </script>
 
