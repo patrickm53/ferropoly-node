@@ -5,6 +5,7 @@
 -->
 <template lang="pug">
   b-container(fluid)
+    call-active-warning
     b-row
       b-col(sm="12" md="6")
         property-list(
@@ -22,10 +23,11 @@ import PropertyList from './property-list.vue';
 import PropertyInfo from './property-info.vue';
 import FerroCard from './../../../common/components/ferro-card/ferro-card.vue';
 import {mapFields} from 'vuex-map-fields';
+import CallActiveWarning from '../call-active-warning.vue';
 
 export default {
   name      : 'PropertiesRoot',
-  components: {FerroCard, PropertyInfo, PropertyList},
+  components: {FerroCard, PropertyInfo, PropertyList, CallActiveWarning},
   filters   : {},
   mixins    : [],
   model     : {},

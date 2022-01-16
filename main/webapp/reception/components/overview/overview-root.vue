@@ -1,7 +1,3 @@
-<!--
-  - Copyright (c) 2021 Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
-  -->
-
 <!---
   Root element of the overview
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
@@ -9,6 +5,7 @@
 -->
 <template lang="pug">
   b-container(fluid)
+    call-active-warning
     b-row
       b-col
         h1 Übersicht
@@ -24,9 +21,11 @@
 <script>
 import GameInfo from './gameInfo.vue';
 import RankingList from './rankingList.vue';
+import CallActiveWarning from '../call-active-warning.vue';
+
 export default {
   name: "OverviewRoot",
-  components: {GameInfo, RankingList},
+  components: {GameInfo, RankingList, CallActiveWarning},
   filters   : {},
   mixins    : [],
   model     : {},

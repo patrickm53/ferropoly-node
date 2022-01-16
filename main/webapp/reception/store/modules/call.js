@@ -4,22 +4,51 @@
  * Created: 12.12.21
  **/
 import {createHelpers} from 'vuex-map-fields';
-
+import {assign} from 'lodash';
 const {getCallField, updateCallField} = createHelpers({
-  getterType: 'getCallField',
+  getterType  : 'getCallField',
   mutationType: 'updateCallField'
 });
 
 const module = {
-  state: () => ({
-    currentTeam: undefined, // uuid of the team
-    callActive: false
+  state    : () => ({
+    currentTeam: {
+      color: 'purple',
+      uuid : 'none',
+      data : {
+        name: 'NONE'
+      }
+    },
+    callActive : false
   }),
-  getters: {
+  getters  : {
     getCallField,
   },
   mutations: {
     updateCallField
+  },
+  actions  : {
+    /**
+     * Resets all data in the module for a new call
+     * @param state
+     * @param options
+     */
+    initCall({state}, options) {
+      console.log('initating call', options);
+      state.callActive  = true;
+      assign(state.currentTeam, options.team);
+    },
+    finishCall({state}) {
+      console.log('finishing call');
+      state.callActive = false;
+      state.currentTeam = {
+        uuid : 'none',
+        color: 'pink',
+        data : {
+          name: 'noni'
+        }
+      };
+    }
   }
 
 };

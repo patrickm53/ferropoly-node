@@ -5,6 +5,7 @@
 -->
 <template lang="pug">
   b-container(fluid)
+    call-active-warning
     b-row
       b-col
         h1 Kontobuch
@@ -19,10 +20,10 @@
 
 import TeamTab from './team-tab.vue';
 import {mapFields} from 'vuex-map-fields';
-
+import CallActiveWarning from '../call-active-warning.vue';
 export default {
   name: "AccountingRoot",
-  components: {TeamTab},
+  components: {TeamTab, CallActiveWarning},
   filters   : {},
   mixins    : [],
   model     : {},

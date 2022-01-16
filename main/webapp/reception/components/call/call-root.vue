@@ -5,34 +5,53 @@
 -->
 <template lang="pug">
   b-container(fluid)
-    b-row(v-if="!callActive")
+    div(v-if="!callActive")
       h2 Bitte anrufendes Team auswählen
-      b-col(sm="3" v-for="team in teams" :key="team.uuid")
-        team-selector(:team="team", :team-color="team.color" @manage-call="manageCall" @viewTeam="viewTeam")
-    b-row(v-if="callActive")
-      h1 hello
+      b-row
+        b-col(sm="3" v-for="team in teams" :key="team.uuid")
+          team-selector(:team="team", :team-color="team.color" @manage-call="manageCall" @viewTeam="viewTeam")
+    div(v-if="callActive")
+      h2 {{teamName}}
+        font#color-tag(:style="cssVars")  &#9608;&#9608;
+      b-button.finish-call-button(@click="finishCall") Anruf beenden
+      ferro-nav(:elements="navBar")
+      div(v-if="navBar[0].active") NAV1
+      div(v-if="navBar[1].active") NAV2
+      div(v-if="navBar[2].active") NAV3
+
+
 
 </template>
 
 <script>
 import TeamSelector from './team-selector.vue';
+import FerroNav from '../../../common/components/ferro-nav/ferro-nav.vue';
+
 import {mapFields} from 'vuex-map-fields';
 import {getTeamColor} from '../../lib/teamLib';
+import {get} from 'lodash';
 
 export default {
   name      : 'CallRoot',
-  components: {TeamSelector},
+  components: {TeamSelector, FerroNav},
   filters   : {},
   mixins    : [],
   model     : {},
   props     : {},
   data      : function () {
-    return {};
+    return {
+      navBar : [
+        {title: 'Kaufen', active: true},
+        {title: 'Besitz', active: false},
+        {title: 'Log', active: false},
+      ]
+    };
   },
   computed  : {
     ...mapFields({
-      teamData  : 'teams.list',
-      callActive: 'call.callActive'
+      teamData   : 'teams.list',
+      callActive : 'call.callActive',
+      currentTeam: 'call.currentTeam'
     }),
     teams() {
       let self = this;
@@ -40,17 +59,27 @@ export default {
         self.teamData[i].color = getTeamColor(i);
       }
       return this.teamData;
+    },
+    teamName() {
+      return this.$store.getters.teamIdToTeamName(get(this.currentTeam, 'uuid', 'nobody'));
+    },
+    cssVars() {
+      return {
+        '--team-color': this.currentTeam.color
+      }
     }
   },
   created   : function () {
   },
   methods   : {
-    manageCall(team) {
-      console.log('Call active for', team);
-      this.callActive = true;
+    manageCall(info) {
+      this.$store.dispatch({type:'initCall', team: info.team});
     },
     viewTeam() {
       console.warn('Not implemented yet');
+    },
+    finishCall() {
+      this.$store.dispatch({type:'finishCall'});
     }
 
   }
@@ -58,5 +87,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#color-tag {
+  color: var(--team-color);
+  position : absolute;
+  right    : 25px;
+}
 
+.finish-call-button {
+  display  : inline-block;
+  position : absolute;
+  right    : 10px;
+}
 </style>
