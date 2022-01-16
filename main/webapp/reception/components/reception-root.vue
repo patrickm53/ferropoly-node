@@ -23,6 +23,7 @@
     chance-root(v-if="panel==='panel-chancellery'")
     properties-root(v-if="panel==='panel-properties'")
     rules-root(v-if="panel==='panel-rules'")
+    call-root(v-if="panel==='panel-call'")
 
 </template>
 
@@ -35,10 +36,11 @@ import AccountingRoot from './accounting/accounting-root.vue';
 import ChanceRoot from './chance/chance-root.vue';
 import PropertiesRoot from './properties/properties-root.vue';
 import RulesRoot from './rules/rules-root.vue';
+import CallRoot from './call/call-root.vue';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot, RulesRoot},
+  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot, RulesRoot, CallRoot},
   filters   : {},
   mixins    : [],
   model     : {},

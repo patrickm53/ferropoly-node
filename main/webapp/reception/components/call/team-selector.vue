@@ -17,7 +17,7 @@
       // Neither implemented nor tested yet:
       .team-members(v-if='team.data.members')
         | Teammitglieder:
-        .team-member(v-for="m in teams" :key="m")
+        .team-member(v-for="m in team.members" :key="m")
           .team-member-login {{m}}
     p
       b-button(v-if="gameActive" variant="primary" @click="onManageCall") Anruf bearbeiten
