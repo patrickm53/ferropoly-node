@@ -15,10 +15,10 @@
         font#color-tag(:style="cssVars")  &#9608;&#9608;
       b-button.finish-call-button(@click="finishCall") Anruf beenden
       ferro-nav(:elements="navBar")
-      div(v-if="navBar[0].active") NAV1
+      div(v-if="navBar[0].active")
+        nav-content-buy
       div(v-if="navBar[1].active") NAV2
       div(v-if="navBar[2].active") NAV3
-
 
 
 </template>
@@ -26,21 +26,21 @@
 <script>
 import TeamSelector from './team-selector.vue';
 import FerroNav from '../../../common/components/ferro-nav/ferro-nav.vue';
-
+import NavContentBuy from './nav-content-buy.vue';
 import {mapFields} from 'vuex-map-fields';
 import {getTeamColor} from '../../lib/teamLib';
 import {get} from 'lodash';
 
 export default {
   name      : 'CallRoot',
-  components: {TeamSelector, FerroNav},
+  components: {TeamSelector, FerroNav, NavContentBuy},
   filters   : {},
   mixins    : [],
   model     : {},
   props     : {},
   data      : function () {
     return {
-      navBar : [
+      navBar: [
         {title: 'Kaufen', active: true},
         {title: 'Besitz', active: false},
         {title: 'Log', active: false},
@@ -73,13 +73,13 @@ export default {
   },
   methods   : {
     manageCall(info) {
-      this.$store.dispatch({type:'initCall', team: info.team});
+      this.$store.dispatch({type: 'initCall', team: info.team});
     },
     viewTeam() {
       console.warn('Not implemented yet');
     },
     finishCall() {
-      this.$store.dispatch({type:'finishCall'});
+      this.$store.dispatch({type: 'finishCall'});
     }
 
   }
@@ -89,13 +89,13 @@ export default {
 <style lang="scss" scoped>
 #color-tag {
   color: var(--team-color);
-  position : absolute;
-  right    : 25px;
+  position: absolute;
+  right: 25px;
 }
 
 .finish-call-button {
-  display  : inline-block;
-  position : absolute;
-  right    : 10px;
+  display: inline-block;
+  position: absolute;
+  right: 10px;
 }
 </style>
