@@ -74,6 +74,7 @@ export default {
   methods   : {
     manageCall(info) {
       this.$store.dispatch({type: 'initCall', team: info.team});
+      this.$store.dispatch({type: 'logInfo',  msg: 'Start Anrufbehandlung'});
     },
     viewTeam() {
       console.warn('Not implemented yet');

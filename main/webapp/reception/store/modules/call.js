@@ -5,6 +5,8 @@
  **/
 import {createHelpers} from 'vuex-map-fields';
 import {assign} from 'lodash';
+import {DateTime} from 'luxon';
+
 const {getCallField, updateCallField} = createHelpers({
   getterType  : 'getCallField',
   mutationType: 'updateCallField'
@@ -19,7 +21,8 @@ const module = {
         name: 'NONE'
       }
     },
-    callActive : false
+    callActive : false,
+    log        : []
   }),
   getters  : {
     getCallField,
@@ -35,12 +38,16 @@ const module = {
      */
     initCall({state}, options) {
       console.log('initating call', options);
-      state.callActive  = true;
+      state.callActive = true;
       assign(state.currentTeam, options.team);
     },
+    /**
+     * Finishes a call
+     * @param state
+     */
     finishCall({state}) {
       console.log('finishing call');
-      state.callActive = false;
+      state.callActive  = false;
       state.currentTeam = {
         uuid : 'none',
         color: 'pink',
@@ -48,7 +55,39 @@ const module = {
           name: 'noni'
         }
       };
-    }
+    },
+    /**
+     * Logs an error in a call
+     * @param state
+     * @param options
+     */
+    logFail({state}, options) {
+      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title:options.title, _rowVariant: 'danger'};
+      console.log('error message', info);
+      state.log.push(info);
+    },
+    /**
+     * Logs an info
+     * @param state
+     * @param options
+     */
+    logInfo({state}, options) {
+      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title:options.title};
+      console.log('info message', info);
+      state.log.push(info);
+    },
+    /**
+     * Logs a success
+     * @param state
+     * @param options
+     */
+    logSuccess({state}, options) {
+      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title:options.title, _rowVariant: 'success'};
+      console.log('success message', info);
+      state.log.push(info);
+    },
+
+
   }
 
 };

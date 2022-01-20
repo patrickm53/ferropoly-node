@@ -89,7 +89,7 @@ router.post('/gamble/:gameId/:teamId', function (req, res) {
   if (!req.body.authToken) {
     return res.status(401).send({message: 'Permission denied (1)'});
   }
-  if (req.body.authToken !== req.session.ferropolyToken) {
+  if (req.body.authToken !== req.session.authToken) {
     return res.status(401).send({message: 'Permission denied (2)'});
   }
   if (!req.params.gameId || !req.params.teamId || !req.body.amount) {

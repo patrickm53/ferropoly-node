@@ -17,7 +17,7 @@ router.post('/buildHouses/:gameId/:teamId', function (req, res) {
   if (!req.body.authToken) {
     return res.status(403).send({message: 'No auth token'});
   }
-  if (req.body.authToken !== req.session.ferropolyToken) {
+  if (req.body.authToken !== req.session.authToken) {
     return res.status(403).send({message: 'No access granted'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
@@ -41,7 +41,7 @@ router.post('/buildHouse/:gameId/:teamId/:propertyId', function (req, res) {
   if (!req.body.authToken) {
     return res.status(403).send({message: 'No auth token'});
   }
-  if (req.body.authToken !== req.session.ferropolyToken) {
+  if (req.body.authToken !== req.session.authToken) {
     return res.status(403).send({message: 'No access granted'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
@@ -66,7 +66,7 @@ router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
   if (!req.body.authToken) {
     return res.status(403).send({message: 'No auth token'});
   }
-  if (req.body.authToken !== req.session.ferropolyToken) {
+  if (req.body.authToken !== req.session.authToken) {
     return res.status(403).send({message: 'No access granted'});
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {

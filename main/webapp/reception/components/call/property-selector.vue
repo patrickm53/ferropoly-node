@@ -7,7 +7,11 @@
   div
     b-form-group.mb-0
       b-input-group(size='sm')
-        b-form-input#filter-input(v-model='filter' type='search' placeholder='Zürich Paradeplatz')
+        b-form-input#filter-input(
+          v-model='filter'
+          type='search'
+          placeholder='Zürich Paradeplatz'
+          :disabled="disabled")
         b-input-group-append
           b-button(:disabled='!filter' @click="filter = ''") Löschen
     b-table(
@@ -20,7 +24,7 @@
       sort-by="location.name"
     )
       template(#cell(uuid)="row")
-        b-button(size="sm" @click="buyProperty(row.value)") kaufen
+        b-button(size="sm" @click="buyProperty(row.value)" :disabled="disabled") kaufen
 
 
 </template>
@@ -43,6 +47,12 @@ export default {
       type   : String,
       default: () => {
         return '10'
+      }
+    },
+    disabled : {
+      type: Boolean,
+      default: () => {
+        return false;
       }
     }
   },

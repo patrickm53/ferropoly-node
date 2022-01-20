@@ -37,6 +37,7 @@ import ChanceRoot from './chance/chance-root.vue';
 import PropertiesRoot from './properties/properties-root.vue';
 import RulesRoot from './rules/rules-root.vue';
 import CallRoot from './call/call-root.vue';
+import {getAuthToken} from '../../common/adapter/authToken';
 
 export default {
   name      : 'ReceptionRoot',
@@ -74,7 +75,8 @@ export default {
       'panel',
       'online',
       'gameplay.owner.organisatorName',
-      'api.error'
+      'api.error',
+      'authToken'
     ]),
     apiErrorActive: {
       get() {
@@ -98,7 +100,14 @@ export default {
     }
   },
   created   : function () {
-
+    getAuthToken((err, token) => {
+      if (err) {
+        console.error('Auth Token error', err);
+        return;
+      }
+      console.log('AuthToken retrieved', token);
+      this.authToken = token;
+    })
   },
   methods   : {
     /**

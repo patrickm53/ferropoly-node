@@ -14,7 +14,10 @@
       thead-class="d-none"
       )
       template(#cell(ts)="data") {{data.item.ts | formatTime}}
-  
+      template(#cell(message)="data")
+        b(v-if="data.item.title") {{data.item.title}}:&nbsp;
+        span {{data.item.message}}
+
 </template>
 
 <script>
@@ -26,30 +29,41 @@ export default {
   filters   : {formatTime},
   mixins    : [],
   model     : {},
-  props     : {},
+  props     : {
+    logEntries: {
+      type: Array,
+      default: ()=>{
+        return [];
+      }
+    }
+  },
   data      : function () {
     return {
-      log: [],
+      logList: [],
       fields: [
         {key: 'ts', sortable: true, tdClass: 'ts-row'},
         {key: 'message'}
       ]
     };
   },
-  computed  : {},
+  computed  : {
+    log() {
+      return this.logEntries || this.logList;
+    }
+  },
   created   : function () {
   },
   methods   : {
     pushErrorMessage(msg) {
-      let info = {ts: DateTime.now().toISOTime(), message: msg, _rowVariant: 'danger'};
+      let info = {ts: DateTime.now().toISOTime(), title:'Fehler', message: msg, _rowVariant: 'danger'};
       console.log('error message', info);
-      this.log.push(info);
+      this.logList.push(info);
     },
     pushInfoMessage(msg) {
-      this.log.push({ts: DateTime.now().toISOTime(), message: msg});
+      this.logList.push({ts: DateTime.now().toISOTime(), message: msg});
     },
     pushSuccessMessage(msg) {
-      this.log.push({ts: DateTime.now().toISOTime(), message: msg, _rowVariant: 'success'});
+      this.logList.push({ts: DateTime.now().toISOTime(), title:'Erfolg', message: msg, _rowVariant: 'success'});
     }
   }
 }

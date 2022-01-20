@@ -19,6 +19,16 @@ const module = {
   },
   mutations: {
     updateTravelLogField
+  },
+  actions: {
+    /**
+     * Updates the travel log for one team
+     * @param state
+     * @param options
+     */
+    updateTravelLog({state}, options) {
+      console.warn('TravelLog is not implemented yet');
+    },
   }
 
 };

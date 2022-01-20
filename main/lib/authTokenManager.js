@@ -34,20 +34,20 @@ function getToken(user, callback) {
 
 module.exports = {
   /**
-   * Generate a new token
-   * @param user
+   * Generate a new token (or uses the proposed one)
+   * @param options
    * @param callback
    */
-  getNewToken: function (user, callback) {
-    getToken(user, function (err, token) {
+  getNewToken: function (options, callback) {
+    getToken(options.user, function (err, token) {
       if (err) {
         return callback(err);
       }
       if (!token) {
         token = new Token();
       }
-      token.id    = uuid();
-      token.login = user;
+      token.id    = options.proposedToken || uuid();
+      token.login = options.user;
       token.save(function (err) {
         callback(err, token.id);
       });

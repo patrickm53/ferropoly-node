@@ -59,11 +59,11 @@ router.get('/:gameId', function (req, res) {
           return errorHandler(res, 'Die Preisliste ist leer.', new Error('Empty pricelist'), 500);
         }
 
-        authTokenManager.getNewToken(req.session.passport.user, function (err, token) {
+        authTokenManager.getNewToken({user: req.session.passport.user, proposedToken: req.session.authToken}, function (err, token) {
           if (err) {
             return errorHandler(res, 'Interner Fehler beim Erstellen des Tokens.', err, 500);
           }
-          req.session.ferropolyToken = token;
+          req.session.authToken = token;
 
           res.render('checkin/checkin', {
             title        : 'Ferropoly',
