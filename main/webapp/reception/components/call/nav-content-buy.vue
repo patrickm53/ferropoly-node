@@ -1,31 +1,34 @@
 <!---
-
+  The navigation Tab with all buying / gambling in it
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 18.01.22
 -->
 <template lang="pug">
   div
-    b-row
+    b-row.mt-1
       b-col(sm="6")
         ferro-card(title="Liegenschaft kaufen" size="sm")
-          property-selector(
+          property-selector#prop-selector(
+            ref="propSelector"
             :properties="properties"
-            per-page="8"
-            @buy-property="onPropertyBought"
+            per-page="40"
+            @buy-property="onBuyProperty"
             :disabled="buyingPropertyActive")
       b-col(sm="6")
         b-row
           b-col(sm="6")
             ferro-card(title="Häuserbau" size="sm")
-              b-button Überall Häuser bauen
-              p Zur Besitzliste um einzelne Häuser zu bauen
+              #building
+                b-button Überall Häuser bauen
+                p Zur Besitzliste um einzelne Häuser zu bauen
           b-col(sm="6")
             ferro-card(title="Gambling" size="sm")
-              gambling-controls
+              #gambling
+                gambling-controls
         b-row
           b-col(sm="12")
             ferro-card(title="Anruf-Log" size="sm")
-              call-log(:log-entries="log")
+              call-log#log(:log-entries="log" ref="logCard")
 
 </template>
 
@@ -36,8 +39,9 @@ import GamblingControls from './gambling-controls.vue';
 import CallLog from './call-log.vue';
 import {mapFields} from 'vuex-map-fields';
 import axios from 'axios';
-import {get} from 'lodash';
+import {get, max} from 'lodash';
 import {formatPrice} from '../../../common/lib/formatters';
+import $ from 'jquery';
 
 export default {
   name      : 'NavContentBuy',
@@ -60,10 +64,22 @@ export default {
       log: 'call.log'
     }),
   },
+  mounted: function () {
+    this.resizeHandler();
+  },
   created   : function () {
+    window.addEventListener('resize', this.resizeHandler);
+    this.resizeHandler();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.resizeHandler);
   },
   methods   : {
-    onPropertyBought(p) {
+    /**
+     * Event when a property shall be bought
+     * @param p
+     */
+    onBuyProperty(p) {
       this.buyingPropertyActive = true;
       console.log(`Buy ${p.uuid}`);
       axios.post(`/marketplace/buyProperty/${this.gameId}/${this.teamUuid}/${p.uuid}`,
@@ -106,7 +122,42 @@ export default {
           .finally(() => {
             this.buyingPropertyActive = false;
           })
-    }
+    },
+    /**
+     * Creates the maximum Size of the control boxes
+     */
+    resizeHandler() {
+      // Property Selector
+      let element       = $('#prop-selector');
+      let hDoc          = $(window).height();
+      let offsetElement = element.offset();
+      if (offsetElement) {
+        element.height(hDoc - offsetElement.top - 20);
+      }
+
+      // The two cards close each other: same size
+      let buildingCard = $('#building');
+      let gamblingCard = $('#gambling');
+      let cardHeight = max([buildingCard.height(), gamblingCard.height()]);
+      buildingCard.height(cardHeight);
+      gamblingCard.height(cardHeight);
+
+      // Log takes the rest
+      let logCard       = $('#log');
+      let logCardOffset = logCard.offset();
+      if (logCardOffset) {
+        logCard.height(hDoc - logCardOffset.top - 20);
+      }
+      if (this.$refs.propSelector) {
+        // only here after rendering!
+        this.$refs.propSelector.resizeHandler();
+      }
+      if (this.$refs.logCard) {
+        // only here after rendering!
+        this.$refs.logCard.resizeHandler();
+      }
+      console.log('resizer', cardHeight, logCardOffset);
+    },
   }
 }
 </script>

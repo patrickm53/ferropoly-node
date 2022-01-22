@@ -5,24 +5,26 @@
 -->
 <template lang="pug">
   div
-    b-table(
-      :items="log"
-      :fields="fields"
-      small
-      sort-by="ts"
-      sort-desc
-      thead-class="d-none"
-      )
-      template(#cell(ts)="data") {{data.item.ts | formatTime}}
-      template(#cell(message)="data")
-        b(v-if="data.item.title") {{data.item.title}}:&nbsp;
-        span {{data.item.message}}
+    #log-list
+      b-table(
+        :items="log"
+        :fields="fields"
+        small
+        sort-by="ts"
+        sort-desc
+        thead-class="d-none"
+        )
+        template(#cell(ts)="data") {{data.item.ts | formatTime}}
+        template(#cell(message)="data")
+          b(v-if="data.item.title") {{data.item.title}}:&nbsp;
+          span {{data.item.message}}
 
 </template>
 
 <script>
 import { DateTime } from "luxon";
 import {formatTime} from '../../../common/lib/formatters';
+import $ from 'jquery';
 export default {
   name: "CallLog",
   components: {},
@@ -51,7 +53,11 @@ export default {
       return this.logEntries || this.logList;
     }
   },
+  mounted   : function () {
+    this.resizeHandler();
+  },
   created   : function () {
+    this.resizeHandler();
   },
   methods   : {
     pushErrorMessage(msg) {
@@ -64,7 +70,21 @@ export default {
     },
     pushSuccessMessage(msg) {
       this.logList.push({ts: DateTime.now().toISOTime(), title:'Erfolg', message: msg, _rowVariant: 'success'});
-    }
+    },
+    /**
+     * Creates the maximum Size of the list
+     */
+    resizeHandler() {
+      let element       = $('#log-list');
+      let parent        = $('#log');
+      let parentHeight  = parent.height();
+      let parentOffset  = parent.offset();
+      let offsetElement = element.offset();
+      console.log('rhd', parentHeight, offsetElement, parentOffset);
+      if (offsetElement && parentOffset) {
+        element.height(parentHeight - (offsetElement.top - parentOffset.top));
+      }
+    },
   }
 }
 </script>
@@ -73,5 +93,10 @@ export default {
 .ts-row {
   max-width: 10%;
   color: pink;
+}
+
+#log-list {
+  overflow: auto;
+  height: 200px;
 }
 </style>
