@@ -24,7 +24,13 @@
           b-col(sm="6")
             ferro-card(title="Gambling" size="sm")
               #gambling
-                gambling-controls
+                gambling-controls(
+                  :min="gamblingMin"
+                  :max="gamblingMax"
+                  @win="onGamblingWin"
+                  @loose="onGamblingLoose"
+                  :disabled="gamblingActive"
+                )
         b-row
           b-col(sm="12")
             ferro-card(title="Anruf-Log" size="sm")
@@ -52,19 +58,28 @@ export default {
   props     : {},
   data      : function () {
     return {
-      buyingPropertyActive: false
+      buyingPropertyActive: false,
+      gamblingActive      : false
     };
   },
   computed  : {
     ...mapFields({
-      properties: 'properties.list',
-      gameId    : 'gameId',
-      teamUuid  : 'call.currentTeam.uuid',
-      authToken : 'authToken',
-      log: 'call.log'
+      properties    : 'properties.list',
+      gameId        : 'gameId',
+      teamUuid      : 'call.currentTeam.uuid',
+      authToken     : 'authToken',
+      gamblingMinVal: 'gameplay.gameParams.chancellery.minLottery',
+      gamblingMaxVal: 'gameplay.gameParams.chancellery.maxLottery',
+      log           : 'call.log'
     }),
+    gamblingMin() {
+      return this.gamblingMinVal.toString();
+    },
+    gamblingMax() {
+      return this.gamblingMaxVal.toString();
+    }
   },
-  mounted: function () {
+  mounted   : function () {
     this.resizeHandler();
   },
   created   : function () {
@@ -74,7 +89,7 @@ export default {
   destroyed() {
     window.removeEventListener('resize', this.resizeHandler);
   },
-  methods   : {
+  methods: {
     /**
      * Event when a property shall be bought
      * @param p
@@ -106,7 +121,7 @@ export default {
                 msg : `Grundstück gekauft, Preis: ${formatPrice(res.amount)}`
               });
             }
-            this.$store.dispatch({type:'updateTravelLog', teamUuid: this.teamUuid});
+            this.$store.dispatch({type: 'updateTravelLog', teamUuid: this.teamUuid});
           })
           .catch(err => {
             console.error(err);
@@ -114,9 +129,9 @@ export default {
             errorText += ': ' + get(err, 'response.data.message', 'Allgemeiner Fehler');
             console.error(errorText);
             this.$store.dispatch({
-              type: 'logFail',
+              type : 'logFail',
               title: 'Programmfehler',
-              msg : errorText
+              msg  : errorText
             });
           })
           .finally(() => {
@@ -138,7 +153,7 @@ export default {
       // The two cards close each other: same size
       let buildingCard = $('#building');
       let gamblingCard = $('#gambling');
-      let cardHeight = max([buildingCard.height(), gamblingCard.height()]);
+      let cardHeight   = max([buildingCard.height(), gamblingCard.height()]);
       buildingCard.height(cardHeight);
       gamblingCard.height(cardHeight);
 
@@ -158,6 +173,55 @@ export default {
       }
       console.log('resizer', cardHeight, logCardOffset);
     },
+    onGamblingWin(v) {
+      console.log('we have a winner');
+      this.gamble(parseInt(v));
+    },
+    onGamblingLoose(v) {
+      console.log('we have a looser');
+      this.gamble(parseInt(v) * -1);
+    },
+    /**
+     * Runs the gambling route
+     * @param amount
+     */
+    gamble(amount) {
+      console.log(`Gambling ${amount}`);
+      this.gamblingActive = true;
+      axios.post(`/chancellery/gamble/${this.gameId}/${this.teamUuid}`,
+          {
+            authToken: this.authToken,
+            amount   : amount
+          })
+          .then(resp => {
+            let res      = resp.data.result;
+            let logEntry = {
+              title: res.infoText,
+              msg  : formatPrice(res.amount)
+            }
+            if (res.amount < 0) {
+              logEntry.type = 'logFail';
+            } else {
+              logEntry.type = 'logSuccess';
+            }
+            this.$store.dispatch(logEntry);
+          })
+          .catch(err => {
+            console.error(err);
+            let errorText = get(err, 'message', 'Fehler /chancellery/gamble');
+            errorText += ': ' + get(err, 'response.data.message', 'Allgemeiner Fehler');
+            console.error(errorText);
+            this.$store.dispatch({
+              type : 'logFail',
+              title: 'Programmfehler',
+              msg  : errorText
+            });
+          })
+          .finally(() => {
+            this.gamblingActive = false;
+          })
+    }
+
   }
 }
 </script>

@@ -15,8 +15,8 @@
         :max="max"
       )
       b-input-group-append
-        b-button(variant="success" @click="onWinning") Gewinn
-        b-button(variant="danger" @click="onLoosing") Verlust
+        b-button(variant="success" @click="onWinning" :disabled="disabled") Gewinn
+        b-button(variant="danger" @click="onLoosing" :disabled="disabled") Verlust
 
 </template>
 
@@ -28,13 +28,23 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    min: {
-      type: String,
-      default: '1'
+    min     : {
+      type   : String,
+      default: () => {
+        return '1';
+      }
     },
-    max: {
-      type: String,
-      default: '5000'
+    max     : {
+      type   : String,
+      default: () => {
+        return '5000';
+      }
+    },
+    disabled: {
+      type: Boolean,
+      default : () => {
+        return false;
+      }
     }
   },
   data      : function () {

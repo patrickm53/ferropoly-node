@@ -48,6 +48,7 @@ const module = {
     finishCall({state}) {
       console.log('finishing call');
       state.callActive  = false;
+      state.log         = [];
       state.currentTeam = {
         uuid : 'none',
         color: 'pink',
@@ -62,7 +63,7 @@ const module = {
      * @param options
      */
     logFail({state}, options) {
-      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title:options.title, _rowVariant: 'danger'};
+      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title: options.title, _rowVariant: 'danger'};
       console.log('error message', info);
       state.log.push(info);
     },
@@ -72,7 +73,7 @@ const module = {
      * @param options
      */
     logInfo({state}, options) {
-      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title:options.title};
+      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title: options.title};
       console.log('info message', info);
       state.log.push(info);
     },
@@ -82,7 +83,7 @@ const module = {
      * @param options
      */
     logSuccess({state}, options) {
-      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title:options.title, _rowVariant: 'success'};
+      let info = {ts: DateTime.now().toISOTime(), message: options.msg, title: options.title, _rowVariant: 'success'};
       console.log('success message', info);
       state.log.push(info);
     },
