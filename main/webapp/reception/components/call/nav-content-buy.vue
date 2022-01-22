@@ -19,7 +19,7 @@
           b-col(sm="6")
             ferro-card(title="Häuserbau" size="sm")
               #building
-                b-button Überall Häuser bauen
+                b-button(@click="buildHouses" :disabled="buildingHousesActive") Überall Häuser bauen
                 p Zur Besitzliste um einzelne Häuser zu bauen
           b-col(sm="6")
             ferro-card(title="Gambling" size="sm")
@@ -59,7 +59,8 @@ export default {
   data      : function () {
     return {
       buyingPropertyActive: false,
-      gamblingActive      : false
+      gamblingActive      : false,
+      buildingHousesActive: false
     };
   },
   computed  : {
@@ -220,8 +221,47 @@ export default {
           .finally(() => {
             this.gamblingActive = false;
           })
+    },
+    /** Build houses everywhere */
+    buildHouses() {
+      console.log(`Building houses`);
+      this.buildingHousesActive = true;
+      axios.post(`/marketplace/buildHouses/${this.gameId}/${this.teamUuid}`,
+          {
+            authToken: this.authToken
+          })
+          .then(resp => {
+            let res      = resp.data.result;
+            let logEntry = {
+              title: 'Hausbau',
+              msg  : ''
+            }
+            if (res.amount === 0) {
+              logEntry.msg  = 'Es konnten keine Häuser gebaut werden';
+              logEntry.type = 'logInfo';
+            } else {
+              logEntry.msg = `Belastung: ${formatPrice(res.amount)}, Gebaute Häuser: `;
+              res.log.forEach(e => {
+                logEntry.msg += `${e.propertyName} (${e.buildingNb} / ${formatPrice(e.amount)}) `;
+              })
+              logEntry.type = 'logSuccess';
+            }
+            this.$store.dispatch(logEntry);
+          })
+          .catch(err => {
+            let errorText = get(err, 'message', 'Fehler /marketplace/buildHouses');
+            errorText += ': ' + get(err, 'response.data.message', 'Allgemeiner Fehler');
+            console.error(err, errorText);
+            this.$store.dispatch({
+              type : 'logFail',
+              title: 'Programmfehler',
+              msg  : errorText
+            });
+          })
+          .finally(() => {
+            this.buildingHousesActive = false;
+          })
     }
-
   }
 }
 </script>
