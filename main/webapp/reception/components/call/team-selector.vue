@@ -15,7 +15,7 @@
         a(:href="'mailto:' + team.data.teamLeader.email") {{team.data.teamLeader.email}}
       .team-leader-remarks {{team.data.remarks}}
       // Neither implemented nor tested yet:
-      .team-members(v-if='team.data.members')
+      //.team-members(v-if='team.data.members')
         | Teammitglieder:
         .team-member(v-for="m in team.members" :key="m")
           .team-member-login {{m}}
