@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import GamblingControls from '../../reception/components/call/gambling-controls.vue';
-import CallLog from '../../reception/components/call/call-log.vue';
+import GamblingControls from '../../reception/components/call/buy-tab/gambling-controls.vue';
+import CallLog from '../../reception/components/call/buy-tab/call-log.vue';
 
 export default {
   name: "TestGamblingControls",

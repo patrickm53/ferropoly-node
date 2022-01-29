@@ -39,14 +39,14 @@
 </template>
 
 <script>
-import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
+import FerroCard from '../../../../common/components/ferro-card/ferro-card.vue';
 import PropertySelector from './property-selector.vue';
 import GamblingControls from './gambling-controls.vue';
 import CallLog from './call-log.vue';
 import {mapFields} from 'vuex-map-fields';
 import axios from 'axios';
 import {get, max} from 'lodash';
-import {formatPrice} from '../../../common/lib/formatters';
+import {formatPrice} from '../../../../common/lib/formatters';
 import $ from 'jquery';
 
 export default {

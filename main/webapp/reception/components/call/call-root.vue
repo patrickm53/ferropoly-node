@@ -26,7 +26,7 @@
 <script>
 import TeamSelector from './team-selector.vue';
 import FerroNav from '../../../common/components/ferro-nav/ferro-nav.vue';
-import NavContentBuy from './nav-content-buy.vue';
+import NavContentBuy from './buy-tab/nav-content-buy.vue';
 import {mapFields} from 'vuex-map-fields';
 import {getTeamColor} from '../../lib/teamLib';
 import {get} from 'lodash';

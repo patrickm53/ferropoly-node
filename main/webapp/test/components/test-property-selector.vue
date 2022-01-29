@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import PropertySelector from '../../reception/components/call/property-selector.vue'
+import PropertySelector from '../../reception/components/call/buy-tab/property-selector.vue'
 import {getProperties} from '../fixtures/properties';
 
 export default {

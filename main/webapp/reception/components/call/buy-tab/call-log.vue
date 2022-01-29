@@ -23,7 +23,7 @@
 
 <script>
 import { DateTime } from "luxon";
-import {formatTime} from '../../../common/lib/formatters';
+import {formatTime} from '../../../../common/lib/formatters';
 import $ from 'jquery';
 export default {
   name: "CallLog",
