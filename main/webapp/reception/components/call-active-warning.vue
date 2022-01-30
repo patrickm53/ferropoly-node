@@ -24,8 +24,7 @@ export default {
   },
   computed  : {
     ...mapFields({
-      callActive: 'call.callActive',
-      panel     : 'panel'
+      callActive: 'call.callActive'
     }),
   },
   created   : function () {
@@ -36,8 +35,8 @@ export default {
      * solution
      */
     onClick() {
-      console.log('switching panel');
-      this.panel = 'panel-call';
+      console.log('switching panel to call');
+      this.$store.commit('setPanel', 'panel-call');
     }
   }
 }

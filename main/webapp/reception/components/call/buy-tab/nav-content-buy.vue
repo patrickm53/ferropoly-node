@@ -172,7 +172,6 @@ export default {
         // only here after rendering!
         this.$refs.logCard.resizeHandler();
       }
-      console.log('resizer', cardHeight, logCardOffset);
     },
     onGamblingWin(v) {
       console.log('we have a winner');

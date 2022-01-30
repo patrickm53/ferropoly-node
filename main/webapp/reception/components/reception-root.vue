@@ -48,17 +48,7 @@ export default {
   props     : {},
   data      : function () {
     return {
-      menuElements: [
-        {title: 'Übersicht', href: '#', event: 'panel-change', eventParam: 'panel-overview', active: true},
-        {title: 'Anruf behandeln', href: '#', event: 'panel-change', eventParam: 'panel-call', active: false},
-        {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map', active: false},
-        {title: 'Statistik', href: '#', event: 'panel-change', eventParam: 'panel-statistic', active: false},
-        {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting', active: false},
-        {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chancellery', active: false},
-        {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-properties', active: false},
-        {title: 'Spielregeln', href: '#', event: 'panel-change', eventParam: 'panel-rules', active: false}
-      ],
-      helpUrls    : {
+      helpUrls: {
         'panel-overview'   : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
         'panel-call'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
         'panel-map'        : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
@@ -72,6 +62,7 @@ export default {
   },
   computed  : {
     ...mapFields([
+      'menuElements',
       'panel',
       'online',
       'gameplay.owner.organisatorName',
@@ -116,10 +107,7 @@ export default {
      */
     onPanelChange(panel) {
       console.log('onPanelChange', panel);
-      this.panel = panel;
-      this.menuElements.forEach(e => {
-        e.active = (e.eventParam === panel);
-      });
+      this.$store.commit('setPanel', panel);
     }
   }
 }

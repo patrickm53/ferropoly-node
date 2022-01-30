@@ -80,7 +80,6 @@ export default {
       let parentHeight  = parent.height();
       let parentOffset  = parent.offset();
       let offsetElement = element.offset();
-      console.log('rhd', parentHeight, offsetElement, parentOffset);
       if (offsetElement && parentOffset) {
         element.height(parentHeight - (offsetElement.top - parentOffset.top));
       }

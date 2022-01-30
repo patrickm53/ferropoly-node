@@ -41,6 +41,16 @@ const store = new Vuex.Store({
   state    : {
     gameDataLoaded: false, // becomes true when static data was loaded
     panel         : 'panel-overview', // panel displayed
+    menuElements  : [
+      {title: 'Übersicht', href: '#', event: 'panel-change', eventParam: 'panel-overview', active: true},
+      {title: 'Anruf behandeln', href: '#', event: 'panel-change', eventParam: 'panel-call', active: false},
+      {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map', active: false},
+      {title: 'Statistik', href: '#', event: 'panel-change', eventParam: 'panel-statistic', active: false},
+      {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting', active: false},
+      {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chancellery', active: false},
+      {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-properties', active: false},
+      {title: 'Spielregeln', href: '#', event: 'panel-change', eventParam: 'panel-rules', active: false}
+    ],
     gameId        : 'none',
     authToken     : 'none',
     socketUrl     : '/none',
@@ -67,6 +77,13 @@ const store = new Vuex.Store({
     // socket.io connection has gone
     disconnected(state) {
       state.online = false;
+    },
+    setPanel(state, panel) {
+      console.log('changing Panel', panel);
+      state.menuElements.forEach(e => {
+        e.active = (e.eventParam === panel);
+      })
+      state.panel = panel;
     }
   },
   actions  : {
