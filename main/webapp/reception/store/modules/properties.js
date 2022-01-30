@@ -25,7 +25,7 @@ const module = {
      */
     getPropertyById: (state) => (id) => {
       return find(state.list, {uuid: id});
-    },
+    }
   },
   mutations: {
     updatePricelistField

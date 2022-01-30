@@ -11,6 +11,7 @@
     :items="properties"
       :fields="fields"
       responsive="sm"
+      sort-icon-left
       @row-clicked="onRowClicked")
       // eslint-disable-next-line vue/valid-v-slot
       template(#cell(pricelist.position)="data") {{data.item.pricelist.position + 1}}

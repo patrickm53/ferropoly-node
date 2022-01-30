@@ -367,6 +367,10 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
       return callback(err);
     }
 
+    if (!property) {
+      return callback(new Error(`Property ${propertyId} for ${teamId} in ${gameId} not found`));
+    }
+
     if (property.gamedata.owner !== teamId) {
       marketLog(gameId, 'Property ' + property.location.name + ' does not belong this team, building not allowed');
       return callback(new Error('Team does not possess this property'));
