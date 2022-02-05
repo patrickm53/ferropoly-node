@@ -6,7 +6,7 @@
 import {createHelpers} from 'vuex-map-fields';
 import {find, findIndex, get, assign} from 'lodash';
 import axios from 'axios';
-
+import GameProperty from '../../../lib/gameProperty';
 const {getPricelistField, updatePricelistField} = createHelpers({
   getterType  : 'getPricelistField',
   mutationType: 'updatePricelistField'
@@ -39,7 +39,7 @@ const module = {
      * @param options
      */
     updatePropertyInPricelist({state, commit, rootState}, options) {
-      let property = get(options, 'property', null);
+      let property = new GameProperty(get(options, 'property', null));
       console.log('updatePropertyInPricelist', property, options.property);
       if (property && property.uuid) {
         let i = findIndex(state.list, {uuid: property.uuid});
@@ -62,12 +62,13 @@ const module = {
       axios.get(`/properties/get/${rootState.gameId}/${teamId}`)
         .then(resp => {
           resp.data.properties.forEach(p => {
-            let i = findIndex(state.list, {uuid: p.uuid});
+            let property = new GameProperty(p);
+            let i = findIndex(state.list, {uuid: property.uuid});
             if (i > -1) {
-              assign(state.list[i], p);
-              state.list[i] = p;
+              assign(state.list[i], property);
+              state.list[i] = property;
             } else {
-              console.error('Did not find property', p);
+              console.error('Did not find property', property);
             }
           });
           console.log('Properties read', resp.data, state.list);

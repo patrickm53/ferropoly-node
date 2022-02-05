@@ -16,6 +16,8 @@ import teams from './modules/teams';
 import travelLog from './modules/travelLog';
 import chancellery from './modules/chancellery';
 import call from './modules/call';
+import map from './modules/map';
+import GameProperty from '../../lib/gameProperty';
 
 Vue.use(Vuex);
 
@@ -64,7 +66,7 @@ const store = new Vuex.Store({
       requestPending: false
     }
   },
-  modules  : {gameplay, properties, propertyAccount, rankingList, teamAccount, teams, travelLog, chancellery, call},
+  modules  : {gameplay, properties, propertyAccount, rankingList, teamAccount, teams, travelLog, chancellery, call, map},
   getters  : {
     getField
   },
@@ -119,8 +121,9 @@ const store = new Vuex.Store({
         i++;
       });
       // Properties
-      state.properties.list = options.data.pricelist;
-
+      options.data.pricelist.forEach(p => {
+        state.properties.list.push(new GameProperty(p));
+      })
       state.gameDataLoaded = true;
     },
     /**

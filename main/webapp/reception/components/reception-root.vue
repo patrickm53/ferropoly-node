@@ -24,6 +24,7 @@
     properties-root(v-if="panel==='panel-properties'")
     rules-root(v-if="panel==='panel-rules'")
     call-root(v-if="panel==='panel-call'")
+    map-root(v-if="panel==='panel-map'")
 
 </template>
 
@@ -37,11 +38,13 @@ import ChanceRoot from './chance/chance-root.vue';
 import PropertiesRoot from './properties/properties-root.vue';
 import RulesRoot from './rules/rules-root.vue';
 import CallRoot from './call/call-root.vue';
+import MapRoot from './map/map-root.vue';
+
 import {getAuthToken} from '../../common/adapter/authToken';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot, RulesRoot, CallRoot},
+  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot, RulesRoot, CallRoot, MapRoot},
   filters   : {},
   mixins    : [],
   model     : {},
