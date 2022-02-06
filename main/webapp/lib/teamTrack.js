@@ -51,18 +51,25 @@ class TeamTrack {
    * Clear the complete track
    */
   clear() {
-    console.log('clearing track');
     this.track = [];
     this.updateMarker();
     this.updatePolyline();
+  }
+
+  /**
+   * Returns true if the track is visible
+   * @returns {boolean}
+   */
+  isVisible() {
+    console.log('is visible', (this.map !== null))
+    return (this.map !== null);
   }
 
   /***
    * Creates / updates the position marker to the latest known position
    */
   updateMarker() {
-    console.log('updating marker')
-    if (!google) {
+    if (typeof google === 'undefined') {
       return;
     }
     const lastPosition = last(this.track);
@@ -88,12 +95,15 @@ class TeamTrack {
   }
 
   updatePolyline() {
+    if (typeof google === 'undefined') {
+      return;
+    }
     let lineOptions = {
       path         : this.track,
       geodesic     : true,
       strokeColor  : this.color,
       strokeOpacity: 1.0,
-      strokeWeight : 2,
+      strokeWeight : 4,
       map          : this.map
     }
     if (!this.polyline) {
@@ -111,10 +121,10 @@ class TeamTrack {
    */
   setMap(map) {
     this.map = map;
-    if (map) {
-      this.updateMarker();
-      this.updatePolyline();
-    }
+
+    this.updateMarker();
+    this.updatePolyline();
+
   }
 }
 

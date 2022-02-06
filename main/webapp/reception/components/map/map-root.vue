@@ -10,7 +10,7 @@
       b-col(cols="9")
         ferropoly-map(:map-options="mapOptions" @map="onNewMap")
       b-col(cols="3")
-        h1 ToDo
+        show-team-on-map-selector(:teams="teams" :travel-log="travelLog" @visibility-changed="onTeamVisibilityChanged")
 
 </template>
 
@@ -18,10 +18,11 @@
 import CallActiveWarning from '../call-active-warning.vue';
 import FerropolyMap from '../../../common/components/ferropoly-map/ferropoly-map.vue';
 import {mapFields} from 'vuex-map-fields';
+import ShowTeamOnMapSelector from './show-team-on-map-selector.vue';
 
 export default {
   name      : 'MapRoot',
-  components: {CallActiveWarning, FerropolyMap},
+  components: {CallActiveWarning, FerropolyMap, ShowTeamOnMapSelector},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -45,9 +46,6 @@ export default {
       }
     }
   },
-  created   : function () {
-
-  },
   methods   : {
     /**
      * A new map instance was created, we're using this one now
@@ -58,16 +56,17 @@ export default {
       this.properties.forEach(p => {
        // p.setMap(map);
       });
-      console.log('Travellog is', this.travelLog);
-      this.teams.forEach(t => {
-        let log = this.$store.getters.teamLog(t.uuid);
-        console.log('LOG', log);
-        if (log) {
-          log.setMap(map);
-        }
-
-      });
     },
+    onTeamVisibilityChanged(info) {
+      console.log('onTeamVisibilityChanged', info.teamId, info.visible);
+      let teamLog = this.travelLog[info.teamId];
+      if (info.visible) {
+        teamLog.setMap(this.map);
+      }
+      else {
+        teamLog.setMap(null);
+      }
+    }
   }
 }
 </script>

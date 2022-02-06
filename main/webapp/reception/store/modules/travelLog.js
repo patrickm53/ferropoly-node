@@ -47,6 +47,16 @@ const module = {
         .then(resp => {
           console.log('travelLog read', resp.data);
           if (!teamId) {
+            // Create for each team a log (if not existing)
+            rootState.teams.list.forEach(t => {
+              if (!state.log[t.uuid]) {
+                state.log[t.uuid] = new TeamTrack({
+                  id   : t.uuid,
+                  color: getters.teamColor(t.uuid),
+                  name : getters.teamIdToTeamName(t.uuid)
+                });
+              }
+            })
             // Returns all entries, clear existing ones
             forOwn(state.log, (val, key) => {
               state.log[key].clear();
@@ -58,7 +68,8 @@ const module = {
               // Create new track for a team if it does not already exist
               state.log[tl.teamId] = new TeamTrack({
                 id   : tl.teamId,
-                color: getters.teamColor(tl.teamId)
+                color: getters.teamColor(tl.teamId),
+                name : getters.teamIdToTeamName(tl.teamId)
               });
             }
             state.log[tl.teamId].pushLocation(createEntry(tl));
