@@ -12,6 +12,14 @@ class GameProperty extends Property {
   }
 
   /**
+   * Returns true if the property is still avilable
+   * @returns {boolean}
+   */
+  isAvailable() {
+    return (typeof this.gamedata.owner === 'undefined')
+  }
+
+  /**
    * Set the icon for this location in the map, this is main specific, for pricelist
    * @param selected true if the item was selected
    */

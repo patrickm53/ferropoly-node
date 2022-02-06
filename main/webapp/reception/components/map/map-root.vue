@@ -54,7 +54,9 @@ export default {
       console.log('new Map!', map);
       this.map = map;
       this.properties.forEach(p => {
-       // p.setMap(map);
+        if (p.isAvailable()) {
+          p.setMap(map);
+        }
       });
     },
     onTeamVisibilityChanged(info) {
