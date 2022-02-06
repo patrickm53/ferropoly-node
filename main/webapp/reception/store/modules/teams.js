@@ -40,6 +40,9 @@ const module = {
      */
     teamIdToIndex: (state) => (id) => {
       return result(find(state.list, {uuid: id}), 'index');
+    },
+    teamColor: (state) => (id) => {
+      return result(find(state.list, {uuid: id}), 'color');
     }
   },
   mutations: {

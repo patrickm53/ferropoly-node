@@ -23,6 +23,7 @@ class GameProperty extends Property {
       } else {
         switch (this.location.accessibility) {
           case 'train':
+           // this.marker.setIcon(this.ICON_TRAIN_LOCATION);
             this.marker.setIcon(this.ICON_TRAIN_LOCATION);
             break;
 

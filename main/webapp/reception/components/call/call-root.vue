@@ -30,7 +30,6 @@ import FerroNav from '../../../common/components/ferro-nav/ferro-nav.vue';
 import NavContentBuy from './buy-tab/nav-content-buy.vue';
 import NavContentProperty from './property-tab/nav-content-property.vue';
 import {mapFields} from 'vuex-map-fields';
-import {getTeamColor} from '../../lib/teamLib';
 import {get} from 'lodash';
 
 export default {
@@ -56,10 +55,6 @@ export default {
       currentTeam: 'call.currentTeam'
     }),
     teams() {
-      let self = this;
-      for (let i = 0; i < this.teamData.length; i++) {
-        self.teamData[i].color = getTeamColor(i);
-      }
       return this.teamData;
     },
     teamName() {

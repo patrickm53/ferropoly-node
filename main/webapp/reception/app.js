@@ -71,6 +71,7 @@ $(document).ready(function () {
         });
         this.$store.dispatch({type: 'fetchRankingList'});
         this.$store.dispatch({type: 'updateTeamAccountEntries'});
+        this.$store.dispatch({type: 'updateTravelLog'});
 
       })
     },

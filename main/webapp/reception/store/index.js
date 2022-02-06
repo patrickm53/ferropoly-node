@@ -18,6 +18,7 @@ import chancellery from './modules/chancellery';
 import call from './modules/call';
 import map from './modules/map';
 import GameProperty from '../../lib/gameProperty';
+import {getTeamColor} from '../lib/teamLib';
 
 Vue.use(Vuex);
 
@@ -115,6 +116,7 @@ const store = new Vuex.Store({
       teams.forEach(t => {
         t.index        = i;
         t.internalName = 'team' + i.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping: false});
+        t.color = getTeamColor(i - 1);
         state.teams.list.push(t);
         // Team account needs this mapping for speeding things up
         state.teamAccount.id2accounts[t.uuid] = t.internalName;

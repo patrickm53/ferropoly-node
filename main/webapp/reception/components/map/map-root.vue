@@ -34,7 +34,9 @@ export default {
       center: 'map.center',
       zoom  : 'map.zoom',
       map   : 'map.instance',
-      properties: 'properties.list'
+      properties: 'properties.list',
+      teams: 'teams.list',
+      travelLog: 'travelLog.log'
     }),
     mapOptions() {
       return {
@@ -54,8 +56,17 @@ export default {
       console.log('new Map!', map);
       this.map = map;
       this.properties.forEach(p => {
-        p.setMap(map);
-      })
+       // p.setMap(map);
+      });
+      console.log('Travellog is', this.travelLog);
+      this.teams.forEach(t => {
+        let log = this.$store.getters.teamLog(t.uuid);
+        console.log('LOG', log);
+        if (log) {
+          log.setMap(map);
+        }
+
+      });
     },
   }
 }
