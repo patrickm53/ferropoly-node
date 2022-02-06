@@ -15,21 +15,33 @@
 import {WmsMapType} from '@googlemaps/ogc';
 import $ from 'jquery';
 import gl from './googleLoader.js';
+import {assign} from 'lodash';
+import {setItem, getItem} from '../../lib/localStorage';
 
 const mapOptionsDefaults = {
-  center: {
+  center           : {
     lat: 47.35195,
     lng: 7.90781
   },
-  zoom  : 8,
+  zoom             : 8,
+  streetViewControl: false,
+  fullscreenControl: false,
+  restriction      : {
+    latLngBounds: {
+      north: 48.2,
+      south: 45.6,
+      east : 11.01,
+      west : 5.5
+    }
+  }
 };
 
 export default {
-  name : 'FerropolyMap',
+  name      : 'FerropolyMap',
   components: {},
   filters   : {},
-  model: {},
-  props: {
+  model     : {},
+  props     : {
     mapOptions: {
       type   : Object,
       default: function () {
@@ -37,7 +49,7 @@ export default {
       }
     }
   },
-  data : function () {
+  data      : function () {
     return {
       mapElement: undefined,
       map       : undefined
@@ -49,7 +61,7 @@ export default {
    */
   async mounted() {
     console.log('mounted');
-    let self   = this;
+    let self = this;
     gl.load((err, google) => {
       if (err) {
         console.error('Cannot display map');
@@ -58,14 +70,24 @@ export default {
       console.log('Google API loaded, creating map...');
 
       self.mapOptions.mapTypeControlOptions = {
-        mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'swisstopo']
+        mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN, 'swisstopo',
+                     google.maps.MapTypeId.SATELLITE]
       };
+
+      let mapOptions = assign(self.mapOptions, mapOptionsDefaults)
 
       if (!self.mapOptions.center) {
         self.mapOptions.center = mapOptionsDefaults.center;
       }
-      console.log('mapOptions', this.mapOptions);
-      self.map     = new google.maps.Map(document.getElementById('map'), this.mapOptions);
+      console.log('mapOptions', mapOptions);
+      self.map     = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+      // Saving map-types to the local storage
+      self.map.addListener('maptypeid_changed', () => {
+        console.log('Maptype changed', self.map.getMapTypeId());
+        setItem('ferropoly-map', self.map.getMapTypeId());
+      });
+
       let swissMap = WmsMapType({
         url        : 'https://wms.geo.admin.ch',
         layers     : 'ch.swisstopo.pixelkarte-farbe',
@@ -78,7 +100,7 @@ export default {
       });
 
       self.map.mapTypes.set('swisstopo', swissMap);
-      self.map.setMapTypeId('swisstopo');
+      self.map.setMapTypeId(getItem('ferropoly-map','roadmap'));
       self.resizeHandler();
       console.log('Google Map Initialized');
       self.$emit('map', self.map);
@@ -97,7 +119,7 @@ export default {
     console.log('fuck, destroyed')
     window.removeEventListener('resize', this.resizeHandler);
   },
-  methods   : {
+  methods: {
     /**
      * Sets the focus on the property: if the property
      * is in the current viewport, nothing is done. Otherwise

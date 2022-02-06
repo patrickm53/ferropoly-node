@@ -17,11 +17,10 @@ function setItem(key, value) {
 /**
  * Retrieves an item
  * @param key
- * @param value
  * @param def
  * @returns {string}
  */
-function getItem(key, value, def = undefined) {
+function getItem(key, def = undefined) {
   let retVal = localStorage.getItem(key);
   if (!retVal) {
     retVal = def;
