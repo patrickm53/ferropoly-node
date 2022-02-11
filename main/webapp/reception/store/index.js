@@ -96,8 +96,9 @@ const store = new Vuex.Store({
      * @param commit
      * @param rootState
      * @param options
+     * @param dispatch
      */
-    fetchStaticData({state, commit, rootState}, options) {
+    fetchStaticData({state, commit, rootState, dispatch}, options) {
       if (options.err) {
         console.error(options.err);
         state.api.error.message  = options.err;
@@ -126,6 +127,9 @@ const store = new Vuex.Store({
       options.data.pricelist.forEach(p => {
         state.properties.list.push(new GameProperty(p));
       })
+      // Properties -> Map settings
+      dispatch('setMapBounds', state.properties.list);
+
       state.gameDataLoaded = true;
     },
     /**

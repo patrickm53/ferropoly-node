@@ -1,5 +1,5 @@
 <!---
-  Google Maps Root element
+  Google Maps root element for Ferropoly
 
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 06.06.21
@@ -60,7 +60,6 @@ export default {
    * When Map was mounted
    */
   async mounted() {
-    console.log('mounted');
     let self = this;
     gl.load((err, google) => {
       if (err) {
@@ -74,12 +73,13 @@ export default {
                      google.maps.MapTypeId.SATELLITE]
       };
 
-      let mapOptions = assign(self.mapOptions, mapOptionsDefaults)
+      let mapOptions = assign(mapOptionsDefaults, self.mapOptions);
 
       if (!self.mapOptions.center) {
         self.mapOptions.center = mapOptionsDefaults.center;
       }
       console.log('mapOptions', mapOptions);
+
       self.map     = new google.maps.Map(document.getElementById('map'), mapOptions);
 
       // Saving map-types to the local storage
@@ -110,13 +110,10 @@ export default {
    * When Map was Created
    */
   created() {
-    console.log('created');
-
     window.addEventListener('resize', this.resizeHandler);
     this.resizeHandler(null);
   },
   destroyed() {
-    console.log('fuck, destroyed')
     window.removeEventListener('resize', this.resizeHandler);
   },
   methods: {
@@ -126,11 +123,35 @@ export default {
      * it is centered to the map
      */
     setFocusOnProperty(property) {
-      console.log('setFocusOnProperty');
       let pos = property.marker.getPosition();
       if (!this.map.getBounds().contains(pos)) {
-        this.map.setCenter(pos);
+       // this.map.setCenter(pos);
+        this.map.panTo(pos);
       }
+    },
+    /**
+     * Sets the maps bounds
+     * @param bounds is a google.maps.LatLngBoundsLiteral
+     */
+    panToBounds(bounds) {
+      console.log('pan to bounds', bounds);
+      this.map.panToBounds(bounds);
+    },
+    /**
+     * Sets the maps bounds including zoom
+     * @param bounds is a google.maps.LatLngBoundsLiteral
+     */
+    fitBounds(bounds) {
+      console.log('pan to bounds', bounds);
+      this.map.fitBounds(bounds);
+    },
+    /**
+     * Sets the map center
+     * @param center is a google.maps.LatLngLiteral
+     */
+    setCenter(center) {
+      console.log('set center', center);
+      this.map.setCenter(center);
     },
     /**
      * Creates the maximum Size

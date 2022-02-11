@@ -48,20 +48,26 @@ const module = {
     updateMapField
   },
   actions  : {
+    /**
+     * Sets the bounds properties according to the list of properties
+     * @param state
+     * @param options
+     */
     setMapBounds({state}, options) {
       let properties     = options.properties;
-      state.bounds.north = maxBy(properties, p => {
+      state.bounds.north = parseFloat(maxBy(properties, p => {
         return parseFloat(p.location.position.lat);
-      });
-      state.bounds.south = minBy(properties, p => {
+      }).location.position.lat);
+      state.bounds.south = parseFloat(minBy(properties, p => {
         return parseFloat(p.location.position.lat);
-      });
-      state.bounds.east  = maxBy(properties, p => {
+      }).location.position.lat);
+      state.bounds.east  = parseFloat(maxBy(properties, p => {
         return parseFloat(p.location.position.lng);
-      });
-      state.bounds.west  = minBy(properties, p => {
+      }).location.position.lng);
+      state.bounds.west  = parseFloat(minBy(properties, p => {
         return parseFloat(p.location.position.lng);
-      });
+      }).location.position.lng);
+      console.log('bound set', state.bounds);
     }
   }
 };
