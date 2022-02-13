@@ -9,6 +9,24 @@ import Property from '../common/lib/property'
 class GameProperty extends Property {
   constructor(p) {
     super(p);
+
+    this.on('property-selected', p => {
+      console.log('hold on, property selected', p);
+    })
+  }
+
+  /**
+   * Creating a marker
+   */
+  createMarker() {
+    super.createMarker();
+
+    this.infoWindow = new google.maps.InfoWindow({
+      content: `<h4>${this.location.name}</h4><p>Kaufpreis: ${this.pricelist.price}</p>`
+    })
+    this.marker.addListener('click', () => {
+      this.infoWindow.open(this.map, this.marker);
+    });
   }
 
   /**

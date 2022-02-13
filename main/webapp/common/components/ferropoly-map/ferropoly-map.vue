@@ -3,6 +3,10 @@
 
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 06.06.21
+
+  History:
+  1.0.0     First versioned map
+
 -->
 <template lang="pug">
   #map-root
@@ -102,6 +106,13 @@ export default {
       self.map.mapTypes.set('swisstopo', swissMap);
       self.map.setMapTypeId(getItem('ferropoly-map','roadmap'));
       self.resizeHandler();
+
+      self.map.addListener('center_changed', () => {
+        self.$emit('center-changed', self.map.getCenter())
+      });
+      self.map.addListener('zoom_changed', () => {
+        self.$emit('zoom-changed', self.map.getZoom())
+      });
       console.log('Google Map Initialized');
       self.$emit('map', self.map);
     });
@@ -125,7 +136,6 @@ export default {
     setFocusOnProperty(property) {
       let pos = property.marker.getPosition();
       if (!this.map.getBounds().contains(pos)) {
-       // this.map.setCenter(pos);
         this.map.panTo(pos);
       }
     },
@@ -134,7 +144,6 @@ export default {
      * @param bounds is a google.maps.LatLngBoundsLiteral
      */
     panToBounds(bounds) {
-      console.log('pan to bounds', bounds);
       this.map.panToBounds(bounds);
     },
     /**
@@ -142,7 +151,6 @@ export default {
      * @param bounds is a google.maps.LatLngBoundsLiteral
      */
     fitBounds(bounds) {
-      console.log('pan to bounds', bounds);
       this.map.fitBounds(bounds);
     },
     /**
@@ -150,8 +158,14 @@ export default {
      * @param center is a google.maps.LatLngLiteral
      */
     setCenter(center) {
-      console.log('set center', center);
       this.map.setCenter(center);
+    },
+    /**
+     * Sets the zoom of the map
+     * @param zoom
+     */
+    setZoom(zoom) {
+      this.map.setZoom(zoom);
     },
     /**
      * Creates the maximum Size

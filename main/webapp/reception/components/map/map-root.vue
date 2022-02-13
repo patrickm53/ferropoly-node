@@ -8,7 +8,7 @@
     call-active-warning
     b-row
       b-col(cols="9")
-        ferropoly-map(:map-options="mapOptions" @map="onNewMap" ref="map")
+        ferropoly-map(:map-options="mapOptions" @map="onNewMap" ref="map" @zoom-changed="onZoomChanged" @center-changed="onCenterChanged")
       b-col(cols="3")
         show-team-on-map-selector(:teams="teams" :travel-log="travelLog" @visibility-changed="onTeamVisibilityChanged")
 
@@ -19,6 +19,12 @@ import CallActiveWarning from '../call-active-warning.vue';
 import FerropolyMap from '../../../common/components/ferropoly-map/ferropoly-map.vue';
 import {mapFields} from 'vuex-map-fields';
 import ShowTeamOnMapSelector from './show-team-on-map-selector.vue';
+import {forOwn} from 'lodash';
+import {
+  getItem,
+  setInt,
+  setObject
+} from '../../../common/lib/sessionStorage';
 
 export default {
   name      : 'MapRoot',
@@ -32,6 +38,7 @@ export default {
   },
   computed  : {
     ...mapFields({
+      gameId    : 'gameId',
       center    : 'map.center',
       zoom      : 'map.zoom',
       bounds    : 'map.bounds',
@@ -53,13 +60,31 @@ export default {
      */
     onNewMap(map) {
       console.log('new Map!', map);
-      this.map = map;
-      this.$refs.map.fitBounds(this.bounds);
+      this.map   = map;
+      let zoom   = getItem(`${this.gameId}-travelmap-zoom`, -1);
+      let center = getItem(`${this.gameId}-travelmap-center`, null);
+
+      // If we were here before, use the same settings as before
+      if (zoom < 0 || !center) {
+        this.$refs.map.fitBounds(this.bounds);
+      } else {
+        this.$refs.map.setCenter(center);
+        this.$refs.map.setZoom(zoom);
+      }
+
       this.properties.forEach(p => {
         if (p.isAvailable()) {
           p.setMap(map);
         }
       });
+
+      forOwn(this.travelLog, (value) => {
+        if (value.visible) {
+          value.setMap(this.map);
+        } else {
+          value.setMap(null);
+        }
+      })
     },
     onTeamVisibilityChanged(info) {
       console.log('onTeamVisibilityChanged', info.teamId, info.visible);
@@ -69,6 +94,13 @@ export default {
       } else {
         teamLog.setMap(null);
       }
+    },
+    onZoomChanged(zoom) {
+      setInt(`${this.gameId}-travelmap-zoom`, zoom);
+    },
+    onCenterChanged(center) {
+      console.log(center);
+      setObject(`${this.gameId}-travelmap-center`, center);
     }
   }
 }

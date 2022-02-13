@@ -15,7 +15,44 @@
  * @param value
  */
 function setItem(key, value) {
+  console.warn('This function is obsolete!');
   sessionStorage.setItem(key, value);
+}
+
+/**
+ * Sets an object in the storage
+ * @param key
+ * @param value
+ */
+function setObject(key, value) {
+  sessionStorage.setItem(key, JSON.stringify({type: 'Object', value}));
+}
+
+/**
+ * Sets an integer in the storage
+ * @param key
+ * @param value
+ */
+function setInt(key, value) {
+  sessionStorage.setItem(key, JSON.stringify({type: 'Int', value}));
+}
+
+/**
+ * Sets a float in the storage
+ * @param key
+ * @param value
+ */
+function setFloat(key, value) {
+  sessionStorage.setItem(key, JSON.stringify({type: 'Float', value}));
+}
+
+/**
+ * Sets a string in the storage
+ * @param key
+ * @param value
+ */
+function setString(key, value) {
+  sessionStorage.setItem(key, JSON.stringify({type: 'String', value}));
 }
 
 /**
@@ -25,11 +62,13 @@ function setItem(key, value) {
  * @returns {string}
  */
 function getItem(key, def = undefined) {
-  let retVal = sessionStorage.getItem(key);
-  if (!retVal) {
-    retVal = def;
+  let data = JSON.parse(sessionStorage.getItem(key));
+  if (!data) {
+    return def;
   }
-  return retVal;
+
+  console.log('session storage', data);
+  return data.value;
 }
 
 /**
@@ -47,4 +86,4 @@ function clear() {
   sessionStorage.clear();
 }
 
-export {setItem, getItem, clear, removeItem};
+export {setItem, getItem, clear, removeItem, setObject, setInt, setFloat, setString};
