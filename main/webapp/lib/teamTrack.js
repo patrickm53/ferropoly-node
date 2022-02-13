@@ -5,6 +5,7 @@
  **/
 import {get, sortBy, find, last} from 'lodash';
 import {DateTime} from 'luxon';
+import {faLocationDot} from '@fortawesome/free-solid-svg-icons';
 
 class TeamTrack {
   /**
@@ -22,14 +23,15 @@ class TeamTrack {
     this.ICON_CURRENT_LOCATION = '/images/markers/red-dot.png';
   }
 
+
   /**
    * Pushes a new location to the track
    * @param location
    */
   pushLocation(location) {
     let newLocation = {
-      lat: parseFloat(get(location, 'lat', 0)),
-      lng: parseFloat(get(location, 'lng', 0)),
+      lat: parseFloat(get(location, 'lat', '0')),
+      lng: parseFloat(get(location, 'lng', '0')),
       ts : DateTime.fromISO(get(location, 'ts', DateTime.now().toISO())),
     }
     if (!find(this.track, {'ts': newLocation.ts})) {
@@ -79,15 +81,39 @@ class TeamTrack {
       return;
     }
     if (!this.marker) {
+      // well, this is pretty cool: using FontAwesome as icon for the marker.
+      // see https://developers.google.com/maps/documentation/javascript/examples/marker-modern
+      // for details!
       this.marker = new google.maps.Marker({
         position: {
           lat: lastPosition.lat,
           lng: lastPosition.lng
         },
         map     : null,
-        title   : this.name,
+        icon    : {
+          path        : faLocationDot.icon[4],
+          fillColor   : this.color,
+          fillOpacity : 1,
+          anchor      : new google.maps.Point(
+            faLocationDot.icon[0] / 2, // width
+            faLocationDot.icon[1] // height
+          ),
+          strokeWeight: 1,
+          strokeColor : '#ffffff',
+          scale       : 0.05,
+        },
       });
-      this.marker.setIcon(this.ICON_CURRENT_LOCATION);
+
+      // Open an info Window if someone clicks on it
+      if (this.name && this.name.length > 0) {
+        this.infoWindow = new google.maps.InfoWindow({
+          content: `<h4>${this.name}</h4>`
+        })
+        this.marker.addListener('click', () => {
+          this.infoWindow.open(this.map, this.marker);
+        });
+      }
+
     } else {
       this.marker.setPosition({lat: lastPosition.lat, lng: lastPosition.lng});
     }

@@ -8,7 +8,7 @@
     call-active-warning
     b-row
       b-col(cols="9")
-        ferropoly-map(:map-options="mapOptions" @map="onNewMap")
+        ferropoly-map(:map-options="mapOptions" @map="onNewMap" ref="map")
       b-col(cols="3")
         show-team-on-map-selector(:teams="teams" :travel-log="travelLog" @visibility-changed="onTeamVisibilityChanged")
 
@@ -32,12 +32,13 @@ export default {
   },
   computed  : {
     ...mapFields({
-      center: 'map.center',
-      zoom  : 'map.zoom',
-      map   : 'map.instance',
+      center    : 'map.center',
+      zoom      : 'map.zoom',
+      bounds    : 'map.bounds',
+      map       : 'map.instance',
       properties: 'properties.list',
-      teams: 'teams.list',
-      travelLog: 'travelLog.log'
+      teams     : 'teams.list',
+      travelLog : 'travelLog.log'
     }),
     mapOptions() {
       return {
@@ -53,6 +54,7 @@ export default {
     onNewMap(map) {
       console.log('new Map!', map);
       this.map = map;
+      this.$refs.map.fitBounds(this.bounds);
       this.properties.forEach(p => {
         if (p.isAvailable()) {
           p.setMap(map);
@@ -64,8 +66,7 @@ export default {
       let teamLog = this.travelLog[info.teamId];
       if (info.visible) {
         teamLog.setMap(this.map);
-      }
-      else {
+      } else {
         teamLog.setMap(null);
       }
     }
