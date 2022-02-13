@@ -16,7 +16,7 @@ import teams from './modules/teams';
 import travelLog from './modules/travelLog';
 import chancellery from './modules/chancellery';
 import call from './modules/call';
-import map from './modules/map';
+import map from '../../common/store/map';
 import GameProperty from '../../lib/gameProperty';
 import {getTeamColor} from '../lib/teamLib';
 

@@ -51,10 +51,9 @@ const module = {
     /**
      * Sets the bounds properties according to the list of properties
      * @param state
-     * @param options
+     * @param properties
      */
-    setMapBounds({state}, options) {
-      let properties     = options.properties;
+    setMapBounds({state}, properties) {
       state.bounds.north = parseFloat(maxBy(properties, p => {
         return parseFloat(p.location.position.lat);
       }).location.position.lat);
