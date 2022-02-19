@@ -25,6 +25,7 @@
     rules-root(v-if="panel==='panel-rules'")
     call-root(v-if="panel==='panel-call'")
     map-root(v-if="panel==='panel-map'")
+    statistic-root(v-if="panel==='panel-statistic'")
 
 </template>
 
@@ -39,12 +40,24 @@ import PropertiesRoot from './properties/properties-root.vue';
 import RulesRoot from './rules/rules-root.vue';
 import CallRoot from './call/call-root.vue';
 import MapRoot from './map/map-root.vue';
+import StatisticRoot from './statistic/statistic-root.vue';
 
 import {getAuthToken} from '../../common/adapter/authToken';
 
 export default {
   name      : 'ReceptionRoot',
-  components: {MenuBar, ModalError, OverviewRoot, AccountingRoot, ChanceRoot, PropertiesRoot, RulesRoot, CallRoot, MapRoot},
+  components: {
+    MenuBar,
+    ModalError,
+    OverviewRoot,
+    AccountingRoot,
+    ChanceRoot,
+    StatisticRoot,
+    PropertiesRoot,
+    RulesRoot,
+    CallRoot,
+    MapRoot
+  },
   filters   : {},
   mixins    : [],
   model     : {},

@@ -65,9 +65,28 @@ const store = new Vuex.Store({
         message : ''
       },
       requestPending: false
+    },
+    statistic     : {
+      navBar    : [
+        {title: 'Vermögen', event: 'nav-event', eventParam: 'nav-asset', active: true},
+        {title: 'Vermögensverlauf', event: 'nav-event', eventParam: 'nav-asset-history', active: false},
+        {title: 'Einkommen', event: 'nav-event', eventParam: 'nav-income', active: false},
+      ],
+      currentNav: 'nav-asset'
     }
   },
-  modules  : {gameplay, properties, propertyAccount, rankingList, teamAccount, teams, travelLog, chancellery, call, map},
+  modules  : {
+    gameplay,
+    properties,
+    propertyAccount,
+    rankingList,
+    teamAccount,
+    teams,
+    travelLog,
+    chancellery,
+    call,
+    map
+  },
   getters  : {
     getField
   },
@@ -117,7 +136,7 @@ const store = new Vuex.Store({
       teams.forEach(t => {
         t.index        = i;
         t.internalName = 'team' + i.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping: false});
-        t.color = getTeamColor(i - 1);
+        t.color        = getTeamColor(i - 1);
         state.teams.list.push(t);
         // Team account needs this mapping for speeding things up
         state.teamAccount.id2accounts[t.uuid] = t.internalName;
