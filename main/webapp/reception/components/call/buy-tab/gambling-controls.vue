@@ -13,6 +13,7 @@
         step="500"
         :min="min"
         :max="max"
+        @change="valueChanged"
       )
       b-input-group-append
         b-button(variant="success" @click="onWinning" :disabled="disabled") Gewinn
@@ -41,8 +42,8 @@ export default {
       }
     },
     disabled: {
-      type: Boolean,
-      default : () => {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     }
@@ -69,6 +70,15 @@ export default {
         this.$emit('loose', this.gamblingValue)
       }
       this.gamblingValue = this.min;
+    },
+    valueChanged(value) {
+      let val = parseInt(value);
+      if (val > this.max) {
+        this.gamblingValue = this.max;
+      }
+      if (val < this.min) {
+        this.gamblingValue = this.min;
+      }
     }
   }
 }
