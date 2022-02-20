@@ -38,7 +38,6 @@ export default {
   },
   methods   : {
     onNavEvent(element) {
-      console.log('new nav', element);
       this.currentNavElement = element;
     }
   }
