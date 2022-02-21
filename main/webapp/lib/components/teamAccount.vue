@@ -35,7 +35,8 @@
             b-tbody
               b-tr(v-for="(value, key) in row.item.transaction.parts" :key="key")
                 b-td {{ value.propertyName }}
-                b-td(v-if="value.buildingNb") {{ value.buildingNb }} {{value.buildingNb > 4 ? 'Hotel' : '. Haus'}}
+                b-td(v-if="value.buildingNb > 0 && value.buildingNb < 5") {{ value.buildingNb }}. Haus
+                b-td(v-if="value.buildingNb > 4") Hotel
                 b-td {{ value.amount | formatPrice}}
 
 </template>

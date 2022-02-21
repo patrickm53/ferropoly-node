@@ -81,6 +81,9 @@ export default {
             formatter: function (val) {
               return DateTime.fromMillis(val).toLocaleString(DateTime.TIME_24_WITH_SECONDS);
             }
+          },
+          labels: {
+            datetimeUTC: false
           }
         },
         yaxis     : {
