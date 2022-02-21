@@ -35,7 +35,6 @@ export default {
   },
   computed  : {
     chartData() {
-      console.log('chartData', this.list);
       let data = [];
       sortBy(this.list, 'name').forEach(e => {
         data.push({
@@ -45,7 +44,6 @@ export default {
           strokeColor: this.$store.getters.teamColor(e.teamId)
         });
       })
-      console.log(data);
       return [{
         name: 'Vermögen',
         data: data
