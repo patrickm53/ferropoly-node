@@ -34,6 +34,7 @@ export default {
     }),
   },
   created   : function () {
+    this.$store.dispatch({type: 'fetchRankingList', forcedUpdate: true});
   },
   methods   : {}
 }

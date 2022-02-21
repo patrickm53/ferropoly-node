@@ -37,7 +37,7 @@ const module = {
         console.log('Game not loaded yet, wait for ranking list');
         return;
       }
-      if (rootState.panel !== 'panel-overview') {
+      if (rootState.panel !== 'panel-overview' && rootState.panel !== 'panel-statistic') {
         // console.log('wrong panel, not loading ranking list');
         return;
       }
