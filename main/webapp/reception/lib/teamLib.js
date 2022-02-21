@@ -36,4 +36,7 @@ function getTeamColor(teamIndex) {
   return 'black';
 }
 
-export {getTeamColor};
+function getTeamColorArray() {
+  return teamColors;
+}
+export {getTeamColor, getTeamColorArray};

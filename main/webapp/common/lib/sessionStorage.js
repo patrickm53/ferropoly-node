@@ -69,6 +69,9 @@ function getItem(key, def = undefined) {
   catch (e) {
     console.warn(e);
   }
+  if (!data) {
+    return def;
+  }
 
   console.log('session storage', data);
   return data.value;

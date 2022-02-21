@@ -5,14 +5,17 @@
 -->
 <template lang="pug">
   div
-    h1 statistic-asset-history
+    b-row
+      b-col
+        asset-history-graph
   
 </template>
 
 <script>
+import AssetHistoryGraph from './asset-history-graph.vue';
 export default {
   name: "StatisticAssetHistory",
-  components: {},
+  components: {AssetHistoryGraph},
   filters   : {},
   mixins    : [],
   model     : {},
