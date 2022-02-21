@@ -52,7 +52,6 @@ export default {
       return {
         chart      : {
           type: 'bar',
-
         },
         plotOptions: {
           bar: {
@@ -69,7 +68,13 @@ export default {
           width : 2,
           colors: ['transparent']
         },
-        yaxis      : {},
+        yaxis      : {
+          labels        : {
+            formatter: formatPrice
+          },
+          tickAmount    : 10,
+          forceNiceScale: true
+        },
         fill       : {
           opacity: 1
         },

@@ -92,7 +92,6 @@ export default {
           },
           tickAmount    : 10,
           forceNiceScale: true
-
         },
         tooltip   : {
           y: {
