@@ -1,57 +1,51 @@
 <!---
 
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
-  Created: 20.02.22
+  Created: 21.02.22
 -->
 <template lang="pug">
   div(id="chart")
-    apexchart(type="bar"  :options="chartOptions" :series="chartData")
+    apexchart(type="bar" height="350" :options="chartOptions" :series="chartData")
+
+
 </template>
 
 <script>
+import {formatPrice} from '../../common/lib/formatters';
 import VueApexCharts from 'vue-apexcharts';
-import {sortBy} from 'lodash';
-import {formatPrice} from '../../../common/lib/formatters';
 
 export default {
-  name      : 'AssetGraph',
+  name      : 'TestGraph',
   components: {
     apexchart: VueApexCharts,
   },
   filters   : {},
   mixins    : [],
   model     : {},
-  props     : {
-    list: {
-      type   : Array,
-      default: () => {
-        return [];
-      }
-    }
-  },
+  props     : {},
   data      : function () {
     return {};
   },
   computed  : {
     chartData() {
-      let data = [];
-      sortBy(this.list, 'name').forEach(e => {
-        data.push({
-          x          : e.name,
-          y          : e.asset,
-          fillColor  : this.$store.getters.teamColor(e.teamId),
-          strokeColor: this.$store.getters.teamColor(e.teamId)
-        });
-      })
-      return [{
-        name: 'Vermögen',
-        data: data
-      }];
+      let series  = [{
+        name: 'Aktueller Wert',
+        data: [{x: 'a', y: 15}, {x: 'b', y: 10}, {x: 'c', y: 20}]
+      }, {
+        name: 'Potentieller Wert',
+        data: [{x: 'a', y: 0}, {x: 'c', y: 5}, {x: 'b', y: 2}]
+      },
+      ];
+
+
+      return series;
     },
     chartOptions() {
       return {
         chart      : {
-          type: 'bar',
+          type   : 'bar',
+          height : 350,
+          stacked: true
 
         },
         plotOptions: {

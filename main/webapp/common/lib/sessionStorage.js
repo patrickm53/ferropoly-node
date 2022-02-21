@@ -15,8 +15,8 @@
  * @param value
  */
 function setItem(key, value) {
-  console.warn('This function is obsolete!');
-  sessionStorage.setItem(key, value);
+  console.warn('setItem in sessionStorage is obsolete!');
+  setString(key, value);
 }
 
 /**
@@ -62,9 +62,12 @@ function setString(key, value) {
  * @returns {string}
  */
 function getItem(key, def = undefined) {
-  let data = JSON.parse(sessionStorage.getItem(key));
-  if (!data) {
-    return def;
+  let data = def;
+  try {
+    data = JSON.parse(sessionStorage.getItem(key));
+  }
+  catch (e) {
+    console.warn(e);
   }
 
   console.log('session storage', data);

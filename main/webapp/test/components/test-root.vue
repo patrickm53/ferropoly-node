@@ -17,14 +17,16 @@
       test-property-selector(v-if="panel==='propertySelector'")
       test-gambling-controls(v-if="panel==='gamblingControls'")
       test-team-selector(v-if="panel==='teamSelector'")
+      test-graph(v-if="panel==='graph'")
 </template>
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
-import {getItem, setItem} from '../../common/lib/sessionStorage';
+import {getItem, setString} from '../../common/lib/sessionStorage';
 import TestPropertySelector from './test-property-selector.vue';
 import TestGamblingControls from './test-gambling-controls.vue';
 import TestTeamSelector from './test-team-selector.vue';
+import TestGraph from './test-graph.vue';
 
 // EASY START
 const defaultPanel = getItem('test-panel', 'top');
@@ -35,7 +37,8 @@ export default {
     MenuBar,
     TestPropertySelector,
     TestGamblingControls,
-    TestTeamSelector
+    TestTeamSelector,
+    TestGraph
   },
   filters   : {},
   model     : {},
@@ -51,6 +54,7 @@ export default {
             {title: 'Property Selector', href: '#', event: 'panel-change', eventParam: 'propertySelector'},
             {title: 'Gambling Controls / Call Log', href: '#', event: 'panel-change', eventParam: 'gamblingControls'},
             {title: 'Team Selector', href: '#', event: 'panel-change', eventParam: 'teamSelector'},
+            {title: 'Graph Playground', href: '#', event: 'panel-change', eventParam: 'graph'},
           ]
         },
       ],
@@ -65,7 +69,7 @@ export default {
     onPanelChange(panel) {
       console.log('onPanelChange', panel);
       this.panel = panel;
-      setItem('test-panel', panel);
+      setString('test-panel', panel);
     },
     onTestEvent(data) {
       console.log('onTestEvent', data);

@@ -5,14 +5,18 @@
 -->
 <template lang="pug">
   div
-    h1 statistic-income
-  
+    b-row
+      b-col
+        income-graph
+
 </template>
 
 <script>
+import IncomeGraph from './income-graph.vue';
+
 export default {
-  name: "StatisticIncome",
-  components: {},
+  name      : 'StatisticIncome',
+  components: {IncomeGraph},
   filters   : {},
   mixins    : [],
   model     : {},
