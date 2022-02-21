@@ -23,17 +23,17 @@
       :current-page="currentPage"
       :items="transactions"
       :fields="fields")
-      template(#cell(transaction)="data") {{data.item.transaction | formatInfo}}
+      template(#cell(transaction)="data") {{getProp(data, 'item.transaction', 'Fehler') | formatInfo}}
       template(#cell(timestamp)="data") {{data.item.timestamp | formatTime}}
-      template(#cell(transaction.amount)="data") {{data.item.transaction.amount | formatPrice}}
-      template(#cell(balance)="data") {{data.item.balance | formatPrice}}
+      template(#cell(transaction.amount)="data") {{getProp(data, 'item.transaction.amount', 0) | formatPrice}}
+      template(#cell(balance)="data") {{getProp(data, 'item.balance', 0) | formatPrice}}
       template(#cell(transaction.parts)="row")
-        b-button(v-if="row.item.transaction.parts.length > 0" size="sm" @click="row.toggleDetails") Details ({{row.item.transaction.parts.length}})  {{ row.detailsShowing ? 'verbergen' : 'anzeigen' }}
+        b-button(v-if="getProp(row, 'item.transaction.parts.length', 0) > 0" size="sm" @click="row.toggleDetails") Details ({{getProp(row, 'item.transaction.parts.length', 0)}})  {{ row.detailsShowing ? 'verbergen' : 'anzeigen' }}
       template(#row-details="row")
         b-card
           b-table-simple(small)
             b-tbody
-              b-tr(v-for="(value, key) in row.item.transaction.parts" :key="key")
+              b-tr(v-for="(value, key) in getProp(row, 'item.transaction.parts', [])" :key="key")
                 b-td {{ value.propertyName }}
                 b-td(v-if="value.buildingNb > 0 && value.buildingNb < 5") {{ value.buildingNb }}. Haus
                 b-td(v-if="value.buildingNb > 4") Hotel
@@ -43,6 +43,7 @@
 
 <script>
 import {formatPrice, formatTime} from '../../common/lib/formatters'
+import {get} from 'lodash';
 
 /**
  * Formatter for the info about the transaction
@@ -106,6 +107,9 @@ export default {
   methods   : {
     onPaginationChange(page) {
       // not used yet
+    },
+    getProp(obj, path, def) {
+      return get(obj, path, def);
     }
   }
 }
