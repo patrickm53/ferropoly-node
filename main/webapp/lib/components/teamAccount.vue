@@ -11,6 +11,7 @@
       :total-rows="rows"
       :per-page="perPage"
       aria-controls="accounting-table"
+      @change="onPaginationChange"
     )
     b-table(
       id="accounting-table"
@@ -83,7 +84,7 @@ export default {
   data      : function () {
     return {
       perPage    : 10,
-      currentPage: 1,
+      currentPage: 1000, // sets to the last page
       elementNb  : 0,
       fields     : [
         {key: 'timestamp', label: 'Zeit'},
@@ -101,7 +102,11 @@ export default {
   },
   created   : function () {
   },
-  methods   : {}
+  methods   : {
+    onPaginationChange(page) {
+      // not used yet
+    }
+  }
 }
 </script>
 
