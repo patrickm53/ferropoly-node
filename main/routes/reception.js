@@ -64,14 +64,17 @@ router.get('/static/:gameId', function (req, res) {
           pl = {};
         }
 
-        authTokenManager.getNewToken({user: req.session.passport.user, proposedToken: req.session.authToken}, function (err, token) {
+        authTokenManager.getNewToken({
+            user: req.session.passport.user,
+            proposedToken: req.session.authToken
+          }, function (err, token) {
             if (err) {
               return res.status(500).send({message: 'Interner Fehler beim Erstellen des Tokens.'});
             }
             req.session.authToken = token;
             res.send({
               authToken    : token,
-              socketUrl    : 'http://' + settings.socketIoServer.host + ':' + settings.socketIoServer.port,
+              socketUrl    : '/',
               gameplay     : gp,
               pricelist    : pl,
               teams        : _.values(teams),
@@ -128,7 +131,10 @@ router.get('/old/:gameId', function (req, res) {
           errMsg2 = err2.message;
         }
 
-        authTokenManager.getNewToken({user: req.session.passport.user, proposedToken: req.session.authToken}, function (err, token) {
+        authTokenManager.getNewToken({
+          user         : req.session.passport.user,
+          proposedToken: req.session.authToken
+        }, function (err, token) {
           if (err) {
             return errorHandler(res, 'Interner Fehler beim Erstellen des Tokens.', err, 500);
           }
