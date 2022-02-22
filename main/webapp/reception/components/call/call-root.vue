@@ -19,7 +19,8 @@
         nav-content-buy
       div(v-if="navBar[1].active")
         nav-content-property
-      div(v-if="navBar[2].active") NAV3
+      div(v-if="navBar[2].active")
+        nav-content-log
 
 
 </template>
@@ -31,10 +32,11 @@ import NavContentBuy from './buy-tab/nav-content-buy.vue';
 import NavContentProperty from './property-tab/nav-content-property.vue';
 import {mapFields} from 'vuex-map-fields';
 import {get} from 'lodash';
+import NavContentLog from './log-tab/nav-content-log.vue';
 
 export default {
   name      : 'CallRoot',
-  components: {TeamSelector, FerroNav, NavContentBuy, NavContentProperty},
+  components: {NavContentLog, TeamSelector, FerroNav, NavContentBuy, NavContentProperty},
   filters   : {},
   mixins    : [],
   model     : {},

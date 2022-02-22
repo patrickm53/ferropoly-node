@@ -3,7 +3,7 @@
  * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
  * Created: 06.02.22
  **/
-import {get, sortBy, find, last} from 'lodash';
+import {get, sortBy, find, last, maxBy, minBy} from 'lodash';
 import {DateTime} from 'luxon';
 import {faLocationDot} from '@fortawesome/free-solid-svg-icons';
 
@@ -139,6 +139,28 @@ class TeamTrack {
     }
     this.polyline.setMap(this.map);
     this.polyline.setVisible(this.map !== null);
+  }
+
+  /**
+   * Returns the bounds of the travel log
+   */
+  getBounds() {
+    let retVal = {
+      north: maxBy(this.track, p => {
+        return p.lat;
+      }).lat,
+      south: minBy(this.track, p => {
+        return p.lat;
+      }).lat,
+      east : maxBy(this.track, p => {
+        return p.lng;
+      }).lng,
+      west : minBy(this.track, p => {
+        return p.lng;
+      }).lng,
+    }
+    console.log('track bounds', retVal);
+    return retVal;
   }
 
   /**

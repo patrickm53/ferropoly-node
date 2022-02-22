@@ -21,8 +21,15 @@ class GameProperty extends Property {
   createMarker() {
     super.createMarker();
 
+    let content = `<h4>${this.location.name}</h4><p>Kaufpreis: ${this.pricelist.price}</p>`;
+    if (this.gamedata.owner) {
+      content += `<p>verkauft</p>`
+    } else {
+      content += `<p>verfügbar</p>`
+    }
+
     this.infoWindow = new google.maps.InfoWindow({
-      content: `<h4>${this.location.name}</h4><p>Kaufpreis: ${this.pricelist.price}</p>`
+      content: content
     })
     this.marker.addListener('click', () => {
       this.infoWindow.open(this.map, this.marker);
