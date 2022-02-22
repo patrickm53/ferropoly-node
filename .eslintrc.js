@@ -3,6 +3,10 @@
  */
 
 module.exports = {
+  env: {
+    node: true,
+    es6: true,
+  },
   extends: [
     // add more generic rulesets here, such as:
      //'eslint:recommended',

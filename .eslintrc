@@ -81,3 +81,4 @@ rules:
 
 parserOptions:
   sourceType: module
+  ecmaVersion: latest

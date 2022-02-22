@@ -9,20 +9,19 @@
       striped
       small
       sort-icon-left
-      :items="properties"
+      :items="propertyList"
       :fields="fields"
-      :filter="teamId"
       responsive="sm"
       )
       template(#cell(pricelist.position)="data") {{data.item.pricelist.position + 1}}
       template(#cell(pricelist.price)="data") {{data.item.pricelist.price | formatPrice}}
       template(#cell(gamedata.buildings)="data")
-        span(v-if="data.item.gamedata.buildings === 0") unbebaut
-        span(v-if="data.item.gamedata.buildings === 1") 1 Haus
-        span(v-if="data.item.gamedata.buildings === 2") 2 Häuser
-        span(v-if="data.item.gamedata.buildings === 3") 3 Häuser
-        span(v-if="data.item.gamedata.buildings === 4") 4 Häuser
-        span(v-if="data.item.gamedata.buildings === 5") Hotel
+        span(v-if="getBuildingNb(data) === 0") unbebaut
+        span(v-if="getBuildingNb(data) === 1") 1 Haus
+        span(v-if="getBuildingNb(data) === 2") 2 Häuser
+        span(v-if="getBuildingNb(data) === 3") 3 Häuser
+        span(v-if="getBuildingNb(data) === 4") 4 Häuser
+        span(v-if="getBuildingNb(data) === 5") Hotel
       template(#cell(gamedata)="data")
         span(v-if="!data.item.gamedata.buildingEnabled || data.item.gamedata.buildings === 5") nicht möglich
         b-button(v-if="data.item.gamedata.buildingEnabled && data.item.gamedata.buildings < 5" variant="dark" size="sm" @click="onBuyHouseClick(data.item)" :disabled="buyingDisabled") bauen für {{data.item.pricelist.pricePerHouse | formatPrice}}
@@ -31,6 +30,7 @@
 
 <script>
 import {formatPrice} from '../../../../common/lib/formatters';
+import {filter, get} from 'lodash';
 
 export default {
   name      : 'OwnPropertyList',
@@ -69,13 +69,27 @@ export default {
       ]
     };
   },
-  computed  : {},
+  computed  : {
+    /**
+     * Filtering the properties. The built in function in the table crashed, too complex structure!
+     * @returns {unknown[]}
+     */
+    propertyList() {
+      return filter(this.properties, p => {
+        return get(p, 'gamedata.owner', 'none') === this.teamId;
+      });
+    }
+  },
   created   : function () {
+    console.log('own-property-list created');
   },
   methods   : {
     onBuyHouseClick(property) {
       console.log(`Buy house for ${property}`);
       this.$emit('buy-house', property)
+    },
+    getBuildingNb(obj) {
+      return get(obj, 'item.gamedata.buildings', 0);
     }
   }
 }

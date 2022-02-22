@@ -11,9 +11,7 @@ import {merge, get} from 'lodash';
 import EventEmitter from '../../common/lib/eventEmitter';
 
 
-
 class Property extends EventEmitter {
-
   /**
    * Constructor
    * @param p is the property as in the Property Model, is merged with the object
@@ -21,9 +19,9 @@ class Property extends EventEmitter {
   constructor(p) {
     super();
     merge(this, p);
-    this.marker          = null;
-    this.isVisibleInList = true; // Flag indicating if the property is in the list or not
-
+    this.marker                 = null;
+    this.isVisibleInList        = true; // Flag indicating if the property is in the list or not
+    this.ferropolyMap           = null;
     // The Icons to use
     this.ICON_EDIT_LOCATION     = '/images/markers/red-dot.png';
     this.ICON_TRAIN_LOCATION    = '/images/markers/green.png';
@@ -75,7 +73,7 @@ class Property extends EventEmitter {
   setMap(map) {
     this.createMarker();
     this.marker.setMap(map);
-    this.map = map;
+    this.ferropolyMap = map;
   }
 
   /**
@@ -84,7 +82,7 @@ class Property extends EventEmitter {
    */
   applyFilter(show) {
     if (show && !this.isVisibleInList) {
-      this.marker.setMap(this.map);
+      this.marker.setMap(this.ferropolyMap);
       this.isVisibleInList = true;
     } else if (!show && this.isVisibleInList) {
       this.marker.setMap(null);
