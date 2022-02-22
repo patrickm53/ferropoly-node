@@ -23,7 +23,8 @@
         span(v-if="getBuildingNb(data) === 4") 4 Häuser
         span(v-if="getBuildingNb(data) === 5") Hotel
       template(#cell(gamedata)="data")
-        span(v-if="!data.item.gamedata.buildingEnabled || data.item.gamedata.buildings === 5") nicht möglich
+        span(v-if="!data.item.gamedata.buildingEnabled && data.item.gamedata.buildings < 5") nicht möglich
+        span(v-if="data.item.gamedata.buildings === 5") &nbsp;
         b-button(v-if="data.item.gamedata.buildingEnabled && data.item.gamedata.buildings < 5" variant="dark" size="sm" @click="onBuyHouseClick(data.item)" :disabled="buyingDisabled") bauen für {{data.item.pricelist.pricePerHouse | formatPrice}}
 
 </template>
