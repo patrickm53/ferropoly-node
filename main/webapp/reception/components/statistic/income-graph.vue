@@ -91,9 +91,12 @@ export default {
           width : 2,
           colors: ['transparent']
         },
-        yaxis      : {},
-        fill       : {
-          opacity: 1
+        yaxis     : {
+          labels        : {
+            formatter: formatPrice
+          },
+          tickAmount    : 10,
+          forceNiceScale: true
         },
         tooltip    : {
           y: {
