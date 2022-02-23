@@ -8,7 +8,7 @@
     b-row.mt-1
       b-col(sm="4")
         ferro-card(title="Reiselog" size="sm")
-          p coming soon
+          travel-log-list(:travel-log="travelLogForTeam")
       b-col(sm="8")
         ferro-card(title="Standortverlauf" size="sm")
           property-display-selector(@change="onNewPropertyViewSelected")
@@ -22,10 +22,11 @@ import FerropolyMap from '../../../../common/components/ferropoly-map/ferropoly-
 import PropertyDisplaySelector from './property-display-selector.vue';
 import {mapFields} from 'vuex-map-fields';
 import {delay, get} from 'lodash';
+import TravelLogList from './travel-log-list.vue';
 
 export default {
   name      : 'NavContentLog',
-  components: {PropertyDisplaySelector, FerropolyMap, FerroCard},
+  components: {TravelLogList, PropertyDisplaySelector, FerropolyMap, FerroCard},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -41,6 +42,9 @@ export default {
       travelLog : 'travelLog.log',
       properties: 'properties.list'
     }),
+    travelLogForTeam() {
+      return this.$store.getters.teamLog(this.teamId).getTrackPoints();
+    }
   },
   created   : function () {
   },

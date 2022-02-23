@@ -30,9 +30,12 @@ class TeamTrack {
    */
   pushLocation(location) {
     let newLocation = {
-      lat: parseFloat(get(location, 'lat', '0')),
-      lng: parseFloat(get(location, 'lng', '0')),
-      ts : DateTime.fromISO(get(location, 'ts', DateTime.now().toISO())),
+      lat       : parseFloat(get(location, 'lat', '0')),
+      lng       : parseFloat(get(location, 'lng', '0')),
+      ts        : DateTime.fromISO(get(location, 'ts', DateTime.now().toISO())),
+      name      : get(location, 'name', 'nada'),
+      accuracy  : location.accuracy,
+      propertyId: location.propertyId
     }
     if (!find(this.track, {'ts': newLocation.ts})) {
       this.track.push(newLocation);
@@ -47,6 +50,14 @@ class TeamTrack {
       this.updateMarker();
       this.updatePolyline();
     }
+  }
+
+  /**
+   * Returns the array with the track points
+   * @returns {[]}
+   */
+  getTrackPoints() {
+    return this.track;
   }
 
   /**

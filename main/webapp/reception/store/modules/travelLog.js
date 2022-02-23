@@ -36,10 +36,20 @@ const module = {
      */
     updateTravelLog({state, rootState, getters}, options) {
       const createEntry = function (tl) {
+        let propertyId = get(tl, 'propertyId', null);
+        let name;
+        if (propertyId) {
+          name = get(getters.getPropertyById(propertyId), 'location.name', 'none');
+        } else {
+          name = `GPS: ${tl.position.lat}, ${tl.position.lng}`
+        }
         return {
-          lat: tl.position.lat,
-          lng: tl.position.lng,
-          ts : tl.timestamp
+          lat       : tl.position.lat,
+          lng       : tl.position.lng,
+          ts        : tl.timestamp,
+          name      : name,
+          accuracy  : get(tl, 'position.accuracy', 10000),
+          propertyId: get(tl, 'propertyId', null)
         };
       }
       let teamId        = get(options, 'teamUuid', undefined);

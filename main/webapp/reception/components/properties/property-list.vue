@@ -35,6 +35,7 @@ import {faHotel} from '@fortawesome/free-solid-svg-icons'
 import {faHome} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import $ from 'jquery';
+
 library.add(faHotel);
 library.add(faHome);
 
@@ -73,7 +74,7 @@ export default {
     };
   },
   computed  : {},
-  mounted: function () {
+  mounted   : function () {
     this.resizeHandler();
   },
   created   : function () {
@@ -83,7 +84,7 @@ export default {
   destroyed() {
     window.removeEventListener('resize', this.resizeHandler);
   },
-  methods   : {
+  methods: {
     onRowClicked(item) {
       this.$emit('property-selected', item);
     },
@@ -131,6 +132,7 @@ export default {
   overflow: auto;
   font-size: 12px;
   height: 200px;
+  cursor: pointer;
 }
 
 </style>
