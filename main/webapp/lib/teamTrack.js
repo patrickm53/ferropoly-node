@@ -4,8 +4,8 @@
  * Created: 06.02.22
  **/
 import {get, sortBy, find, last, maxBy, minBy} from 'lodash';
-import {DateTime} from 'luxon';
 import {faLocationDot} from '@fortawesome/free-solid-svg-icons';
+import {TeamTrackLocation} from './teamTrackLocation';
 
 class TeamTrack {
   /**
@@ -29,14 +29,7 @@ class TeamTrack {
    * @param location
    */
   pushLocation(location) {
-    let newLocation = {
-      lat       : parseFloat(get(location, 'lat', '0')),
-      lng       : parseFloat(get(location, 'lng', '0')),
-      ts        : DateTime.fromISO(get(location, 'ts', DateTime.now().toISO())),
-      name      : get(location, 'name', 'nada'),
-      accuracy  : location.accuracy,
-      propertyId: location.propertyId
-    }
+    let newLocation = new TeamTrackLocation(location);
     if (!find(this.track, {'ts': newLocation.ts})) {
       this.track.push(newLocation);
       // Sort by timestamp

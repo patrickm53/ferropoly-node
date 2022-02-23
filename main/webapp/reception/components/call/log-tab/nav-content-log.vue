@@ -8,7 +8,7 @@
     b-row.mt-1
       b-col(sm="4")
         ferro-card(title="Reiselog" size="sm")
-          travel-log-list(:travel-log="travelLogForTeam")
+          travel-log-list(:travel-log="travelLogForTeam" @location-selected="onLocationSelected")
       b-col(sm="8")
         ferro-card(title="Standortverlauf" size="sm")
           property-display-selector(@change="onNewPropertyViewSelected")
@@ -33,7 +33,8 @@ export default {
   props     : {},
   data      : function () {
     return {
-      map: null
+      map             : null,
+      selectedLocation: null,
     };
   },
   computed  : {
@@ -105,6 +106,17 @@ export default {
           p.setMap(null);
         }
       });
+    },
+    /**
+     * Event with a newly selected location
+     * @param location
+     */
+    onLocationSelected(location) {
+      if (this.selectedLocation) {
+        this.selectedLocation.setMarker(null);
+      }
+      this.selectedLocation = location;
+      this.selectedLocation.setMarker(this.map);
     }
   }
 }

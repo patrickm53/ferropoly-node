@@ -58,6 +58,7 @@ export default {
     },
     onPositionSelected(item) {
       console.log('click', item);
+      this.$emit('location-selected', item);
     },
     /**
      * Creates the maximum Size of the list
