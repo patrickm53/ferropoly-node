@@ -4,24 +4,26 @@
   29.4.2021 KC
 -->
 <template lang="pug">
-div
-  b-modal(ref="modal-info"
-    :title="title"
-    :size="size"
-    header-bg-variant="info"
-    hide-header-close=true
-    cancel-title="Nein"
-    ok-title="Ja"
-    @cancel="deny",
-    @ok="confirm")
-    .modal-body
-      div(v-html="info")
-      div(v-html="message")
+  div
+    b-modal(ref="modal-info"
+      :title="title"
+      :size="size"
+      header-bg-variant="info"
+      hide-header-close=true
+      cancel-title="Nein"
+      ok-title="Ja"
+      @cancel="deny",
+      @ok="confirm")
+      .modal-body
+        div(v-html="info")
+        div(v-html="message")
 </template>
 
 <script>
 export default {
-  name      : 'modal-info-yes-no',
+  name      : 'ModalInfoYesNo',
+  components: {},
+  model     : {},
   props     : {
     size: {
       type   : String,
@@ -33,10 +35,10 @@ export default {
       title   : '',
       info    : '',
       message : '',
+      context : {},
       callback: undefined
     };
   },
-  model     : {},
   methods   : {
     /**
      * Using this function starts the dialog
@@ -47,6 +49,7 @@ export default {
       this.info     = options.info;
       this.message  = options.message;
       this.callback = options.callback;
+      this.context  = options.context;
       this.$refs['modal-info'].show();
     },
     /**
@@ -60,19 +63,18 @@ export default {
       this.showDialog({title, info, message});
     },
     deny() {
-      this.$emit('no');
+      this.$emit('no', this.context);
       if (this.callback) {
-        this.callback(false);
+        this.callback(false, this.context);
       }
     },
     confirm() {
-      this.$emit('yes');
+      this.$emit('yes', this.context);
       if (this.callback) {
-        this.callback(true);
+        this.callback(true, this.context);
       }
     }
-  },
-  components: {}
+  }
 }
 </script>
 

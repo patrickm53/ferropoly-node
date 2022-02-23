@@ -14,6 +14,7 @@
             per-page="40"
             @buy-property="onBuyProperty"
             :disabled="buyingPropertyActive")
+          modal-info-yes-no(ref="buyConfirmationDialog" @yes="onBuyPropertyConfirmed" @no="onBuyPropertyDenied")
       b-col(sm="6")
         b-row
           b-col(sm="6")
@@ -48,10 +49,11 @@ import axios from 'axios';
 import {get, max} from 'lodash';
 import {formatPrice} from '../../../../common/lib/formatters';
 import $ from 'jquery';
+import ModalInfoYesNo from '../../../../common/components/modal-info-yes-no/modal-info-yes-no.vue';
 
 export default {
   name      : 'NavContentBuy',
-  components: {FerroCard, PropertySelector, GamblingControls, CallLog},
+  components: {ModalInfoYesNo, FerroCard, PropertySelector, GamblingControls, CallLog},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -98,7 +100,20 @@ export default {
     onBuyProperty(p) {
       this.buyingPropertyActive = true;
       console.log(`Buy ${p.uuid}`);
-      axios.post(`/marketplace/buyProperty/${this.gameId}/${this.teamUuid}/${p.uuid}`,
+      let property = this.$store.getters.getPropertyById(p.uuid);
+      let teamName = this.$store.getters.teamIdToTeamName(this.teamUuid);
+      this.$refs.buyConfirmationDialog.showDialog({
+        title  : 'Kauf bestätigen',
+        info   : `Bitte bestätigen, dass ${teamName} folgendes Grundstück kaufen will:<br/>`,
+        message: `<h4>${property.location.name}</h4><p>Kaufpreis: ${formatPrice(property.pricelist.price)}</p>`,
+        context: property
+      });
+
+    },
+    onBuyPropertyConfirmed(p) {
+      console.log('BUY CONFIRMED', p);
+      axios.post(
+          `/marketplace/buyProperty/${this.gameId}/${this.teamUuid}/${p.uuid}`,
           {authToken: this.authToken}
       )
           .then(resp => {
@@ -138,6 +153,10 @@ export default {
           .finally(() => {
             this.buyingPropertyActive = false;
           })
+    },
+    onBuyPropertyDenied(p) {
+      console.log('Buying property canceled', p);
+      this.buyingPropertyActive = false;
     },
     /**
      * Creates the maximum Size of the control boxes

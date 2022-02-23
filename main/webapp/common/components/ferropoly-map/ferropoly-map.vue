@@ -56,9 +56,9 @@ export default {
      * How many pixels shall be the map smaller than filling the screen to bottom???
      */
     ySizeReduction: {
-      type: Number,
+      type: String,
       default: function() {
-        return 0;
+        return '0';
       }
     }
   },
@@ -189,7 +189,7 @@ export default {
       console.log(hDoc, offsetMap);
 
       if (this.mapElement && offsetMap) {
-        this.mapElement.height(hDoc - offsetMap.top - this.ySizeReduction);
+        this.mapElement.height(hDoc - offsetMap.top - parseInt(this.ySizeReduction));
         this.mapElement.width(parentWidth);
       } else {
         console.log('Map not ready yet');
