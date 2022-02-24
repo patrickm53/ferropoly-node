@@ -22,16 +22,21 @@ ferropolyApps.forEach(app => {
 });
 
 module.exports = merge(common, {
-  mode   : 'production',
-  devtool: 'source-map',
-  output : {
+  mode        : 'production',
+  devtool     : 'source-map',
+  output      : {
     filename     : '[name].min.js',
     chunkFilename: '[name].bundle.js',
     path         : path.resolve(__dirname, '..', 'public', 'build')
   },
-  stats  : {
+  stats       : {
     preset  : 'normal',
     children: true
+  },
+  resolve     : {
+    alias: {
+      vue: 'vue/dist/vue.min.js'
+    }
   },
   optimization: {
     splitChunks: {
