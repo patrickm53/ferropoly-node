@@ -1,11 +1,16 @@
 # Ferropoly 
 This is the game part of the Ferropoly project. For more information see [www.ferropoly.ch](http://www.ferropoly.ch).
 
-This software project is generously supported by BrowserStack, [www.browserstack.com](https://www.browserstack.com), a tool enabling tests for every webbrowser on every device.
-
 ## Language policy
 The documentation of the project is  in English while the user interface is in German (there are no plans for the support of other
 languages).
+
+## Software Repository and Bug tracking
+
+  * [Bitbucket Git-Repo](https://bitbucket.org/christian_kuster/ferropoly_main/src/master/)
+    * [Bugtracking](https://bitbucket.org/christian_kuster/ferropoly_main/issues?status=new&status=open) (public), report found bugs here
+  * [Atlassian Jira](https://christian-kuster.atlassian.net/jira/software/projects/FERS/boards/2) for mid and longterm planning (Login required)
+  
 
 ## Environment Variables 
 
