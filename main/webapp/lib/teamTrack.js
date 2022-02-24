@@ -81,7 +81,9 @@ class TeamTrack {
     const lastPosition = last(this.track);
     if (!lastPosition) {
       console.log('no last position, quit');
-      this.marker.setMap(null);
+      if (this.marker) {
+        this.marker.setMap(null);
+      }
       return;
     }
     if (!this.marker) {
