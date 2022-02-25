@@ -5,6 +5,7 @@
 -->
 <template lang="pug">
   b-container(fluid)
+    call-confirm-modal(ref="confirm" @normal-call="onNormalCall" @silent-call="onSilentCall" @cancel="onCancel")
     div(v-if="!callActive")
       h2 Bitte anrufendes Team auswählen
       b-row
@@ -13,7 +14,7 @@
     div(v-if="callActive")
       h2 {{teamName}}
         font#color-tag(:style="cssVars")  &#9608;&#9608;
-      b-button.finish-call-button(@click="finishCall") Anruf beenden
+      b-button.finish-call-button(@click="finishCall" variant="info") Anruf beenden
       ferro-nav(:elements="navBar")
       div(v-if="navBar[0].active")
         nav-content-buy(:enabled="gameActive")
@@ -21,7 +22,6 @@
         nav-content-property(:enabled="gameActive")
       div(v-if="navBar[2].active")
         nav-content-log
-      call-confirm-modal(ref="callConfirm" @normal-call="onNormalCall" @silent-call="onSilentCall" @cancel="onCancel")
 
 </template>
 
@@ -34,6 +34,8 @@ import {mapFields} from 'vuex-map-fields';
 import {get} from 'lodash';
 import NavContentLog from './log-tab/nav-content-log.vue';
 import CallConfirmModal from './call-confirm-modal.vue';
+import axios from 'axios';
+import {formatPrice} from '../../../common/lib/formatters';
 
 export default {
   name      : 'CallRoot',
@@ -55,7 +57,9 @@ export default {
     ...mapFields({
       teamData   : 'teams.list',
       callActive : 'call.callActive',
-      currentTeam: 'call.currentTeam'
+      currentTeam: 'call.currentTeam',
+      gameId     : 'gameId',
+      teamUuid   : 'call.currentTeam.uuid',
     }),
     gameActive() {
       return this.$store.getters.gameIsActive;
@@ -82,7 +86,7 @@ export default {
      */
     onSilentCall(info) {
       this.$store.dispatch({type: 'initCall', team: info.team});
-      this.$store.dispatch({type: 'logInfo', msg: 'Start Anrufbehandlung'});
+      this.$store.dispatch({type: 'logInfo', msg: 'Start Nachbearbeitung'});
     },
     /**
      * Modal dialog: handle a normal call, including gambling
@@ -91,12 +95,38 @@ export default {
     onNormalCall(info) {
       this.$store.dispatch({type: 'initCall', team: info.team});
       this.$store.dispatch({type: 'logInfo', msg: 'Start Anrufbehandlung'});
+      axios.post(
+          `/chancellery/play/${this.gameId}/${this.teamUuid}`,
+          {authToken: this.authToken}
+      ).then(resp => {
+        let res      = resp.data.result;
+        let logEntry = {
+          title: res.infoText,
+          msg  : formatPrice(res.amount)
+        }
+        if (res.amount < 0) {
+          logEntry.type = 'logFail';
+        } else {
+          logEntry.type = 'logSuccess';
+        }
+        this.$store.dispatch(logEntry);
+      }).catch(err => {
+        console.error(err);
+        let errorText = get(err, 'message', 'Fehler Chance/Kanzlei');
+        errorText += ': ' + get(err, 'response.data.message', 'Allgemeiner Fehler');
+        console.error(errorText);
+        this.$store.dispatch({
+          type : 'logFail',
+          title: 'Programmfehler',
+          msg  : errorText
+        });
+      });
     },
     /**
      * Modal dialog canceled
      */
     onCancel() {
-
+      console.warn('you ain\'t seen me, right?');
     },
     /**
      * A team was selected for calling
@@ -104,6 +134,8 @@ export default {
      */
     manageCall(info) {
       // Show modal dialog
+      console.log('manageCall', info);
+      this.$refs.confirm.showDialog(info);
     },
     /**
      * After a game is played (or before): view the team
@@ -119,7 +151,6 @@ export default {
       })
       this.navBar[0].active = true;
     }
-
   }
 }
 </script>
