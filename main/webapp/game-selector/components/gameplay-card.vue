@@ -21,6 +21,8 @@
         b-col {{getGpProperty('scheduling.deleteTs') | formatDate}}
       b-row
         b-col.id Id: {{getGpProperty('internal.gameId')}}
+      b-row(v-if="!getGpProperty('internal.finalized')")
+        b-alert(variant="warning" show) Das Spiel wurde im Editor noch nicht finalisiert und kann deshalb nicht gespielt werden!
       b-row
         b-col
           b-button.btn-gameplay(size="sm" variant="primary" v-if="gameRunning" :href="url.play") Spielen
@@ -38,7 +40,9 @@ import FerroCard from '../../common/components/ferro-card/ferro-card.vue';
 import {DateTime} from 'luxon';
 
 export default {
-  name      : 'gameplay-card',
+  name      : 'GameplayCard',
+  components: {FerroCard, BIconTrash, BIconPerson, BIconPeople, BIconEye, BIconPencil},
+  model     : {},
   props     : {
     gameplay: {
       type   : Object,
@@ -56,23 +60,6 @@ export default {
       }
     };
   },
-  model     : {},
-  methods   : {
-    /**
-     * Get the property of the gameplay object
-     * @param id
-     */
-    getGpProperty(id) {
-      return get(this.gameplay, id, '');
-    },
-    /**
-     * Returns the name of the map
-     * @returns {string|string}
-     */
-    getMapName() {
-      return getMapName(this.getGpProperty('internal.map'));
-    }
-  },
   computed  : {
     /**
      * Is the game running?
@@ -89,7 +76,22 @@ export default {
       return DateTime.now() > gameDate.plus({days: 1});
     }
   },
-  components: {FerroCard, BIconTrash, BIconPerson, BIconPeople, BIconEye, BIconPencil}
+  methods   : {
+    /**
+     * Get the property of the gameplay object
+     * @param id
+     */
+    getGpProperty(id) {
+      return get(this.gameplay, id, '');
+    },
+    /**
+     * Returns the name of the map
+     * @returns {string|string}
+     */
+    getMapName() {
+      return getMapName(this.getGpProperty('internal.map'));
+    }
+  }
 }
 </script>
 
