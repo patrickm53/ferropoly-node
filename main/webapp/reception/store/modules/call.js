@@ -22,6 +22,7 @@ const module = {
       }
     },
     callActive : false,
+    viewOnly   : false,
     log        : []
   }),
   getters  : {
@@ -39,6 +40,18 @@ const module = {
     initCall({state}, options) {
       console.log('initating call', options);
       state.callActive = true;
+      state.viewOnly   = false;
+      assign(state.currentTeam, options.team);
+    },
+    /**
+     * Viewing team after game is over
+     * @param state
+     * @param options
+     */
+    viewTeam({state}, options) {
+      console.log('view team', options);
+      state.callActive = true;
+      state.viewOnly   = true;
       assign(state.currentTeam, options.team);
     },
     /**

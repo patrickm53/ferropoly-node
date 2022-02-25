@@ -5,6 +5,7 @@
 -->
 <template lang="pug">
   div
+    call-active-warning
     ferro-nav.mt-1(:elements="navBarElements" @nav-event="onNavEvent")
     statistic-asset(v-if="currentNavElement==='nav-asset'")
     statistic-asset-history(v-if="currentNavElement==='nav-asset-history'")
@@ -17,10 +18,11 @@ import StatisticAsset from './statistic-asset.vue';
 import StatisticAssetHistory from './statistic-asset-history.vue';
 import StatisticIncome from './statistic-income.vue';
 import FerroNav from '../../../common/components/ferro-nav/ferro-nav.vue';
+import CallActiveWarning from '../call-active-warning.vue';
 
 export default {
   name      : 'StatisticRoot',
-  components: {StatisticAsset, StatisticAssetHistory, StatisticIncome, FerroNav},
+  components: {CallActiveWarning, StatisticAsset, StatisticAssetHistory, StatisticIncome, FerroNav},
   filters   : {},
   mixins    : [],
   model     : {},

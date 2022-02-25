@@ -9,19 +9,19 @@
       h2 Bitte anrufendes Team auswählen
       b-row
         b-col(sm="3" v-for="team in teams" :key="team.uuid")
-          team-selector(:team="team", :team-color="team.color" @manage-call="manageCall" @viewTeam="viewTeam")
+          team-selector(:team="team", :team-color="team.color" :enabled="gameActive" @manage-call="manageCall" @view-team="viewTeam")
     div(v-if="callActive")
       h2 {{teamName}}
         font#color-tag(:style="cssVars")  &#9608;&#9608;
       b-button.finish-call-button(@click="finishCall") Anruf beenden
       ferro-nav(:elements="navBar")
       div(v-if="navBar[0].active")
-        nav-content-buy
+        nav-content-buy(:enabled="gameActive")
       div(v-if="navBar[1].active")
-        nav-content-property
+        nav-content-property(:enabled="gameActive")
       div(v-if="navBar[2].active")
         nav-content-log
-
+      call-confirm-modal(ref="callConfirm" @normal-call="onNormalCall" @silent-call="onSilentCall" @cancel="onCancel")
 
 </template>
 
@@ -33,10 +33,11 @@ import NavContentProperty from './property-tab/nav-content-property.vue';
 import {mapFields} from 'vuex-map-fields';
 import {get} from 'lodash';
 import NavContentLog from './log-tab/nav-content-log.vue';
+import CallConfirmModal from './call-confirm-modal.vue';
 
 export default {
   name      : 'CallRoot',
-  components: {NavContentLog, TeamSelector, FerroNav, NavContentBuy, NavContentProperty},
+  components: {CallConfirmModal, NavContentLog, TeamSelector, FerroNav, NavContentBuy, NavContentProperty},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -56,6 +57,9 @@ export default {
       callActive : 'call.callActive',
       currentTeam: 'call.currentTeam'
     }),
+    gameActive() {
+      return this.$store.getters.gameIsActive;
+    },
     teams() {
       return this.teamData;
     },
@@ -71,12 +75,42 @@ export default {
   created   : function () {
   },
   methods   : {
-    manageCall(info) {
+    /**
+     * Modal dialog: a "silent call" is one without gambling chance, in case you forgot to
+     * do something in the last call
+     * @param info
+     */
+    onSilentCall(info) {
       this.$store.dispatch({type: 'initCall', team: info.team});
       this.$store.dispatch({type: 'logInfo', msg: 'Start Anrufbehandlung'});
     },
-    viewTeam() {
-      console.warn('Not implemented yet');
+    /**
+     * Modal dialog: handle a normal call, including gambling
+     * @param info
+     */
+    onNormalCall(info) {
+      this.$store.dispatch({type: 'initCall', team: info.team});
+      this.$store.dispatch({type: 'logInfo', msg: 'Start Anrufbehandlung'});
+    },
+    /**
+     * Modal dialog canceled
+     */
+    onCancel() {
+
+    },
+    /**
+     * A team was selected for calling
+     * @param info
+     */
+    manageCall(info) {
+      // Show modal dialog
+    },
+    /**
+     * After a game is played (or before): view the team
+     * @param info
+     */
+    viewTeam(info) {
+      this.$store.dispatch({type: 'viewTeam', team: info.team});
     },
     finishCall() {
       this.$store.dispatch({type: 'finishCall'});

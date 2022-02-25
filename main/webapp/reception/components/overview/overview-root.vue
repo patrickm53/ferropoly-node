@@ -15,7 +15,7 @@
       b-col
         game-info
 
-  
+
 </template>
 
 <script>
@@ -24,7 +24,7 @@ import RankingList from './rankingList.vue';
 import CallActiveWarning from '../call-active-warning.vue';
 
 export default {
-  name: "OverviewRoot",
+  name      : 'OverviewRoot',
   components: {GameInfo, RankingList, CallActiveWarning},
   filters   : {},
   mixins    : [],
@@ -33,7 +33,11 @@ export default {
   data      : function () {
     return {};
   },
-  computed  : {},
+  computed  : {
+    gameIsNotActive() {
+      return !this.$store.getters.gameIsActive();
+    }
+  },
   created   : function () {
   },
   methods   : {}

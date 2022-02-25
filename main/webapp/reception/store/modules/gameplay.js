@@ -21,10 +21,12 @@ const gameplay = {
       organisatorPhone: ''
     },
     scheduling: {
-      gameDate : DateTime.now(),
-      gameStart: '',
-      gameEnd  : '',
-      deleteTs : ''
+      gameDate   : DateTime.now(),
+      gameStartTs: '1980-01-01T08:00:00',
+      gameEndTs  : '1980-01-01T09:00:00',
+      gameStart  : '',
+      gameEnd    : '',
+      deleteTs   : ''
     },
     gameParams: {
       startCapital             : 0,
@@ -78,6 +80,18 @@ const gameplay = {
   }),
   getters  : {
     getGameplayField,
+    gameIsActive: (state) => {
+      let now = DateTime.now();
+      if (now < DateTime.fromISO(state.scheduling.gameStartTs)) {
+        console.log('Game ont started yet', now, state.scheduling.gameStartTs);
+        return false;
+      }
+      if (now > DateTime.fromISO(state.scheduling.gameEndTs)) {
+        console.log('Game over', now, state.scheduling.gameEndTs);
+        return false;
+      }
+      return true;
+    }
   },
   mutations: {
     updateGameplayField

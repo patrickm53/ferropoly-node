@@ -20,8 +20,8 @@
         .team-member(v-for="m in team.members" :key="m")
           .team-member-login {{m}}
     p
-      b-button(v-if="gameActive" variant="primary" @click="onManageCall") Anruf bearbeiten
-      b-button(v-if="!gameActive" variant="primary" @click="onViewTeam") Team ansehen
+      b-button(v-if="enabled" variant="primary" @click="onManageCall") Anruf bearbeiten
+      b-button(v-if="!enabled" variant="primary" @click="onViewTeam") Team ansehen
 
 </template>
 
@@ -37,7 +37,7 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    team      : {
+    team     : {
       type   : Object,
       default: () => {
         return {
@@ -54,16 +54,16 @@ export default {
         }
       }
     },
-    gameActive: {
-      type   : Boolean,
-      default: () => {
-        return true;
-      }
-    },
-    teamColor : {
+    teamColor: {
       type   : String,
       default: () => {
         return 'pink';
+      }
+    },
+    enabled  : {
+      type   : Boolean,
+      default: () => {
+        return true;
       }
     }
   },

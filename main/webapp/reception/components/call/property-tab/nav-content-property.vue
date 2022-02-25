@@ -9,7 +9,12 @@
       b-col(sm="6")
         ferro-card(title="Liegenschaften" size="sm")
           p Anzahl Liegenschaften: {{propertyNb}}
-          own-property-list(:properties="properties" :team-id="teamId" @buy-house="onBuyHouse" :buying-disabled="buyingHouseDisabled")
+          own-property-list(
+            :properties="properties"
+            :team-id="teamId"
+            :enabled="enabled"
+            @buy-house="onBuyHouse"
+            :buying-disabled="buyingHouseDisabled")
         b-toast(id="building-error" title="Hausbau" variant="danger")
           p {{buildingErrorMessage}}
       b-col(sm="6")
@@ -33,7 +38,14 @@ export default {
   filters   : {},
   mixins    : [],
   model     : {},
-  props     : {},
+  props     : {
+    enabled  : {
+      type   : Boolean,
+      default: () => {
+        return true;
+      }
+    }
+  },
   data      : function () {
     return {
       buyingHouseDisabled: false,

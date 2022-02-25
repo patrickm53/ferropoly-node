@@ -13,14 +13,17 @@
             :properties="properties"
             per-page="40"
             @buy-property="onBuyProperty"
-            :disabled="buyingPropertyActive")
+            :disabled="buyingPropertyActive || !enabled")
           modal-info-yes-no(ref="buyConfirmationDialog" @yes="onBuyPropertyConfirmed" @no="onBuyPropertyDenied")
       b-col(sm="6")
         b-row
           b-col(sm="6")
             ferro-card(title="Häuserbau" size="sm")
               #building
-                b-button(@click="buildHouses" :disabled="buildingHousesActive") Überall Häuser bauen
+                b-button(
+                  @click="buildHouses"
+                  :disabled="buildingHousesActive || !enabled"
+                ) Überall Häuser bauen
                 p Zur Besitzliste um einzelne Häuser zu bauen
           b-col(sm="6")
             ferro-card(title="Gambling" size="sm")
@@ -30,7 +33,7 @@
                   :max="gamblingMax"
                   @win="onGamblingWin"
                   @loose="onGamblingLoose"
-                  :disabled="gamblingActive"
+                  :disabled="gamblingDisabled"
                 )
         b-row
           b-col(sm="12")
@@ -57,7 +60,14 @@ export default {
   filters   : {},
   mixins    : [],
   model     : {},
-  props     : {},
+  props     : {
+    enabled: {
+      type   : Boolean,
+      default: () => {
+        return true;
+      }
+    }
+  },
   data      : function () {
     return {
       buyingPropertyActive: false,
@@ -80,6 +90,10 @@ export default {
     },
     gamblingMax() {
       return this.gamblingMaxVal.toString();
+    },
+    gamblingDisabled() {
+      console.log('gamblingDisabled?', this.enabled)
+      return (this.gamblingActive || !this.enabled)
     }
   },
   mounted   : function () {
