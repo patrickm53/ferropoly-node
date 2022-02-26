@@ -19,6 +19,7 @@ import call from './modules/call';
 import map from '../../common/store/map';
 import GameProperty from '../../lib/gameProperty';
 import {getTeamColor} from '../lib/teamLib';
+import {GameProperties} from '../../lib/gameProperties';
 
 Vue.use(Vuex);
 
@@ -143,6 +144,7 @@ const store = new Vuex.Store({
         i++;
       });
       // Properties
+      state.propertyRegister.properties = new GameProperties({gameplay: options.data.gameplay});
       options.data.pricelist.forEach(p => {
         state.propertyRegister.register.pushProperty(new GameProperty(p));
       })

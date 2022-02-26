@@ -11,10 +11,17 @@ import {assign, filter, find, findIndex, get} from 'lodash';
 class GameProperties {
   /**
    * We're expecting an array of gameProperty objects as parameter (or none)
-   * @param properties
+   * @param options
    */
-  constructor(properties) {
-    this.properties = properties || [];
+  constructor(options) {
+    this.properties = get(options, 'properties', []);
+    this.gameplay   = get(options, 'gameplay', {
+      gameParams: {
+        rentFactors: {
+          allPropertiesOfGroup: 2
+        }
+      }
+    });
   }
 
   /**
@@ -40,6 +47,17 @@ class GameProperties {
   }
 
   /**
+   * Returns the properties of a team
+   * @param teamId
+   * @returns {string[]}
+   */
+  getPropertiesOfTeam(teamId) {
+    return filter(this.properties, p => {
+      return p.gamedata.owner === teamId;
+    });
+  }
+
+  /**
    * Just returns the first property
    * @returns {*}
    */
@@ -53,9 +71,7 @@ class GameProperties {
    * @returns {number}
    */
   getNbOfPropertiesOfTeam(teamId) {
-    let ownProps = filter(this.properties, p => {
-      return p.gamedata.owner === teamId;
-    })
+    let ownProps = this.getPropertiesOfTeam(teamId);
     return ownProps.length;
   }
 
@@ -125,6 +141,91 @@ class GameProperties {
       p.setMap(null);
     });
   }
+
+  /**
+   * Evaluates the value of all properties belongig to a team
+   * @param teamId
+   * @returns {{max: number, sum: number}}
+   */
+  evaluatePropertyValueForTeam(teamId) {
+    let props  = this.getPropertiesOfTeam(teamId);
+    let retVal = {
+      sum: 0,
+      max: 0
+    }
+    props.forEach(p => {
+      retVal.sum += this.evaluatePropertyValue(p);
+      retVal.max += this.evaluatePropertyValue(p, 5);
+    })
+    return retVal;
+  }
+
+  /**
+   * Returns the value of the property for rent and interest. This function checks also if a group belongs to one team
+   * Pretty much the same as gound in propertyAccount.js in the backend, but it is implemented here as I consider it
+   * better performing in the frontend: do not use too much calculating power in the backend just for a nerdy stats!
+   * @param property
+   * @param calculateWithBuildingNb number of buildings which shall be used for calculation, leave empty if game decides
+   * @returns {*}
+   */
+  evaluatePropertyValue(property, calculateWithBuildingNb = -1) {
+    let propertyGroup = get(property, 'pricelist.propertyGroup', -1);
+    let properties    = filter(this.properties, p => {
+      return p.pricelist.propertyGroup === propertyGroup;
+    });
+
+    let sameGroup = 0;
+    for (let i = 0; i < properties.length; i++) {
+      if (properties[i].gamedata.owner === property.gamedata.owner) {
+        sameGroup++;
+      }
+    }
+    let retVal = {};
+    let factor = 1;
+    if ((properties.length > 1) && (sameGroup === properties.length)) {
+      // all properties in a group belong the same team, pay more!
+      factor = this.gameplay.gameParams.rentFactors.allPropertiesOfGroup || 2;
+      console.log(`Properties in group ${propertyGroup} count ${factor} x`);
+    }
+
+    let rent       = 0;
+    let buildingNb;
+    if (calculateWithBuildingNb >= 0) {
+      buildingNb = calculateWithBuildingNb;
+    }
+    else {
+      buildingNb = property.gamedata.buildings || 0;
+    }
+
+    switch (buildingNb) {
+      case 0:
+        rent = property.pricelist.rents.noHouse;
+        break;
+      case 1:
+        rent = property.pricelist.rents.oneHouse;
+        break;
+      case 2:
+        rent = property.pricelist.rents.twoHouses;
+        break;
+      case 3:
+        rent = property.pricelist.rents.threeHouses;
+        break;
+      case 4:
+        rent = property.pricelist.rents.fourHouses;
+        break;
+      case 5:
+        rent = property.pricelist.rents.hotel;
+        break;
+      default:
+        console.warn('invalid building nb', property);
+    }
+
+    retVal.amount = rent * factor;
+    retVal.uuid   = property.uuid;
+    return retVal.amount;
+  };
+
+
 }
 
 export {GameProperties};

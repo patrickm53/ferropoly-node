@@ -13,7 +13,6 @@ import {formatPrice} from '../../../common/lib/formatters';
 import VueApexCharts from 'vue-apexcharts';
 import {mapFields} from 'vuex-map-fields';
 import {forOwn} from 'lodash';
-import {evaluateCurrentPropertyValue, evaluatePropertyValue} from '../../lib/propertyLib';
 import $ from 'jquery';
 
 export default {
@@ -37,12 +36,14 @@ export default {
       let dataset = {};
       // Init the working data set
       this.teams.forEach(t => {
+        let rents = this.propertyRegister.evaluatePropertyValueForTeam(t.uuid);
         dataset[t.uuid] = {
           name     : t.data.name,
-          current  : {x: t.data.name, y: 0},
-          potential: {x: t.data.name, y: 0}
+          current  : {x: t.data.name, y: rents.sum},
+          potential: {x: t.data.name, y: rents.max - rents.sum}
         }
       });
+
       // Iterate through propertys and fill in the data
       let series = [
         {
@@ -54,7 +55,7 @@ export default {
           data: []
         }
       ];
-
+/*
       this.propertyRegister.properties.forEach(p => {
         let owner = p.gamedata.owner;
         if (owner) {
@@ -62,7 +63,7 @@ export default {
           dataset[owner].current.y += current;
           dataset[owner].potential.y += evaluatePropertyValue(p, 5) - current;
         }
-      });
+      });*/
 
       forOwn(dataset, (value) => {
         series[0].data.push(value.current);

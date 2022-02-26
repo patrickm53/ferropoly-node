@@ -8,7 +8,7 @@
   #property-list
     b-table(striped
     small
-    :items="properties"
+    :items="propertyRegister.properties"
       :fields="fields"
       responsive="sm"
       sort-icon-left
@@ -35,6 +35,8 @@ import {faHotel} from '@fortawesome/free-solid-svg-icons'
 import {faHome} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import $ from 'jquery';
+import {GameProperties} from '../../../lib/gameProperties';
+
 
 library.add(faHotel);
 library.add(faHome);
@@ -46,10 +48,10 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    properties: {
-      type   : Array,
+    propertyRegister: {
+      type   : Object,
       default: function () {
-        return [];
+        return new GameProperties();
       }
     }
   },

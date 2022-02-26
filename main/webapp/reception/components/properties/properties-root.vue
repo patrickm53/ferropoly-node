@@ -9,7 +9,7 @@
     b-row
       b-col(sm="12" md="6")
         property-list(
-          :properties="properties"
+          :property-register="propertyRegister"
           @property-selected="onPropertySelected")
       b-col(sm="12" md="6")
         ferro-card(:title="selectedProperty.location.name" size="sm")
