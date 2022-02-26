@@ -99,9 +99,10 @@ export default {
           `/chancellery/play/${this.gameId}/${this.teamUuid}`,
           {authToken: this.authToken}
       ).then(resp => {
+        console.log('GAMBLING', resp.data);
         let res      = resp.data.result;
         let logEntry = {
-          title: res.infoText,
+          title: res.infoText || res.title,
           msg  : formatPrice(res.amount)
         }
         if (res.amount < 0) {
