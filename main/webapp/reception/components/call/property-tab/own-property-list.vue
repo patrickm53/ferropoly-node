@@ -32,6 +32,7 @@
 <script>
 import {formatPrice} from '../../../../common/lib/formatters';
 import {filter, get} from 'lodash';
+import {GameProperties} from '../../../../lib/gameProperties';
 
 export default {
   name      : 'OwnPropertyList',
@@ -46,10 +47,10 @@ export default {
         return 'none';
       }
     },
-    properties: {
-      type   : Array,
+    propertyRegister: {
+      type   : Object,
       default: () => {
-        return [];
+        return new GameProperties();
       }
     },
     buyingDisabled: {
@@ -82,7 +83,7 @@ export default {
      * @returns {unknown[]}
      */
     propertyList() {
-      return filter(this.properties, p => {
+      return filter(this.propertyRegister.properties, p => {
         return get(p, 'gamedata.owner', 'none') === this.teamId;
       });
     }

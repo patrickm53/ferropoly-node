@@ -30,7 +30,7 @@ export default {
   },
   computed  : {
     ...mapFields({
-      properties: 'properties.list',
+      propertyRegister: 'propertyRegister.register',
       teams     : 'teams.list'
     }),
     chartData() {
@@ -55,7 +55,7 @@ export default {
         }
       ];
 
-      this.properties.forEach(p => {
+      this.propertyRegister.properties.forEach(p => {
         let owner = p.gamedata.owner;
         if (owner) {
           let current = evaluateCurrentPropertyValue(p);

@@ -32,6 +32,7 @@
 
 <script>
 import $ from 'jquery';
+import {GameProperties} from '../../../../lib/gameProperties';
 
 export default {
   name      : 'PropertySelector',
@@ -40,19 +41,19 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    properties: {
-      type   : Array,
+    propertyRegister: {
+      type   : Object, // a GameProperties Object
       default: () => {
-        return [];
+        return new GameProperties();
       }
     },
-    perPage   : {
+    perPage         : {
       type   : String,
       default: () => {
         return '10'
       }
     },
-    disabled  : {
+    disabled        : {
       type   : Boolean,
       default: () => {
         return false;
@@ -72,7 +73,7 @@ export default {
   computed  : {
     propertyList() {
       if (this.filter) {
-        return this.properties;
+        return this.propertyRegister.properties;
       }
       return [];
     }
@@ -83,7 +84,7 @@ export default {
   created   : function () {
     this.resizeHandler();
   },
-  methods: {
+  methods   : {
     filterNames(row, filter) {
       return row.location.name.toLowerCase().includes(filter.toLowerCase());
     },

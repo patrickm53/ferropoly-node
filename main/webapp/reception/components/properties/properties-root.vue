@@ -60,11 +60,11 @@ export default {
   },
   computed  : {
     ...mapFields({
-      properties: 'properties.list'
+      propertyRegister: 'propertyRegister.register'
     }),
   },
   created   : function () {
-    this.selectedProperty = this.properties[0];
+    this.selectedProperty = this.propertyRegister.getFirstProperty();
   },
   methods   : {
     onPropertySelected(property) {

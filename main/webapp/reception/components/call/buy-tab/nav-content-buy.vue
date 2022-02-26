@@ -10,7 +10,7 @@
         ferro-card(title="Liegenschaft kaufen" size="sm")
           property-selector#prop-selector(
             ref="propSelector"
-            :properties="properties"
+            :property-register="propertyRegister"
             per-page="40"
             @buy-property="onBuyProperty"
             :disabled="buyingPropertyActive || !enabled")
@@ -77,13 +77,13 @@ export default {
   },
   computed  : {
     ...mapFields({
-      properties    : 'properties.list',
-      gameId        : 'gameId',
-      teamUuid      : 'call.currentTeam.uuid',
-      authToken     : 'authToken',
-      gamblingMinVal: 'gameplay.gameParams.chancellery.minLottery',
-      gamblingMaxVal: 'gameplay.gameParams.chancellery.maxLottery',
-      log           : 'call.log'
+      propertyRegister: 'propertyRegister.register',
+      gameId          : 'gameId',
+      teamUuid        : 'call.currentTeam.uuid',
+      authToken       : 'authToken',
+      gamblingMinVal  : 'gameplay.gameParams.chancellery.minLottery',
+      gamblingMaxVal  : 'gameplay.gameParams.chancellery.maxLottery',
+      log             : 'call.log'
     }),
     gamblingMin() {
       return this.gamblingMinVal.toString();

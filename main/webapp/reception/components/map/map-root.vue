@@ -38,14 +38,14 @@ export default {
   },
   computed  : {
     ...mapFields({
-      gameId    : 'gameId',
-      center    : 'map.center',
-      zoom      : 'map.zoom',
-      bounds    : 'map.bounds',
-      map       : 'map.instance',
-      properties: 'properties.list',
-      teams     : 'teams.list',
-      travelLog : 'travelLog.log'
+      gameId          : 'gameId',
+      center          : 'map.center',
+      zoom            : 'map.zoom',
+      bounds          : 'map.bounds',
+      map             : 'map.instance',
+      propertyRegister: 'propertyRegister.register',
+      teams           : 'teams.list',
+      travelLog       : 'travelLog.log'
     }),
     mapOptions() {
       return {
@@ -72,11 +72,7 @@ export default {
         this.$refs.map.setZoom(zoom);
       }
 
-      this.properties.forEach(p => {
-        if (p.isAvailable()) {
-          p.setMap(map);
-        }
-      });
+      this.propertyRegister.showOnlyFreePropertiesOnMap(map);
 
       forOwn(this.travelLog, (value) => {
         if (value.visible) {

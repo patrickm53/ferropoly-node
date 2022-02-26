@@ -8,7 +8,7 @@ import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
 import {get, forIn, isPlainObject, set, sortBy} from 'lodash';
 import gameplay from './modules/gameplay';
-import properties from './modules/properties';
+import propertyRegister from './modules/propertyRegister';
 import propertyAccount from './modules/propertyAccount';
 import rankingList from './modules/rankingList';
 import teamAccount from './modules/teamAccount';
@@ -77,7 +77,7 @@ const store = new Vuex.Store({
   },
   modules  : {
     gameplay,
-    properties,
+    propertyRegister,
     propertyAccount,
     rankingList,
     teamAccount,
@@ -144,10 +144,10 @@ const store = new Vuex.Store({
       });
       // Properties
       options.data.pricelist.forEach(p => {
-        state.properties.list.push(new GameProperty(p));
+        state.propertyRegister.register.pushProperty(new GameProperty(p));
       })
       // Properties -> Map settings
-      dispatch('setMapBounds', state.properties.list);
+      dispatch('setMapBounds', state.propertyRegister.register.properties);
 
       state.gameDataLoaded = true;
     },

@@ -10,7 +10,7 @@
         ferro-card(title="Liegenschaften" size="sm")
           p Anzahl Liegenschaften: {{propertyNb}}
           own-property-list(
-            :properties="properties"
+            :property-register="propertyRegister"
             :team-id="teamId"
             :enabled="enabled"
             @buy-house="onBuyHouse"
@@ -28,7 +28,7 @@ import FerroCard from '../../../../common/components/ferro-card/ferro-card.vue';
 import TeamAccount from '../../../../lib/components/teamAccount.vue';
 import OwnPropertyList from './own-property-list.vue';
 import {mapFields} from 'vuex-map-fields';
-import {filter, get} from 'lodash';
+import {get} from 'lodash';
 import axios from 'axios';
 import {formatPrice} from '../../../../common/lib/formatters';
 
@@ -39,7 +39,7 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    enabled  : {
+    enabled: {
       type   : Boolean,
       default: () => {
         return true;
@@ -48,16 +48,16 @@ export default {
   },
   data      : function () {
     return {
-      buyingHouseDisabled: false,
+      buyingHouseDisabled : false,
       buildingErrorMessage: ''
     };
   },
   computed  : {
     ...mapFields({
-      gameId    : 'gameId',
-      teamId    : 'call.currentTeam.uuid',
-      properties: 'properties.list',
-      authToken: 'authToken'
+      gameId          : 'gameId',
+      teamId          : 'call.currentTeam.uuid',
+      propertyRegister: 'propertyRegister.register',
+      authToken       : 'authToken'
     }),
     /**
      * Transactions of the team
@@ -74,10 +74,7 @@ export default {
      * @returns {number}
      */
     propertyNb() {
-      let ownProps = filter(this.properties, p => {
-        return p.gamedata.owner === this.teamId;
-      })
-      return ownProps.length;
+      return this.propertyRegister.getNbOfPropertiesOfTeam(this.teamId);
     }
   },
   mounted   : function () {

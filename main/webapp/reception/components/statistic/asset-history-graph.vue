@@ -30,8 +30,7 @@ export default {
   },
   computed  : {
     ...mapFields({
-      properties: 'properties.list',
-      teams     : 'teams.list'
+      teams: 'teams.list'
     }),
     chartData() {
       let series = [];
@@ -82,7 +81,7 @@ export default {
               return DateTime.fromMillis(val).toLocaleString(DateTime.TIME_24_WITH_SECONDS);
             }
           },
-          labels: {
+          labels : {
             datetimeUTC: false
           }
         },
@@ -104,7 +103,7 @@ export default {
       return $(window).height() * 0.8;
     }
   },
-  methods: {}
+  methods   : {}
 }
 </script>
 

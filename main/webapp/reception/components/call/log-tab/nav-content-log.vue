@@ -21,7 +21,7 @@ import FerroCard from '../../../../common/components/ferro-card/ferro-card.vue';
 import FerropolyMap from '../../../../common/components/ferropoly-map/ferropoly-map.vue';
 import PropertyDisplaySelector from './property-display-selector.vue';
 import {mapFields} from 'vuex-map-fields';
-import {delay, get} from 'lodash';
+import {delay} from 'lodash';
 import TravelLogList from './travel-log-list.vue';
 
 export default {
@@ -39,9 +39,9 @@ export default {
   },
   computed  : {
     ...mapFields({
-      teamId    : 'call.currentTeam.uuid',
-      travelLog : 'travelLog.log',
-      properties: 'properties.list'
+      teamId          : 'call.currentTeam.uuid',
+      travelLog       : 'travelLog.log',
+      propertyRegister: 'propertyRegister.register'
     }),
     travelLogForTeam() {
       return this.$store.getters.teamLog(this.teamId).getTrackPoints();
@@ -64,7 +64,7 @@ export default {
       delay(() => {
         this.$refs.map.fitBounds(travelLog.getBounds());
         travelLog.setMap(map);
-        this.showFreeProperties();
+        this.propertyRegister.showOnlyFreePropertiesOnMap(map);
       }, 500);
 
     },
@@ -72,40 +72,17 @@ export default {
       console.log('new property view', p);
       switch (p) {
         case 'own':
-          this.showOwnProperties();
+          this.propertyRegister.showOnlyPropertiesOfTeamOnMap(this.map, this.teamId);
           break;
         case 'all':
-          this.showAllProperties();
+          this.propertyRegister.showAllPropertiesOnMap(this.map);
           break;
         case 'free':
-          this.showFreeProperties();
+          this.propertyRegister.showOnlyFreePropertiesOnMap(this.map);
           break;
         default:
           console.warn(`Don't know what to do: ${p}`);
       }
-    },
-    showAllProperties() {
-      this.properties.forEach(p => {
-        p.setMap(this.map);
-      });
-    },
-    showFreeProperties() {
-      this.properties.forEach(p => {
-        if (p.isAvailable()) {
-          p.setMap(this.map);
-        } else {
-          p.setMap(null);
-        }
-      });
-    },
-    showOwnProperties() {
-      this.properties.forEach(p => {
-        if (get(p, 'gamedata.owner', '') === this.teamId) {
-          p.setMap(this.map);
-        } else {
-          p.setMap(null);
-        }
-      });
     },
     /**
      * Event with a newly selected location

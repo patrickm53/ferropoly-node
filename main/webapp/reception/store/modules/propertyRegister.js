@@ -4,9 +4,11 @@
  * Created: 12.12.21
  **/
 import {createHelpers} from 'vuex-map-fields';
-import {find, findIndex, get, assign} from 'lodash';
 import axios from 'axios';
 import GameProperty from '../../../lib/gameProperty';
+import {GameProperties} from '../../../lib/gameProperties';
+import {get} from 'lodash';
+
 const {getPricelistField, updatePricelistField} = createHelpers({
   getterType  : 'getPricelistField',
   mutationType: 'updatePricelistField'
@@ -14,7 +16,7 @@ const {getPricelistField, updatePricelistField} = createHelpers({
 
 const module = {
   state    : () => ({
-    list: []
+    register: new GameProperties()
   }),
   getters  : {
     getPricelistField,
@@ -24,7 +26,7 @@ const module = {
      * @returns {function(*): unknown}
      */
     getPropertyById: (state) => (id) => {
-      return find(state.list, {uuid: id});
+      return state.register.getPropertyById(id);
     }
   },
   mutations: {
@@ -42,11 +44,7 @@ const module = {
       let property = new GameProperty(get(options, 'property', null));
       console.log('updatePropertyInPricelist', property, options.property);
       if (property && property.uuid) {
-        let i = findIndex(state.list, {uuid: property.uuid});
-        if (i > -1) {
-          assign(state.list[i], property);
-          console.log(`updated ${property.location.name}`);
-        }
+        state.register.updateProperty(property);
       }
     },
 
@@ -63,13 +61,7 @@ const module = {
         .then(resp => {
           resp.data.properties.forEach(p => {
             let property = new GameProperty(p);
-            let i = findIndex(state.list, {uuid: property.uuid});
-            if (i > -1) {
-              assign(state.list[i], property);
-              state.list[i] = property;
-            } else {
-              console.error('Did not find property', property);
-            }
+            state.register.updateProperty(property);
           });
           console.log('Properties read', resp.data, state.list);
         })
