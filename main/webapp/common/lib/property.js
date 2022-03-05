@@ -11,6 +11,7 @@ import {merge, get} from 'lodash';
 import EventEmitter from '../../common/lib/eventEmitter';
 
 
+
 class Property extends EventEmitter {
 
   /**

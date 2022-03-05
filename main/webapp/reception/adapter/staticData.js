@@ -7,7 +7,7 @@ import axios from 'axios';
 import {get} from 'lodash';
 
 function getStaticData(gameId, callback) {
-  axios.get(`/reception/static/${gameId}`)
+  axios.get(`/static/${gameId}`)
     .then(resp => {
       console.log(resp.data);
       return callback(null, resp.data);

@@ -11,17 +11,19 @@ const settings                    = require('../settings');
 const gameplayModel               = require('../../common/models/gameplayModel');
 const chancelleryTransactionModel = require('../../common/models/accounting/chancelleryTransaction');
 const teamAccountTransactionModel = require('../../common/models/accounting/teamAccountTransaction');
-const travelLogModel              = require('../../common/models/travelLogModel');
-const propertyModel               = require('../../common/models/propertyModel');
-const gameLogModel                = require('../../common/models/gameLogModel');
-const pricelist                   = require('../../common/lib/pricelist');
-const teamModel                   = require('../../common/models/teamModel');
-const errorHandler                = require('../lib/errorHandler');
-const logger                      = require('../../common/lib/logger').getLogger('routes:summary');
-const summaryMailer               = require('../lib/summaryMailer');
-const async                       = require('async');
-const moment                      = require('moment');
-const _                           = require('lodash');
+const travelLogModel = require('../../common/models/travelLogModel');
+const propertyModel  = require('../../common/models/propertyModel');
+const gameLogModel   = require('../../common/models/gameLogModel');
+const pricelist      = require('../../common/lib/pricelist');
+const teamModel      = require('../../common/models/teamModel');
+const errorHandler   = require('../lib/errorHandler');
+const logger         = require('../../common/lib/logger').getLogger('routes:summary');
+const summaryMailer  = require('../lib/summaryMailer');
+const async          = require('async');
+const moment         = require('moment');
+const _              = require('lodash');
+const gameCache      = require('../lib/gameCache');
+const path           = require('path');
 
 
 let ngFile = '/js/summaryctrl.js';
@@ -29,8 +31,21 @@ if (settings.minifiedjs) {
   ngFile = '/js/min/summaryctrl.min.js';
 }
 
-/* GET home page. */
+
+/**
+ * Send HTML Page
+ */
 router.get('/:gameId', function (req, res) {
+  gameCache.getGameData(req.params.gameId, (err, gameData) => {
+    if (err || !gameData) {
+      return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
+    }
+    res.sendFile(path.join(__dirname, '..', 'public', 'html', 'summary.html'));
+  });
+});
+
+/* GET home page. */
+router.get('/old/:gameId', function (req, res) {
   let gameId = req.params.gameId;
   let info   = {};
 
