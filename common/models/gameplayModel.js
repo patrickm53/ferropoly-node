@@ -87,6 +87,7 @@ const gameplaySchema = mongoose.Schema({
     finalized              : {type: Boolean, default: false}, // finalized means no edits anymore,
     priceListPendingChanges: {type: Boolean, default: false}, // Are there pending changes?
     creatingInstance       : String,                          // Instance creating this gameplay
+    gameDataPublic         : {type: Boolean, default: false}, // After the game, the complete game is "public"
     isDemo                 : {type: Boolean, default: false}  // Demo games have some special behaviour
   },
   joining   : {
