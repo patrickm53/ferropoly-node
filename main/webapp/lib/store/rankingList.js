@@ -30,21 +30,22 @@ const module = {
      * Loads the ranking list, has a mechanism included to avoid loading it too often
      * @param state
      * @param options has to contain the gameId
+     * @returns promise
      */
     loadRankingList({state}, options) {
-      if (!options.gameId) {
-        console.log('GameId not loaded yet, wait for ranking list');
-        return;
-      }
-
-      if (state.nextUpdate > DateTime.now() && !options.forcedUpdate) {
-        console.log('Not yet time to load', state.nextUpdate.toISOTime());
-        return;
-      }
-      state.nextUpdate = DateTime.now().plus({seconds: 30});
-
       // My first promise... a bit special when being more familiar with callbacks... ;-)
       return new Promise((resolve, reject) => {
+        if (!options.gameId) {
+          console.log('GameId not loaded yet, wait for ranking list');
+          return reject({active:false});
+        }
+
+        if (state.nextUpdate > DateTime.now() && !options.forcedUpdate) {
+          console.log('Not yet time to load', state.nextUpdate.toISOTime());
+          return reject({active:false});
+        }
+        state.nextUpdate = DateTime.now().plus({seconds: 30});
+
         axios.get(`/statistics/rankingList/${options.gameId}`)
           .then(resp => {
             console.log('Building ranking list', resp.data);
@@ -61,7 +62,7 @@ const module = {
               message : get(err, 'response.data.message', null) || err.message,
               infoText: 'Es gab einen Fehler beim Laden der Rangliste:',
               active  : true
-            })
+            });
           })
       });
 

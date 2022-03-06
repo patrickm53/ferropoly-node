@@ -114,7 +114,7 @@ export default {
     onBuyProperty(p) {
       this.buyingPropertyActive = true;
       console.log(`Buy ${p.uuid}`);
-      let property = this.$store.getters.getPropertyById(p.uuid);
+      let property = this.$store.getters['propertyRegister/getPropertyById'](p.uuid);
       let teamName = this.$store.getters.teamIdToTeamName(this.teamUuid);
       this.$refs.buyConfirmationDialog.showDialog({
         title  : 'Kauf bestätigen',

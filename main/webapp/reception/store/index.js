@@ -9,10 +9,10 @@ import {getField, updateField} from 'vuex-map-fields';
 import {get, forIn, isPlainObject, set} from 'lodash';
 import gameplay from '../../lib/store/gameplay';
 import api from '../../lib/store/api';
-import propertyRegister from './modules/propertyRegister';
+import propertyRegister from '../../lib/store/propertyRegister';
 import propertyAccount from './modules/propertyAccount';
 import rankingList from '../../lib/store/rankingList';
-import teamAccount from './modules/teamAccount';
+import teamAccount from '../../lib/store/teamAccount';
 import teams from '../../lib/store/teams';
 import travelLog from './modules/travelLog';
 import chancellery from './modules/chancellery';
@@ -118,13 +118,35 @@ const store = new Vuex.Store({
       }
 
       dispatch('loadRankingList', {gameId: state.gameId, forcedUpdate: get(options, 'forcedUpdate', false)})
-        .then(resp => {
-          console.log('LOADED', resp);
+        .then(() => {
         })
         .catch(err => {
           state.api.error = err;
         })
+    },
+    /**
+     * Updating the team account entries on application level
+     * @param state
+     * @param dispatch
+     * @param options
+     */
+    updateTeamAccountEntries({state, dispatch}, options) {
+      dispatch('loadTeamAccountEntries', {gameId: state.gameId, teamId: get(options, 'teamId', false)})
+        .then(() => {
+        })
+        .catch(err => {
+          state.api.error = err;
+        })
+    },
+    updateProperties({state, dispatch}, options) {
+      dispatch('propertyRegister/updateProperties', {gameId: state.gameId, teamId: get(options, 'teamId', undefined)})
+        .then(() => {
+        })
+        .catch(err => {
+          state.api.error = err;
+        });
     }
+
   }
 });
 

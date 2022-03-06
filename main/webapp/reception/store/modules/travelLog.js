@@ -39,7 +39,7 @@ const module = {
         let propertyId = get(tl, 'propertyId', null);
         let name;
         if (propertyId) {
-          name = get(getters.getPropertyById(propertyId), 'location.name', 'none');
+          name = get(getters['propertyRegister/getPropertyById'], 'location.name', 'none');
         } else {
           name = `GPS: ${tl.position.lat}, ${tl.position.lng}`
         }
