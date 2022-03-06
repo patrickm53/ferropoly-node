@@ -15,7 +15,7 @@ import rankingList from '../../lib/store/rankingList';
 import teamAccount from '../../lib/store/teamAccount';
 import teams from '../../lib/store/teams';
 import travelLog from './modules/travelLog';
-import chancellery from './modules/chancellery';
+import chancellery from '../../lib/store/chancellery';
 import call from './modules/call';
 import map from '../../common/store/map';
 import reception from './modules/reception';
@@ -138,6 +138,12 @@ const store = new Vuex.Store({
           state.api.error = err;
         })
     },
+    /**
+     * Updates properties on application level
+     * @param state
+     * @param dispatch
+     * @param options
+     */
     updateProperties({state, dispatch}, options) {
       dispatch('propertyRegister/updateProperties', {gameId: state.gameId, teamId: get(options, 'teamId', undefined)})
         .then(() => {
@@ -145,8 +151,25 @@ const store = new Vuex.Store({
         .catch(err => {
           state.api.error = err;
         });
-    }
+    },
+    /**
+     * Updates the chancellery on application level
+     * @param state
+     * @param dispatch
+     * @param options
+     */
+    updateChancellery({state, dispatch}, options) {
+      if (state.reception.panel !== 'panel-chancellery') {
+        return;
+      }
 
+      dispatch('chancellery/updateChancellery', {gameId: state.gameId})
+        .then(() => {
+        })
+        .catch(err => {
+          state.api.error = err;
+        });
+    }
   }
 });
 

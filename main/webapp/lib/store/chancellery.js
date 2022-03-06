@@ -37,21 +37,28 @@ const module = {
     updateChancelleryField
   },
   actions   : {
-    updateChancellery({state, rootState}) {
-      if (rootState.panel !== 'panel-chancellery') {
-        return;
-      }
-      axios.get(`/chancellery/account/statement/${rootState.gameId}`)
-        .then(resp => {
-          console.log('Chancellery read', resp.data);
-          state.list = resp.data.entries;
-        })
-        .catch(err => {
-          console.error(err);
-          rootState.api.error.message  = get(err, 'response.data.message', null) || err.message
-          rootState.api.error.infoText = 'Es gab einen Fehler beim Laden der Chance/Kanzlei Daten:';
-          rootState.api.error.active   = true;
-        })
+    /**
+     * Updates the chancellery
+     * @param state
+     * @param options has to contain the gameId
+     * @returns {Promise<unknown>}
+     */
+    updateChancellery({state}, options) {
+      return new Promise((resolve, reject) => {
+        axios.get(`/chancellery/account/statement/${options.gameId}`)
+          .then(resp => {
+            console.log('Chancellery read', resp.data);
+            state.list = resp.data.entries;
+          })
+          .catch(err => {
+            console.error(err);
+            return reject({
+              message : get(err, 'response.data.message', null) || err.message,
+              infoText: 'Es gab einen Fehler beim Laden der Chance/Kanzlei Daten:',
+              active  : true
+            });
+          })
+      })
     }
   }
 };
