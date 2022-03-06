@@ -68,7 +68,7 @@ export default {
           sortable       : true,
           sortByFormatted: true,
           formatter      : (value) => {
-            return this.$store.getters.teamIdToTeamName(value);
+            return this.$store.getters['teams/idToTeamName'](value);
           }
         },
         {key: 'gamedata.buildings', label: 'Status', sortable: true},
@@ -91,7 +91,7 @@ export default {
       this.$emit('property-selected', item);
     },
     teamName(id) {
-      return this.$store.getters.teamIdToTeamName(id);
+      return this.$store.getters['teams/idToTeamName'](id);
     },
     showFirstHouse(buildings) {
       return (buildings < 5) && (buildings > 0);

@@ -4,7 +4,7 @@
  * Created: 06.03.22
  **/
 
-import {merge} from 'lodash';
+import {merge, get} from 'lodash';
 
 /*
 const teamColorsOriginal = [
@@ -36,6 +36,7 @@ class Team {
     merge(this, team);
     // Additional Data used
     this.internalName = 'team' + index.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping: false});
+    this.name = get(team, 'data.name', 'none');
     this.setIndex(index);
   }
 

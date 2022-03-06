@@ -79,7 +79,7 @@ export default {
   },
   methods   : {
     teamName(id) {
-      return this.$store.getters.teamIdToTeamName(id);
+      return this.$store.getters['teams/idToTeamName'](id);
     },
   }
 }

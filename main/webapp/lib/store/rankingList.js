@@ -37,12 +37,12 @@ const module = {
       return new Promise((resolve, reject) => {
         if (!options.gameId) {
           console.log('GameId not loaded yet, wait for ranking list');
-          return reject({active:false});
+          return reject({active: false});
         }
 
         if (state.nextUpdate > DateTime.now() && !options.forcedUpdate) {
           console.log('Not yet time to load', state.nextUpdate.toISOTime());
-          return reject({active:false});
+          return reject({active: false});
         }
         state.nextUpdate = DateTime.now().plus({seconds: 30});
 
@@ -51,7 +51,13 @@ const module = {
             console.log('Building ranking list', resp.data);
             state.list = [];
             resp.data.ranking.forEach(t => {
-              t.name = this.getters.teamIdToTeamName(t.teamId);
+              let team = this.getters['teams/teamById'](t.teamId);
+              if (!team) {
+                console.log('Team not found', t.teamId);
+                return;
+              }
+              t.name   = team.name;
+              t.color  = team.color;
               state.list.push(t);
             });
             return resolve(state.list);

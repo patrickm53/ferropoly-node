@@ -13,50 +13,52 @@ const {getTeamField, updateTeamField} = createHelpers({
 });
 
 const module = {
-  state    : () => ({
+  namespaced: true,
+  state     : () => ({
     list: [] // is an array of Team objects
   }),
-  getters  : {
+  getters   : {
     getTeamField,
+    getTeamList(state) {
+      return state.list;
+    },
     /**
      * Converts a teamId to the name of the team
      * @param state
      * @returns {function(*): unknown}
      */
-    teamIdToTeamName: (state) => (id) => {
+    idToTeamName: (state) => (id) => {
       return result(find(state.list, {uuid: id}), 'data.name');
     },
     /**
-     * Returns the internal name of a team
+     * Returns the team by its ID
      * @param state
      * @returns {function(*): unknown}
      */
-    teamIdToInternalName: (state) => (id) => {
-      return result(find(state.list, {uuid: id}), 'internalName');
+    teamById: (state) => (id) => {
+      console.log('Requesting', id, state.list);
+      return find(state.list, {uuid: id});
     },
     /**
-     * Returns the internal (frontend internal) index of a team
+     * Returns the color of a team by its ID
      * @param state
      * @returns {function(*): unknown}
      */
-    teamIdToIndex: (state) => (id) => {
-      return result(find(state.list, {uuid: id}), 'index');
-    },
-    teamColor: (state) => (id) => {
+    idToColor: (state) => (id) => {
       return result(find(state.list, {uuid: id}), 'color');
-    }
+    },
   },
-  mutations: {
+  mutations : {
     updateTeamField
   },
-  actions: {
+  actions   : {
     /**
      * Init the teams during startup
      * @param state
      * @param teams is the array with all teams
      */
-    initTeams({state}, teams) {
-      let i     = 1;
+    init({state}, teams) {
+      let i           = 1;
       let sortedTeams = sortBy(teams, 'data.name');
       console.log('SORTING', teams, state.list);
       sortedTeams.forEach(t => {

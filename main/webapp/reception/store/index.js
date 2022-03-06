@@ -14,7 +14,7 @@ import propertyAccount from './modules/propertyAccount';
 import rankingList from '../../lib/store/rankingList';
 import teamAccount from '../../lib/store/teamAccount';
 import teams from '../../lib/store/teams';
-import travelLog from './modules/travelLog';
+import travelLog from '../../lib/store/travelLog';
 import chancellery from '../../lib/store/chancellery';
 import call from './modules/call';
 import map from '../../common/store/map';
@@ -91,7 +91,7 @@ const store = new Vuex.Store({
       state.gameId        = options.data.currentGameId;
       assignObject(state, options.data, 'gameplay');
       // Init teams, assign indexes to them, also create associated tables in other store modules
-      dispatch('initTeams', options.data.teams);
+      dispatch('teams/init', options.data.teams);
       dispatch('initTeamAccounts', state.teams.list);
 
       // Properties
@@ -169,7 +169,18 @@ const store = new Vuex.Store({
         .catch(err => {
           state.api.error = err;
         });
-    }
+    },
+    updateTravelLog({state, dispatch}, options) {
+      dispatch('travelLog/update', {gameId: state.gameId,
+        teams: state.teams.list,
+        teamId: get(options, 'teamId', undefined)})
+        .then(() => {
+        })
+        .catch(err => {
+          console.log(err);
+          state.api.error = err;
+        });
+    },
   }
 });
 

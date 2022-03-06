@@ -1,5 +1,8 @@
 /**
  * Team Account module for the store
+ *
+ * Thes module REQUIRES THE TEAM MODULE being present
+ *
  * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
  * Created: 12.12.21
  **/
@@ -86,7 +89,7 @@ const module = {
                 }
                 entry.balance = teamBalance + entry.transaction.amount;
                 if (entry.transaction.origin.category === 'team') {
-                  entry.transaction.origin.teamName = this.getters.teamIdToTeamName(entry.transaction.origin.uuid);
+                  entry.transaction.origin.teamName = this.getters['teams/idToTeamName'](entry.transaction.origin.uuid);
                 }
                 account.push(entry)
 

@@ -39,8 +39,8 @@ export default {
         data.push({
           x          : e.name,
           y          : e.asset,
-          fillColor  : this.$store.getters.teamColor(e.teamId),
-          strokeColor: this.$store.getters.teamColor(e.teamId)
+          fillColor  : e.color,
+          strokeColor: e.color
         });
       })
       return [{

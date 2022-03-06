@@ -44,7 +44,7 @@ export default {
       propertyRegister: 'propertyRegister.register'
     }),
     travelLogForTeam() {
-      return this.$store.getters.teamLog(this.teamId).getTrackPoints();
+      return this.$store.getters['travelLog/teamLog'](this.teamId).getTrackPoints();
     }
   },
   created   : function () {
@@ -53,7 +53,7 @@ export default {
     onNewMap(map) {
       console.log('new Map!', map);
       this.map      = map;
-      let travelLog = this.$store.getters.teamLog(this.teamId);
+      let travelLog = this.$store.getters['travelLog/teamLog'](this.teamId);
       if (!travelLog) {
         console.warn(`No travellog for ${this.teamId}`);
         return;

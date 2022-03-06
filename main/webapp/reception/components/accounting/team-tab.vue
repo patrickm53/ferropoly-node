@@ -39,7 +39,7 @@ export default {
       return transactions;
     },
     teamName() {
-      return this.$store.getters.teamIdToTeamName(this.teamId)
+      return this.$store.getters['teams/idToTeamName'](this.teamId)
     },
     /**
      * Title text of the tab

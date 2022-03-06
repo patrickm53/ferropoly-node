@@ -69,7 +69,7 @@ export default {
       return this.teamData;
     },
     teamName() {
-      return this.$store.getters.teamIdToTeamName(get(this.currentTeam, 'uuid', 'nobody'));
+      return this.$store.getters['teams/idToTeamName'](get(this.currentTeam, 'uuid', 'nobody'));
     },
     cssVars() {
       return {
