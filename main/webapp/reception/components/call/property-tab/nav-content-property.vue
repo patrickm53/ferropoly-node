@@ -57,7 +57,7 @@ export default {
       gameId          : 'gameId',
       teamId          : 'call.currentTeam.uuid',
       propertyRegister: 'propertyRegister.register',
-      authToken       : 'authToken'
+      authToken       : 'api.authToken'
     }),
     /**
      * Transactions of the team

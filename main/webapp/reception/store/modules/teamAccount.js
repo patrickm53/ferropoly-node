@@ -50,6 +50,16 @@ const module = {
   },
   actions  : {
     /**
+     * Initializes the team accounts
+     * @param state
+     * @param teams are Team Objects
+     */
+    initTeamAccounts({state}, teams) {
+      teams.forEach(t => {
+        state.id2accounts[t.uuid] = t.internalName;
+      })
+    },
+    /**
      * Updates the team account entries
      * @param state
      * @param commit

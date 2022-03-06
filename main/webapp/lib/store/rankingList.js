@@ -1,5 +1,6 @@
 /**
  * Team Account module for the store with the ranking list
+ *
  * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
  * Created: 12.12.21
  **/
@@ -28,39 +29,42 @@ const module = {
     /**
      * Loads the ranking list, has a mechanism included to avoid loading it too often
      * @param state
-     * @param commit
-     * @param rootState
-     * @param options
+     * @param options has to contain the gameId
      */
-    fetchRankingList({state, commit, rootState}, options) {
-      if (!rootState.gameDataLoaded) {
-        console.log('Game not loaded yet, wait for ranking list');
+    loadRankingList({state}, options) {
+      if (!options.gameId) {
+        console.log('GameId not loaded yet, wait for ranking list');
         return;
       }
-      if (rootState.panel !== 'panel-overview' && rootState.panel !== 'panel-statistic') {
-        // console.log('wrong panel, not loading ranking list');
-        return;
-      }
+
       if (state.nextUpdate > DateTime.now() && !options.forcedUpdate) {
         console.log('Not yet time to load', state.nextUpdate.toISOTime());
         return;
       }
       state.nextUpdate = DateTime.now().plus({seconds: 30});
-      axios.get(`/statistics/rankingList/${rootState.gameId}`)
-        .then(resp => {
-          console.log('Building ranking list', resp.data);
-          state.list = [];
-          resp.data.ranking.forEach(t => {
-            t.name = this.getters.teamIdToTeamName(t.teamId);
-            state.list.push(t);
-          });
-        })
-        .catch(err => {
-          console.error(err);
-          rootState.api.error.message  = get(err, 'response.data.message', null) || err.message
-          rootState.api.error.infoText = 'Es gab einen Fehler beim Laden der Rangliste:';
-          rootState.api.error.active   = true;
-        })
+
+      // My first promise... a bit special when being more familiar with callbacks... ;-)
+      return new Promise((resolve, reject) => {
+        axios.get(`/statistics/rankingList/${options.gameId}`)
+          .then(resp => {
+            console.log('Building ranking list', resp.data);
+            state.list = [];
+            resp.data.ranking.forEach(t => {
+              t.name = this.getters.teamIdToTeamName(t.teamId);
+              state.list.push(t);
+            });
+            return resolve(state.list);
+          })
+          .catch(err => {
+            console.error(err);
+            return reject({
+              message : get(err, 'response.data.message', null) || err.message,
+              infoText: 'Es gab einen Fehler beim Laden der Rangliste:',
+              active  : true
+            })
+          })
+      });
+
     }
   }
 

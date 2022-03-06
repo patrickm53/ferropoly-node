@@ -6,19 +6,21 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
-import {get, forIn, isPlainObject, set, sortBy} from 'lodash';
-import gameplay from './modules/gameplay';
+import {get, forIn, isPlainObject, set} from 'lodash';
+import gameplay from '../../lib/store/gameplay';
+import api from '../../lib/store/api';
 import propertyRegister from './modules/propertyRegister';
 import propertyAccount from './modules/propertyAccount';
-import rankingList from './modules/rankingList';
+import rankingList from '../../lib/store/rankingList';
 import teamAccount from './modules/teamAccount';
-import teams from './modules/teams';
+import teams from '../../lib/store/teams';
 import travelLog from './modules/travelLog';
 import chancellery from './modules/chancellery';
 import call from './modules/call';
 import map from '../../common/store/map';
+import reception from './modules/reception';
+import statistic from './modules/statistic';
 import GameProperty from '../../lib/gameProperty';
-import {getTeamColor} from '../lib/teamLib';
 import {GameProperties} from '../../lib/gameProperties';
 
 Vue.use(Vuex);
@@ -44,37 +46,7 @@ function assignObject(state, obj, name) {
 const store = new Vuex.Store({
   state    : {
     gameDataLoaded: false, // becomes true when static data was loaded
-    panel         : 'panel-overview', // panel displayed
-    menuElements  : [
-      {title: 'Übersicht', href: '#', event: 'panel-change', eventParam: 'panel-overview', active: true},
-      {title: 'Anruf behandeln', href: '#', event: 'panel-change', eventParam: 'panel-call', active: false},
-      {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map', active: false},
-      {title: 'Statistik', href: '#', event: 'panel-change', eventParam: 'panel-statistic', active: false},
-      {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting', active: false},
-      {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chancellery', active: false},
-      {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-properties', active: false},
-      {title: 'Spielregeln', href: '#', event: 'panel-change', eventParam: 'panel-rules', active: false}
-    ],
-    gameId        : 'none',
-    authToken     : 'none',
-    socketUrl     : '/none',
-    online        : false,
-    api           : {
-      error         : {
-        active  : false,
-        infoText: '',
-        message : ''
-      },
-      requestPending: false
-    },
-    statistic     : {
-      navBar    : [
-        {title: 'Vermögen', event: 'nav-event', eventParam: 'nav-asset', active: true},
-        {title: 'Vermögensverlauf', event: 'nav-event', eventParam: 'nav-asset-history', active: false},
-        {title: 'Einkommen', event: 'nav-event', eventParam: 'nav-income', active: false},
-      ],
-      currentNav: 'nav-asset'
-    }
+    gameId        : undefined,
   },
   modules  : {
     gameplay,
@@ -86,28 +58,16 @@ const store = new Vuex.Store({
     travelLog,
     chancellery,
     call,
-    map
+    map,
+    api,
+    reception,
+    statistic
   },
   getters  : {
     getField
   },
   mutations: {
-    updateField,
-    // Socket.io connection is here
-    connected(state) {
-      state.online = true;
-    },
-    // socket.io connection has gone
-    disconnected(state) {
-      state.online = false;
-    },
-    setPanel(state, panel) {
-      console.log('changing Panel', panel);
-      state.menuElements.forEach(e => {
-        e.active = (e.eventParam === panel);
-      })
-      state.panel = panel;
-    }
+    updateField
   },
   actions  : {
     /**
@@ -126,43 +86,45 @@ const store = new Vuex.Store({
         state.api.error.active   = true;
         return;
       }
-      state.authToken = get(options.data, 'authToken', 'none');
-      state.socketUrl = get(options.data, 'socketUrl', '/');
-      state.gameId    = options.data.currentGameId;
+      state.api.authToken = get(options.data, 'authToken', 'none');
+      state.api.socketUrl = get(options.data, 'socketUrl', '/');
+      state.gameId        = options.data.currentGameId;
       assignObject(state, options.data, 'gameplay');
       // Init teams, assign indexes to them, also create associated tables in other store modules
-      let i     = 1;
-      let teams = sortBy(options.data.teams, 'data.name');
-      console.log('SORTING', teams, options.data.teams);
-      teams.forEach(t => {
-        t.index        = i;
-        t.internalName = 'team' + i.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping: false});
-        t.color        = getTeamColor(i - 1);
-        state.teams.list.push(t);
-        // Team account needs this mapping for speeding things up
-        state.teamAccount.id2accounts[t.uuid] = t.internalName;
-        i++;
-      });
+      dispatch('initTeams', options.data.teams);
+      dispatch('initTeamAccounts', state.teams.list);
+
       // Properties
       state.propertyRegister.properties = new GameProperties({gameplay: options.data.gameplay});
       options.data.pricelist.forEach(p => {
         state.propertyRegister.register.pushProperty(new GameProperty(p));
       })
+
       // Properties -> Map settings
       dispatch('setMapBounds', state.propertyRegister.register.properties);
 
       state.gameDataLoaded = true;
     },
     /**
-     * Resets the API error from the last call, used when closing the modal dialog
+     * Loading the ranking list, application level
      * @param state
+     * @param dispatch
+     * @param options
      */
-    resetApiError(state) {
-      console.log('resetting api error');
-      state.api.error.active   = false;
-      state.api.error.infoText = '';
-      state.api.error.message  = '';
-    },
+    fetchRankingList({state, dispatch}, options) {
+      if (state.reception.panel !== 'panel-overview' && state.reception.panel !== 'panel-statistic') {
+        //console.log('wrong panel, not loading ranking list');
+        return;
+      }
+
+      dispatch('loadRankingList', {gameId: state.gameId, forcedUpdate: get(options, 'forcedUpdate', false)})
+        .then(resp => {
+          console.log('LOADED', resp);
+        })
+        .catch(err => {
+          state.api.error = err;
+        })
+    }
   }
 });
 

@@ -4,7 +4,8 @@
  * Created: 12.12.21
  **/
 import {createHelpers} from 'vuex-map-fields';
-import {result, find} from 'lodash';
+import {result, find, sortBy} from 'lodash';
+import {Team} from '../team';
 
 const {getTeamField, updateTeamField} = createHelpers({
   getterType  : 'getTeamField',
@@ -13,7 +14,7 @@ const {getTeamField, updateTeamField} = createHelpers({
 
 const module = {
   state    : () => ({
-    list: []
+    list: [] // is an array of Team objects
   }),
   getters  : {
     getTeamField,
@@ -47,6 +48,22 @@ const module = {
   },
   mutations: {
     updateTeamField
+  },
+  actions: {
+    /**
+     * Init the teams during startup
+     * @param state
+     * @param teams is the array with all teams
+     */
+    initTeams({state}, teams) {
+      let i     = 1;
+      let sortedTeams = sortBy(teams, 'data.name');
+      console.log('SORTING', teams, state.list);
+      sortedTeams.forEach(t => {
+        state.list.push(new Team(t, i));
+        i++;
+      });
+    }
   }
 
 };

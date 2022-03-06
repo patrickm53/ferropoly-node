@@ -1,8 +1,10 @@
 /**
- * Library functions for teams
+ * The Object for a team, implementing the team model
  * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
- * Created: 12.12.21
+ * Created: 06.03.22
  **/
+
+import {merge} from 'lodash';
 
 /*
 const teamColorsOriginal = [
@@ -22,6 +24,34 @@ const teamColors = [
   '#00FF00', '#FF00FF', '#4B0082', '#D2691E'
 ];
 
+const MAX_TEAM_NB = 20;
+
+class Team {
+  /**
+   * Creates a new team
+   * @param team object with the data of the team model
+   * @param index index of the team in the game, 1 based
+   */
+  constructor(team, index = -1) {
+    merge(this, team);
+    // Additional Data used
+    this.internalName = 'team' + index.toLocaleString('de-ch', {minimumIntegerDigits: 2, useGrouping: false});
+    this.setIndex(index);
+  }
+
+  /**
+   * The index is __1__ based! First team is team 1, count it like normal people.
+   * @param index
+   */
+  setIndex(index) {
+    if (index < 0 || index > MAX_TEAM_NB) {
+      console.error('team index out of range', index);
+      return;
+    }
+    this.index = index;
+    this.color = getTeamColor(index);
+  }
+}
 
 /**
  * Returns the teams color
@@ -36,7 +66,9 @@ function getTeamColor(teamIndex) {
   return 'black';
 }
 
+
 function getTeamColorArray() {
   return teamColors;
 }
-export {getTeamColor, getTeamColorArray};
+
+export {Team, getTeamColor, getTeamColorArray};

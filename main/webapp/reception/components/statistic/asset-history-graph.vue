@@ -14,9 +14,9 @@
 import {mapFields} from 'vuex-map-fields';
 import $ from 'jquery';
 import VueApexCharts from 'vue-apexcharts';
-import {getTeamColorArray} from '../../lib/teamLib';
 import {DateTime} from 'luxon';
 import {formatPrice} from '../../../common/lib/formatters';
+import {getTeamColorArray} from '../../../lib/team';
 
 export default {
   name      : 'AssetHistoryGraph',

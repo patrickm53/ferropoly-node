@@ -60,6 +60,7 @@ export default {
       currentTeam: 'call.currentTeam',
       gameId     : 'gameId',
       teamUuid   : 'call.currentTeam.uuid',
+      authToken  : 'api.authToken'
     }),
     gameActive() {
       return this.$store.getters.gameIsActive;

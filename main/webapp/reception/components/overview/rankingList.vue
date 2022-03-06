@@ -57,7 +57,7 @@ export default {
     }
   },
   created   : function () {
-    console.log('creating ranking list');
+    console.log('creating ranking list', this.gameDataLoaded);
     if (this.gameDataLoaded) {
       this.$store.dispatch({type: 'fetchRankingList', forcedUpdate: true});
     }

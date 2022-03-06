@@ -77,14 +77,14 @@ export default {
     };
   },
   computed  : {
-    ...mapFields([
-      'menuElements',
-      'panel',
-      'online',
-      'gameplay.owner.organisatorName',
-      'api.error',
-      'authToken'
-    ]),
+    ...mapFields({
+      menuElements   : 'reception.menuElements',
+      panel          : 'reception.panel',
+      online         : 'api.online',
+      organisatorName: 'gameplay.owner.organisatorName',
+      error          : 'api.error',
+      authToken      : 'api.authToken'
+    }),
     apiErrorActive: {
       get() {
         return this.error.active;

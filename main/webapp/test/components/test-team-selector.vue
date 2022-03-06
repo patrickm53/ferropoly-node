@@ -16,7 +16,7 @@
 <script>
 import {getPlayers} from '../fixtures/players';
 import TeamSelector from '../../reception/components/call/team-selector.vue';
-import {getTeamColor} from '../../reception/lib/teamLib';
+import {getTeamColor} from '../../lib/team';
 
 export default {
   name      : 'TestTeamSelector',

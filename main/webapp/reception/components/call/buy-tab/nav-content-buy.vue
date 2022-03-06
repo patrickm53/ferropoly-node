@@ -80,7 +80,7 @@ export default {
       propertyRegister: 'propertyRegister.register',
       gameId          : 'gameId',
       teamUuid        : 'call.currentTeam.uuid',
-      authToken       : 'authToken',
+      authToken       : 'api.authToken',
       gamblingMinVal  : 'gameplay.gameParams.chancellery.minLottery',
       gamblingMaxVal  : 'gameplay.gameParams.chancellery.maxLottery',
       log             : 'call.log'
