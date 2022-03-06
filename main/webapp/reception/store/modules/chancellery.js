@@ -13,10 +13,11 @@ const {getChancelleryField, updateChancelleryField} = createHelpers({
 });
 
 const module = {
-  state    : () => ({
+  namespaced: true,
+  state     : () => ({
     list: []
   }),
-  getters  : {
+  getters   : {
     getChancelleryField,
     asset(state) {
       return sumBy(state.list, 'transaction.amount');
@@ -32,10 +33,10 @@ const module = {
       });
     }
   },
-  mutations: {
+  mutations : {
     updateChancelleryField
   },
-  actions  : {
+  actions   : {
     updateChancellery({state, rootState}) {
       if (rootState.panel !== 'panel-chancellery') {
         return;
