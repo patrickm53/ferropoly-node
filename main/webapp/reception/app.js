@@ -37,7 +37,7 @@ import '../common/style/app.scss';
 import {last, split} from 'lodash';
 import {getStaticData} from '../lib/adapter/staticData';
 import {get} from 'lodash';
-import {FerropolySocket} from './lib/ferropolySocket';
+import {FerropolySocket} from '../lib/ferropolySocket';
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);

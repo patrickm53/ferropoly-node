@@ -5,7 +5,7 @@
  **/
 
 import {io} from 'socket.io-client';
-import EventEmitter from '../../common/lib/eventEmitter'
+import EventEmitter from '../common/lib/eventEmitter'
 
 
 class FerropolySocket extends EventEmitter {
