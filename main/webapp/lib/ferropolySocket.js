@@ -11,9 +11,10 @@ import EventEmitter from '../common/lib/eventEmitter'
 class FerropolySocket extends EventEmitter {
   constructor(options) {
     super();
-    let self    = this;
-    this.socket = io(options.url);
-    this.store  = options.store;
+    let self        = this;
+    this.socket     = io(options.url);
+    this.store      = options.store;
+    this.logEnabled = true;
     console.log('Socket created');
 
     this.socket.on('connect', () => {
@@ -38,43 +39,86 @@ class FerropolySocket extends EventEmitter {
     this.socket.on('welcome', () => {
       console.log('welcome');
     });
-    this.socket.on('initialized', () => {
-      console.log('socket fully initialized');
+
+    /**
+     * Event when the authorization in the Ferropoly game was successful
+     */
+    this.socket.on('initialized', (msg) => {
+      if (msg.isPlayer) {
+        console.log('PLAYER socket initialized');
+      }
+      if (msg.isAdmin) {
+        console.log('ADMIN socket initialized');
+      }
       self.store.commit('connected');
     });
 
+    // Checkin Store Messages, obsolete??
+    this.registerSocketEventHandler('checkinStore', msg => {
+      console.warn('Checkin store...?');
+    });
+
     // Team Account messages
-    this.socket.on('admin-teamAccount', msg => {
+    this.registerSocketEventHandler('admin-teamAccount', msg => {
       self.store.dispatch({type: 'fetchRankingList'});
       self.store.dispatch({type: 'updateTeamAccountEntries', teamId: msg.data.teamId});
     });
+
     // Incoming Property Account Messages
-    this.socket.on('admin-propertyAccount', msg => {
+    this.registerSocketEventHandler('admin-propertyAccount', msg => {
       self.store.dispatch({type: 'fetchRankingList'});
       self.store.dispatch({type: 'updatePropertyInPricelist', property: msg.property});
-      console.log('Unhandled message admin-propertyAccount', msg)
     });
+
     // Chancellery Messages
-    this.socket.on('admin-chancelleryAccount', () => {
-      console.log('admin-chancelleryAccount info')
+    this.registerSocketEventHandler('admin-chancelleryAccount', msg => {
       self.store.dispatch({type: 'fetchRankingList'});
       self.store.dispatch({type: 'updateChancellery'});
     });
+
     // Incoming Properties messages
-    this.socket.on('admin-properties', msg => {
+    this.registerSocketEventHandler('admin-properties', msg => {
       self.store.dispatch({type: 'fetchRankingList'});
-      console.log('Unhandled message admin-properties', msg)
     });
+
     // Incoming marketplace messages
-    this.socket.on('admin-marketplace', msg => {
+    this.registerSocketEventHandler('admin-marketplace', msg => {
       self.store.dispatch({type: 'fetchRankingList'});
-      console.log('Unhandled message admin-marketplace', msg)
     });
+
     // Incoming info that rent was paid
-    this.socket.on('admin-rents-paid', msg => {
+    this.registerSocketEventHandler('admin-rents-paid', msg => {
       self.store.dispatch({type: 'updateProperties'});
-      console.log('Unhandled message admin-rents-paid', msg)
     });
+
+    // Catch all handler
+  /*  this.socket.onAny((eventName, ...msg) => {
+      console.warn(`Unhandled socket.io event: ${eventName}`, ...msg);
+    })*/
+  }
+
+  /**
+   * Registers a socket handler
+   * @param channel
+   * @param handler
+   */
+  registerSocketEventHandler(channel, handler) {
+    let self = this;
+    this.socket.on(channel, msg => {
+      self.logSocketEvent(channel, msg);
+      handler(msg);
+    })
+  }
+
+  /**
+   * Central logging function
+   * @param channel
+   * @param payload
+   */
+  logSocketEvent(channel, payload) {
+    if (this.logEnabled) {
+      console.info(`Socket data for ${channel}`, payload);
+    }
   }
 }
 

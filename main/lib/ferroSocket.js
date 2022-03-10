@@ -187,7 +187,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
     registerChannel('player-position');
   }
   // Say the socket that we are operative
-  socket.emit('initialized', {result: true});
+  socket.emit('initialized', {result: true, isAdmin: socket.ferropoly.isAdmin, isPlayer:socket.ferropoly.isPlayer});
 };
 
 
