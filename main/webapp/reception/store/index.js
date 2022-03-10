@@ -6,7 +6,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
-import {get, forIn, isPlainObject, set} from 'lodash';
+import {get} from 'lodash';
 import gameplay from '../../lib/store/gameplay';
 import api from '../../lib/store/api';
 import propertyRegister from '../../lib/store/propertyRegister';
@@ -22,26 +22,11 @@ import reception from './modules/reception';
 import statistic from './modules/statistic';
 import GameProperty from '../../lib/gameProperty';
 import {GameProperties} from '../../lib/gameProperties';
+import assignObject from '../../lib/assignObject';
 
 Vue.use(Vuex);
 
-/**
- * Assigns the members of an object step by step to the state object with the same path
- * @param state
- * @param obj
- * @param name
- */
-function assignObject(state, obj, name) {
-  let src = get(obj, name, undefined);
-  if (isPlainObject(src)) {
-    forIn(src, (val, key) => {
-      assignObject(state, obj, `${name}.${key}`);
-    })
-  } else {
-    console.log('set', name, get(obj, name));
-    set(state, name, get(obj, name, undefined));
-  }
-}
+
 
 const store = new Vuex.Store({
   state    : {

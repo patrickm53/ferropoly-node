@@ -34,18 +34,18 @@ router.get('/:gameId', function (req, res) {
         return res.status(500).send({message: 'Spiel nicht gefunden!'});
       }
 
-      // As we use the gamecache, we have to check the user manually
-      // Only admins and owner get an access token (the right, to edit data)
+      // A future feature to disable token generation...
       let generateToken = true;
-      if (gp.internal.owner !== req.session.passport.user) {
-        // Check if declared as additional admin
-        if (gp.admins && gp.admins.logins && !_.find(gp.admins.logins, function (n) {
-          return n === req.session.passport.user;
-        })) {
-          generateToken = false;
-          //return res.status(403).send({message: 'Keine Berechtigung für dieses Spiel vorhanden.'});
+
+      // The team is only returned if the requesting user is a player
+      let team = _.find(_.values(teams), function (t) {
+        if (t.data.teamLeader.email === req.session.passport.user) {
+          return true;
         }
-      }
+        return _.find(t.data.members, function (m) {
+          return m === req.session.passport.user;
+        });
+      });
 
       pricelist.getPricelist(gameId, function (err2, pl) {
         if (!pl) {
@@ -66,6 +66,7 @@ router.get('/:gameId', function (req, res) {
               socketUrl    : '/',
               gameplay     : gp,
               pricelist    : pl,
+              team         : team,
               teams        : _.values(teams),
               currentGameId: gameId,
               mapApiKey    : settings.maps.apiKey,

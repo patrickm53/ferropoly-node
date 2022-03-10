@@ -1,12 +1,12 @@
 /**
- * Web app for the summary
- * 05.03.2022 KC
+ * Web app for the check-in
+ * 10.03.2022 KC
  */
 import Vue from 'vue';
 import {BootstrapVue} from 'bootstrap-vue';
 import $ from 'jquery';
 import VueRouter from 'vue-router';
-import store from '../reception/store';
+import store from './store';
 
 // Font Awesome Part
 // See: https://github.com/FortAwesome/vue-fontawesome
@@ -24,11 +24,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 // Import components
-import SummaryRoot from './components/summary-root.vue';
+import CheckInRoot from './components/check-in-root.vue';
 
 Vue.use(VueRouter);
 
-Vue.component('SummaryRoot', SummaryRoot);
+Vue.component('CheckInRoot', CheckInRoot);
 
 console.log('Webapp initializing');
 
@@ -36,6 +36,8 @@ console.log('Webapp initializing');
 import '../common/style/app.scss';
 import {last, split} from 'lodash';
 import {getStaticData} from '../lib/adapter/staticData';
+import {get} from 'lodash';
+import {FerropolySocket} from '../reception/lib/ferropolySocket';
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
@@ -47,7 +49,7 @@ Vue.use(BootstrapVue);
 $(document).ready(function () {
   console.log('DOM ready');
   new Vue({
-    el     : '#summary-app',
+    el     : '#checkin-app',
     created: function () {
       console.log('created');
       // Retrieve GameId for this page
@@ -59,10 +61,15 @@ $(document).ready(function () {
         // Set the static data
         this.$store.dispatch({type: 'fetchStaticData', err, data});
         this.$store.dispatch({type: 'updateProperties'});
-        this.$store.dispatch({type: 'fetchRankingList'});
-        this.$store.dispatch({type: 'updateTeamAccountEntries'});
-        this.$store.dispatch({type: 'updateTravelLog'});
-
+        // Connect to Ferropoly Instance
+        this.fsocket = new FerropolySocket({
+          url      : get(data, 'socketUrl', '/'),
+          authToken: get(data, 'authToken', 'none'),
+          user     : get(data, 'user', 'none'),
+          teamId   : get(data, 'team.uuid', 'none'),
+          gameId   : gameId,
+          store    : this.$store
+        });
       })
     },
     store  : store

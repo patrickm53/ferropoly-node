@@ -35,7 +35,7 @@ console.log('Webapp initializing');
 // Ferropoly Style!
 import '../common/style/app.scss';
 import {last, split} from 'lodash';
-import {getStaticData} from './adapter/staticData';
+import {getStaticData} from '../lib/adapter/staticData';
 import {get} from 'lodash';
 import {FerropolySocket} from './lib/ferropolySocket';
 

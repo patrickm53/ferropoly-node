@@ -30,6 +30,7 @@ class FerropolySocket extends EventEmitter {
       console.log('identify', options);
       self.socket.emit('identify', {
         user     : options.user,
+        teamId   : options.teamId,
         authToken: options.authToken,
         gameId   : options.gameId
       })
