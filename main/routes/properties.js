@@ -19,8 +19,20 @@ router.get('/get/:gameId/:teamId', function (req, res) {
   }
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      return res.status(403).send({message: 'Access right error: ' + err.message});
+      // definitely not an admin and game in process. Be careful what we return, only data of the calling team is returned
+     return accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, err => {
+       if (err) {
+         return res.status(403).send({message: 'Access right error: ' + err.message});
+       }
+       propWrap.getTeamProperties(req.params.gameId, req.params.teamId, function (err, props) {
+         if (err) {
+           return res.status(500).send({message: 'getTeamProperties error: ' + err.message});
+         }
+         res.send({properties: props});
+       });
+     });
     }
+
     if (!req.params.teamId || req.params.teamId === 'undefined') {
       propWrap.getAllProperties(req.params.gameId, function (err, props) {
         if (err) {

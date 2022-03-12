@@ -92,9 +92,11 @@ class FerropolySocket extends EventEmitter {
     });
 
     // Catch all handler
-  /*  this.socket.onAny((eventName, ...msg) => {
-      console.warn(`Unhandled socket.io event: ${eventName}`, ...msg);
-    })*/
+    this.socket.onAny((eventName, msg) => {
+      if (this.logEnabled) {
+        console.warn(`Unhandled socket.io event: ${eventName}`, msg);
+      }
+    })
   }
 
   /**

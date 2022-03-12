@@ -13,8 +13,11 @@ import gameplay from '../../lib/store/gameplay';
 import api from '../../lib/store/api';
 import checkin from './modules/checkin';
 import rankingList from '../../lib/store/rankingList';
+import propertyRegister from '../../lib/store/propertyRegister';
 import {get} from 'lodash';
 import assignObject from '../../lib/assignObject';
+import {GameProperties} from '../../lib/gameProperties';
+import GameProperty from '../../lib/gameProperty';
 
 Vue.use(Vuex);
 
@@ -23,7 +26,7 @@ const store = new Vuex.Store({
     gameDataLoaded: false, // becomes true when static data was loaded
     gameId        : undefined,
   },
-  modules: {map, teamAccount, gameplay, api, teams, checkin, rankingList},
+  modules  : {map, teamAccount, gameplay, api, teams, checkin, rankingList, propertyRegister},
   getters  : {getField},
   mutations: {updateField},
   actions  : {
@@ -47,12 +50,35 @@ const store = new Vuex.Store({
       state.api.socketUrl = get(options.data, 'socketUrl', '/');
       state.gameId        = options.data.currentGameId;
       assignObject(state, options.data, 'gameplay');
+      assignObject(state.checkin, options.data, 'team');
       // Init teams, assign indexes to them, also create associated tables in other store modules
       dispatch('teams/init', options.data.teams);
       dispatch('initTeamAccounts', state.teams.list);
 
+      // Properties
+      state.propertyRegister.properties = new GameProperties({gameplay: options.data.gameplay});
+      options.data.pricelist.forEach(p => {
+        state.propertyRegister.register.pushProperty(new GameProperty(p));
+      })
+
+      // Properties -> Map settings
+      dispatch('setMapBounds', state.propertyRegister.register.properties);
 
       state.gameDataLoaded = true;
+    },
+    /**
+     * Updates properties on application level
+     * @param state
+     * @param dispatch
+     * @param options
+     */
+    updateProperties({state, dispatch}, options) {
+      dispatch('propertyRegister/updateProperties', {gameId: state.gameId, teamId: state.checkin.team.uuid})
+        .then(() => {
+        })
+        .catch(err => {
+          state.api.error = err;
+        });
     },
   }
 
