@@ -28,6 +28,22 @@ const module = {
      */
     getPropertyById: (state) => (id) => {
       return state.register.getPropertyById(id);
+    },
+    /**
+     * Returns the properties of a team
+     * @param state
+     * @returns {function(*): number}
+     */
+    getPropertiesForTeam:(state) => (teamId) => {
+      return state.register.getPropertiesOfTeam(teamId);
+    },
+    /**
+     * Returns the value of a property
+     * @param state
+     * @returns {function(*): number}
+     */
+    getPropertyValue:(state) => (property) => {
+      return state.register.evaluatePropertyValue(property);
     }
   },
   mutations : {

@@ -53,7 +53,7 @@ class GameProperties {
    */
   getPropertiesOfTeam(teamId) {
     return filter(this.properties, p => {
-      return p.gamedata.owner === teamId;
+      return get(p, 'gamedata.owner', 'x') === teamId;
     });
   }
 
@@ -176,7 +176,7 @@ class GameProperties {
 
     let sameGroup = 0;
     for (let i = 0; i < properties.length; i++) {
-      if (properties[i].gamedata.owner === property.gamedata.owner) {
+      if (get(properties[i], 'gamedata.owner', 'che') === get(property, 'gamedata.owner', 'ge')) {
         sameGroup++;
       }
     }
@@ -188,12 +188,11 @@ class GameProperties {
       console.log(`Properties in group ${propertyGroup} count ${factor} x`);
     }
 
-    let rent       = 0;
+    let rent = 0;
     let buildingNb;
     if (calculateWithBuildingNb >= 0) {
       buildingNb = calculateWithBuildingNb;
-    }
-    else {
+    } else {
       buildingNb = property.gamedata.buildings || 0;
     }
 
