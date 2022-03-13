@@ -14,102 +14,84 @@ class FerropolySocket extends EventEmitter {
     let self        = this;
     this.socket     = io(options.url);
     this.store      = options.store;
+    this.options    = options;
     this.logEnabled = true;
     console.log('Socket created');
 
-    this.socket.on('connect', () => {
-      console.log('connect', self.socket.id); // x8WIv7-mJelg7on_ALbx
-    });
+    let handlers = this.getHandlers();
 
-    this.socket.on('disconnect', () => {
-      console.log('disconnect', self.socket.id); // undefined
-      self.store.commit('disconnected');
-    });
-
-    // Initialization procedure
-    this.socket.on('identify', () => {
-      console.log('identify', options);
-      self.socket.emit('identify', {
-        user     : options.user,
-        teamId   : options.teamId,
-        authToken: options.authToken,
-        gameId   : options.gameId
-      })
-    });
-    this.socket.on('welcome', () => {
-      console.log('welcome');
-    });
-
-    /**
-     * Event when the authorization in the Ferropoly game was successful
-     */
-    this.socket.on('initialized', (msg) => {
-      if (msg.isPlayer) {
-        console.log('PLAYER socket initialized');
-      }
-      if (msg.isAdmin) {
-        console.log('ADMIN socket initialized');
-      }
-      self.store.commit('connected');
-    });
-
-    // Checkin Store Messages, obsolete??
-    this.registerSocketEventHandler('checkinStore', msg => {
-      console.warn('Checkin store...?');
-    });
-
-    // Team Account messages
-    this.registerSocketEventHandler('admin-teamAccount', msg => {
-      self.store.dispatch({type: 'fetchRankingList'});
-      self.store.dispatch({type: 'updateTeamAccountEntries', teamId: msg.data.teamId});
-    });
-
-    // Incoming Property Account Messages
-    this.registerSocketEventHandler('admin-propertyAccount', msg => {
-      self.store.dispatch({type: 'fetchRankingList'});
-      self.store.dispatch({type: 'updatePropertyInPricelist', property: msg.property});
-    });
-
-    // Chancellery Messages
-    this.registerSocketEventHandler('admin-chancelleryAccount', msg => {
-      self.store.dispatch({type: 'fetchRankingList'});
-      self.store.dispatch({type: 'updateChancellery'});
-    });
-
-    // Incoming Properties messages
-    this.registerSocketEventHandler('admin-properties', msg => {
-      self.store.dispatch({type: 'fetchRankingList'});
-    });
-
-    // Incoming marketplace messages
-    this.registerSocketEventHandler('admin-marketplace', msg => {
-      self.store.dispatch({type: 'fetchRankingList'});
-    });
-
-    // Incoming info that rent was paid
-    this.registerSocketEventHandler('admin-rents-paid', msg => {
-      self.store.dispatch({type: 'updateProperties'});
-    });
-
-    // Catch all handler
+    // Handler for all events
     this.socket.onAny((eventName, msg) => {
-      if (this.logEnabled) {
+      if (handlers[eventName]) {
+        self.logSocketEvent(eventName, msg);
+        handlers[eventName](msg);
+      } else if (this.logEnabled) {
         console.warn(`Unhandled socket.io event: ${eventName}`, msg);
       }
     })
   }
 
   /**
-   * Registers a socket handler
-   * @param channel
-   * @param handler
+   * Returns the handlers
+   * @returns {{disconnect: disconnect, checkinStore: checkinStore, identify: identify, 'admin-teamAccount': admin-teamAccount, 'admin-chancelleryAccount': admin-chancelleryAccount, initialized: initialized, 'admin-properties': admin-properties, welcome: welcome, connect: connect, 'admin-rents-paid': admin-rents-paid, 'admin-propertyAccount': admin-propertyAccount, 'admin-marketplace': admin-marketplace}}
    */
-  registerSocketEventHandler(channel, handler) {
+  getHandlers() {
     let self = this;
-    this.socket.on(channel, msg => {
-      self.logSocketEvent(channel, msg);
-      handler(msg);
-    })
+    return {
+      'connect'                 : () => {
+        console.log('connect', self.socket.id); // x8WIv7-mJelg7on_ALbx
+      },
+      'disconnect'              : () => {
+        console.log('disconnect', self.socket.id); // undefined
+        self.store.commit('disconnected');
+      },
+      'identify'                : () => {
+        console.log('identify', self.options);
+        self.socket.emit('identify', {
+          user     : self.options.user,
+          teamId   : self.options.teamId,
+          authToken: self.options.authToken,
+          gameId   : self.options.gameId
+        })
+      },
+      'welcome'                 : () => {
+        console.log('Welcome!');
+      },
+      'initialized'             : (msg) => {
+        if (msg.isPlayer) {
+          console.log('PLAYER socket initialized');
+        }
+        if (msg.isAdmin) {
+          console.log('ADMIN socket initialized');
+        }
+        self.store.commit('connected');
+      },
+      'checkinStore'            : msg => {
+        console.warn('Checkin store...?', msg);
+      },
+      'admin-teamAccount'       : msg => {
+        self.store.dispatch({type: 'fetchRankingList'});
+        self.store.dispatch({type: 'updateTeamAccountEntries', teamId: msg.data.teamId});
+      },
+      'admin-propertyAccount'   : msg => {
+        self.store.dispatch({type: 'fetchRankingList'});
+        self.store.dispatch({type: 'updatePropertyInPricelist', property: msg.property});
+      },
+      'admin-chancelleryAccount': () => {
+        self.store.dispatch({type: 'fetchRankingList'});
+        self.store.dispatch({type: 'updateChancellery'});
+      },
+      'admin-properties'        : () => {
+        self.store.dispatch({type: 'fetchRankingList'});
+      },
+      'admin-marketplace'       : () => {
+        self.store.dispatch({type: 'fetchRankingList'});
+      },
+      'admin-rents-paid'        : () => {
+        self.store.dispatch({type: 'updateProperties'});
+      }
+
+    };
   }
 
   /**
