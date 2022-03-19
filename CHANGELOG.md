@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+## v3.0.0 19.3.2022
+Erste Version 3.0:
 * Komplettes Redesign Front-End: Umstellung User Interface von Angular.js auf vue.js
   * Spielauswertung Admin:
     * Echtzeitinfo SBB entfernt (Wechsel API, fraglich ob das nochmals kommt)
