@@ -1,12 +1,12 @@
 # Changelog Ferropoly Spiel
 
-* Dependency Updates. Wichtigste Änderungen
-    * Webpack bewusst auf V4 belassen
-    * Socket.io: 4.0 
-    * Grunt-browserify: 6
-    * Grund-contrib-css-min: 4.0  
-    * Kleine Updates u.a.: jquery, Pug, nodemailer, node-xlsx, needle, mongodb, moongose
-    * moment und moment-timezone ebenfalls upgedated, Ablösung planen!
+* Komplettes Redesign Front-End
+  * Spielauswertung Admin:
+    * Echtzeitinfo SBB entfernt (Wechsel API, fraglich ob das nochmals kommt)
+    * Statistik-Graphen überabeitet mit mehr Informationen
+    * Spielregeln direkt aus dem Spiel aufrufen
+    * Karte der Landestopgraphie kann verwendet werden
+    * Kontobuch mit detaillierten Funktionen und auf mehrere Seiten gesplittet
   
 ## v2.4.2 19.12.2020
 * Webpack Downgrade
