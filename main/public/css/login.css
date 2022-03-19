@@ -110,3 +110,11 @@
     -o-background-size: cover;
     background-size: cover;
 }
+
+.bg15 {
+    background: url("/images/ferropoly_background15.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}

@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Neues Titelbild "Paradeplatz"
+
 ## v3.0.0 19.3.2022
 Erste Version 3.0:
 * Komplettes Redesign Front-End: Umstellung User Interface von Angular.js auf vue.js

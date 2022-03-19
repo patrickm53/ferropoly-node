@@ -73,7 +73,7 @@ export default {
   },
   created   : function () {
     // Set background randomly
-    let i = Math.floor(((new Date().getMilliseconds() / 10) % 14) + 1);
+    let i = Math.floor(((new Date().getMilliseconds() / 10) % 15) + 1);
     console.log('Background', i);
     $('body').addClass('bg' + i);
   },
