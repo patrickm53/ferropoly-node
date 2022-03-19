@@ -1,12 +1,15 @@
 # Changelog Ferropoly Spiel
 
-* Komplettes Redesign Front-End
+* Komplettes Redesign Front-End: Umstellung User Interface von Angular.js auf vue.js
   * Spielauswertung Admin:
     * Echtzeitinfo SBB entfernt (Wechsel API, fraglich ob das nochmals kommt)
     * Statistik-Graphen überabeitet mit mehr Informationen
     * Spielregeln direkt aus dem Spiel aufrufen
     * Karte der Landestopgraphie kann verwendet werden
     * Kontobuch mit detaillierten Funktionen und auf mehrere Seiten gesplittet
+  * Login mit Microsoft Account
+  * Neue Bilder für Login und Startseite
+  * Bower entfernt
   
 ## v2.4.2 19.12.2020
 * Webpack Downgrade
