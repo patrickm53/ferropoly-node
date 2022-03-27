@@ -12,7 +12,7 @@ const chancelleryAccount = require('./chancelleryAccount');
 const propertyActions    = require('../../../components/checkin-datastore/lib/properties/actions');
 const logger             = require('../../../common/lib/logger').getLogger('marketplace');
 const travelLog          = require('../../../common/models/travelLogModel');
-const gameLog            = require('../../../common/models/gameLogModel');
+const gameLog            = require('../gameLog');
 const async              = require('async');
 const moment             = require('moment');
 const EventEmitter       = require('events').EventEmitter;
@@ -82,13 +82,11 @@ function Marketplace(scheduler) {
      */
     this.scheduler.on('start', function (event) {
       marketLog(event.gameId, 'Marketplace: onStart');
-      gameLog.addEntry(event.gameId, gameLog.CAT_GENERAL, 'Spielstart', {}, err => {
-        if (err) {
-          // log only, no consequences
-          logger.error(err);
-        }
-        event.callback(null, event);
-      })
+      gameLog.addEntry({
+        gameId   : event.gameId,
+        category : gameLog.CAT_GENERAL,
+        saveTitle: 'Spielstart'
+      }, event.callback(null, event));
     });
     /**
      * This is the 'end' event launched by the gameScheduler. Pay the final rents & interests
@@ -102,13 +100,12 @@ function Marketplace(scheduler) {
           return;
         }
         marketLog(event.gameId, 'Timed interests paid');
-        gameLog.addEntry(event.gameId, gameLog.CAT_GENERAL, 'Spielende', {}, err => {
-          if (err) {
-            // log only, no consequences
-            logger.error(err);
-          }
-          event.callback(null, event);
-        })
+        marketLog(event.gameId, 'Marketplace: onStart');
+        gameLog.addEntry({
+          gameId   : event.gameId,
+          category : gameLog.CAT_GENERAL,
+          saveTitle: 'Spielende'
+        }, event.callback(null, event));
       });
     });
   }
@@ -206,26 +203,16 @@ Marketplace.prototype.buyProperty = function (options, callback) {
             if (err) {
               return callback(err, {message: 'Fehler beim Grundstückkauf'});
             }
-            if (ferroSocket) {
-              // Inform others that the team bought an (annonymous) village
-              ferroSocket.emitToGame(options.gameId, 'general', {
-                teamId : options.teamId,
-                message: `"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`
-              });
-            }
-            // Add a log entry
-            gameLog.addEntry(options.gameId,
-              gameLog.CAT_PROPERTY,
-              `"${team.data.name}" kaufen ${property.location.name} für ${info.amount} Fr.`,
-              {teamId: team.uuid},
-              err => {
-                if (err) {
-                  // not critical, log only
-                  logger.error(err);
-                }
-                // that's it!
-                return callback(null, {property: property, amount: info.amount});
-              });
+            gameLog.addEntry({
+              gameId   : options.gameId,
+              category : gameLog.CAT_PROPERTY,
+              title    : `"${team.data.name}" kaufen ${property.location.name} für ${info.amount} Fr.`,
+              saveTitle: `"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`,
+              options  : {teamId: team.uuid}
+            }, () => {
+              // that's it!
+              return callback(null, {property: property, amount: info.amount});
+            });
           });
         });
       }
@@ -244,26 +231,16 @@ Marketplace.prototype.buyProperty = function (options, callback) {
             return callback(err, {message: 'Fehler beim Grundstückkauf'});
           }
           let targetTeam = _.get(gameData.teams[info.owner], 'data.name', 'unbekannt');
-          if (ferroSocket) {
-            // Inform others about paying a rent
-            ferroSocket.emitToGame(options.gameId, 'general', {
-              teamId : options.teamId,
-              message: `"${team.data.name}" zahlen Miete an "${targetTeam}": ${info.amount} Fr.`
-            });
-          }
-          // Add a log entry
-          gameLog.addEntry(options.gameId,
-            gameLog.CAT_PROPERTY,
-            `"${team.data.name}" zahlen für ${property.location.name} Miete an "${targetTeam}": ${info.amount} Fr.`,
-            {teamId: team.uuid},
-            err => {
-              if (err) {
-                // not critical, log only
-                logger.error(err);
-              }
-              // that's it!
-              return callback(null, info);
-            });
+          gameLog.addEntry({
+            gameId   : options.gameId,
+            category : gameLog.CAT_PROPERTY,
+            title    : `"${team.data.name}" zahlen für ${property.location.name} Miete an "${targetTeam}": ${info.amount} Fr.`,
+            saveTitle: `"${team.data.name}" zahlen ${info.amount} Fr. Miete an "${targetTeam}"`,
+            options  : {teamId: team.uuid}
+          }, () => {
+            // that's it!
+            return callback(null, info);
+          });
         });
       }
     });
@@ -670,7 +647,7 @@ Marketplace.prototype.payRents = function (options, callback) {
             function (err) {
               if (ferroSocket) {
                 // Inform clients that the can build again
-                ferroSocket.emitToGame(gameId, 'admin-rents-paid');
+                ferroSocket.emitToGame(gameId, 'general', {message: 'Die Mieten wurden ausbezahlt'});
               }
               callback(err);
             }
@@ -821,6 +798,7 @@ module.exports = {
     chancelleryAccount.init();
 
     ferroSocket = require('../ferroSocket').get();
+    gameLog.initSocket(ferroSocket);
 
     return marketplace;
   },
@@ -828,7 +806,7 @@ module.exports = {
    * Gets the marketplace, throws an error, if not defined
    * @returns {*}
    */
-  getMarketplace   : function () {
+  getMarketplace: function () {
     if (!marketplace) {
       throw new Error('You must create a marketplace first before getting it');
     }

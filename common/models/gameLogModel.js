@@ -24,11 +24,12 @@ const CAT_CHANCELLERY = 2; // chancellery actions
 /**
  * The mongoose schema for a log entry
  */
-let gameLogSchema     = mongoose.Schema({
+const gameLogSchema   = mongoose.Schema({
   _id      : String,
   gameId   : String,
   teamId   : String, // Set only if relevant, otherwise undefined
   title    : String, // Title of the entry, as short and informative as possible
+  saveTitle: String, // Title save to be displayed to users (nor revealing any positions)
   message  : String, // This is the more detailed message (if any)
   category : {type: Number, default: CAT_GENERAL},
   files    : {type: Array, default: []}, // this is an array with objects for pics
@@ -44,37 +45,57 @@ let GameLog = mongoose.model('GameLog', gameLogSchema);
 
 /**
  * Creates a new log entry and saves it
- * @param gameId
- * @param title
- * @param category
- * @param options
- * @param callback
+ * @param p1 was gameId
+ * @param p2 was title
+ * @param p3 was category
+ * @param p4 was options
+ * @param p5 was callback
  * @returns {*}
  */
-let addEntry = function (gameId, category, title, options, callback) {
-  if (!gameId || !title) {
-    return callback(new Error('all params in addEntry must be set'));
-  }
-  if (!_.isString(gameId) || !_.isString(title)) {
-    return callback(new Error('all params in createEntry must be strings'));
-  }
-  let logEntry      = new GameLog();
-  logEntry.gameId   = gameId;
-  logEntry.title    = title;
-  logEntry.message  = _.get(options, 'message', '');
-  logEntry.category = category
-  logEntry.teamId   = _.get(options, 'teamId', undefined);
-  logEntry.files    = []; // Not used yet
-  logEntry._id      = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
-  logEntry.save(callback);
-};
+    //let addEntry = function (gameId, category, title, options, callback) {
+const addEntry = function (p1, p2, p3, p4, p5) {
+      let gameId    = p1;
+      let category  = p2;
+      let title     = p3;
+      let saveTitle = ''; // title without additional infos about locations, "game save"
+      let options   = p4;
+      let callback  = p5;
+
+      if (_.isFunction(p2) && _.isObject((p1))) {
+        // New API with object as param 1 and callback as param 2
+        gameId    = _.get(p1, 'gameId', null);
+        category  = _.get(p1, 'category', CAT_GENERAL);
+        saveTitle = _.get(p1, 'saveTitle', '');
+        title     = _.get(p1, 'title', saveTitle);
+        options   = _.get(p1, 'options', {});
+        callback  = p2;
+      }
+
+      if (!gameId) {
+        return callback(new Error('gameId in addEntry must be set'));
+      }
+
+      if (!_.isString(gameId) || !_.isString(title)) {
+        return callback(new Error('all params in createEntry must be strings'));
+      }
+      let logEntry       = new GameLog();
+      logEntry.gameId    = gameId;
+      logEntry.title     = title;
+      logEntry.saveTitle = saveTitle;
+      logEntry.message   = _.get(options, 'message', '');
+      logEntry.category  = category
+      logEntry.teamId    = _.get(options, 'teamId', undefined);
+      logEntry.files     = []; // Not used yet
+      logEntry._id       = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
+      logEntry.save(callback);
+    };
 
 /**
  * Deletes all entries for a gameplay
  * @param gameId
  * @param callback
  */
-let deleteAllEntries = function (gameId, callback) {
+const deleteAllEntries = function (gameId, callback) {
   logger.info('Removing all entries in the game log');
   GameLog.deleteMany({gameId: gameId}, callback);
 };
@@ -89,7 +110,7 @@ let deleteAllEntries = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-let getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
+const getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -121,7 +142,7 @@ let getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
  * @param teamId
  * @param callback
  */
-let getAllLogEntries = function (gameId, teamId, callback) {
+const getAllLogEntries = function (gameId, teamId, callback) {
   getLogEntries(gameId, teamId, undefined, undefined, callback);
 };
 
@@ -132,7 +153,7 @@ module.exports = {
   getLogEntries   : getLogEntries,
   getAllLogEntries: getAllLogEntries,
   // Constants
-  CAT_GENERAL     : CAT_GENERAL,
-  CAT_CHANCELLERY : CAT_CHANCELLERY,
-  CAT_PROPERTY    : CAT_PROPERTY
+  CAT_GENERAL    : CAT_GENERAL,
+  CAT_CHANCELLERY: CAT_CHANCELLERY,
+  CAT_PROPERTY   : CAT_PROPERTY
 };

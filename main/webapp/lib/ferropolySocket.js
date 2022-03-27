@@ -89,6 +89,9 @@ class FerropolySocket extends EventEmitter {
       },
       'admin-rents-paid'        : () => {
         self.store.dispatch({type: 'updateProperties'});
+      },
+      'general'                 : (msg) => {
+        self.store.dispatch({type: 'gameLog/pushEntry', logEntry: msg})
       }
 
     };

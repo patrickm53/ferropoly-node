@@ -16,6 +16,7 @@ import teamAccount from '../../lib/store/teamAccount';
 import teams from '../../lib/store/teams';
 import travelLog from '../../lib/store/travelLog';
 import chancellery from '../../lib/store/chancellery';
+import gameLog from '../../lib/store/gameLog';
 import call from './modules/call';
 import map from '../../common/store/map';
 import reception from './modules/reception';
@@ -46,7 +47,8 @@ const store = new Vuex.Store({
     map,
     api,
     reception,
-    statistic
+    statistic,
+    gameLog
   },
   getters  : {
     getField

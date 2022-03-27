@@ -9,7 +9,7 @@
  */
 
 const chancelleryTransaction = require('../../../common/models/accounting/chancelleryTransaction');
-const gameLog                = require('../../../common/models/gameLogModel');
+const gameLog                = require('../gameLog');
 const teamAccount            = require('./teamAccount');
 const _                      = require('lodash');
 const moment                 = require('moment');
@@ -144,11 +144,13 @@ function playChancellery(gameplay, team, callback) {
         if (err) {
           return callback(err, retVal);
         }
-        return gameLog.addEntry(gameplay.internal.gameId,
-          gameLog.CAT_CHANCELLERY,
-          `"${_.get(team, 'data.name', 'unbekannt')}" gewinnt den Parkplatz: ${info.balance} Fr.`,
-          {
-            teamId : team.uuid
+        return gameLog.addEntry({
+            gameId   : gameplay.internal.gameId,
+            category : gameLog.CAT_CHANCELLERY,
+            saveTitle: `"${_.get(team, 'data.name', 'unbekannt')}" gewinnt den Parkplatz: ${info.balance} Fr.`,
+            options  : {
+              teamId: team.uuid
+            }
           },
           callback);
       });

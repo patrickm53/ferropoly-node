@@ -13,6 +13,8 @@
       b-col
         ranking-list
       b-col
+        game-events
+      b-col
         game-info
 
 
@@ -21,11 +23,12 @@
 <script>
 import GameInfo from './gameInfo.vue';
 import RankingList from './rankingList.vue';
+import GameEvents from './game-events.vue';
 import CallActiveWarning from '../call-active-warning.vue';
 
 export default {
   name      : 'OverviewRoot',
-  components: {GameInfo, RankingList, CallActiveWarning},
+  components: {GameInfo, RankingList, CallActiveWarning, GameEvents},
   filters   : {},
   mixins    : [],
   model     : {},

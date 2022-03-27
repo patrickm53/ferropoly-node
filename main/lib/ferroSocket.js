@@ -12,6 +12,8 @@ const _                = require('lodash');
 const util             = require('util');
 const accessor         = require('./accessor');
 const {v4: uuid}       = require('uuid');
+const gameLogModel     = require('../../common/models/gameLogModel');
+const moment           = require('moment');
 
 let ferroSocket;
 
@@ -95,6 +97,7 @@ function FerroSocket(server) {
               self.addSocket(socket, data.user, data.gameId);
               self.registerChannels(socket);
               self.emit('player-connected', {gameId: data.gameId, teamId: data.teamId, user: data.user});
+              self.emitGameMessagesAfterConnect(data.gameId, socket);
             });
             return;
           }
@@ -108,7 +111,7 @@ function FerroSocket(server) {
           self.addSocket(socket, data.user, data.gameId);
           self.emit('admin-connected', {gameId: data.gameId, user: data.user});
           self.registerChannels(socket);
-
+          self.emitGameMessagesAfterConnect(data.gameId, socket);
         });
       });
     });
@@ -187,7 +190,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
     registerChannel('player-position');
   }
   // Say the socket that we are operative
-  socket.emit('initialized', {result: true, isAdmin: socket.ferropoly.isAdmin, isPlayer:socket.ferropoly.isPlayer});
+  socket.emit('initialized', {result: true, isAdmin: socket.ferropoly.isAdmin, isPlayer: socket.ferropoly.isPlayer});
 };
 
 
@@ -270,15 +273,47 @@ FerroSocket.prototype.emitToTeamAndAdmin = function (gameId, teamId, channel, da
  * Emit data to all participants of a game (admins and players)
  * @param gameId
  * @param channel
- * @param data
+ * @param data, must contain a title and a saveTitle!
  */
 FerroSocket.prototype.emitToGame = function (gameId, channel, data) {
-  logger.info('ferroSockets.emitToGame: ' + gameId + ' ' + channel);
+  logger.info(`ferroSockets.emitToGame: ${gameId}, ${channel}`);
+
   if (this.sockets[gameId]) {
     this.sockets[gameId].forEach(function (socket) {
+      if (socket.ferropoly.isAdmin) {
+        data.title = _.get(data, 'title', 'Fehler!');
+      } else {
+        data.title = _.get(data, 'saveTitle', data.title);
+      }
+      delete data.saveTitle;
       socket.emit(channel, data);
     });
   }
+};
+
+/**
+ * Emits all game messages to a single socket after connecting
+ */
+FerroSocket.prototype.emitGameMessagesAfterConnect = function (gameId, socket) {
+  gameLogModel.getLogEntries(gameId, null, moment().subtract(30, 'minutes'), null, (err, entries) => {
+    if (err) {
+      return logger.error(err);
+    }
+
+    entries.forEach(e => {
+      let message = {
+        title    : e.saveTitle,
+        message  : e.message,
+        category : e.category,
+        timestamp: e.timestamp,
+        id       : e._id
+      }
+      if (socket.ferropoly.isAdmin) {
+        message.title = e.title;
+      }
+      socket.emit('general', message);
+    });
+  })
 };
 
 /**
