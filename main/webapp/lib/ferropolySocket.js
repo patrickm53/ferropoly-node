@@ -69,13 +69,14 @@ class FerropolySocket extends EventEmitter {
       'checkinStore'            : msg => {
         console.warn('Checkin store...?', msg);
       },
+
       'admin-teamAccount'       : msg => {
         self.store.dispatch({type: 'fetchRankingList'});
         self.store.dispatch({type: 'updateTeamAccountEntries', teamId: msg.data.teamId});
       },
       'admin-propertyAccount'   : msg => {
         self.store.dispatch({type: 'fetchRankingList'});
-        self.store.dispatch({type: 'updatePropertyInPricelist', property: msg.property});
+        self.store.dispatch({type: 'propertyRegister/updatePropertyInPricelist', property: msg.property});
       },
       'admin-chancelleryAccount': () => {
         self.store.dispatch({type: 'fetchRankingList'});

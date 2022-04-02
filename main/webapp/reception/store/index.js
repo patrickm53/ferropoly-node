@@ -168,6 +168,7 @@ const store = new Vuex.Store({
           state.api.error = err;
         });
     },
+
   }
 });
 
