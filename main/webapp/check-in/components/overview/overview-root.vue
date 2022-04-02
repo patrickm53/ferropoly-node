@@ -4,17 +4,19 @@
   Created: 10.03.22
 -->
 <template lang="pug">
-  div
+  b-container(fluid)
     h1 {{teamName}}
+    game-events
 
 </template>
 
 <script>
 import {mapFields} from 'vuex-map-fields';
+import gameEvents from './game-events.vue';
 
 export default {
   name      : 'OverviewRoot',
-  components: {},
+  components: {gameEvents},
   filters   : {},
   mixins    : [],
   model     : {},

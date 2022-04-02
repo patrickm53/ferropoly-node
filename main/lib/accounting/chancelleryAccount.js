@@ -147,7 +147,7 @@ function playChancellery(gameplay, team, callback) {
         return gameLog.addEntry({
             gameId   : gameplay.internal.gameId,
             category : gameLog.CAT_CHANCELLERY,
-            saveTitle: `"${_.get(team, 'data.name', 'unbekannt')}" gewinnt den Parkplatz: ${info.balance} Fr.`,
+            saveTitle: `"${_.get(team, 'data.name', 'unbekannt')}" gewinnen den Parkplatz: ${info.balance} Fr.`,
             options  : {
               teamId: team.uuid
             }

@@ -14,6 +14,7 @@ import api from '../../lib/store/api';
 import checkin from './modules/checkin';
 import rankingList from '../../lib/store/rankingList';
 import propertyRegister from '../../lib/store/propertyRegister';
+import gameLog from '../../lib/store/gameLog';
 import {get} from 'lodash';
 import assignObject from '../../lib/assignObject';
 import {GameProperties} from '../../lib/gameProperties';
@@ -26,7 +27,7 @@ const store = new Vuex.Store({
     gameDataLoaded: false, // becomes true when static data was loaded
     gameId        : undefined,
   },
-  modules  : {map, teamAccount, gameplay, api, teams, checkin, rankingList, propertyRegister},
+  modules  : {map, teamAccount, gameplay, api, teams, checkin, rankingList, propertyRegister, gameLog},
   getters  : {getField},
   mutations: {updateField},
   actions  : {
