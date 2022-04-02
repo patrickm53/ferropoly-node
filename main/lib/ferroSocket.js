@@ -301,7 +301,7 @@ FerroSocket.prototype.emitGameLogMessageToGame = function (gameId, message) {
       if (socket.ferropoly.isAdmin) {
         message.title = _.get(message, 'title', 'Fehler!');
       } else {
-        message.title = _.get(message, 'saveTitle', data.title);
+        message.title = _.get(message, 'saveTitle', message.title);
       }
       delete message.saveTitle;
       socket.emit('game-log', message);
