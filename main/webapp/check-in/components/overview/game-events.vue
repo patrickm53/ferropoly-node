@@ -5,6 +5,7 @@
 -->
 <template lang="pug">
   div
+    h4 Live-Ticker
     game-event(v-for="event in eventList" :event="event" :key="event.id")
 
 
