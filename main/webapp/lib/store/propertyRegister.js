@@ -34,7 +34,7 @@ const module = {
      * @param state
      * @returns {function(*): number}
      */
-    getPropertiesForTeam:(state) => (teamId) => {
+    getPropertiesForTeam: (state) => (teamId) => {
       return state.register.getPropertiesOfTeam(teamId);
     },
     /**
@@ -42,7 +42,7 @@ const module = {
      * @param state
      * @returns {function(*): number}
      */
-    getPropertyValue:(state) => (property) => {
+    getPropertyValue: (state) => (property) => {
       return state.register.evaluatePropertyValue(property);
     }
   },
@@ -61,6 +61,13 @@ const module = {
       if (property && property.uuid) {
         state.register.updateProperty(property);
       }
+    },
+    /**
+     * It is allowed again to build buildings
+     * @param state
+     */
+    buildingAllowedAgain({state}) {
+      state.register.enableBuilding();
     },
 
     /**

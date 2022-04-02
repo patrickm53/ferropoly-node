@@ -67,7 +67,13 @@ class FerropolySocket extends EventEmitter {
         self.store.commit('connected');
       },
       'checkinStore'            : msg => {
-        console.warn('Checkin store...?', msg);
+        if (msg.type === 'buildingAllowedAgain') {
+          self.store.dispatch({type: 'propertyRegister/buildingAllowedAgain'});
+
+        }
+        else {
+          console.warn('Checkin store...?', msg);
+        }
       },
 
       'admin-teamAccount'       : msg => {

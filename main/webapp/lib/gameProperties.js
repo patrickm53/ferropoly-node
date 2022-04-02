@@ -95,6 +95,15 @@ class GameProperties {
   }
 
   /**
+   * Enables building for all properties
+   */
+  enableBuilding() {
+    this.properties.forEach(p => {
+      p.gamedata.buildingEnabled = true;
+    });
+  }
+
+  /**
    * Show all properties on the map
    * @param map
    */

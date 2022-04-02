@@ -29,7 +29,7 @@ function FerroSocket(server) {
 
   this.sockets = {};
 
-  this.io.on('connect', function (socket) {
+  this.io.on('connect', function () {
     logger.info('io connect event');
   });
   this.io.on('connection', function (socket) {
@@ -46,22 +46,22 @@ function FerroSocket(server) {
     logger.info('io connect_error event');
     logger.info(obj);
   });
-  this.io.on('connect_timeout', function (socket) {
+  this.io.on('connect_timeout', function () {
     logger.info('io connect_timeout event');
   });
-  this.io.on('reconnect', function (socket) {
+  this.io.on('reconnect', function () {
     logger.info('io reconnect event');
   });
-  this.io.on('reconnect_attempt', function (socket) {
+  this.io.on('reconnect_attempt', function () {
     logger.info('io reconnect_attempt event');
   });
-  this.io.on('reconnecting', function (socket) {
+  this.io.on('reconnecting', function () {
     logger.info('io reconnecting event');
   });
-  this.io.on('reconnect_error', function (socket) {
+  this.io.on('reconnect_error', function () {
     logger.info('io reconnect_error event');
   });
-  this.io.on('reconnect_failed', function (socket) {
+  this.io.on('reconnect_failed', function () {
     logger.info('io reconnect_failed event');
   });
   /**
@@ -128,6 +128,7 @@ util.inherits(FerroSocket, EventEmitter);
 /**
  * Add a socket after connection
  * @param socket
+ * @param userId
  * @param gameId
  */
 FerroSocket.prototype.addSocket = function (socket, userId, gameId) {
@@ -149,7 +150,7 @@ FerroSocket.prototype.addSocket = function (socket, userId, gameId) {
  * @param socket
  */
 FerroSocket.prototype.removeSocket = function (socket) {
-  _.forIn(this.sockets, function (value, key) {
+  _.forIn(this.sockets, function (value) {
     if (_.isArray(value)) {
       _.remove(value, function (s) {
         return s === socket;
@@ -237,6 +238,7 @@ FerroSocket.prototype.emitToAdmins = function (gameId, channel, data) {
 /**
  * Emit data to a specific team of the game
  * @param gameId
+ * @param teamId
  * @param channel
  * @param data
  */
@@ -255,6 +257,7 @@ FerroSocket.prototype.emitToTeam = function (gameId, teamId, channel, data) {
 /**
  * Emit data to a specific team of the game with CC to admins
  * @param gameId
+ * @param teamId
  * @param channel
  * @param data
  */
@@ -273,19 +276,13 @@ FerroSocket.prototype.emitToTeamAndAdmin = function (gameId, teamId, channel, da
  * Emit data to all participants of a game (admins and players)
  * @param gameId
  * @param channel
- * @param data, must contain a title and a saveTitle!
+ * @param data
  */
 FerroSocket.prototype.emitToGame = function (gameId, channel, data) {
   logger.info(`ferroSockets.emitToGame: ${gameId}, ${channel}`);
 
   if (this.sockets[gameId]) {
     this.sockets[gameId].forEach(function (socket) {
-      if (socket.ferropoly.isAdmin) {
-        data.title = _.get(data, 'title', 'Fehler!');
-      } else {
-        data.title = _.get(data, 'saveTitle', data.title);
-      }
-      delete data.saveTitle;
       socket.emit(channel, data);
     });
   }
@@ -294,7 +291,7 @@ FerroSocket.prototype.emitToGame = function (gameId, channel, data) {
 /**
  * Emit Game Log data to all participants of a game (admins and players)
  * @param gameId
- * @param data, must contain a title and a saveTitle!
+ * @param message
  */
 FerroSocket.prototype.emitGameLogMessageToGame = function (gameId, message) {
   logger.info(`ferroSockets.emitGameLogMessageToGame: ${gameId}`);
