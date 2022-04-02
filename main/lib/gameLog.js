@@ -31,7 +31,7 @@ module.exports = {
           timestamp: entry.timestamp,
           id       : entry._id
         }
-        ferroSocket.emitToGame(_.get(gameMessage, 'gameId', 'none'), 'general', message);
+        ferroSocket.emitGameLogMessageToGame(_.get(gameMessage, 'gameId', 'none'), message);
       }
       if (callback) {
         return callback(err);

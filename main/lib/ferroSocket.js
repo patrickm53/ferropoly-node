@@ -292,6 +292,27 @@ FerroSocket.prototype.emitToGame = function (gameId, channel, data) {
 };
 
 /**
+ * Emit Game Log data to all participants of a game (admins and players)
+ * @param gameId
+ * @param data, must contain a title and a saveTitle!
+ */
+FerroSocket.prototype.emitGameLogMessageToGame = function (gameId, message) {
+  logger.info(`ferroSockets.emitGameLogMessageToGame: ${gameId}`);
+
+  if (this.sockets[gameId]) {
+    this.sockets[gameId].forEach(function (socket) {
+      if (socket.ferropoly.isAdmin) {
+        message.title = _.get(message, 'title', 'Fehler!');
+      } else {
+        message.title = _.get(message, 'saveTitle', data.title);
+      }
+      delete message.saveTitle;
+      socket.emit('game-log', message);
+    });
+  }
+};
+
+/**
  * Emits all game messages to a single socket after connecting
  */
 FerroSocket.prototype.emitGameMessagesAfterConnect = function (gameId, socket) {
@@ -311,7 +332,7 @@ FerroSocket.prototype.emitGameMessagesAfterConnect = function (gameId, socket) {
       if (socket.ferropoly.isAdmin) {
         message.title = e.title;
       }
-      socket.emit('general', message);
+      socket.emit('game-log', message);
     });
   })
 };

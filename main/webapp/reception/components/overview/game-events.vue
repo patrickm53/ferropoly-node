@@ -22,7 +22,7 @@
 import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
 import {mapFields} from 'vuex-map-fields';
 import {formatTime} from '../../../common/lib/formatters';
-import {slice} from 'lodash';
+import {slice, orderBy} from 'lodash';
 
 export default {      name: 'GameEvents',
   components: {FerroCard},
@@ -54,7 +54,7 @@ export default {      name: 'GameEvents',
       else {
         start = this.events.length - 5;
       }
-      return slice(this.events, start);
+      return orderBy(slice(this.events, start), e=>{ return e.timestamp}, 'desc');
     }
   },
   created   : function () {
