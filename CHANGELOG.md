@@ -2,6 +2,10 @@
 
 * Neues Titelbild "Paradeplatz"
 * Persistente Logs: die letzten verpassten Einträge werden beim Laden der Reception angezeigt
+* Komplette Überarbeitung check-in
+  * Live-Ticker verbessert
+  * Mehr Echtzeit-Infos
+
 
 ## v3.0.0 19.3.2022
 Erste Version 3.0:

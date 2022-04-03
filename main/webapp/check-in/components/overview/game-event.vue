@@ -1,11 +1,11 @@
 <!---
-
+  A single game event in the checkin view
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 02.04.22
 -->
 <template lang="pug">
   div
-    div.time-stamp {{event.timestamp | formatTime}}
+    div.time-stamp {{event.timeInfo}}
     div.title {{event.title}}
 
 
@@ -13,12 +13,12 @@
 
 <script>
 import {DateTime} from 'luxon';
-import {formatTime} from '../../../common/lib/formatters';
+import {formatTime,formatTimestampAsAgo} from '../../../common/lib/formatters';
 
 export default {
   name      : 'GameEvent',
   components: {},
-  filters   : {formatTime},
+  filters   : {formatTime, formatTimestampAsAgo},
   mixins    : [],
   model     : {},
   props     : {

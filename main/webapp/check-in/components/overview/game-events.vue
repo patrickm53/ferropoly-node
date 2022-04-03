@@ -8,7 +8,6 @@
     h4 Live-Ticker
     game-event(v-for="event in eventList" :event="event" :key="event.id")
 
-
 </template>
 
 <script>
@@ -25,7 +24,9 @@ export default {
   model     : {},
   props     : {},
   data      : function () {
-    return {};
+    return {
+      timer: ''
+    };
   },
   computed  : {
     ...mapFields({
@@ -48,8 +49,13 @@ export default {
     }
   },
   created   : function () {
+    this.timer = setInterval(this.updateList, 5000)
   },
-  methods   : {}
+  methods   : {
+    updateList() {
+      this.$store.dispatch('gameLog/updateTimeinfo');
+    }
+  }
 }
 </script>
 

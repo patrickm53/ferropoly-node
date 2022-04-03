@@ -8,6 +8,7 @@
 import {createHelpers} from 'vuex-map-fields';
 import {find} from 'lodash';
 import {DateTime} from 'luxon';
+import {formatTimestampAsAgo} from '../../common/lib/formatters';
 
 const {getGameLogField, updateGameLogField} = createHelpers({
   getterType  : 'getGameLogField',
@@ -17,7 +18,7 @@ const {getGameLogField, updateGameLogField} = createHelpers({
 const GameLog = {
   namespaced: true,
   state     : () => ({
-    entries: []
+    entries  : []
   }),
   getters   : {
     getGameLogField,
@@ -36,11 +37,21 @@ const GameLog = {
       if (find(state.entries, entry => {
         return (entry.id.localeCompare(logEntry.id) === 0);
       })) {
+        // Entry already in list, do not add
         return;
       }
       logEntry.timestamp = DateTime.fromISO(logEntry.timestamp);
-      console.log('New log received B', logEntry);
+      logEntry.timeInfo  = formatTimestampAsAgo(logEntry.timestamp);
       state.entries.push(logEntry);
+    },
+    /**
+     * Updates the time info ("5 seconds ago")
+     * @param state
+     */
+    updateTimeinfo({state}) {
+      state.entries.forEach(e => {
+        e.timeInfo = formatTimestampAsAgo(e.timestamp);
+      });
     }
   }
 }
