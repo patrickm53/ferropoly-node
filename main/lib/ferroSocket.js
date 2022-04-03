@@ -297,14 +297,17 @@ FerroSocket.prototype.emitGameLogMessageToGame = function (gameId, message) {
   logger.info(`ferroSockets.emitGameLogMessageToGame: ${gameId}`);
 
   if (this.sockets[gameId]) {
+    let adminMessage    = _.clone(message);
+    let playerMessage   = _.clone(message);
+    playerMessage.title = _.get(playerMessage, 'saveTitle', playerMessage.title);
+    delete playerMessage.saveTitle;
+
     this.sockets[gameId].forEach(function (socket) {
       if (socket.ferropoly.isAdmin) {
-        message.title = _.get(message, 'title', 'Fehler!');
+        socket.emit('game-log', adminMessage);
       } else {
-        message.title = _.get(message, 'saveTitle', message.title);
+        socket.emit('game-log', playerMessage);
       }
-      delete message.saveTitle;
-      socket.emit('game-log', message);
     });
   }
 };
