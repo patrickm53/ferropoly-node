@@ -118,7 +118,7 @@ const store = new Vuex.Store({
      * @param options
      */
     updateTeamAccountEntries({state, dispatch}, options) {
-      dispatch('loadTeamAccountEntries', {gameId: state.gameId, teamId: get(options, 'teamId', false)})
+      dispatch('loadTeamAccountEntries', {gameId: state.gameId, teamId: get(options, 'teamId', 'all')})
         .then(() => {
         })
         .catch(err => {

@@ -18,10 +18,11 @@ router.get('/get/:gameId/:teamId', function (req, res) {
   if (req.params.teamId === 'undefined' || req.params.teamId === 'all') {
     req.params.teamId = undefined;
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
-    if (err) {
-      return res.status(401).send({message: err.message});
-    }
+
+  /**
+   * Internal function collecting the statement, either for one team or for all, depending on rights
+   */
+  function collectAccountStatement() {
     let teamBalance = {};
     let query       = req.query || {};
     let tsStart     = query.start ? moment(query.start) : undefined;
@@ -48,6 +49,22 @@ router.get('/get/:gameId/:teamId', function (req, res) {
       }
       res.send({accountData: data});
     });
+  }
+
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+
+    if (err) {
+      // This is not the admin. How abaout a player with valid TeamID?
+      accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, function(err) {
+        if (err) {
+          return res.status(401).send({message: err.message});
+        }
+        return collectAccountStatement();
+      })
+    }
+    else {
+      collectAccountStatement();
+    }
   });
 });
 

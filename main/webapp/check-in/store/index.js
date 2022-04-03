@@ -81,6 +81,20 @@ const store = new Vuex.Store({
           state.api.error = err;
         });
     },
+    /**
+     * Updating the team account entries on application level => here only for the current team!
+     * @param state
+     * @param dispatch
+     */
+    updateTeamAccountEntries({state, dispatch}) {
+      console.log('updateTeamAccountEntries', state)
+      dispatch('loadTeamAccountEntries', {gameId: state.gameId, teamId: state.checkin.team.uuid})
+        .then(() => {
+        })
+        .catch(err => {
+          state.api.error = err;
+        })
+    },
   }
 
 });

@@ -71,11 +71,12 @@ const module = {
      * @returns promise
      */
     loadTeamAccountEntries({state, commit}, options) {
-      console.log('update team');
+      console.log('update team account entries', options);
       let query = '?start=' + state.lastValidTimestamp;
+      let teamId = get(options, 'teamId', 'all');
 
       return new Promise((resolve, reject) => {
-        axios.get(`/teamAccount/get/${options.gameId}/all${query}`)
+        axios.get(`/teamAccount/get/${options.gameId}/${teamId}${query}`)
           .then(resp => {
             forEach(resp.data.accountData, rawEntry => {
               let entry   = new TeamAccountTransaction(rawEntry);

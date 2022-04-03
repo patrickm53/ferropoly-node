@@ -77,6 +77,8 @@ $(document).ready(function () {
         this.fsocket.addAdditionalHandler('checkinStore', () => {
           this.$store.dispatch({type: 'updatePropertyNb'});
         })
+
+        this.$store.dispatch({type: 'updateTeamAccountEntries'});
       })
     },
     store  : store
