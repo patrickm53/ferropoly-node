@@ -4,15 +4,20 @@
   Created: 10.03.22
 -->
 <template lang="pug">
-  div
-    h1 accounting-root
+  b-container(fluid)
+    h1 Kontobuch
+    team-account-mobile(:transactions="transactions")
   
 </template>
 
 <script>
+import TeamAccountMobile from './team-account-mobile.vue';
+import {mapFields} from 'vuex-map-fields';
+
+
 export default {
   name: "AccountingRoot",
-  components: {},
+  components: {TeamAccountMobile},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -20,7 +25,14 @@ export default {
   data      : function () {
     return {};
   },
-  computed  : {},
+  computed  : {
+    ...mapFields({
+      teamId          : 'checkin.team.uuid',
+    }),
+    transactions() {
+      return this.$store.getters.teamAccountData(this.teamId);
+    },
+  },
   created   : function () {
   },
   methods   : {}
