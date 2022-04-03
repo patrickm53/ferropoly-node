@@ -260,7 +260,7 @@ function payInterest(gameplay, register, callback) {
 
   async.each(register,
     function (prop, cb) {
-      logger.info('Book propertyAccount transaction for property', prop);
+      logger.debug('Book propertyAccount transaction for property', prop);
       let pt         = new propertyTransaction.Model();
       pt.gameId      = gameplay.internal.gameId;
       pt.propertyId  = prop.uuid;
