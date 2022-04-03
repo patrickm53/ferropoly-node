@@ -33,7 +33,6 @@ export default {
       events: 'gameLog.entries',
     }),
     eventList() {
-      console.log('events', this.events);
       let start = 0;
       if (this.events.length === 0) {
         return [];
