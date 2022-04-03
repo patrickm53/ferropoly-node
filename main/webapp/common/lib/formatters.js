@@ -64,6 +64,16 @@ function formatDateTime(value) {
 }
 
 /**
+ * Formats a timestamp to "4 seconds ago"
+ * @param timestamp
+ * @returns {*}
+ */
+function formatTimestampAsAgo(timestamp) {
+  return timestamp.toRelative();
+}
+
+
+/**
  * Formats the price with the 1'000 format
  * @param val
  * @returns {string|*}
@@ -188,6 +198,8 @@ function buildingStatus(bs) {
   }
 }
 
+
+
 export {
   formatMap,
   formatTime,
@@ -198,5 +210,6 @@ export {
   formatAccessibility,
   formatPriceRange,
   booleanYesNo,
-  buildingStatus
+  buildingStatus,
+  formatTimestampAsAgo
 };

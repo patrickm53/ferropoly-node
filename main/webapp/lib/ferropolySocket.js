@@ -18,13 +18,13 @@ class FerropolySocket extends EventEmitter {
     this.logEnabled = true;
     console.log('Socket created');
 
-    let handlers = this.getHandlers();
+    this.handlers = this.getHandlers();
 
     // Handler for all events
     this.socket.onAny((eventName, msg) => {
-      if (handlers[eventName]) {
+      if (self.handlers[eventName]) {
         self.logSocketEvent(eventName, msg);
-        handlers[eventName](msg);
+        self.handlers[eventName](msg);
       } else if (this.logEnabled) {
         console.warn(`Unhandled socket.io event: ${eventName}`, msg);
       }
@@ -69,13 +69,14 @@ class FerropolySocket extends EventEmitter {
       'checkinStore'            : msg => {
         if (msg.type === 'buildingAllowedAgain') {
           self.store.dispatch({type: 'propertyRegister/buildingAllowedAgain'});
-
-        }
-        else {
+        } else if (msg.type === 'setChancelleryAsset') {
+          self.store.dispatch({type: 'setChancelleryAsset', asset: msg.asset});
+        } else if (msg.type === 'updateProperty') {
+          self.store.dispatch({type: 'propertyRegister/updatePropertyInPricelist', property: msg.property});
+        } else {
           console.warn('Checkin store...?', msg);
         }
       },
-
       'admin-teamAccount'       : msg => {
         self.store.dispatch({type: 'fetchRankingList'});
         self.store.dispatch({type: 'updateTeamAccountEntries', teamId: msg.data.teamId});
@@ -97,11 +98,27 @@ class FerropolySocket extends EventEmitter {
       'admin-rents-paid'        : () => {
         self.store.dispatch({type: 'updateProperties'});
       },
-      'game-log'                 : (msg) => {
+      'game-log'                : (msg) => {
         self.store.dispatch({type: 'gameLog/pushEntry', logEntry: msg})
       }
-
     };
+  }
+
+  /**
+   * Allows the addition of an additional handler for an event which is not of a generic nature:
+   * e.g. in CheckIn we have additional things to do as in reception and vice versa.
+   * @param channel
+   * @param handler
+   */
+  addAdditionalHandler(channel, handler) {
+    let self = this;
+    if (self.handlers[channel]) {
+      let oldHandler         = self.handlers[channel];
+      self.handlers[channel] = (msg) => {
+        oldHandler(msg);
+        handler(msg);
+      }
+    }
   }
 
   /**

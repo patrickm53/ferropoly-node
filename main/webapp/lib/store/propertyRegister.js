@@ -38,6 +38,14 @@ const module = {
       return state.register.getPropertiesOfTeam(teamId);
     },
     /**
+     * Returns the number of properties of a team
+     * @param state
+     * @returns {function(*): number}
+     */
+    getNbOfPropertiesOfTeam: (state)=>(teamId)=>{
+      return state.register.getNbOfPropertiesOfTeam(teamId);
+    },
+    /**
      * Returns the value of a property
      * @param state
      * @returns {function(*): number}

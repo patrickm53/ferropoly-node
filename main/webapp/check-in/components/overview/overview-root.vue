@@ -5,18 +5,24 @@
 -->
 <template lang="pug">
   b-container(fluid)
-    h1 {{teamName}}
-    game-events
+    h2 {{teamName}}
+    b-row
+      b-col
+        basic-info
+    b-row
+      b-col
+        game-events
 
 </template>
 
 <script>
 import {mapFields} from 'vuex-map-fields';
 import gameEvents from './game-events.vue';
+import BasicInfo from './basic-info.vue';
 
 export default {
   name      : 'OverviewRoot',
-  components: {gameEvents},
+  components: {BasicInfo, gameEvents},
   filters   : {},
   mixins    : [],
   model     : {},

@@ -70,6 +70,13 @@ $(document).ready(function () {
           gameId   : gameId,
           store    : this.$store
         });
+
+        this.fsocket.addAdditionalHandler('updateProperty', () => {
+          this.$store.dispatch({type: 'updatePropertyNb'});
+        })
+        this.fsocket.addAdditionalHandler('checkinStore', () => {
+          this.$store.dispatch({type: 'updatePropertyNb'});
+        })
       })
     },
     store  : store

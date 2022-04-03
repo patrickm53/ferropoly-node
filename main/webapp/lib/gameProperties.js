@@ -6,7 +6,7 @@
  * Created: 26.02.22
  **/
 import GameProperty from './gameProperty';
-import {assign, filter, find, findIndex, get} from 'lodash';
+import {assign, filter, find, findIndex, get, set} from 'lodash';
 
 class GameProperties {
   /**
@@ -99,7 +99,7 @@ class GameProperties {
    */
   enableBuilding() {
     this.properties.forEach(p => {
-      p.gamedata.buildingEnabled = true;
+      set(p, 'gamedata.buildingEnabled', true);
     });
   }
 

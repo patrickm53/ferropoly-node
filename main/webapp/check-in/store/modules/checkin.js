@@ -14,21 +14,24 @@ const {getCheckInField, updateCheckInField} = createHelpers({
 
 const CheckIn = {
   state    : () => ({
-    panel       : 'panel-overview', // panel displayed,
-    team        : {
+    panel           : 'panel-overview', // panel displayed,
+    team            : {
       uuid: 'x',
       data: {
-        name: 'n'
+        name: ''
       }
     },
-    menuElements: [
+    menuElements    : [
       {title: 'Übersicht', href: '#', event: 'panel-change', eventParam: 'panel-overview', active: true},
       {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map', active: false},
       {title: 'Besitz', href: '#', event: 'panel-change', eventParam: 'panel-property', active: false},
       {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting', active: false},
       {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-pricelist', active: false},
       {title: 'Spielregeln', href: '#', event: 'panel-change', eventParam: 'panel-rules', active: false}
-    ]
+    ],
+    asset           : 0,
+    chancelleryAsset: 0,
+    nbProperties    : 0
   }),
   getters  : {
     getCheckInField,
@@ -41,6 +44,15 @@ const CheckIn = {
         e.active = (e.eventParam === panel);
       })
       state.panel = panel;
+    },
+  },
+  actions  : {
+    setChancelleryAsset({state}, options) {
+      console.log('setChancelleryAsset', options);
+      state.chancelleryAsset = options.asset;
+    },
+    updatePropertyNb({state, rootGetters}) {
+      state.nbProperties = rootGetters['propertyRegister/getNbOfPropertiesOfTeam'](state.team.uuid);
     }
   }
 }
