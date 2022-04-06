@@ -9,7 +9,7 @@
       b-col(xs="7")
         .checkin-info Vermögen
       b-col(xs="5")
-        .checkin-amount {{asset | formatPrice}}
+        .checkin-amount {{balance | formatPrice}}
     b-row
       b-col(xs="7")
         .checkin-info Gekaufte Orte
@@ -40,7 +40,6 @@ export default {
   },
   computed  : {
     ...mapFields({
-      asset           : 'checkin.asset',
       teamId          : 'checkin.team.uuid',
       propertyRegister: 'properties.register',
       chancelleryAsset: 'checkin.chancelleryAsset',
@@ -49,6 +48,9 @@ export default {
     propertyNb() {
       let t = this.$store.getters['propertyRegister/getPropertiesForTeam'](this.teamId) || [];
       return t.length;
+    },
+    balance() {
+      return this.$store.getters.teamAccountBalance(this.teamId);
     }
   },
   created   : function () {

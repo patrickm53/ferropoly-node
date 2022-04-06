@@ -45,8 +45,22 @@ const module = {
   }),
   getters  : {
     getTeamAccountField,
+    /**
+     * Return the complete data of a specific team
+     * @param state
+     * @returns {function(*): *}
+     */
     teamAccountData: (state) => (id) => {
       return state.accounts[state.id2accounts[id]];
+    },
+    /**
+     * Returns the team account balance
+     * @param state
+     * @returns {function(*): any}
+     */
+    teamAccountBalance: (state) => (id) => {
+      let lastEntry = last(state.accounts[state.id2accounts[id]]) || {};
+      return get(lastEntry, 'balance', 0);
     }
   },
   mutations: {
