@@ -78,6 +78,34 @@ const module = {
       })
     },
     /**
+     * Adds a single team account transaction
+     * @param state
+     * @param options
+     */
+    addTeamAccountTransaction({state}, options) {
+      let teamId = get(options, 'transaction.teamId', null);
+      if (!teamId) {
+        console.warn('Invalid transaction received', options);
+        return;
+      }
+      console.time('addTeamAccountTransaction');
+      let entry   = new TeamAccountTransaction(options.transaction);
+      let account = state.accounts[state.id2accounts[entry.teamId]];
+      if (!findLast(account, {_id: entry._id})) {
+        if (entry.transaction.origin.category === 'team') {
+          entry.transaction.origin.teamName = this.getters['teams/idToTeamName'](entry.transaction.origin.uuid);
+        }
+        account.push(entry)
+      }
+      // Rebuild data
+      let balance = 0;
+      account.forEach(e => {
+        balance += e.transaction.amount;
+        e.balance = balance;
+      })
+      console.timeEnd('addTeamAccountTransaction');
+    },
+    /**
      * Updates the team account entries
      * @param state
      * @param commit
