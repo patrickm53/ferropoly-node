@@ -5,7 +5,8 @@
 * Komplette Überarbeitung check-in
   * Live-Ticker verbessert
   * Mehr Echtzeit-Infos
-
+  * Telefonnummer Zentrale wird dargestellt
+  * Mietwert (aktuell und bei Vollausbau) wird dargestellt
 
 ## v3.0.0 19.3.2022
 Erste Version 3.0:

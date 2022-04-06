@@ -52,6 +52,14 @@ const module = {
      */
     getPropertyValue: (state) => (property) => {
       return state.register.evaluatePropertyValue(property);
+    },
+    /**
+     * Returns the register object
+     * @param state
+     * @returns {GameProperties}
+     */
+    getRegister: (state)=> {
+      return state.register;
     }
   },
   mutations : {

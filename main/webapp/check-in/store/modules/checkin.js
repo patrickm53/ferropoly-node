@@ -31,7 +31,8 @@ const CheckIn = {
     ],
     asset           : 0,
     chancelleryAsset: 0,
-    nbProperties    : 0
+    nbProperties    : 0,
+    propertyValue   : 0,
   }),
   getters  : {
     getCheckInField,
@@ -53,6 +54,7 @@ const CheckIn = {
     },
     updatePropertyNb({state, rootGetters}) {
       state.nbProperties = rootGetters['propertyRegister/getNbOfPropertiesOfTeam'](state.team.uuid);
+      state.propertyValue = rootGetters['propertyRegister/getRegister'].evaluatePropertyValueForTeam(state.team.uuid);
     }
   }
 }

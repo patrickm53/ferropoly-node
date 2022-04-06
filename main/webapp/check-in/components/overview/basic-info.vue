@@ -17,6 +17,16 @@
         .checkin-amount {{nbProperties}}
     b-row
       b-col(xs="7")
+        .checkin-info Mietwert akt.
+      b-col(xs="5")
+        .checkin-amount {{propertyValue.sum | formatPrice}}
+    b-row
+      b-col(xs="7")
+        .checkin-info Mietwert max.
+      b-col(xs="5")
+        .checkin-amount {{propertyValue.max | formatPrice}}
+    b-row
+      b-col(xs="7")
         .checkin-info Parkplatz
       b-col(xs="5")
         .checkin-amount {{chancelleryAsset | formatPrice}}
@@ -41,9 +51,10 @@ export default {
   computed  : {
     ...mapFields({
       teamId          : 'checkin.team.uuid',
-      propertyRegister: 'properties.register',
+      propertyRegister: 'propertyRegister.register',
       chancelleryAsset: 'checkin.chancelleryAsset',
-      nbProperties    : 'checkin.nbProperties'
+      nbProperties    : 'checkin.nbProperties',
+      propertyValue   : 'checkin.propertyValue',
     }),
     propertyNb() {
       let t = this.$store.getters['propertyRegister/getPropertiesForTeam'](this.teamId) || [];
