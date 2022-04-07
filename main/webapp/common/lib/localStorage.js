@@ -11,8 +11,56 @@
  * @param value
  */
 function setItem(key, value) {
-  localStorage.setItem(key, value);
+  console.warn('setItem in sessionStorage is obsolete!');
+  setString(key, value);
 }
+
+
+/**
+ * Sets an object in the storage
+ * @param key
+ * @param value
+ */
+function setObject(key, value) {
+  localStorage.setItem(key, JSON.stringify({type: 'Object', value}));
+}
+
+/**
+ * Sets an integer in the storage
+ * @param key
+ * @param value
+ */
+function setInt(key, value) {
+  localStorage.setItem(key, JSON.stringify({type: 'Int', value}));
+}
+
+/**
+ * Sets a float in the storage
+ * @param key
+ * @param value
+ */
+function setFloat(key, value) {
+  localStorage.setItem(key, JSON.stringify({type: 'Float', value}));
+}
+
+/**
+ * Sets a string in the storage
+ * @param key
+ * @param value
+ */
+function setString(key, value) {
+  localStorage.setItem(key, JSON.stringify({type: 'String', value}));
+}
+
+/**
+ * Sets a boolean in the storage
+ * @param key
+ * @param value
+ */
+function setBoolean(key, value) {
+  localStorage.setItem(key, JSON.stringify({type: 'Boolean', value}));
+}
+
 
 /**
  * Retrieves an item
@@ -21,11 +69,19 @@ function setItem(key, value) {
  * @returns {string}
  */
 function getItem(key, def = undefined) {
-  let retVal = localStorage.getItem(key);
-  if (!retVal) {
-    retVal = def;
+  let data = def;
+  try {
+    data = JSON.parse(localStorage.getItem(key));
   }
-  return retVal;
+  catch (e) {
+    console.warn(e);
+  }
+  if (!data) {
+    return def;
+  }
+
+  console.log('session storage', data);
+  return data.value;
 }
 
 /**
@@ -43,4 +99,5 @@ function clear() {
   localStorage.clear();
 }
 
-export {setItem, getItem, clear, removeItem};
+export {setItem, getItem, clear, removeItem, setObject, setInt, setFloat, setString, setBoolean};
+

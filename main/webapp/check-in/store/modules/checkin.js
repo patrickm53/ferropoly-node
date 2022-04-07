@@ -33,6 +33,10 @@ const CheckIn = {
     chancelleryAsset: 0,
     nbProperties    : 0,
     propertyValue   : 0,
+    gps: {
+      usageAllowed: false,
+      active: false
+    }
   }),
   getters  : {
     getCheckInField,

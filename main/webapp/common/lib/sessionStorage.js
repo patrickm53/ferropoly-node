@@ -55,6 +55,16 @@ function setString(key, value) {
   sessionStorage.setItem(key, JSON.stringify({type: 'String', value}));
 }
 
+
+/**
+ * Sets a boolean in the storage
+ * @param key
+ * @param value
+ */
+function setBoolean(key, value) {
+  sessionStorage.setItem(key, JSON.stringify({type: 'Boolean', value}));
+}
+
 /**
  * Retrieves an item
  * @param key
@@ -92,4 +102,4 @@ function clear() {
   sessionStorage.clear();
 }
 
-export {setItem, getItem, clear, removeItem, setObject, setInt, setFloat, setString};
+export {setItem, getItem, clear, removeItem, setObject, setInt, setFloat, setString, setBoolean};

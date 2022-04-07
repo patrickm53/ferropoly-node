@@ -18,37 +18,56 @@
       :message="apiErrorMessage"
       @close="apiErrorActive=false"
     )
+    modal-info-yes-no(ref="info1" size="sm" @yes="onAccept" @no="onDeny")
     overview-root(v-if="panel==='panel-overview'")
-    accounting-root(v-if="panel==='panel-accounting'")
-    property-root(v-if="panel==='panel-property'")
     rules-root(v-if="panel==='panel-rules'")
-    map-root(v-if="panel==='panel-map'")
     pricelist-root(v-if="panel==='panel-pricelist'")
+    div(v-if="gpsWarningMessageActive")
+      no-gps-info(v-if="panel==='panel-accounting'")
+      no-gps-info(v-if="panel==='panel-property'")
+      no-gps-info(v-if="panel==='panel-map'")
+    div(v-if="!gpsWarningMessageActive")
+      accounting-root(v-if="panel==='panel-accounting'")
+      property-root(v-if="panel==='panel-property'")
+      map-root(v-if="panel==='panel-map'")
 
 </template>
 
 <script>
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
 import ModalError from '../../common/components/modal-error/modal-error.vue';
+import ModalInfoYesNo from '../../common/components/modal-info-yes-no/modal-info-yes-no.vue';
 import MapRoot from './map/map-root.vue';
+import NoGpsInfo from './no-gps-info.vue';
 import OverviewRoot from './overview/overview-root.vue';
 import PricelistRoot from './pricelist/pricelist-root.vue';
 import PropertyRoot from './property/property-root.vue';
 import RulesRoot from './rules/rules-root.vue';
 import AccountingRoot from './accounting/accounting-root.vue';
-
+import {getItem, setBoolean} from '../../common/lib/localStorage';
 import {mapFields} from 'vuex-map-fields';
 
 export default {
   name      : 'CheckInRoot',
-  components: {MenuBar, ModalError, MapRoot, OverviewRoot, PricelistRoot, PropertyRoot, RulesRoot, AccountingRoot},
+  components: {
+    MenuBar,
+    ModalError,
+    MapRoot,
+    OverviewRoot,
+    PricelistRoot,
+    PropertyRoot,
+    RulesRoot,
+    AccountingRoot,
+    ModalInfoYesNo,
+    NoGpsInfo
+  },
   filters   : {},
   mixins    : [],
   model     : {},
   props     : {},
   data      : function () {
     return {
-      helpUrls: {
+      helpUrls  : {
         'panel-overview'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
         'panel-map'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
         'panel-statistic' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
@@ -65,7 +84,8 @@ export default {
       online         : 'api.online',
       organisatorName: 'gameplay.owner.organisatorName',
       error          : 'api.error',
-      authToken      : 'api.authToken'
+      authToken      : 'api.authToken',
+      gpsAllowed     : 'checkin.gps.usageAllowed'
     }),
     apiErrorActive: {
       get() {
@@ -81,13 +101,47 @@ export default {
     apiErrorMessage() {
       return this.error.message;
     },
+    gpsWarningMessageActive() {
+      return !this.gpsAllowed;
+    },
     helpUrl: {
       get() {
         return this.helpUrls[this.panel];
       }
     }
   },
-  created   : function () {
+  mounted   : function () {
+    this.gpsAllowed = getItem('GpsAllowed', false);
+
+    this.panelRules = {
+      'panel-overview'  : () => {
+        return this.gpsAllowed
+      },
+      'panel-map'       : () => {
+        return this.gpsAllowed
+      },
+      'panel-property'  : () => {
+        return this.gpsAllowed
+      },
+      'panel-accounting': () => {
+        return this.gpsAllowed
+      },
+      'panel-pricelist' : () => {
+        return this.gpsAllowed
+      },
+      'panel-rules'     : () => {
+        return this.gpsAllowed
+      }
+
+    }
+
+    if (!this.gpsAllowed) {
+      this.$refs.info1.showDialog({
+        title  : 'GPS & Ferropoly',
+        info   : 'Während dem Spiel wird dein Standort der Zentrale übermittelt, dazu muss das GPS in deinem Handy aktiviert sein. Die Standortdaten werden nur während dem Spiel erfasst und gespeichert, 30 Tage nach dem Spiel werden sie automatisch gelöscht.',
+        message: 'Für die Verwendung der Ferropoly App musst Du der Verwendung von GPS zustimmen, bitte bestätige dies mit Click auf "ja".'
+      });
+    }
   },
   methods   : {
     /**
@@ -97,6 +151,13 @@ export default {
     onPanelChange(panel) {
       console.log('onPanelChange', panel);
       this.$store.commit('setPanel', panel);
+    },
+    onAccept() {
+      this.gpsAllowed = true;
+      setBoolean('GpsAllowed', true);
+    },
+    onDeny() {
+      console.warn('Usage of GPS was denied, that\'s not what we call fairplay!');
     }
   }
 }
