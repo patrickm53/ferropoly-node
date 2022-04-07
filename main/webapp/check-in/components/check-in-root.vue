@@ -46,6 +46,7 @@ import RulesRoot from './rules/rules-root.vue';
 import AccountingRoot from './accounting/accounting-root.vue';
 import {getItem, setBoolean} from '../../common/lib/localStorage';
 import {mapFields} from 'vuex-map-fields';
+import geograph from '../../common/lib/geograph';
 
 export default {
   name      : 'CheckInRoot',
@@ -67,7 +68,7 @@ export default {
   props     : {},
   data      : function () {
     return {
-      helpUrls  : {
+      helpUrls: {
         'panel-overview'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
         'panel-map'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
         'panel-statistic' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
@@ -135,7 +136,9 @@ export default {
 
     }
 
-    if (!this.gpsAllowed) {
+    if (this.gpsAllowed) {
+      this.activateGps();
+    } else {
       this.$refs.info1.showDialog({
         title  : 'GPS & Ferropoly',
         info   : 'Während dem Spiel wird dein Standort der Zentrale übermittelt, dazu muss das GPS in deinem Handy aktiviert sein. Die Standortdaten werden nur während dem Spiel erfasst und gespeichert, 30 Tage nach dem Spiel werden sie automatisch gelöscht.',
@@ -155,9 +158,22 @@ export default {
     onAccept() {
       this.gpsAllowed = true;
       setBoolean('GpsAllowed', true);
+      this.activateGps();
     },
     onDeny() {
       console.warn('Usage of GPS was denied, that\'s not what we call fairplay!');
+    },
+    activateGps() {
+      console.log('Activating GPS', geograph.getLastLocation());
+      geograph.on('player-position', info => {
+        if (info.cmd === 'positionUpdate') {
+          console.log('GPS Position Update', info.position);
+        } else if (info.cmd === 'positionError') {
+          console.log('GPS Position not available', info.err);
+        }
+      })
+
+      // Todo: cyclic timer, upload socket
     }
   }
 }
