@@ -28,7 +28,7 @@ class Geograph extends EventEmitter {
             });
             self.nextUpdateNotBefore = DateTime.now().plus({seconds: 60});
           } else {
-            console.log('Sending position suppressed');
+            console.log('GPS: Sending position suppressed');
           }
         },
         function (err) {
@@ -36,16 +36,16 @@ class Geograph extends EventEmitter {
           self.emit('player-position', {cmd: 'positionError', err: err.code});
           switch (err.code) {
             case err.PERMISSION_DENIED:
-              console.error('User denied the request for Geolocation.');
+              console.error('GPS: User denied the request for Geolocation.');
               break;
             case err.POSITION_UNAVAILABLE:
-              console.error('Location information is unavailable.');
+              console.error('GPS: Location information is unavailable.');
               break;
             case err.TIMEOUT:
-              console.error('The request to get user location timed out.');
+              console.error('GPS: The request to get user location timed out.');
               break;
             case err.UNKNOWN_ERROR:
-              console.error('An unknown error occurred.');
+              console.error('GPS: An unknown error occurred.');
               break;
           }
         });
