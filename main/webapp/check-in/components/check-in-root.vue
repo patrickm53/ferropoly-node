@@ -47,6 +47,7 @@ import AccountingRoot from './accounting/accounting-root.vue';
 import {getItem, setBoolean} from '../../common/lib/localStorage';
 import {mapFields} from 'vuex-map-fields';
 import geograph from '../../common/lib/geograph';
+import {DateTime} from 'luxon';
 
 export default {
   name      : 'CheckInRoot',
@@ -86,7 +87,9 @@ export default {
       organisatorName: 'gameplay.owner.organisatorName',
       error          : 'api.error',
       authToken      : 'api.authToken',
-      gpsAllowed     : 'checkin.gps.usageAllowed'
+      gpsAllowed     : 'checkin.gps.usageAllowed',
+      gpsActive      : 'checkin.gps.active',
+      nextUpdate     : 'checkin.gps.nextUpdate',
     }),
     apiErrorActive: {
       get() {
@@ -103,7 +106,7 @@ export default {
       return this.error.message;
     },
     gpsWarningMessageActive() {
-      return !this.gpsAllowed;
+      return !(this.gpsAllowed && this.gpsActive);
     },
     helpUrl: {
       get() {
@@ -163,17 +166,25 @@ export default {
     onDeny() {
       console.warn('Usage of GPS was denied, that\'s not what we call fairplay!');
     },
+    /**
+     * Activates GPS and cyclic scans
+     */
     activateGps() {
+      let self = this;
       console.log('Activating GPS', geograph.getLastLocation());
-      geograph.on('player-position', info => {
-        if (info.cmd === 'positionUpdate') {
-          console.log('GPS Position Update', info.position);
-        } else if (info.cmd === 'positionError') {
-          console.log('GPS Position not available', info.err);
+      geograph.on('player-position-update', (pos) => {
+        console.log('GPS received', pos, self.$parent.fsocket);
+        if (self.$parent.fsocket && self.nextUpdate < DateTime.now()) {
+          self.$parent.fsocket.emitToGame('player-position', {cmd: 'positionUpdate', position: pos});
+          self.nextUpdate = DateTime.now().plus({minutes: 5});
         }
-      })
-
-      // Todo: cyclic timer, upload socket
+        self.gpsActive = true;
+      });
+      geograph.on('player-position-error', () => {
+        console.log('GPS INVALID');
+        self.gpsActive = false;
+      });
+      geograph.startPeriodicScan();
     }
   }
 }

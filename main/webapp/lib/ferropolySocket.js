@@ -137,6 +137,12 @@ class FerropolySocket extends EventEmitter {
       console.info(`Socket data for ${channel}`, payload);
     }
   }
+
+  emitToGame(channel, payload) {
+    let self = this;
+    this.logSocketEvent(`Sending on channel ${channel}`, payload);
+    self.socket.emit(channel, payload);
+  }
 }
 
 export {FerropolySocket};

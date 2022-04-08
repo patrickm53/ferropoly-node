@@ -6,6 +6,7 @@
 
 
 import {createHelpers} from 'vuex-map-fields';
+import {DateTime} from 'luxon';
 
 const {getCheckInField, updateCheckInField} = createHelpers({
   getterType  : 'getCheckInField',
@@ -33,9 +34,10 @@ const CheckIn = {
     chancelleryAsset: 0,
     nbProperties    : 0,
     propertyValue   : 0,
-    gps: {
+    gps             : {
       usageAllowed: false,
-      active: false
+      active      : true,
+      nextUpdate  : DateTime.now()
     }
   }),
   getters  : {
@@ -57,7 +59,7 @@ const CheckIn = {
       state.chancelleryAsset = options.asset;
     },
     updatePropertyNb({state, rootGetters}) {
-      state.nbProperties = rootGetters['propertyRegister/getNbOfPropertiesOfTeam'](state.team.uuid);
+      state.nbProperties  = rootGetters['propertyRegister/getNbOfPropertiesOfTeam'](state.team.uuid);
       state.propertyValue = rootGetters['propertyRegister/getRegister'].evaluatePropertyValueForTeam(state.team.uuid);
     }
   }
