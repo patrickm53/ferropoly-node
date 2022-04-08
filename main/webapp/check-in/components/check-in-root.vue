@@ -173,8 +173,8 @@ export default {
       let self = this;
       console.log('Activating GPS', geograph.getLastLocation());
       geograph.on('player-position-update', (pos) => {
-        console.log('GPS received', pos, self.$parent.fsocket);
         if (self.$parent.fsocket && self.nextUpdate < DateTime.now()) {
+          console.log('Sending GPS info to system', pos);
           self.$parent.fsocket.emitToGame('player-position', {cmd: 'positionUpdate', position: pos});
           self.nextUpdate = DateTime.now().plus({minutes: 5});
         }
