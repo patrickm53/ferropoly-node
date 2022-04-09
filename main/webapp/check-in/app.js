@@ -61,12 +61,13 @@ $(document).ready(function () {
         // Set the static data
         this.$store.dispatch({type: 'fetchStaticData', err, data});
         this.$store.dispatch({type: 'updateProperties'});
+        let teamId   = get(data, 'team.uuid', 'none');
         // Connect to Ferropoly Instance
         this.fsocket = new FerropolySocket({
           url      : get(data, 'socketUrl', '/'),
           authToken: get(data, 'authToken', 'none'),
           user     : get(data, 'user', 'none'),
-          teamId   : get(data, 'team.uuid', 'none'),
+          teamId   : teamId,
           gameId   : gameId,
           store    : this.$store
         });
@@ -79,6 +80,7 @@ $(document).ready(function () {
         })
 
         this.$store.dispatch({type: 'updateTeamAccountEntries'});
+        this.$store.dispatch({type: 'updateTravelLog', teamUuid: teamId});
       })
     },
     store  : store

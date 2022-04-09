@@ -15,6 +15,7 @@ import checkin from './modules/checkin';
 import rankingList from '../../lib/store/rankingList';
 import propertyRegister from '../../lib/store/propertyRegister';
 import gameLog from '../../lib/store/gameLog';
+import travelLog from '../../lib/store/travelLog'
 import {get} from 'lodash';
 import assignObject from '../../lib/assignObject';
 import {GameProperties} from '../../lib/gameProperties';
@@ -27,7 +28,7 @@ const store = new Vuex.Store({
     gameDataLoaded: false, // becomes true when static data was loaded
     gameId        : undefined,
   },
-  modules  : {map, teamAccount, gameplay, api, teams, checkin, rankingList, propertyRegister, gameLog},
+  modules  : {map, teamAccount, gameplay, api, teams, checkin, rankingList, propertyRegister, gameLog, travelLog},
   getters  : {getField},
   mutations: {updateField},
   actions  : {
@@ -94,6 +95,17 @@ const store = new Vuex.Store({
         .catch(err => {
           state.api.error = err;
         })
+    },
+    updateTravelLog({state, dispatch}, options) {
+      dispatch('travelLog/update', {gameId: state.gameId,
+        teams: state.teams.list,
+        teamUuid: get(options, 'teamUuid', 'shouldNotBeSo')})
+        .then(() => {
+        })
+        .catch(err => {
+          console.log(err);
+          state.api.error = err;
+        });
     },
   }
 });

@@ -74,7 +74,9 @@ class Property extends EventEmitter {
    */
   setMap(map) {
     this.createMarker();
-    this.marker.setMap(map);
+    if (this.marker) {
+      this.marker.setMap(map);
+    }
     this.map = map;
   }
 
@@ -84,10 +86,14 @@ class Property extends EventEmitter {
    */
   applyFilter(show) {
     if (show && !this.isVisibleInList) {
-      this.marker.setMap(this.map);
+      if (this.marker) {
+        this.marker.setMap(this.map);
+      }
       this.isVisibleInList = true;
     } else if (!show && this.isVisibleInList) {
-      this.marker.setMap(null);
+      if (this.marker) {
+        this.marker.setMap(null);
+      }
       this.isVisibleInList = false;
     }
   }

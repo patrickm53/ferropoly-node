@@ -96,7 +96,7 @@ module.exports = {
 
       let team = gc.teams[teamId];
       if (!team) {
-        return callback(new Error('Unknown teamId, not allowed'));
+        return callback(new Error(`Unknown teamId "${teamId}", not allowed`));
       }
 
       if (team.data.teamLeader.email === userId) {

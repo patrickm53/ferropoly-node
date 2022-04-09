@@ -108,6 +108,7 @@ class GameProperties {
    * @param map
    */
   showAllPropertiesOnMap(map) {
+    console.log('SHOW ALL PROPS!!')
     this.properties.forEach(p => {
       p.setMap(map);
     });

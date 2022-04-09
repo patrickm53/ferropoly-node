@@ -22,10 +22,13 @@ class GameProperty extends Property {
     super.createMarker();
 
     let content = `<h4>${this.location.name}</h4><p>Kaufpreis: ${this.pricelist.price}</p>`;
-    if (this.gamedata.owner) {
-      content += `<p>verkauft</p>`
-    } else {
-      content += `<p>verfügbar</p>`
+
+    if (this.gamedata) {
+      if (this.gamedata.owner) {
+        content += `<p>verkauft</p>`
+      } else {
+        content += `<p>verfügbar</p>`
+      }
     }
 
     this.infoWindow = new google.maps.InfoWindow({

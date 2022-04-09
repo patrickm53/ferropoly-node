@@ -20,16 +20,20 @@ router.get('/:gameId/:teamId', function (req, res) {
   if (!req.params.teamId) {
     return res.status(400).send({message: 'No teamId supplied'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
-    if (err) {
-      return res.status(401).send({message: err.message});
-    }
-    logger.info('Request for ' + req.params.teamId + ' @ ' + req.params.gameId);
-    let teamId = req.params.teamId;
-    if (req.params.teamId === 'undefined') {
-      teamId = undefined;
-    }
-    travelLog.getAllLogEntries(req.params.gameId, teamId, function (err, log) {
+
+  let teamId = req.params.teamId;
+  if (req.params.teamId === 'undefined') {
+    teamId = undefined;
+  }
+
+
+  /**
+   * Collect data and send it back
+   * @param tId
+   */
+  function collectAndSendLog(tId) {
+    logger.info('Request for ' + tId + ' @ ' + req.params.gameId);
+    travelLog.getAllLogEntries(req.params.gameId, tId, function (err, log) {
       if (err) {
         return res.status(500).send({message: err.message});
       }
@@ -38,6 +42,22 @@ router.get('/:gameId/:teamId', function (req, res) {
       }
       res.send({status: 'ok', travelLog: log});
     });
+  }
+
+  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+    if (err) {
+      accessor.verifyPlayer(req.session.passport.user, req.params.gameId, teamId, err => {
+        if (err) {
+          return res.status(401).send({message: err.message});
+        }
+        // User response
+        return collectAndSendLog(teamId);
+      })
+      return;
+    }
+
+    // Admin Response
+    collectAndSendLog(teamId);
   });
 });
 
