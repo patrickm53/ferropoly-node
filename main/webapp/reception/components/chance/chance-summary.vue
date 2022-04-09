@@ -35,7 +35,7 @@ export default {
       list: 'chancellery.list'
     }),
     asset() {
-      return this.$store.getters.asset;
+      return this.$store.getters['chancellery/asset'];
     }
   },
   created   : function () {
