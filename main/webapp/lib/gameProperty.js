@@ -20,6 +20,11 @@ class GameProperty extends Property {
     })
   }
 
+  /**
+   * Set Map override: when a teamId is supplied, we have different markers
+   * @param map
+   * @param teamId
+   */
   setMap(map, teamId = '') {
     if (get(this.gamedata, 'owner', 'none') === teamId) {
       this.createTeamMarker();
