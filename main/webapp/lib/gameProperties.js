@@ -144,6 +144,17 @@ class GameProperties {
   }
 
   /**
+   * Shows all properties, but highlights properties of the team on the map
+   * @param map
+   * @param teamId
+   */
+  showAllPropertiesWithTeamProps(map, teamId) {
+    this.properties.forEach(p => {
+        p.setMap(map, teamId);
+    });
+  }
+
+  /**
    * Hides (deletes) all properties on a map
    */
   hideAllPropertiesOnMap() {

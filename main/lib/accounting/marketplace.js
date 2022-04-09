@@ -162,11 +162,14 @@ Marketplace.prototype.buyProperty = function (options, callback) {
     if (err) {
       return callback(err);
     }
-    travelLog.addPropertyEntry(options.gameId, options.teamId, property, function (err) {
+    travelLog.addPropertyEntry(options.gameId, options.teamId, property, function (err, logEntry) {
+      // we do not care about this return, it's asynchronous and that's ok
       if (err) {
         logger.error(err);
+      } else {
+        ferroSocket.emitToAdmins(options.gameId, 'player-position', logEntry);
+        ferroSocket.emitToTeam(options.gameId, options.teamId, 'player-position', logEntry);
       }
-      // we do not care about this return, it's asynchronous and that's ok
     });
     if (!property) {
       return callback(new Error('No property for this location'), {message: 'Dieses Ort kann nicht gekauft werden'});

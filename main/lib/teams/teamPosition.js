@@ -41,6 +41,7 @@ function addLog(data) {
       }
       // Same style as returned by the team log
       ferroSocket.emitToAdmins(data.gameId, 'player-position', entry);
+      ferroSocket.emitToTeam(data.gameId, data.teamId,'player-position', entry);
     });
   });
 

@@ -40,6 +40,7 @@ export default {
       console.log('new Map!', map);
       this.map      = map;
       let travelLog = this.$store.getters['travelLog/teamLog'](this.teamId);
+      travelLog.setTrackColor('red');
       if (!travelLog) {
         console.warn(`No travellog for ${this.teamId}`);
         return;
@@ -50,7 +51,8 @@ export default {
       delay(() => {
         this.$refs.map.fitBounds(travelLog.getBounds());
         travelLog.setMap(map);
-        this.propertyRegister.showAllPropertiesOnMap(map);
+        travelLog.updateMarker();
+        this.propertyRegister.showAllPropertiesWithTeamProps(map, this.teamId);
       }, 500);
 
     },

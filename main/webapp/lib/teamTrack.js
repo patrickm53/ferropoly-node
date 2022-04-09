@@ -23,6 +23,14 @@ class TeamTrack {
     this.ICON_CURRENT_LOCATION = '/images/markers/red-dot.png';
   }
 
+  /**
+   * Override color
+   * @param color
+   */
+  setTrackColor(color) {
+    this.color = color;
+  }
+
 
   /**
    * Pushes a new location to the track
