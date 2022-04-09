@@ -4,7 +4,7 @@
   Created: 10.03.22
 -->
 <template lang="pug">
-  div
+  div.full-screen
     ferropoly-map(@map="onNewMap" ref="map")
   
 </template>
@@ -50,6 +50,7 @@ export default {
       this.$refs.map.fitBounds(travelLog.getBounds());
       delay(() => {
         this.$refs.map.fitBounds(travelLog.getBounds());
+        this.$refs.map.resizeHandler();
         travelLog.setMap(map);
         travelLog.updateMarker();
         this.propertyRegister.showAllPropertiesWithTeamProps(map, this.teamId);
@@ -61,5 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.full-screen {
+  height: 100vh;
+}
 </style>
