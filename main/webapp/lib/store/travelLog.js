@@ -16,21 +16,45 @@ const {getTravelLogField, updateTravelLogField} = createHelpers({
   mutationType: 'updateTravelLogField'
 });
 
+/**
+ * Creates a trave log entry
+ * @param tl
+ * @param rootGetters
+ * @returns {{lng, name, accuracy: number, propertyId: null, lat, ts}}
+ */
+const createEntry = function (tl, rootGetters) {
+  let propertyId = get(tl, 'propertyId', null);
+  let name;
+  if (propertyId) {
+    name = get(rootGetters['propertyRegister/getPropertyById'](propertyId), 'location.name', 'none');
+  } else {
+    name = `GPS: ${tl.position.lat}, ${tl.position.lng}`
+  }
+  return {
+    lat       : tl.position.lat,
+    lng       : tl.position.lng,
+    ts        : tl.timestamp,
+    name      : name,
+    accuracy  : get(tl, 'position.accuracy', 10000),
+    propertyId: get(tl, 'propertyId', null)
+  };
+}
+
 const module = {
   namespaced: true,
-  state    : () => ({
+  state     : () => ({
     log: {}
   }),
-  getters  : {
+  getters   : {
     getTravelLogField,
     teamLog: (state) => (id) => {
       return state.log[id];
     }
   },
-  mutations: {
+  mutations : {
     updateTravelLogField
   },
-  actions  : {
+  actions   : {
     /**
      * Updates the travel log for one team
      * @param state
@@ -39,24 +63,6 @@ const module = {
      * @param getters
      */
     update({state, getters, rootGetters}, options) {
-      const createEntry = function (tl) {
-        let propertyId = get(tl, 'propertyId', null);
-        let name;
-        if (propertyId) {
-          name = get(rootGetters['propertyRegister/getPropertyById'](propertyId), 'location.name', 'none');
-        } else {
-          name = `GPS: ${tl.position.lat}, ${tl.position.lng}`
-        }
-        return {
-          lat       : tl.position.lat,
-          lng       : tl.position.lng,
-          ts        : tl.timestamp,
-          name      : name,
-          accuracy  : get(tl, 'position.accuracy', 10000),
-          propertyId: get(tl, 'propertyId', null)
-        };
-      }
-
       return new Promise((resolve, reject) => {
         let teamId = get(options, 'teamUuid', undefined);
         axios.get(`/travellog/${options.gameId}/${teamId}`)
@@ -89,7 +95,7 @@ const module = {
                   name : rootGetters['teams/idToTeamName'](tl.teamId)
                 });
               }
-              state.log[tl.teamId].pushLocation(createEntry(tl));
+              state.log[tl.teamId].pushLocation(createEntry(tl, rootGetters));
             });
 
             console.log('Travellog read', state.log);
@@ -105,7 +111,19 @@ const module = {
           })
       });
     },
-  }
+    /**
+     * Updates the GPS position received, same format as in the travel log read over API
+     * @param state
+     * @param rootGetters
+     * @param options
+     */
+    updateGpsPosition({state, rootGetters}, options) {
+      let entry = createEntry(options.entry, rootGetters);
+      console.log('New GPS entry received', entry);
+      state.log[options.entry.teamId].pushLocation(entry);
+    }
+  },
+
 
 };
 

@@ -17,7 +17,7 @@ function addLog(data) {
       return logger.error(err);
     }
 
-    logger.debug('Player positoion', data);
+    logger.debug('Player position', data);
 
     /**
      * Privacy: we log the position of the teams only during the game, not when they access
@@ -35,10 +35,12 @@ function addLog(data) {
       lat     : data.position.lat,
       lng     : data.position.lng,
       accuracy: data.position.accuracy
-    }, err => {
+    }, (err, entry) => {
       if (err) {
-        logger.error(err);
+        return logger.error(err);
       }
+      // Same style as returned by the team log
+      ferroSocket.emitToAdmins(data.gameId, 'player-position', entry);
     });
   });
 
