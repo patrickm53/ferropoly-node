@@ -66,7 +66,7 @@ function autoplay() {
               startTimer();
               return;
             }
-            logger.debug('bought location', _.get(info, 'amount' ,0));
+            logger.debug('bought location', _.get(info, 'amount', 0));
             startTimer();
           });
         });
@@ -81,8 +81,8 @@ function autoplay() {
 
 /**
  * Play a round, we don't care about any errors here
- * @param gp
- * @param team
+ * @param gameId
+ * @param teamId
  * @param travelLog
  * @param properties
  * @param callback
@@ -143,7 +143,10 @@ function selectClosestsProperty(travelLog, properties) {
     // First property, just start random
     return properties[_.random(0, properties.length - 1)].uuid;
   }
-  let lastItem  = _.last(travelLog);
+  let lastItem  = _.findLast(travelLog, tl => {
+    // consider only entries with a propertyID, the other ones are GPS tracks
+    return tl.propertyId;
+  });
   let distances = calculateDistances(lastItem.propertyId, properties);
   let i         = 0;
 
