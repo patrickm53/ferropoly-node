@@ -20,7 +20,7 @@ import {WmsMapType} from '@googlemaps/ogc';
 import $ from 'jquery';
 import gl from './googleLoader.js';
 import {assign} from 'lodash';
-import {setItem, getItem} from '../../lib/localStorage';
+import {setString, getItem} from '../../lib/localStorage';
 
 const mapOptionsDefaults = {
   center           : {
@@ -98,7 +98,7 @@ export default {
       // Saving map-types to the local storage
       self.map.addListener('maptypeid_changed', () => {
         console.log('Maptype changed', self.map.getMapTypeId());
-        setItem('ferropoly-map', self.map.getMapTypeId());
+        setString('ferropoly-map', self.map.getMapTypeId());
       });
 
       let swissMap = WmsMapType({
