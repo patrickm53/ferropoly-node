@@ -20,6 +20,15 @@ class FerropolySocket extends EventEmitter {
 
     this.handlers = this.getHandlers();
 
+    this.socket.on('connect', () => {
+      console.log('socket.io connect');
+      self.store.commit('connected');
+    })
+    this.socket.on('disconnect', () => {
+      console.log('socket.io disconnect');
+      self.store.commit('disconnected');
+    })
+
     // Handler for all events
     this.socket.onAny((eventName, msg) => {
       if (self.handlers[eventName]) {
@@ -38,13 +47,6 @@ class FerropolySocket extends EventEmitter {
   getHandlers() {
     let self = this;
     return {
-      'connect'                 : () => {
-        console.log('connect', self.socket.id); // x8WIv7-mJelg7on_ALbx
-      },
-      'disconnect'              : () => {
-        console.log('disconnect', self.socket.id); // undefined
-        self.store.commit('disconnected');
-      },
       'identify'                : () => {
         console.log('identify', self.options);
         self.socket.emit('identify', {
@@ -74,7 +76,7 @@ class FerropolySocket extends EventEmitter {
         } else if (msg.type === 'updateProperty') {
           self.store.dispatch({type: 'propertyRegister/updatePropertyInPricelist', property: msg.property});
         } else if (msg.type === 'addTeamAccountTransaction') {
-          self.store.dispatch({type:'addTeamAccountTransaction', transaction: msg.transaction});
+          self.store.dispatch({type: 'addTeamAccountTransaction', transaction: msg.transaction});
         } else if (msg.type === 'setTeamAccountAsset') {
           console.log('ignoring "setTeamAccountAsset"');
         } else if (msg.type === 'setTeamAccountTransactions') {
@@ -107,8 +109,8 @@ class FerropolySocket extends EventEmitter {
       'game-log'                : (msg) => {
         self.store.dispatch({type: 'gameLog/pushEntry', logEntry: msg})
       },
-      'player-position' : (msg) => {
-        self.store.dispatch({type:'travelLog/updateGpsPosition', entry:msg});
+      'player-position'         : (msg) => {
+        self.store.dispatch({type: 'travelLog/updateGpsPosition', entry: msg});
       }
 
     };
