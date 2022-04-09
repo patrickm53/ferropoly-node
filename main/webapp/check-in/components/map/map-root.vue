@@ -49,11 +49,11 @@ export default {
       let center = getItem(`${this.gameId}-checkinmap-center`, null);
 
       let travelLog = this.$store.getters['travelLog/teamLog'](this.teamId);
-      travelLog.setTrackColor('red');
       if (!travelLog) {
         console.warn(`No travellog for ${this.teamId}`);
         return;
       }
+      travelLog.setTrackColor('red');
       // If we were here before, use the same settings as before
       if (zoom < 0 || !center) {
         this.$refs.map.fitBounds(travelLog.getBounds());
