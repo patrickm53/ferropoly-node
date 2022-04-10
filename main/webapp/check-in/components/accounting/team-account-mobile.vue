@@ -24,7 +24,8 @@
       :items="transactions"
       :fields="fields")
       template(#cell(transaction)="data")
-        span.details-available(@click="toggleDetails(data)" v-if="getProp(data, 'item.transaction.parts.length', 0) > 0") {{getProp(data, 'item.transaction', 'Fehler') | formatInfo}}
+        span.details-available(@click="toggleDetails(data)" v-if="getProp(data, 'item.transaction.parts.length', 0) > 0") {{getProp(data, 'item.transaction', 'Fehler') | formatInfo}} &nbsp;
+          font-awesome-icon.no-url(:icon="['fas', 'circle-info']")
         span(v-if="getProp(data, 'item.transaction.parts.length', 0) === 0") {{getProp(data, 'item.transaction', 'Fehler') | formatInfo}}
         br
         span &nbsp;
@@ -47,7 +48,10 @@
 <script>
 import {formatPrice, formatTime} from '../../../common/lib/formatters'
 import {get} from 'lodash';
-
+import {faCircleInfo} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {library} from '@fortawesome/fontawesome-svg-core'
+library.add(faCircleInfo);
 /**
  * Formatter for the info about the transaction
  * @param transaction
@@ -65,7 +69,7 @@ function formatInfo(transaction) {
 
 export default {
   name      : 'TeamAccountMobile',
-  components: {},
+  components: {FontAwesomeIcon},
   filters   : {formatPrice, formatTime, formatInfo},
   mixins    : [],
   model     : {},
