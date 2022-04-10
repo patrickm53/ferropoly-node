@@ -1,12 +1,15 @@
 # Changelog Ferropoly Spiel
 
+## v3.0.1 10.4.2022
+Zwischenversion für Deployment-Test
 * Neues Titelbild "Paradeplatz"
 * Persistente Logs: die letzten verpassten Einträge werden beim Laden der Reception angezeigt
-* Komplette Überarbeitung check-in
-  * Live-Ticker verbessert
-  * Mehr Echtzeit-Infos
-  * Telefonnummer Zentrale wird dargestellt
+* Komplette Überarbeitung Check-In App (App für Spieler)
+  * Live-Ticker verbessert: beim Laden der Seite werden die letzten Meldungen dargestellt
+  * Telefonnummer Zentrale ist verfügbar
   * Mietwert (aktuell und bei Vollausbau) wird dargestellt
+  * Spielregeln integriert
+  * Mehr Details im Kontobuch
 
 ## v3.0.0 19.3.2022
 Erste Version 3.0:
