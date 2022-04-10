@@ -20,6 +20,7 @@ class TeamTrack {
     this.map                   = null; // The Google Map instance the track is assigned to
     this.marker                = null; // Marker displaying the current position
     this.polyline              = null;
+    this.circle                = null;
     this.ICON_CURRENT_LOCATION = '/images/markers/red-dot.png';
   }
 
@@ -76,6 +77,28 @@ class TeamTrack {
   isVisible() {
     console.log('is visible', (this.map !== null))
     return (this.map !== null);
+  }
+
+  /**
+   * Draws the circle with the accuracy (if applicable)
+   */
+  drawAccuracyCircle() {
+    if (this.circle) {
+      this.circle.setMap(null);
+    }
+    if (this.track.length === 0) {
+      return;
+    }
+    let lastElement = last(this.track);
+
+    this.circle = new google.maps.Circle({
+      strokeWeight: 0,
+      fillColor   : this.color,
+      fillOpacity : 0.2,
+      map         : this.map,
+      center      : {lat: lastElement.lat, lng: lastElement.lng},
+      radius      : get(lastElement, 'accuracy', 400)
+    })
   }
 
   /***
@@ -184,9 +207,8 @@ class TeamTrack {
    * @returns {TeamTrackLocation|unknown}
    */
   getLatestLocation() {
-    if (this.track.length === 0)
-    {
-      return new TeamTrackLocation({lat:47.36970, lng: 8.53897, accuracy:10000, name:'Vielleicht am Paradeplatz?'});
+    if (this.track.length === 0) {
+      return new TeamTrackLocation({lat: 47.36970, lng: 8.53897, accuracy: 10000, name: 'Vielleicht am Paradeplatz?'});
     }
     return last(this.track);
   }
@@ -197,7 +219,7 @@ class TeamTrack {
    */
   setMap(map) {
     this.map = map;
-
+    this.drawAccuracyCircle();
     this.updateMarker();
     this.updatePolyline();
   }
