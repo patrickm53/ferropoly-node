@@ -3,6 +3,32 @@
  *
  * This module REQUIRES TEAMS and PROPERTY-REGISTER module to be present!
  *
+ * On the interface level, supply following objects:
+ *
+ * Entry with a property assigned:
+ *   {
+ *     "position": {
+ *       "lat": 47.193967,
+ *       "lng": 8.822888000000034,
+ *       "accuracy": 200
+ *     },
+ *     "timestamp": "2022-04-10T10:11:48.629Z",
+ *     "teamId": "464100c8-2631-4712-9919-625f2a771ad9",
+ *     "propertyId": "fff70c4c-2217-4b5f-a32b-850933576597"
+ *   }
+ *
+ *   GPS based entry: no propertyId, user login instead:
+  *   {
+ *     "position": {
+ *       "lat": 47.297084,
+ *       "lng": 8.8676974,
+ *       "accuracy": 15.686
+ *     },
+ *     "timestamp": "2022-04-10T10:08:56.353Z",
+ *     "teamId": "6da075ab-5b45-414e-a2b1-e8166e81a900",
+ *     "user": "team1@ferropoly.ch"
+ *   }
+ *
  * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
  * Created: 12.12.21
  **/
@@ -65,6 +91,24 @@ const module = {
     update({state, getters, rootGetters}, options) {
       return new Promise((resolve, reject) => {
         let teamId = get(options, 'teamUuid', undefined);
+
+        /**
+         * Initialize the entry for a team
+         * @param _teamId
+         */
+        function initTeam(_teamId) {
+          state.log[_teamId] = new TeamTrack({
+            id   : _teamId,
+            color: rootGetters['teams/idToColor'](_teamId),
+            name : rootGetters['teams/idToTeamName'](_teamId)
+          });
+        }
+
+        if (teamId && !state.log[teamId]) {
+          // Init data container asap
+          initTeam(teamId);
+        }
+
         axios.get(`/travellog/${options.gameId}/${teamId}`)
           .then(resp => {
             console.log('travelLog read', resp.data);
@@ -89,11 +133,7 @@ const module = {
             resp.data.travelLog.forEach(tl => {
               if (!state.log[tl.teamId]) {
                 // Create new track for a team if it does not already exist
-                state.log[tl.teamId] = new TeamTrack({
-                  id   : tl.teamId,
-                  color: rootGetters['teams/idToColor'](tl.teamId),
-                  name : rootGetters['teams/idToTeamName'](tl.teamId)
-                });
+                initTeam(tl.teamId);
               }
               state.log[tl.teamId].pushLocation(createEntry(tl, rootGetters));
             });
@@ -123,8 +163,6 @@ const module = {
       state.log[options.entry.teamId].pushLocation(entry);
     }
   },
-
-
 };
 
 export default module;

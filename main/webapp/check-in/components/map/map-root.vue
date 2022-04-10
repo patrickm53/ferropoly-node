@@ -5,7 +5,7 @@
 -->
 <template lang="pug">
   div.full-screen
-    ferropoly-map(@map="onNewMap" ref="map" @zoom-changed="onZoomChanged" @center-changed="onCenterChanged")
+    ferropoly-map(@map="onNewMap" ref="map" @zoom-changed="onZoomChanged")
 
 </template>
 
@@ -15,8 +15,7 @@ import {mapFields} from 'vuex-map-fields';
 import {delay} from 'lodash';
 import {
   getItem,
-  setInt,
-  setObject
+  setInt
 } from '../../../common/lib/sessionStorage';
 
 export default {
@@ -44,9 +43,8 @@ export default {
   methods   : {
     onNewMap(map) {
       console.log('new Map!', map);
-      this.map   = map;
-      let zoom   = getItem(`${this.gameId}-checkinmap-zoom`, -1);
-      let center = getItem(`${this.gameId}-checkinmap-center`, null);
+      this.map = map;
+      let zoom = getItem(`${this.gameId}-checkinmap-zoom`, -1);
 
       let travelLog = this.$store.getters['travelLog/teamLog'](this.teamId);
       if (!travelLog) {
@@ -55,13 +53,13 @@ export default {
       }
       travelLog.setTrackColor('red');
       // If we were here before, use the same settings as before
-      if (zoom < 0 || !center) {
+      if (zoom < 0) {
         this.$refs.map.fitBounds(travelLog.getBounds());
       } else {
-        this.$refs.map.setCenter(center);
         this.$refs.map.setZoom(zoom);
       }
 
+      this.$refs.map.setCenter(travelLog.getLatestLocation().getPosition());
       // mhm, this leaves me back with a bad feeling... why do I need to
       // set the bounds delayed...?
       delay(() => {
@@ -74,9 +72,6 @@ export default {
 
     }, onZoomChanged(zoom) {
       setInt(`${this.gameId}-checkinmap-zoom`, zoom);
-    },
-    onCenterChanged(center) {
-      setObject(`${this.gameId}-checkinmap-center`, center);
     }
   }
 }

@@ -147,6 +147,12 @@ function selectClosestsProperty(travelLog, properties) {
     // consider only entries with a propertyID, the other ones are GPS tracks
     return tl.propertyId;
   });
+  if (!lastItem) {
+    // Only positions with GPS Locations, return a random one, don't care about the GPS coordinates,
+    // this is only a demo!!
+    return properties[_.random(0, properties.length - 1)].uuid;
+  }
+
   let distances = calculateDistances(lastItem.propertyId, properties);
   let i         = 0;
 

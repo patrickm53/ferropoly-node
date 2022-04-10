@@ -34,6 +34,14 @@ class TeamTrackLocation {
       this._internals.marker.setMap(map);
     }
   }
+
+  /**
+   * Returns the position in Google compatible formatg
+   * @returns {{lng: number, lat: number}}
+   */
+  getPosition() {
+    return {lat: this.lat, lng:this.lng}
+  }
 }
 
 export {TeamTrackLocation};

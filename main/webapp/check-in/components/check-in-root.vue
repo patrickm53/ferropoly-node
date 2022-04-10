@@ -84,6 +84,7 @@ export default {
       menuElements   : 'checkin.menuElements',
       panel          : 'checkin.panel',
       online         : 'api.online',
+      teamId         : 'checkin.team.uuid',
       organisatorName: 'gameplay.owner.organisatorName',
       error          : 'api.error',
       authToken      : 'api.authToken',
@@ -174,9 +175,26 @@ export default {
       console.log('Activating GPS', geograph.getLastLocation());
       geograph.on('player-position-update', (pos) => {
         if (self.$parent.fsocket && self.nextUpdate < DateTime.now()) {
+          // An entry sent to the system is returned with the systems timestamp. Therefore do not add
+          // to the store
           console.log('Sending GPS info to system', pos);
-          self.$parent.fsocket.emitToGame('player-position', {cmd: 'positionUpdate', position: pos, timestamp:DateTime.now()});
+          self.$parent.fsocket.emitToGame('player-position', {
+            cmd      : 'positionUpdate',
+            position : pos,
+            timestamp: DateTime.now()
+          });
           self.nextUpdate = DateTime.now().plus({minutes: 5});
+        }
+        else {
+          // This is temporary, for this session: adding the current location to the store
+          this.$store.dispatch({
+            type : 'travelLog/updateGpsPosition',
+            entry: {
+              position : pos,
+              timestamp: DateTime.now(),
+              teamId   : this.teamId
+            }
+          });
         }
         self.gpsActive = true;
       });

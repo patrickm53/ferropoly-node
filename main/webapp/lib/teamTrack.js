@@ -31,7 +31,6 @@ class TeamTrack {
     this.color = color;
   }
 
-
   /**
    * Pushes a new location to the track
    * @param location
@@ -134,6 +133,9 @@ class TeamTrack {
     this.marker.setMap(this.map);
   }
 
+  /**
+   * Updates the polyline
+   */
   updatePolyline() {
     if (typeof google === 'undefined') {
       return;
@@ -178,6 +180,18 @@ class TeamTrack {
   }
 
   /**
+   * Returns the latest known location
+   * @returns {TeamTrackLocation|unknown}
+   */
+  getLatestLocation() {
+    if (this.track.length === 0)
+    {
+      return new TeamTrackLocation({lat:47.36970, lng: 8.53897, accuracy:10000, name:'Vielleicht am Paradeplatz?'});
+    }
+    return last(this.track);
+  }
+
+  /**
    * Sets the map: if map is a google map, the track is shown, if null, the track is hidden
    * @param map
    */
@@ -186,7 +200,6 @@ class TeamTrack {
 
     this.updateMarker();
     this.updatePolyline();
-
   }
 }
 
