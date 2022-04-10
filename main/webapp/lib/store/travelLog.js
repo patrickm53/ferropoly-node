@@ -159,8 +159,16 @@ const module = {
      */
     updateGpsPosition({state, rootGetters}, options) {
       let entry = createEntry(options.entry, rootGetters);
+      let teamId = options.entry.teamId;
       console.log('New GPS entry received', entry);
-      state.log[options.entry.teamId].pushLocation(entry);
+      if (!state.log[teamId]) {
+        state.log[teamId] = new TeamTrack({
+          id   : teamId,
+          color: rootGetters['teams/idToColor'](teamId),
+          name : rootGetters['teams/idToTeamName'](teamId)
+        });
+      }
+      state.log[teamId].pushLocation(entry);
     }
   },
 };
