@@ -37,6 +37,7 @@ const ferroSocket  = require('./lib/ferroSocket');
 const autopilot    = require('./lib/autopilot');
 const authStrategy = require('../common/lib/authStrategy')(settings, users);
 const infoRoute    = require('../common/routes/info');
+const aboutRoute   = require('../common/routes/about');
 
 require('../common/lib/mailer').init(settings);
 
@@ -119,7 +120,6 @@ ferropolyDb.init(settings, function (err) {
   app.use('/statistics', require('./routes/statistics'));
   app.use('/properties', require('./routes/properties'));
   app.use('/download', require('./routes/download'));
-  app.use('/about', require('./routes/about'));
   app.use('/gamecache/', require('./routes/gamecache'));
   app.use('/teamAccount', require('./routes/teamAccount'));
   app.use('/propertyAccount', require('./routes/propertyAccount'));
@@ -135,6 +135,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/agb', require('../common/routes/agb'));
   app.use('/join', joinRoute);
   app.use('/anmelden', joinRoute);
+  aboutRoute.init(app, settings);
   authtoken.init(app);
 
   app.set('port', settings.server.port);

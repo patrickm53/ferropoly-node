@@ -11,16 +11,16 @@
   ],
   "author": {
     "name": "Christian Kuster, CH-8342 Wernetshausen",
-    "email": "christian@kusti.ch",
+    "email": "info@ferropoly.ch",
     "url": "https://www.ferropoly.ch/"
   },
   "homepage": "https://www.ferropoly.ch/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ancasicolica/ferropoly-main.git"
+    "url": "https://bitbucket.org/christian_kuster/ferropoly_main"
   },
   "engines": {
-    "node": ">= 12.0.0",
+    "node": ">= 16.0.0",
     "npm": ">= 2.14.0"
   },
   "private": true,
