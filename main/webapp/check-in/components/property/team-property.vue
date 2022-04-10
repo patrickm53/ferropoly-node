@@ -7,21 +7,22 @@
   div
     b-card(:title="locationName")
       div Kaufzeit: {{boughtTs}}
-      div Anzahl Häuser: {{buildingNb}}
+      div Anzahl Häuser: {{buildingNb | buildingStatus}}
       div Wert: {{propertyValue}}
-      div Hausbau möglich: {{buildingEnabled}}
+      div(v-if="buildingNb < 5") Hausbau möglich: {{buildingEnabled}}
+      div(v-if="buildingNb > 4") &nbsp;
 
 
 </template>
 
 <script>
 import {get} from 'lodash';
-import {formatGameTime} from '../../../common/lib/formatters';
+import {formatGameTime, buildingStatus} from '../../../common/lib/formatters';
 
 export default {
   name      : 'TeamProperty',
   components: {},
-  filters   : {},
+  filters   : {buildingStatus},
   mixins    : [],
   model     : {},
   props     : {
