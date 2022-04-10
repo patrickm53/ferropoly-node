@@ -4,7 +4,7 @@
   Created: 06.04.22
 -->
 <template lang="pug">
-  div
+  div(v-if="phoneAvailable")
     h4 Zentrale
     p Die Zentrale ist unter der Nummer &nbsp;
       a(:href=phoneLink) {{phoneNumber}}
@@ -30,6 +30,9 @@ export default {
     }),
     phoneLink() {
       return `tel:${this.phoneNumber}`;
+    },
+    phoneAvailable() {
+      return this.phoneNumber && this.phoneNumber.length > 0;
     }
   },
   created   : function () {
