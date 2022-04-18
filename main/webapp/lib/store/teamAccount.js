@@ -7,7 +7,7 @@
  * Created: 12.12.21
  **/
 import {createHelpers} from 'vuex-map-fields';
-import {get, last, findLast, forEach} from 'lodash';
+import {get, last, findLast, forEach, forOwn} from 'lodash';
 import axios from 'axios';
 import {TeamAccountTransaction} from '../teamAccountTransaction';
 
@@ -90,6 +90,18 @@ const module = {
     teamAccountBalance: (state) => (id) => {
       let lastEntry = last(state.accounts[state.id2accounts[id]]) || {};
       return get(lastEntry, 'balance', 0);
+    },
+    /**
+     * Number of all team account entries
+     * @param state
+     * @returns {*}
+     */
+    numberOfEntries: state => {
+      let nb = 0;
+      forOwn(state.accounts, a => {
+        nb += a.length;
+      })
+      return nb;
     }
   },
   mutations: {

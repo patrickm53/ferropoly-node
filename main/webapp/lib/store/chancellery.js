@@ -31,6 +31,14 @@ const module = {
       return filter(state.list, function (n) {
         return n.transaction.origin.uuid === id;
       });
+    },
+    /**
+     * Number of all chancellery entries
+     * @param state
+     * @returns {*}
+     */
+    numberOfEntries: state => {
+      return state.list.length;
     }
   },
   mutations : {

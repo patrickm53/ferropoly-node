@@ -19,7 +19,8 @@ const Summary = {
       {title: 'Übersicht', href: '#', event: 'panel-change', eventParam: 'panel-overview', active: true},
       {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map', active: false},
       {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chancellery', active: false},
-    ]
+    ],
+    selectedTeamId: undefined
   }),
   getters  : {
     getSummaryField,

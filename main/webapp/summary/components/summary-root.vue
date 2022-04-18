@@ -15,7 +15,10 @@
       :message="apiErrorMessage"
       @close="apiErrorActive=false")
 
-    overview-root(v-if="panel==='panel-overview'")
+    div(v-if="selectedTeamId")
+      h1 team is selected
+    div(v-if="!selectedTeamId")
+      overview-root(v-if="panel==='panel-overview'")
 </template>
 
 <script>
@@ -25,7 +28,7 @@ import ModalError from '../../common/components/modal-error/modal-error.vue';
 import OverviewRoot from './overview/overview-root.vue';
 
 export default {
-  name: "SummaryRoot",
+  name      : 'SummaryRoot',
   components: {OverviewRoot, MenuBar, ModalError},
   filters   : {},
   mixins    : [],
@@ -36,9 +39,10 @@ export default {
   },
   computed  : {
     ...mapFields({
-      menuElements   : 'summary.menuElements',
-      panel          : 'summary.panel',
-      error          : 'api.error',
+      menuElements  : 'summary.menuElements',
+      panel         : 'summary.panel',
+      error         : 'api.error',
+      selectedTeamId: 'summary.selectedTeamId'
     }),
     apiErrorActive: {
       get() {
@@ -64,6 +68,7 @@ export default {
      */
     onPanelChange(panel) {
       console.log('onPanelChange', panel);
+      this.selectedTeamId = undefined;
       this.$store.commit('setPanel', panel);
     }
   }
