@@ -17,6 +17,7 @@ router.get('/get/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
     return res.status(400).send({message: 'No gameId supplied'});
   }
+
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       // definitely not an admin and game in process. Be careful what we return, only data of the calling team is returned

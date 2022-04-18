@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Summary App überarbeitet (div. Stores angepasst)
+
 ## v3.0.1 10.4.2022
 Zwischenversion für Deployment-Test
 * Neues Titelbild "Paradeplatz"

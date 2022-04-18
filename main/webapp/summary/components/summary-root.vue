@@ -5,14 +5,25 @@
 -->
 <template lang="pug">
   div
-    h1 summary-root
+    menu-bar(:elements="menuElements"
+      show-user-box=false
+      @panel-change="onPanelChange")
+    modal-error(
+      :visible="apiErrorActive"
+      title="Fehler"
+      :info="apiErrorText"
+      :message="apiErrorMessage"
+      @close="apiErrorActive=false")
   
 </template>
 
 <script>
+import {mapFields} from 'vuex-map-fields';
+import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
+import ModalError from '../../common/components/modal-error/modal-error.vue';
 export default {
   name: "SummaryRoot",
-  components: {},
+  components: {MenuBar, ModalError},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -20,10 +31,39 @@ export default {
   data      : function () {
     return {};
   },
-  computed  : {},
+  computed  : {
+    ...mapFields({
+      menuElements   : 'summary.menuElements',
+      panel          : 'summary.panel',
+      error          : 'api.error',
+    }),
+    apiErrorActive: {
+      get() {
+        return this.error.active;
+      },
+      set() {
+        this.$store.commit('resetApiError');
+      }
+    },
+    apiErrorText() {
+      return this.error.infoText;
+    },
+    apiErrorMessage() {
+      return this.error.message;
+    },
+  },
   created   : function () {
   },
-  methods   : {}
+  methods   : {
+    /**
+     * Panel change from menu bar / component
+     * @param panel
+     */
+    onPanelChange(panel) {
+      console.log('onPanelChange', panel);
+      this.$store.commit('setPanel', panel);
+    }
+  }
 }
 </script>
 

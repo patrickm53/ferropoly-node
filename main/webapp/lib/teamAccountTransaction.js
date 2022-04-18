@@ -11,6 +11,7 @@ class TeamAccountTransaction {
   constructor(entry) {
     this.teamId      = undefined;
     this.transaction = undefined;
+    this.balance     = 0;
     merge(this, entry);
     this.balance = 0;
   }

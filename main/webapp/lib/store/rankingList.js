@@ -14,6 +14,26 @@ const {getRankingListField, updateRankingListField} = createHelpers({
   mutationType: 'updateRankingListField'
 });
 
+/**
+ * Creates the ranking list out of the received data
+ * @param state
+ * @param ranking
+ * @param getters
+ */
+function createRankingList(state, ranking, getters) {
+  state.list = [];
+  ranking.forEach(t => {
+    let team = getters['teams/teamById'](t.teamId);
+    if (!team) {
+      console.log('Team not found', t.teamId);
+      return;
+    }
+    t.name  = team.name;
+    t.color = team.color;
+    state.list.push(t);
+  });
+}
+
 const module = {
   state    : () => ({
     list      : [],
@@ -29,10 +49,11 @@ const module = {
     /**
      * Loads the ranking list, has a mechanism included to avoid loading it too often
      * @param state
+     * @param getters
      * @param options has to contain the gameId
      * @returns promise
      */
-    loadRankingList({state}, options) {
+    loadRankingList({state, getters}, options) {
       // My first promise... a bit special when being more familiar with callbacks... ;-)
       return new Promise((resolve, reject) => {
         if (!options.gameId) {
@@ -48,18 +69,9 @@ const module = {
 
         axios.get(`/statistics/rankingList/${options.gameId}`)
           .then(resp => {
+            let ranking = resp.data.ranking;
             console.log('Building ranking list', resp.data);
-            state.list = [];
-            resp.data.ranking.forEach(t => {
-              let team = this.getters['teams/teamById'](t.teamId);
-              if (!team) {
-                console.log('Team not found', t.teamId);
-                return;
-              }
-              t.name   = team.name;
-              t.color  = team.color;
-              state.list.push(t);
-            });
+            createRankingList(state, ranking, getters);
             return resolve(state.list);
           })
           .catch(err => {
@@ -71,7 +83,16 @@ const module = {
             });
           })
       });
-
+    },
+    /**
+     * This saves the ranking list received directly (summary app)
+     * @param state
+     * @param getters
+     * @param options
+     */
+    saveRankingList({state, getters}, options) {
+      let ranking = options.ranking;
+      createRankingList(state, ranking, getters);
     }
   }
 

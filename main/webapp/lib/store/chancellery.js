@@ -59,6 +59,14 @@ const module = {
             });
           })
       })
+    },
+    /**
+     * Saves the chancellery data received by another path (summary app)
+     * @param state
+     * @param options
+     */
+    saveChancelleryData({state}, options) {
+      state.list = options.chancellery;
     }
   }
 };

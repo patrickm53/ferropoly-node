@@ -13,8 +13,9 @@ module.exports = {
    * Get the property for a given location and game
    * @param gameId
    * @param propertyId
+   * @param callback
    */
-  getProperty      : function (gameId, propertyId, callback) {
+  getProperty: function (gameId, propertyId, callback) {
     pm.getPropertyById(gameId, propertyId, function (err, prop) {
       callback(err, prop);
     });
@@ -36,12 +37,12 @@ module.exports = {
   },
 
   /**
-   * Get all properties of a gameplay
+   * Get all properties of a gameplay (lean)
    * @param gameId
    * @param callback
    */
   getAllProperties: function (gameId, callback) {
-    pm.getPropertiesForGameplay(gameId, undefined, callback);
+    pm.getPropertiesForGameplay(gameId, {lean: true}, callback);
   },
 
   /**
@@ -58,8 +59,9 @@ module.exports = {
   /**
    * Update the property
    * @param property
+   * @param callback
    */
-  updateProperty      : function (property, callback) {
+  updateProperty: function (property, callback) {
     pm.updateProperty(property.gameId, property, function (err) {
       callback(err);
     });

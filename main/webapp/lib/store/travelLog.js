@@ -18,7 +18,7 @@
  *   }
  *
  *   GPS based entry: no propertyId, user login instead:
-  *   {
+ *   {
  *     "position": {
  *       "lat": 47.297084,
  *       "lng": 8.8676974,
@@ -66,6 +66,57 @@ const createEntry = function (tl, rootGetters) {
   };
 }
 
+/**
+ * Initialize the entry for a team
+ * @param _teamId
+ * @param state
+ * @param rootGetters
+ */
+function initTeam(state, rootGetters, _teamId) {
+  state.log[_teamId] = new TeamTrack({
+    id   : _teamId,
+    color: rootGetters['teams/idToColor'](_teamId),
+    name : rootGetters['teams/idToTeamName'](_teamId)
+  });
+}
+
+/**
+ * Handles the trave log entries received
+ * @param teamId
+ * @param getters
+ * @param state
+ * @param travelLog
+ * @param rootGetters
+ */
+function handleTravelLogData(teamId, getters, state, travelLog, rootGetters) {
+  if (!teamId) {
+    let teams = rootGetters['teams/getTeamList'];
+    // Create for each team a log (if not existing)
+    console.log('TEAMS', teams);
+    teams.forEach(t => {
+      if (!state.log[t.uuid]) {
+        state.log[t.uuid] = new TeamTrack({
+          id   : t.uuid,
+          color: t.color,
+          name : t.name
+        });
+      }
+    })
+    // Returns all entries, clear existing ones
+    forOwn(state.log, (val, key) => {
+      state.log[key].clear();
+    })
+  }
+
+  travelLog.forEach(tl => {
+    if (!state.log[tl.teamId]) {
+      // Create new track for a team if it does not already exist
+      initTeam.call(state, rootGetters, teamId);
+    }
+    state.log[tl.teamId].pushLocation(createEntry(tl, rootGetters));
+  });
+}
+
 const module = {
   namespaced: true,
   state     : () => ({
@@ -92,52 +143,14 @@ const module = {
       return new Promise((resolve, reject) => {
         let teamId = get(options, 'teamUuid', undefined);
 
-        /**
-         * Initialize the entry for a team
-         * @param _teamId
-         */
-        function initTeam(_teamId) {
-          state.log[_teamId] = new TeamTrack({
-            id   : _teamId,
-            color: rootGetters['teams/idToColor'](_teamId),
-            name : rootGetters['teams/idToTeamName'](_teamId)
-          });
-        }
-
         if (teamId && !state.log[teamId]) {
           // Init data container asap
-          initTeam(teamId);
+          initTeam.call(state, rootGetters, teamId);
         }
 
         axios.get(`/travellog/${options.gameId}/${teamId}`)
           .then(resp => {
-            console.log('travelLog read', resp.data);
-            if (!teamId) {
-              // Create for each team a log (if not existing)
-              console.log('TEAMS', getters['teams/getTeamList']);
-              options.teams.forEach(t => {
-                if (!state.log[t.uuid]) {
-                  state.log[t.uuid] = new TeamTrack({
-                    id   : t.uuid,
-                    color: t.color,
-                    name : t.name
-                  });
-                }
-              })
-              // Returns all entries, clear existing ones
-              forOwn(state.log, (val, key) => {
-                state.log[key].clear();
-              })
-            }
-
-            resp.data.travelLog.forEach(tl => {
-              if (!state.log[tl.teamId]) {
-                // Create new track for a team if it does not already exist
-                initTeam(tl.teamId);
-              }
-              state.log[tl.teamId].pushLocation(createEntry(tl, rootGetters));
-            });
-
+            handleTravelLogData(teamId, getters, state, resp.data.travelLog, rootGetters);
             console.log('Travellog read', state.log);
             return resolve(state.log);
           })
@@ -152,13 +165,24 @@ const module = {
       });
     },
     /**
+     * Saves the travel log entries received for summary
+     * @param state
+     * @param getters
+     * @param rootGetters
+     * @param options
+     */
+    saveTravelLogEntries({state, getters, rootGetters},options) {
+      handleTravelLogData(undefined, getters,  state, options.travelLog, rootGetters);
+      console.log('Travellog saved', state.log);
+    },
+    /**
      * Updates the GPS position received, same format as in the travel log read over API
      * @param state
      * @param rootGetters
      * @param options
      */
     updateGpsPosition({state, rootGetters}, options) {
-      let entry = createEntry(options.entry, rootGetters);
+      let entry  = createEntry(options.entry, rootGetters);
       let teamId = options.entry.teamId;
       console.log('New GPS entry received', entry);
       if (!state.log[teamId]) {

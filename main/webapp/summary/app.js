@@ -6,7 +6,7 @@ import Vue from 'vue';
 import {BootstrapVue} from 'bootstrap-vue';
 import $ from 'jquery';
 import VueRouter from 'vue-router';
-import store from '../reception/store';
+import store from './store';
 
 // Font Awesome Part
 // See: https://github.com/FortAwesome/vue-fontawesome
@@ -34,8 +34,8 @@ console.log('Webapp initializing');
 
 // Ferropoly Style!
 import '../common/style/app.scss';
-import {last, split} from 'lodash';
-import {getStaticData} from '../lib/adapter/staticData';
+import {get, last, split} from 'lodash';
+import axios from 'axios';
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
@@ -53,17 +53,18 @@ $(document).ready(function () {
       // Retrieve GameId for this page
       const elements = split(window.location.pathname, '/');
       let gameId     = last(elements);
-      // Load the game data and connect to the ferropoly socket.
-      // Still unclear if this is the best place to do so, we'll see.
-      getStaticData(gameId, (err, data) => {
-        // Set the static data
-        this.$store.dispatch({type: 'fetchStaticData', err, data});
-        this.$store.dispatch({type: 'updateProperties'});
-        this.$store.dispatch({type: 'fetchRankingList'});
-        this.$store.dispatch({type: 'updateTeamAccountEntries'});
-        this.$store.dispatch({type: 'updateTravelLog'});
-
-      })
+      axios.get(`/summary/${gameId}/static`)
+        .then(resp => {
+          this.$store.dispatch({type: 'fetchStaticData', data: resp.data});
+          this.$store.dispatch({type: 'saveRankingList', ranking: resp.data.ranking});
+          this.$store.dispatch({type: 'saveTeamAccountEntries', accountData: resp.data.accountStatement.accountData});
+          this.$store.dispatch({type: 'travelLog/saveTravelLogEntries', travelLog: resp.data.travelLog});
+          this.$store.dispatch({type: 'chancellery/saveChancelleryData', chancellery: resp.data.chancellery});
+        })
+        .catch(err => {
+          let errorMessage = get(err, 'response.data.message', null) || err.message;
+          console.error(`Error in summary app: ${errorMessage}`, err);
+        })
     },
     store  : store
   });

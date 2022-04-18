@@ -16,6 +16,35 @@ const {getTeamAccountField, updateTeamAccountField} = createHelpers({
   mutationType: 'updateTeamAccountField'
 });
 
+/**
+ * Handles the received team account entries and updates the balance
+ * @param accountData is an array with the account data
+ * @param state
+ */
+function handleTeamAccountEntries(accountData, state) {
+  forEach(accountData, rawEntry => {
+    let entry   = new TeamAccountTransaction(rawEntry);
+    let account = state.accounts[state.id2accounts[entry.teamId]];
+
+    if (!findLast(account, {_id: entry._id})) {
+      let teamBalanceEntry = last(account);
+      let teamBalance      = 0;
+      if (teamBalanceEntry) {
+        teamBalance = teamBalanceEntry.balance;
+      }
+      entry.balance = teamBalance + entry.transaction.amount;
+      if (entry.transaction.origin.category === 'team') {
+        entry.transaction.origin.teamName = this.getters['teams/idToTeamName'](entry.transaction.origin.uuid);
+      }
+      account.push(entry)
+    }
+  });
+  if (accountData.length > 0) {
+    state.lastValidTimestamp = accountData[accountData.length - 1].timestamp;
+  }
+}
+
+
 const module = {
   state    : () => ({
     accounts          : {
@@ -120,30 +149,8 @@ const module = {
       return new Promise((resolve, reject) => {
         axios.get(`/teamAccount/get/${options.gameId}/${teamId}${query}`)
           .then(resp => {
-            forEach(resp.data.accountData, rawEntry => {
-              let entry   = new TeamAccountTransaction(rawEntry);
-              let account = state.accounts[state.id2accounts[entry.teamId]];
-
-              if (!findLast(account, {_id: entry._id})) {
-                let teamBalanceEntry = last(account);
-                let teamBalance      = 0;
-                if (teamBalanceEntry) {
-                  teamBalance = teamBalanceEntry.balance;
-                }
-                entry.balance = teamBalance + entry.transaction.amount;
-                if (entry.transaction.origin.category === 'team') {
-                  entry.transaction.origin.teamName = this.getters['teams/idToTeamName'](entry.transaction.origin.uuid);
-                }
-                account.push(entry)
-
-                if (resp.data.accountData.length < 50) {
-                  console.log('team account info', entry);
-                }
-              }
-            });
-            if (resp.data.accountData.length > 0) {
-              state.lastValidTimestamp = resp.data.accountData[resp.data.accountData.length - 1].timestamp;
-            }
+            let accountData = resp.data.accountData;
+            handleTeamAccountEntries.call(this, accountData, state);
 
             console.log('finished', state.lastValidTimestamp, state.accounts);
             return resolve(state.accounts);
@@ -157,7 +164,17 @@ const module = {
             })
           })
       });
+    },
+    /**
+     * Saves thge team account entries "received by another path" (not getting them in the module -> summary app)
+     * @param state
+     * @param options
+     */
+    saveTeamAccountEntries({state}, options) {
+      let accountData = options.accountData;
+      handleTeamAccountEntries.call(this, accountData, state);
     }
+
   }
 
 };
