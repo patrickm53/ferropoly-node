@@ -60,7 +60,40 @@ const module = {
      */
     getRegister: (state)=> {
       return state.register;
+    },
+    /**
+     * Returns the number of all properties
+     * @param state
+     * @returns {number}
+     */
+    numberOfProperties: state => {
+      return state.register.getNumberOfProperties()
+    },
+    /**
+     * Returns the number of free properties
+     * @param state
+     * @returns {*}
+     */
+    numberOfFreeProperties: state => {
+      return state.register.getFreePropertiesNb();
+    },
+    /**
+     * Returns the number of bought properties
+     * @param state
+     * @returns {number}
+     */
+    numberOfBoughtProperties: state => {
+      return state.register.getBoughtPropertiesNb();
+    },
+    /**
+     * Returns the number of total buildings
+     * @param state
+     * @returns {number}
+     */
+    numberOfBuiltHouses: state => {
+      return state.register.getNumberOfBuiltHouses();
     }
+
   },
   mutations : {
     updatePricelistField

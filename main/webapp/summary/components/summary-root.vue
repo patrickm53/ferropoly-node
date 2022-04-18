@@ -14,16 +14,19 @@
       :info="apiErrorText"
       :message="apiErrorMessage"
       @close="apiErrorActive=false")
-  
+
+    overview-root(v-if="panel==='panel-overview'")
 </template>
 
 <script>
 import {mapFields} from 'vuex-map-fields';
-import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
+import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
 import ModalError from '../../common/components/modal-error/modal-error.vue';
+import OverviewRoot from './overview/overview-root.vue';
+
 export default {
   name: "SummaryRoot",
-  components: {MenuBar, ModalError},
+  components: {OverviewRoot, MenuBar, ModalError},
   filters   : {},
   mixins    : [],
   model     : {},

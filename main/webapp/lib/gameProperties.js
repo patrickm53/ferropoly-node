@@ -38,6 +38,44 @@ class GameProperties {
   }
 
   /**
+   * Returns the number of properties in the list
+   * @returns {number}
+   */
+  getNumberOfProperties() {
+    return this.properties.length;
+  }
+
+  /**
+   * Returns the number of free properties
+   */
+  getFreePropertiesNb() {
+    return this.getNumberOfProperties() - this.getBoughtPropertiesNb();
+  }
+
+  /**
+   * Returns the number of bought propertes
+   * @returns {number}
+   */
+  getBoughtPropertiesNb() {
+    let boughtProps =  filter(this.properties, p => {
+      return get(p, 'gamedata.owner', undefined) !== undefined;
+    });
+    return boughtProps.length;
+  }
+
+  /**
+   * Returns the number of built houses
+   * @returns {number}
+   */
+  getNumberOfBuiltHouses() {
+     let nb = 0;
+     this.properties.forEach(p=> {
+       nb += get(p, 'gamedata.buildings', 0);
+     })
+    return nb;
+  }
+
+  /**
    * Returns a property by its id
    * @param id
    * @returns {unknown}

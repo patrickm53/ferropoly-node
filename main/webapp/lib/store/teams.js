@@ -47,6 +47,14 @@ const module = {
     idToColor: (state) => (id) => {
       return result(find(state.list, {uuid: id}), 'color');
     },
+    /**
+     * Returns the number of teams
+     * @param state
+     * @returns {number}
+     */
+    numberOfTeams: (state) => {
+      return state.list.length;
+    }
   },
   mutations : {
     updateTeamField
