@@ -20,6 +20,7 @@
     div(v-if="!selectedTeamId")
       overview-root(v-if="panel==='panel-overview'")
       map-root(v-if="panel==='panel-map'")
+      chancellery-view(v-if="panel==='panel-chancellery'")
 </template>
 
 <script>
@@ -28,10 +29,11 @@ import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
 import ModalError from '../../common/components/modal-error/modal-error.vue';
 import OverviewRoot from './overview/overview-root.vue';
 import MapRoot from '../../lib/components/travel-map/map-root.vue';
+import ChancelleryView from './overview/chancellery-view.vue';
 
 export default {
   name      : 'SummaryRoot',
-  components: {OverviewRoot, MenuBar, ModalError, MapRoot},
+  components: {ChancelleryView, OverviewRoot, MenuBar, ModalError, MapRoot},
   filters   : {},
   mixins    : [],
   model     : {},
