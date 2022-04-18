@@ -39,7 +39,7 @@ import ChanceRoot from './chance/chance-root.vue';
 import PropertiesRoot from './properties/properties-root.vue';
 import RulesRoot from './rules/rules-root.vue';
 import CallRoot from './call/call-root.vue';
-import MapRoot from './map/map-root.vue';
+import MapRoot from '../../lib/components/travel-map/map-root.vue';
 import StatisticRoot from './statistic/statistic-root.vue';
 
 import {getAuthToken} from '../../common/adapter/authToken';

@@ -19,6 +19,7 @@
       h1 team is selected
     div(v-if="!selectedTeamId")
       overview-root(v-if="panel==='panel-overview'")
+      map-root(v-if="panel==='panel-map'")
 </template>
 
 <script>
@@ -26,10 +27,11 @@ import {mapFields} from 'vuex-map-fields';
 import MenuBar from '../../common/components/menu-bar/menu-bar.vue';
 import ModalError from '../../common/components/modal-error/modal-error.vue';
 import OverviewRoot from './overview/overview-root.vue';
+import MapRoot from '../../lib/components/travel-map/map-root.vue';
 
 export default {
   name      : 'SummaryRoot',
-  components: {OverviewRoot, MenuBar, ModalError},
+  components: {OverviewRoot, MenuBar, ModalError, MapRoot},
   filters   : {},
   mixins    : [],
   model     : {},

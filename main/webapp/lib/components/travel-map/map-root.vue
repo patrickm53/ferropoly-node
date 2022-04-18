@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import CallActiveWarning from '../call-active-warning.vue';
+import CallActiveWarning from '../../../reception/components/call-active-warning.vue';
 import FerropolyMap from '../../../common/components/ferropoly-map/ferropoly-map.vue';
 import {mapFields} from 'vuex-map-fields';
 import ShowTeamOnMapSelector from './show-team-on-map-selector.vue';
