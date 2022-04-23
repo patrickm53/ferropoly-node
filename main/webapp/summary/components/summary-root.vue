@@ -16,7 +16,7 @@
       @close="apiErrorActive=false")
 
     div(v-if="selectedTeamId")
-      h1 team is selected
+      team-info-root(:team-id="selectedTeamId")
     div(v-if="!selectedTeamId")
       overview-root(v-if="panel==='panel-overview'")
       map-root(v-if="panel==='panel-map'")
@@ -30,10 +30,11 @@ import ModalError from '../../common/components/modal-error/modal-error.vue';
 import OverviewRoot from './overview/overview-root.vue';
 import MapRoot from '../../lib/components/travel-map/map-root.vue';
 import ChancelleryView from './overview/chancellery-view.vue';
+import TeamInfoRoot from './team-info/team-info-root.vue';
 
 export default {
   name      : 'SummaryRoot',
-  components: {ChancelleryView, OverviewRoot, MenuBar, ModalError, MapRoot},
+  components: {TeamInfoRoot, ChancelleryView, OverviewRoot, MenuBar, ModalError, MapRoot},
   filters   : {},
   mixins    : [],
   model     : {},
