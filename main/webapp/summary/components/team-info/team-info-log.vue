@@ -1,7 +1,7 @@
 <!---
-
+  The log page with the team info
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
-  Created: 22.02.22
+  Created: 23.04.22
 -->
 <template lang="pug">
   div
@@ -14,23 +14,31 @@
           property-display-selector(@change="onNewPropertyViewSelected")
           ferropoly-map(@map="onNewMap" ref="map" y-size-reduction=10 )
 
+
 </template>
 
 <script>
-import FerroCard from '../../../../common/components/ferro-card/ferro-card.vue';
-import FerropolyMap from '../../../../common/components/ferropoly-map/ferropoly-map.vue';
-import PropertyDisplaySelector from '../../../../lib/components/property-display-selector.vue';
+import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
+import FerropolyMap from '../../../common/components/ferropoly-map/ferropoly-map.vue';
+import PropertyDisplaySelector from '../../../lib/components/property-display-selector.vue';
 import {mapFields} from 'vuex-map-fields';
 import {delay} from 'lodash';
-import TravelLogList from '../../../../lib/components/travel-log-list.vue';
+import TravelLogList from '../../../lib/components/travel-log-list.vue';
 
 export default {
-  name      : 'NavContentLog',
+  name      : 'TeamInfoLog',
   components: {TravelLogList, PropertyDisplaySelector, FerropolyMap, FerroCard},
   filters   : {},
   mixins    : [],
   model     : {},
-  props     : {},
+  props     : {
+    teamId: {
+      type   : String,
+      default: () => {
+        return 'none'
+      }
+    }
+  },
   data      : function () {
     return {
       map             : null,
@@ -39,7 +47,6 @@ export default {
   },
   computed  : {
     ...mapFields({
-      teamId          : 'call.currentTeam.uuid',
       travelLog       : 'travelLog.log',
       propertyRegister: 'propertyRegister.register'
     }),

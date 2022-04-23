@@ -1,5 +1,5 @@
 <!---
-
+  The travel log as table
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 23.02.22
 -->
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {formatTime} from '../../../../common/lib/formatters';
+import {formatTime} from '../../common/lib/formatters';
 import $ from 'jquery';
 
 export default {

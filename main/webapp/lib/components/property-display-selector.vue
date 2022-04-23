@@ -1,5 +1,5 @@
 <!---
-
+  Selector showing different kind of properties
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 22.02.22
 -->

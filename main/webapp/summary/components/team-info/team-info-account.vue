@@ -8,24 +8,27 @@
     b-row.mt-2
       b-col(xs="12")
         team-account(:team-id="teamId" :transactions="transactions" )
-  
 
 
 </template>
 
 <script>
 import TeamAccount from '../../../lib/components/teamAccount.vue';
-export default {      name: 'TeamInfoAccount',
+
+export default {
+  name      : 'TeamInfoAccount',
   components: {TeamAccount},
   filters   : {},
   mixins    : [],
   model     : {},
-  props     : {teamId: {
+  props     : {
+    teamId: {
       type   : String,
       default: () => {
         return 'none'
       }
-    }},
+    }
+  },
   data      : function () {
     return {};
   },

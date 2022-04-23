@@ -11,6 +11,7 @@
         ferro-nav(:elements="navElements")
         team-info-properties(:team-id="teamId" v-if="propertiesTabVisible")
         team-info-account(:team-id="teamId" v-if="teamAccountVisible")
+        team-info-log(:team-id="teamId" v-if="teamLogVisible")
 
 </template>
 
@@ -20,10 +21,11 @@ import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
 
 import TeamInfoProperties from './team-info-properties.vue';
 import TeamInfoAccount from './team-info-account.vue';
+import TeamInfoLog from './team-info-log.vue';
 
 export default {
   name      : 'TeamInfoRoot',
-  components: {TeamInfoAccount, TeamInfoProperties, FerroNav, FerroCard},
+  components: {TeamInfoAccount, TeamInfoProperties, FerroNav, FerroCard, TeamInfoLog},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -53,6 +55,9 @@ export default {
     },
     teamAccountVisible() {
       return this.navElements[1].active;
+    },
+    teamLogVisible() {
+      return this.navElements[2].active;
     }
   },
   created   : function () {
