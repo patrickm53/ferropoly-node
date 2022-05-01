@@ -83,7 +83,7 @@ const gameplay = {
     gameIsActive: (state) => {
       let now = DateTime.now();
       if (now < DateTime.fromISO(state.scheduling.gameStartTs)) {
-        console.log('Game ont started yet', now, state.scheduling.gameStartTs);
+        console.log('Game not started yet', now, state.scheduling.gameStartTs);
         return false;
       }
       if (now > DateTime.fromISO(state.scheduling.gameEndTs)) {

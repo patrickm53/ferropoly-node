@@ -89,8 +89,7 @@ export default {
       error          : 'api.error',
       authToken      : 'api.authToken',
       gpsAllowed     : 'checkin.gps.usageAllowed',
-      gpsActive      : 'checkin.gps.active',
-      nextUpdate     : 'checkin.gps.nextUpdate',
+      gpsActive      : 'checkin.gps.active'
     }),
     apiErrorActive: {
       get() {
@@ -174,8 +173,8 @@ export default {
       let self = this;
       console.log('Activating GPS', geograph.getLastLocation());
       geograph.on('player-position-update', (pos) => {
-        if (self.$parent.fsocket && self.nextUpdate < DateTime.now()) {
-          // An entry sent to the system is returned with the systems timestamp. Therefore do not add
+        if (self.$parent.fsocket && this.$store.getters['gameIsActive'] && this.$store.getters.gpsUpdateNeeded) {
+          // An entry sent to the system is returned with the systems timestamp. Therefore, do not add
           // to the store
           console.log('Sending GPS info to system', pos);
           self.$parent.fsocket.emitToGame('player-position', {
@@ -183,9 +182,8 @@ export default {
             position : pos,
             timestamp: DateTime.now()
           });
-          self.nextUpdate = DateTime.now().plus({minutes: 5});
-        }
-        else {
+          self.$store.commit('setNextUpdate');
+        } else {
           // This is temporary, for this session: adding the current location to the store
           this.$store.dispatch({
             type : 'travelLog/updateGpsPosition',

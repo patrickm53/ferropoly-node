@@ -1,6 +1,7 @@
 # Changelog Ferropoly Spiel
 
 * Summary App überarbeitet (div. Stores angepasst)
+* Check-In: GPS Daten werden explizit nur während Spieldauer übertragen
 
 ## v3.0.1 10.4.2022
 Zwischenversion für Deployment-Test
