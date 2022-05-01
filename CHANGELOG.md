@@ -1,6 +1,7 @@
 # Changelog Ferropoly Spiel
 
 * Summary App überarbeitet (div. Stores angepasst)
+* Saldo bei Chance/Kanzlei wird angezeigt
 * Check-In: GPS Daten werden explizit nur während Spieldauer übertragen
 
 ## v3.0.1 10.4.2022

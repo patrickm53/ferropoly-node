@@ -57,6 +57,11 @@ const module = {
           .then(resp => {
             console.log('Chancellery read', resp.data);
             state.list = resp.data.entries;
+            let balance = 0;
+            state.list.forEach(entry => {
+              entry.balance = balance + get(entry, 'transaction.amount', 0);
+              balance = entry.balance;
+            });
           })
           .catch(err => {
             console.error(err);

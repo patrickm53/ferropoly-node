@@ -25,7 +25,8 @@
       template(#cell(transaction.origin.uuid)="data") {{teamName(data.item.transaction.origin.uuid)}}
       template(#cell(timestamp)="data") {{data.item.timestamp | formatTime}}
       template(#cell(transaction.amount)="data") {{data.item.transaction.amount | formatPrice}}
-      template(#cell(balance)="data") {{data.item.transaction.info}}
+      template(#cell(info)="data") {{data.item.transaction.info}}
+      template(#cell(balance)="data") {{data.item.balance | formatPrice}}
 
 
 </template>
@@ -59,7 +60,8 @@ export default {
         {key: 'timestamp', label: 'Zeit'},
         {key: 'transaction.origin.uuid', label: 'Team'},
         {key: 'transaction.info', label: 'Info'},
-        {key: 'transaction.amount', label: 'Betrag', thClass: 'text-right', tdClass: 'text-right'}
+        {key: 'transaction.amount', label: 'Betrag', thClass: 'text-right', tdClass: 'text-right'},
+        {key: 'balance', label: 'Saldo', thClass: 'text-right', tdClass: 'text-right'}
       ]
     };
   },
