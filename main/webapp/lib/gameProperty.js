@@ -6,7 +6,7 @@
 
 import Property from '../common/lib/property';
 import {faHouseFlag} from '@fortawesome/free-solid-svg-icons';
-import {get} from 'lodash';
+import {get, set, isFunction} from 'lodash';
 import {buildingStatus, formatTime, formatPrice} from '../common/lib/formatters';
 
 class GameProperty extends Property {
@@ -23,11 +23,22 @@ class GameProperty extends Property {
   /**
    * Set Map override: when a teamId is supplied, we have different markers
    * @param map
-   * @param teamId
+   * @param options : object customizing the icons. See function with details
    */
-  setMap(map, teamId = '') {
-    if (get(this.gamedata, 'owner', 'none') === teamId) {
-      this.createTeamMarker();
+  setMap(map, options = {}) {
+    let teamId             = get(options, 'teamId', '');
+    let showAllTeamMarkers = get(options, 'showTeamMarkers', false);
+    let owner              = get(this.gamedata, 'owner', undefined);
+
+    if ((owner && showAllTeamMarkers) || (owner === teamId)) {
+      let teamMarkerOptions = get(options, 'teamMarker', {});
+      // Extract options, most important: external fill color function
+      const fillColorFunc   = get(teamMarkerOptions, 'icon.fillColorFunc', null)
+      if (isFunction(fillColorFunc)) {
+        set(teamMarkerOptions, 'icon.fillColor', fillColorFunc(owner));
+      }
+      this.createTeamMarker(teamMarkerOptions);
+
       this.teamMarker.setMap(map);
       if (this.marker) {
         this.marker.setMap(null);
@@ -42,8 +53,9 @@ class GameProperty extends Property {
 
   /**
    * Creates a Team Marker, a special colored and shaped marker with info about an own property
+   * @param options
    */
-  createTeamMarker() {
+  createTeamMarker(options) {
     if (!google) {
       return;
     }
@@ -60,14 +72,14 @@ class GameProperty extends Property {
       title   : this.location.name,
       icon    : {
         path        : faHouseFlag.icon[4],
-        fillColor   : 'blue',
+        fillColor   : get(options, 'icon.fillColor', 'red'),
         fillOpacity : 1,
         anchor      : new google.maps.Point(
           faHouseFlag.icon[0] / 2, // width
           faHouseFlag.icon[1] // height
         ),
-        strokeWeight: 1,
-        strokeColor : '#ffffff',
+        strokeWeight: get(options, 'icon.strokeWeight', 1.2),
+        strokeColor : get(options, 'icon.strokeColor', '0xffffff'),
         scale       : 0.05,
       }
     });
@@ -76,11 +88,10 @@ class GameProperty extends Property {
     });
 
 
-    // Build the info text
+    // Build the info text according to the settings provided
     if (this.gamedata) {
-      console.log('gamedata', this.gamedata);
       if (this.gamedata.owner) {
-        let buildingText = buildingStatus(this.gamedata.buildings);
+        let buildingText        = buildingStatus(this.gamedata.buildings);
         let buildingEnabledText = ''
         if (this.gamedata.buildings < 5) {
           if (this.gamedata.buildingEnabled) {
@@ -89,8 +100,12 @@ class GameProperty extends Property {
             buildingEnabledText = '<br>Hausbau aktuell nicht möglich';
           }
         }
-        let content = `<h4>${this.location.name}</h4>`
-        content += `<p>Kaufpreis ${formatPrice(this.pricelist.price)}<br>`;
+        const idToTeamName = get(options, 'idToTeamName', null);
+        let content = `<h4>${this.location.name}</h4><p>`;
+        if (idToTeamName) {
+          content += `Besitzer: ${idToTeamName(this.gamedata.owner)}<br>`;
+        }
+        content += `Kaufpreis ${formatPrice(this.pricelist.price)}<br>`;
         content += `Kaufzeit: ${formatTime(this.gamedata.boughtTs)}</p>`
         content += `Baustatus: ${buildingText} ${buildingEnabledText}`;
 
@@ -115,7 +130,6 @@ class GameProperty extends Property {
     let content = `<h4>${this.location.name}</h4><p>Kaufpreis: ${this.pricelist.price}</p>`;
 
     if (this.gamedata) {
-      console.log('gamedata', this.gamedata);
       if (this.gamedata.owner) {
         content += `<p>verkauft</p>`
       } else {

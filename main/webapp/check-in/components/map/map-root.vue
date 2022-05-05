@@ -67,7 +67,7 @@ export default {
         this.$refs.map.resizeHandler();
         travelLog.setMap(map);
         travelLog.updateMarker();
-        this.propertyRegister.showAllPropertiesWithTeamProps(map, this.teamId);
+        this.propertyRegister.showAllPropertiesWithTeamProps(map, {teamId: this.teamId});
       }, 500);
 
     }, onZoomChanged(zoom) {

@@ -73,6 +73,7 @@ const createEntry = function (tl, rootGetters) {
  * @param rootGetters
  */
 function initTeam(state, rootGetters, _teamId) {
+  console.log('TRAVELLOG initTeam', rootGetters);
   state.log[_teamId] = new TeamTrack({
     id   : _teamId,
     color: rootGetters['teams/idToColor'](_teamId),
@@ -111,12 +112,17 @@ function handleTravelLogData(teamId, getters, state, travelLog, rootGetters) {
   travelLog.forEach(tl => {
     if (!state.log[tl.teamId]) {
       // Create new track for a team if it does not already exist
-      initTeam.call(state, rootGetters, teamId);
+
+      initTeam(state, rootGetters, teamId);
     }
     state.log[tl.teamId].pushLocation(createEntry(tl, rootGetters));
   });
 }
 
+/**
+ * The module itself
+ * @type {{mutations: {updateTravelLogField: *}, state: (function(): {log: {}}), getters: {teamLog: (function(*): function(*): *), getTravelLogField: *}, actions: {saveTravelLogEntries({state: *, getters: *, rootGetters: *}, *): void, update({state: *, getters: *, rootGetters: *}, *): Promise<unknown>, updateGpsPosition({state: *, rootGetters: *}, *): void}, namespaced: boolean}}
+ */
 const module = {
   namespaced: true,
   state     : () => ({
@@ -145,7 +151,7 @@ const module = {
 
         if (teamId && !state.log[teamId]) {
           // Init data container asap
-          initTeam.call(state, rootGetters, teamId);
+          initTeam(state, rootGetters, teamId);
         }
 
         axios.get(`/travellog/${options.gameId}/${teamId}`)
@@ -171,8 +177,8 @@ const module = {
      * @param rootGetters
      * @param options
      */
-    saveTravelLogEntries({state, getters, rootGetters},options) {
-      handleTravelLogData(undefined, getters,  state, options.travelLog, rootGetters);
+    saveTravelLogEntries({state, getters, rootGetters}, options) {
+      handleTravelLogData(undefined, getters, state, options.travelLog, rootGetters);
       console.log('Travellog saved', state.log);
     },
     /**

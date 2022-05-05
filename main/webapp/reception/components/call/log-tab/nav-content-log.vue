@@ -11,7 +11,6 @@
           travel-log-list(:travel-log="travelLogForTeam" @location-selected="onLocationSelected")
       b-col(sm="8")
         ferro-card(title="Standortverlauf" size="sm")
-          property-display-selector(@change="onNewPropertyViewSelected")
           ferropoly-map(@map="onNewMap" ref="map" y-size-reduction=10 )
 
 </template>
@@ -19,14 +18,13 @@
 <script>
 import FerroCard from '../../../../common/components/ferro-card/ferro-card.vue';
 import FerropolyMap from '../../../../common/components/ferropoly-map/ferropoly-map.vue';
-import PropertyDisplaySelector from '../../../../lib/components/property-display-selector.vue';
 import {mapFields} from 'vuex-map-fields';
 import {delay} from 'lodash';
 import TravelLogList from '../../../../lib/components/travel-log-list.vue';
 
 export default {
   name      : 'NavContentLog',
-  components: {TravelLogList, PropertyDisplaySelector, FerropolyMap, FerroCard},
+  components: {TravelLogList, FerropolyMap, FerroCard},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -63,26 +61,19 @@ export default {
       this.$refs.map.fitBounds(travelLog.getBounds());
       delay(() => {
         this.$refs.map.fitBounds(travelLog.getBounds());
+        this.propertyRegister.showAllPropertiesWithTeamProps(map, {
+          showTeamMarkers: true,
+          teamMarker     : {
+            idToTeamName: this.$store.getters['teams/idToTeamName'],
+            icon        : {
+              fillColorFunc: this.$store.getters['teams/idToColor']
+            }
+          }
+        });
         travelLog.setMap(map);
-        this.propertyRegister.showOnlyFreePropertiesOnMap(map);
+        //  this.propertyRegister.showOnlyFreePropertiesOnMap(map);
       }, 500);
 
-    },
-    onNewPropertyViewSelected(p) {
-      console.log('new property view', p);
-      switch (p) {
-        case 'own':
-          this.propertyRegister.showOnlyPropertiesOfTeamOnMap(this.map, this.teamId);
-          break;
-        case 'all':
-          this.propertyRegister.showAllPropertiesOnMap(this.map);
-          break;
-        case 'free':
-          this.propertyRegister.showOnlyFreePropertiesOnMap(this.map);
-          break;
-        default:
-          console.warn(`Don't know what to do: ${p}`);
-      }
     },
     /**
      * Event with a newly selected location

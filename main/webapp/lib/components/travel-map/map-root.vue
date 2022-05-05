@@ -72,8 +72,18 @@ export default {
         this.$refs.map.setZoom(zoom);
       }
 
-      this.propertyRegister.showOnlyFreePropertiesOnMap(map);
+      // Show all properties and display the ones owned by a team with a special icon
+      this.propertyRegister.showAllPropertiesWithTeamProps(map, {
+        showTeamMarkers: true,
+        teamMarker     : {
+          idToTeamName : this.$store.getters['teams/idToTeamName'],
+          icon: {
+            fillColorFunc: this.$store.getters['teams/idToColor'],
+          }
+        }
+      });
 
+      // Set all travelLogs
       forOwn(this.travelLog, (value) => {
         if (value.visible) {
           value.setMap(this.map);

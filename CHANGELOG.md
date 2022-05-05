@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+* In Reisekarte werden die verkauften Orte optisch hervorgehoben
 * Summary App überarbeitet (div. Stores angepasst)
 * Saldo bei Chance/Kanzlei wird angezeigt
 * Check-In: GPS Daten werden explizit nur während Spieldauer übertragen

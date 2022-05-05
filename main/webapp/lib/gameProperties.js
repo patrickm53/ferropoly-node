@@ -184,11 +184,11 @@ class GameProperties {
   /**
    * Shows all properties, but highlights properties of the team on the map
    * @param map
-   * @param teamId
+   * @param options are passed 1:1 to the gameProperty.setMap function, see there
    */
-  showAllPropertiesWithTeamProps(map, teamId) {
+  showAllPropertiesWithTeamProps(map, options) {
     this.properties.forEach(p => {
-        p.setMap(map, teamId);
+        p.setMap(map, options);
     });
   }
 

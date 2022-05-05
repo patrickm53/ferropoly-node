@@ -163,6 +163,7 @@ class TeamTrack {
     if (typeof google === 'undefined') {
       return;
     }
+
     let lineOptions = {
       path         : this.track,
       geodesic     : true,
@@ -171,6 +172,7 @@ class TeamTrack {
       strokeWeight : 4,
       map          : this.map
     }
+    console.log('updating polyline', lineOptions);
     if (!this.polyline) {
       this.polyline = new google.maps.Polyline(lineOptions);
     } else {
