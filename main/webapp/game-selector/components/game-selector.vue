@@ -30,7 +30,9 @@ import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
 import {mapFields} from 'vuex-map-fields';
 
 export default {
-  name : 'game-selector',
+  name : 'GameSelector',
+  components: {WelcomeBar, MyGames, ModalAgb, MenuBar, MyGameplays}
+  model: {},
   props: [],
   data : function () {
     return {
@@ -42,13 +44,13 @@ export default {
           ]
     };
   },
-  model: {},
   created() {
     this.$store.dispatch('fetchGames');
     this.$store.dispatch('fetchUserData');
   },
   mounted() {
   },
+  // eslint-disable-next-line vue/order-in-components
   computed  : {
     ...mapFields([
       'games',
@@ -60,7 +62,6 @@ export default {
     }
   },
   methods   : {},
-  components: {WelcomeBar, MyGames, ModalAgb, MenuBar, MyGameplays}
 }
 </script>
 

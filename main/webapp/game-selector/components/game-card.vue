@@ -3,10 +3,15 @@
 -->
 <template lang="pug">
   div
-    ferro-card(:title="getGpProperty('gamename')")
+    ferro-card(:title="cardTitle")
       b-row
-        b-col Organisation
-        b-col {{organisator}}
+        b-col Organisiert von:
+        b-col
+          a(:href="organisatorEmail") {{organisator}}
+      b-row(v-if="!isTeamLead")
+        b-col Angemeldet von:
+        b-col
+          a(:href="teamLeadEmail") {{teamLead}}
       b-row
         b-col Spieldatum
         b-col {{getGpProperty('scheduling.gameDate') | formatDate}}
@@ -29,7 +34,7 @@
           b-button.btn-gameplay(size="sm" variant="primary" v-if="gameRunning" :href="url.play") Spielen
           b-button.btn-gameplay(size="sm" v-if="gameOver" :href="url.play") Spiel ansehen
           b-button.btn-gameplay(size="sm" :href="url.viewPricelist") Spielinfo
-          b-button.btn-gameplay(size="sm" :href="url.editTeam") Team Mitglieder &nbsp;
+          b-button.btn-gameplay(size="sm" :href="url.editTeam" v-if="isTeamLead") Team Mitglieder &nbsp;
             b-icon-people
           b-button.btn-gameplay(size="sm" variant="info" v-if="gameOver" :href="url.summary") Zusammenfassung
 
@@ -43,7 +48,9 @@ import FerroCard from '../../common/components/ferro-card/ferro-card.vue';
 import {DateTime} from 'luxon';
 
 export default {
-  name      : 'game-card',
+  name      : 'GameCard',
+  components: {FerroCard, BIconTrash, BIconPerson, BIconPeople, BIconEye, BIconPencil},
+  model     : {},
   props     : {
     gameplay: {
       type   : Object,
@@ -62,7 +69,54 @@ export default {
       }
     };
   },
-  model     : {},
+  computed  : {
+    organisator() {
+      let name   = this.getGpProperty('owner.organisatorName');
+      let org    = this.getGpProperty('owner.organisation');
+      let retVal = name;
+      if (org.length > 0) {
+        retVal += ` (${org})`
+      }
+      return retVal;
+    },
+    organisatorEmail() {
+      return `mailto:${this.getGpProperty('owner.organisatorEmail')}`;
+    },
+    teamLead() {
+      return this.getGpProperty('team.data.teamLeader.name');
+    },
+    teamLeadEmail() {
+      return `mailto:${this.getGpProperty('team.data.teamLeader.email')}`;
+    },
+    /**
+     * Is the game running?
+     */
+    gameRunning() {
+      let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
+      return gameDate.hasSame(DateTime.now(), 'day');
+    },
+    /**
+     * Is the game already over?
+     */
+    gameOver() {
+      let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
+      return DateTime.now() > gameDate.plus({days: 1});
+    },
+    /**
+     * True if the user is team leader of the game
+     * @returns {any}
+     */
+    isTeamLead() {
+      return get(this.gameplay, 'isTeamLead', false);
+    },
+    /**
+     * Title of the car
+     * @returns {string}
+     */
+    cardTitle() {
+      return `${this.getGpProperty('gamename')}, Team "${this.getGpProperty('team.data.name')}"`;
+    }
+  },
   methods   : {
     /**
      * Get the property of the gameplay object
@@ -78,33 +132,7 @@ export default {
     getMapName() {
       return getMapName(this.getGpProperty('internal.map'));
     }
-  },
-  computed  : {
-    organisator() {
-      let name   = this.getGpProperty('owner.organisatorName');
-      let org    = this.getGpProperty('owner.organisation');
-      let retVal = name;
-      if (org.length > 0) {
-        retVal += ` (${org})`
-      }
-      return retVal;
-    },
-    /**
-     * Is the game running?
-     */
-    gameRunning() {
-      let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
-      return gameDate.hasSame(DateTime.now(), 'day');
-    },
-    /**
-     * Is the game already over?
-     */
-    gameOver() {
-      let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
-      return DateTime.now() > gameDate.plus({days: 1});
-    }
-  },
-  components: {FerroCard, BIconTrash, BIconPerson, BIconPeople, BIconEye, BIconPencil}
+  }
 }
 </script>
 

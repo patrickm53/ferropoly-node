@@ -19,7 +19,7 @@ import GameSelector from './components/game-selector.vue';
 
 Vue.use(VueRouter);
 
-Vue.component('game-selector', GameSelector);
+Vue.component('GameSelector', GameSelector);
 
 // This is for redirection when declining the AGB
 const routes = [
@@ -56,10 +56,6 @@ $(document).ready(function () {
   new Vue({
     el     : '#game-selector-app',
     router,
-    created: function () {
-      console.log('created');
-    },
-    store  : storeGameSelector,
     data   : {
       user   : {
         name: ''
@@ -69,6 +65,10 @@ $(document).ready(function () {
       },
       methods: {}
 
-    }
+    },
+    created: function () {
+      console.log('created');
+    },
+    store  : storeGameSelector
   });
 });

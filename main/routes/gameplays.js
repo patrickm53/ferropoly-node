@@ -9,6 +9,7 @@ const gameplayModel = require('../../common/models/gameplayModel');
 const logger        = require('../../common/lib/logger').getLogger('routes:index');
 const teams         = require('../../common/models/teamModel');
 const async         = require('async');
+const _             = require('lodash');
 
 /**
  * Get the gameplays for the user, the ones owned and the ones as player
@@ -49,6 +50,7 @@ router.get('/', function (req, res) {
             if (err) {
               return cb(err);
             }
+            console.log('XXX', req.session.passport.user, _.get(team, 'data.teamLeader.email', 'nomail'));
             retVal.games.push({
               internal  : gp.internal,
               gamename  : gp.gamename,
@@ -56,7 +58,8 @@ router.get('/', function (req, res) {
               log       : gp.log,
               mobile    : gp.mobile,
               team      : team,
-              owner     : gp.owner
+              owner     : gp.owner,
+              isTeamLead: req.session.passport.user === _.get(team, 'data.teamLeader.email', 'nomail')
             });
             cb();
           });

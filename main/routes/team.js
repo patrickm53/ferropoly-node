@@ -25,7 +25,7 @@ router.get('/edit/:gameId/:teamId', function (req, res) {
       return errorHandler(res, 'Interner Fehler beim Laden des Users.', err, 500);
     }
     if (_.get(team, 'data.teamLeader.email', 'x') !== req.session.passport.user) {
-      return errorHandler(res, 'Nicht berechtigt.', new Error('Not authorized or not found'), 404);
+      return errorHandler(res, 'Nicht berechtigt.', new Error('Not authorized or not found'), 403);
     }
     gameCache.getGameData(req.params.gameId, (err, gameData) => {
       if (err || !gameData) {
