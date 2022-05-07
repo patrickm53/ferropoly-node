@@ -31,7 +31,7 @@ import {mapFields} from 'vuex-map-fields';
 
 export default {
   name : 'GameSelector',
-  components: {WelcomeBar, MyGames, ModalAgb, MenuBar, MyGameplays}
+  components: {WelcomeBar, MyGames, ModalAgb, MenuBar, MyGameplays},
   model: {},
   props: [],
   data : function () {
