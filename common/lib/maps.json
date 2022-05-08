@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.2.1",
   "maps": [
     {
       "map" :"sbb",
@@ -26,6 +26,12 @@
       "enabled": false
     },
     {
+      "map" :"libero100",
+      "name":"Libero Stadt Bern, Zone 100/101",
+      "description": "Für ein schnelles Spiel in der Stadt Bern",
+      "enabled": true
+    },
+    {
       "map" :"tva",
       "name":"A-Welle",
       "description": "Tarifverbund des Kantons Aargau",
@@ -39,14 +45,14 @@
     },
     {
       "map" :"tnw",
-      "name":"Tarifverbund Nordostschwez",
+      "name":"Tarifverbund Nordostschweiz",
       "description": "Rund um Basel",
       "enabled": false
     },
     {
       "map" :"zvv110",
       "name":"Stadt Zürich, ZVV Zone 110",
-      "description": "Für ein schnelles Spiel in der Stadt",
+      "description": "Für ein schnelles Spiel in der Stadt Zürich",
       "enabled": true
     }
   ]

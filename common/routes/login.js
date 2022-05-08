@@ -12,7 +12,7 @@ const router   = express.Router();
 const _        = require('lodash');
 const logger   = require('../lib/logger').getLogger('login');
 const path     = require('path');
-let   settings = {};
+let settings   = {};
 
 /**
  * Get the login page
@@ -20,6 +20,14 @@ let   settings = {};
 router.get('/', function (req, res) {
   let appPath = _.get(settings, 'appPath', 'none');
   res.sendFile(path.join(__dirname, '..', '..', appPath, 'public', 'html', 'login.html'));
+});
+
+/**
+ * Showing this page if it fails
+ */
+router.get('/fail', (req, res) => {
+  req.session.targetUrl = '/';
+  res.status(401).render('error/401-login.pug');
 });
 
 /**
@@ -31,7 +39,7 @@ router.post('/', function (req, res) {
   let redirectUri = req.session.targetUrl || '/';
   passport.authenticate('local', {
     successRedirect: redirectUri,
-    failureRedirect: '/login',
+    failureRedirect: '/login/fail',
     failureFlash   : true
   })(req, res);
 });
@@ -83,10 +91,10 @@ module.exports = {
       if (!req.session.passport || !req.session.passport.user) {
         // valid user in session
         if (uri === '/') {
-          logger.info(uri + " redirected to login");
+          logger.info(uri + ' redirected to login');
           res.redirect('/login');
         } else {
-          logger.info(uri + " is not allowed (401)");
+          logger.info(uri + ' is not allowed (401)');
           req.session.targetUrl = req.url;
           res.status(401);
 

@@ -4,6 +4,7 @@
 * Summary App überarbeitet (div. Stores angepasst)
 * Saldo bei Chance/Kanzlei wird angezeigt
 * Check-In: GPS Daten werden explizit nur während Spieldauer übertragen
+* Info bei fehlerhaftem Login
 
 ## v3.0.1 10.4.2022
 Zwischenversion für Deployment-Test

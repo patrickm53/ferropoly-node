@@ -15,7 +15,6 @@ function setItem(key, value) {
   setString(key, value);
 }
 
-
 /**
  * Sets an object in the storage
  * @param key
@@ -61,7 +60,6 @@ function setBoolean(key, value) {
   localStorage.setItem(key, JSON.stringify({type: 'Boolean', value}));
 }
 
-
 /**
  * Retrieves an item
  * @param key
@@ -79,8 +77,6 @@ function getItem(key, def = undefined) {
   if (!data) {
     return def;
   }
-
-  console.log('session storage', data);
   return data.value;
 }
 

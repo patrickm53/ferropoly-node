@@ -49,7 +49,6 @@ export default {
       let element       = $('#rules-viewer');
       let hDoc          = $(window).height();
       let offsetElement = element.offset();
-      console.log('rh', hDoc, offsetElement);
       if (offsetElement) {
         element.height(hDoc - offsetElement.top);
       }
