@@ -92,7 +92,8 @@ const gameplaySchema = mongoose.Schema({
   },
   joining   : {
     possibleUntil: {type: Date},
-    infotext     : String
+    infotext     : String,
+    url          : String, // This is the URL for joining the game
   },
   rules     : {
     // The rules are currently part of the gameplay. In a next version, the rules are probably
@@ -140,6 +141,7 @@ let createGameplay      = function (gpOptions, callback) {
   gp.joining.infotext          = gpOptions.infoText;
   gp.gamename                  = gpOptions.name;
   gp.internal.gameId           = gpOptions.gameId || Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
+  gp.joining.url               = _.get(gpOptions, 'mainInstances[0]', 'https://spiel.ferropoly.ch') + '/anmelden/' + gp.internal.gameId;
   gp.internal.creatingInstance = gpOptions.instance;
   gp.mobile                    = gpOptions.mobile || {level: MOBILE_NONE};
   gp._id                       = gp.internal.gameId;

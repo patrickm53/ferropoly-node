@@ -4,7 +4,7 @@
 <template lang="pug">
   #account
     menu-bar(show-user-box=true
-      help-url="https://www.ferropoly.ch/hilfe/general/account")
+      help-url="https://www.ferropoly.ch/hilfe/general/3-0/account")
     b-container(fluid=true v-if="dataValid")
       b-row
         b-col
