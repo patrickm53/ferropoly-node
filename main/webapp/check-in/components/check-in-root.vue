@@ -70,12 +70,12 @@ export default {
   data      : function () {
     return {
       helpUrls: {
-        'panel-overview'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-map'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-statistic' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-accounting': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-pricelist' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/',
-        'panel-rules'     : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/'
+        'panel-overview'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/overview',
+        'panel-map'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/map',
+        'panel-statistic' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/statistic',
+        'panel-accounting': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/accounting',
+        'panel-pricelist' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/pricelist',
+        'panel-rules'     : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/rules'
       }
     };
   },
