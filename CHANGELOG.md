@@ -1,10 +1,14 @@
 # Changelog Ferropoly Spiel
 
+## v3.1.0 5.6.22
+* Erste RC-Version Spiel V3
 * In Reisekarte werden die verkauften Orte optisch hervorgehoben
 * Summary App überarbeitet (div. Stores angepasst)
 * Saldo bei Chance/Kanzlei wird angezeigt
 * Check-In: GPS Daten werden explizit nur während Spieldauer übertragen
+* Anmeldung verbessert
 * Info bei fehlerhaftem Login
+* Dependency Updates
 
 ## v3.0.1 10.4.2022
 Zwischenversion für Deployment-Test
