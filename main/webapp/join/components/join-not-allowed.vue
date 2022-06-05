@@ -8,24 +8,16 @@
     b-jumbotron(
       header="Anmeldeschluss abgelaufen"
       lead="Leider werden für das gewünschte Spiel keine Anmeldungen (mehr) entgegen genommen. Falls Du denkst, dass dies ein Fehler ist, dann setze Dich bitte mit der organisierenden Person in Verbindung."
-     )
+    )
 </template>
 
 <script>
 export default {
-  name: "join-not-allowed",
+  name : 'JoinNotAllowed',
   props: {},
-  data: function() {
+  data : function () {
     return {};
-  },
-  model: {},
-  created: function() {
-  },
-  computed: {},
-  methods: {},
-  components: {},
-  filters: {},
-  mixins: []
+  }
 }
 </script>
 

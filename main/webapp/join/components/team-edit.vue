@@ -53,19 +53,14 @@
 import InputText from '../../common/components/form-controls/input-text.vue';
 import InputPhone from '../../common/components/form-controls/input-phone.vue';
 import InputTextarea from '../../common/components/form-controls/input-textarea.vue';
-
 import {mapFields} from 'vuex-map-fields';
 
-
 export default {
-  name      : 'team-edit',
+  name      : 'TeamEdit',
+  components: {InputText, InputPhone, InputTextarea},
   props     : {},
   data      : function () {
     return {};
-  },
-  model     : {},
-  created   : function () {
-    console.log('created', this.$store.getters.organizationValid);
   },
   computed  : {
     ...mapFields({
@@ -84,15 +79,15 @@ export default {
       return this.id.length > 0;
     }
   },
+  created   : function () {
+    console.log('created', this.$store.getters.organizationValid);
+  },
   methods   : {
     joinGame() {
       console.log('join the game');
       this.$store.dispatch('joinGame', {});
     }
   },
-  components: {InputText, InputPhone, InputTextarea},
-  filters   : {},
-  mixins    : []
 }
 </script>
 

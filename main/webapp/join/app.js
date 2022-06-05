@@ -22,7 +22,7 @@ import store from './store';
 Vue.use(VueRouter);
 Vue.use(Vuex);
 
-Vue.component('join-root', JoinRoot);
+Vue.component('JoinRoot', JoinRoot);
 
 console.log('Webapp initializing');
 
@@ -39,11 +39,11 @@ $(document).ready(function () {
   console.log('DOM ready');
   new Vue({
     el     : '#join-app',
+    data   : {},
     created: function () {
       console.log('created');
     },
-    store  : store,
-    data   : {}
+    store  : store
   });
 });
 

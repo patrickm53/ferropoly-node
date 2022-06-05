@@ -28,18 +28,14 @@ import {mapFields} from 'vuex-map-fields';
 import {last, split} from 'lodash';
 
 export default {
-  name      : 'join-root',
+  name      : 'JoinRoot',
+  components: {MenuBar, JoinGame, ModalError},
+  model     : {},
   props     : {},
   data      : function () {
     return {
       menuElements: []
     };
-  },
-  model     : {},
-  created   : function () {
-    const elements = split(window.location.pathname, '/');
-    let gameId     = last(elements);
-    this.$store.dispatch('fetchData', {gameId});
   },
   computed  : {
     ...mapFields([
@@ -65,10 +61,12 @@ export default {
       }
     }
   },
+  created   : function () {
+    const elements = split(window.location.pathname, '/');
+    let gameId     = last(elements);
+    this.$store.dispatch('fetchData', {gameId});
+  },
   methods   : {},
-  components: {MenuBar, JoinGame, ModalError},
-  filters   : {},
-  mixins    : []
 }
 </script>
 

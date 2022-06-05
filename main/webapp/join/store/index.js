@@ -3,8 +3,6 @@
  * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
  * Created: 06.11.21
  **/
-
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
@@ -22,12 +20,14 @@ const store = new Vuex.Store({
     gameplay: {
       owner     : {},
       scheduling: {},
-      internal  : {},
+      internal  : {
+        gameId: 'none'
+      },
       rules     : {
         text: '<em>not yet</em>'
       },
       joining   : {
-        infotext: '',
+        infotext     : '',
         possibleUntil: '2121-12-21T00:00:00'
       },
       gamename  : ''
@@ -74,16 +74,16 @@ const store = new Vuex.Store({
      * @param getters
      * @returns {any}
      */
-    joiningButtonEnabled   : (state, getters) => {
-      return (getters.nameValid && getters.organizationValid && getters.phoneValid && !state.api.requestPending );
+    joiningButtonEnabled: (state, getters) => {
+      return (getters.nameValid && getters.organizationValid && getters.phoneValid && !state.api.requestPending);
     },
     /**
      * True if you still can join the game, false if it is too late
      * @param state
      */
     joiningPossible: (state) => {
-        let deadline = DateTime.fromISO(state.gameplay.joining.possibleUntil);
-        return DateTime.now() < deadline;
+      let deadline = DateTime.fromISO(state.gameplay.joining.possibleUntil);
+      return DateTime.now() < deadline;
     }
 
   },
@@ -109,7 +109,8 @@ const store = new Vuex.Store({
      * @param options
      */
     fetchData({state, commit, rootState}, options) {
-      $.ajax(`/join/data/${options.gameId}`, {dataType: 'json'})
+      let gameId = get(options, 'gameId', get(state, 'gameplay.internal.gameId', 'nixda'));
+      $.ajax(`/join/data/${gameId}`, {dataType: 'json'})
         .done(function (data) {
           console.log(data);
           // assign is important, otherwise no 2-way-binding in vue possible!
@@ -128,8 +129,9 @@ const store = new Vuex.Store({
      * Joins the game
      * @param state
      * @param options
+     * @param dispatch
      */
-    joinGame({state}, options) {
+    joinGame({state, dispatch}, options) {
       state.api.requestPending = true;
       getAuthToken((err, authToken) => {
         if (err) {
@@ -148,20 +150,20 @@ const store = new Vuex.Store({
             remarks     : state.teamInfo.remarks
           })
           .then(function () {
-            console.log('saved, ok');
+            console.log('saved, ok, loading data again');
+            dispatch('fetchData');
           })
           .catch(function (err) {
             console.error(err);
-            state.api.error.message = get(err, 'response.data.message', err);
+            state.api.error.message  = get(err, 'response.data.message', err);
             state.api.error.infoText = 'Es gab ein Problem mit der Anmeldung.';
             state.api.error.active   = true;
           })
-          .finally(function() {
+          .finally(function () {
             state.api.requestPending = false;
           });
       });
     }
-
   }
 });
 

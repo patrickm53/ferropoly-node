@@ -56,14 +56,15 @@ import {formatGameDate, formatGameTime, formatDateTime, booleanYesNo} from '../.
 import TeamEdit from './team-edit.vue';
 import JoinNotAllowed from './join-not-allowed.vue';
 import {DateTime} from 'luxon';
+
 export default {
-  name      : 'join-game',
+  name      : 'JoinGame',
+  components: {TeamEdit, JoinNotAllowed},
+  filters   : {formatGameDate, formatGameTime, formatDateTime, booleanYesNo},
+  model     : {},
   props     : {},
   data      : function () {
     return {};
-  },
-  model     : {},
-  created   : function () {
   },
   computed  : {
     ...mapFields([
@@ -93,10 +94,10 @@ export default {
       return this.$store.getters.joiningPossible;
     },
     joiningDeadline() {
-      let date= formatDateTime(this.possibleUntil);
+      let date = formatDateTime(this.possibleUntil);
 
       let deadline = DateTime.fromISO(this.possibleUntil);
-      let now = DateTime.now();
+      let now      = DateTime.now();
       if (deadline.minus({days: 7}) < now && now < deadline) {
         date += ', ' + deadline.toRelative();
       }
@@ -104,9 +105,6 @@ export default {
     }
   },
   methods   : {},
-  components: {TeamEdit, JoinNotAllowed},
-  filters   : {formatGameDate, formatGameTime, formatDateTime, booleanYesNo},
-  mixins    : []
 }
 </script>
 
