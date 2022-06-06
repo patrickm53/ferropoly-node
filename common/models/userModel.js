@@ -598,7 +598,7 @@ function findOrCreateMicrosoftUser(profile, callback) {
         avatar = profile.picture;
       } else {
         avatar = undefined;
-        logger.info('unable to set google avatar', profile);
+        logger.info('unable to set Microsoft avatar');
       }
       logger.info(`Microsoft login with email Address ${emailAddress}`, profile);
 
@@ -629,14 +629,14 @@ function findOrCreateMicrosoftUser(profile, callback) {
             return callback(err);
           }
           if (user) {
-            // Ok, we know this user. Update profile for google access
-            user.info.google           = profile;
-            user.info.registrationDate = new Date();
-            user.login.verifiedEmail   = true; // Facebook does not need verification
-            user.personalData.forename = profile.name.givenName;
-            user.personalData.surname  = profile.name.familyName;
-            user.login.googleProfileId = profile.id;
-            user.personalData.avatar   = avatar;
+            // Ok, we know this user. Update profile for microsoft access
+            user.info.microsoft           = profile;
+            user.info.registrationDate    = new Date();
+            user.login.verifiedEmail      = true; // Google does not need verification
+            user.personalData.forename    = profile.name.givenName;
+            user.personalData.surname     = profile.name.familyName;
+            user.login.microsoftProfileId = profile.id;
+            user.personalData.avatar      = avatar;
             user.save(function (err) {
               if (err) {
                 return callback(err);

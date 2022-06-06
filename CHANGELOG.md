@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Microsoft login Bugfix
+
 ## v3.1.1 6.6.22
 * Bugfix: Logout in Passport benötigt neu Callback
 
