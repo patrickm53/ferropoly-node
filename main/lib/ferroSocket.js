@@ -5,7 +5,7 @@
  */
 
 const EventEmitter     = require('events').EventEmitter;
-const authTokenManager = require('./authTokenManager');
+const authTokenManager = require('../../common/lib/authTokenManager');
 const logger           = require('../../common/lib/logger').getLogger('ferroSocket');
 const settings         = require('../settings');
 const _                = require('lodash');

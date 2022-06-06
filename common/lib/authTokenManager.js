@@ -39,12 +39,6 @@ module.exports = {
    * @param callback
    */
   getNewToken: function (options, callback) {
-    if (!options.generateToken) {
-      // sounds silly when a get token function allows no token - but it's quite effective and
-      // simple to implement read-only-funcionality by not supplying a valid token.
-      return callback(null, 'read-only-token');
-    }
-
     getToken(options.user, function (err, token) {
       if (err) {
         return callback(err);

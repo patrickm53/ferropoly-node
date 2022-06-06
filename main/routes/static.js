@@ -11,7 +11,7 @@ const router           = express.Router();
 const gamecache        = require('../lib/gameCache');
 const _                = require('lodash');
 const pricelist        = require('../../common/lib/pricelist');
-const authTokenManager = require('../lib/authTokenManager');
+const authTokenManager = require('../../common/lib/authTokenManager');
 const settings         = require('../settings');
 
 
@@ -34,9 +34,6 @@ router.get('/:gameId', function (req, res) {
         return res.status(500).send({message: 'Spiel nicht gefunden!'});
       }
 
-      // A future feature to disable token generation...
-      let generateToken = true;
-
       // The team is only returned if the requesting user is a player
       let team = _.find(_.values(teams), function (t) {
         if (t.data.teamLeader.email === req.session.passport.user) {
@@ -54,8 +51,7 @@ router.get('/:gameId', function (req, res) {
 
         authTokenManager.getNewToken({
             user         : req.session.passport.user,
-            proposedToken: req.session.authToken,
-            generateToken
+            proposedToken: req.session.authToken
           }, function (err, token) {
             if (err) {
               return res.status(500).send({message: 'Interner Fehler beim Erstellen des Tokens.'});

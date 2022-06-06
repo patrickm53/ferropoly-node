@@ -3,30 +3,27 @@
  * Created by kc on 29.01.15.
  */
 
-const express    = require('express');
-const router     = express.Router();
-const logger     = require('../lib/logger').getLogger('authToken');
-const {v4: uuid} = require('uuid');
+const express          = require('express');
+const router           = express.Router();
+const logger           = require('../lib/logger').getLogger('authToken');
+const authTokenManager = require('../lib/authTokenManager');
 
 /* GET the authtoken, which you only can get when logged in */
 router.get('/', function (req, res) {
-  if (req.session.authToken) {
-    logger.info(`Auth token REFRESH for ${req.session.passport.user}: ${req.session.authToken}`);
-  } else {
-    if (req.session.passport.user.endsWith('ferropoly.ch')) {
-      req.session.authToken = 'demo-user-static-auth-token';
-    } else {
-      req.session.authToken = uuid();
-    }
-    logger.info(`NEW auth token for ${req.session.passport.user}: ${req.session.authToken}`);
-  }
-
-  req.session.save(err => {
+  authTokenManager.getNewToken({proposedToken: req.session.authToken}, (err, token) => {
     if (err) {
       logger.error(err);
+      return res.status(500).send({authToken: 'none', message: 'Error while creating AuthToken'});
     }
-    res.send({authToken: req.session.authToken, user: req.session.passport.user});
-  });
+    logger.info(`NEW auth token for ${req.session.passport.user}: ${req.session.authToken}`);
+    req.session.save(err => {
+      if (err) {
+        logger.error(err);
+      }
+      req.session.authToken = token;
+      res.send({authToken: req.session.authToken, user: req.session.passport.user});
+    });
+  })
 });
 
 
