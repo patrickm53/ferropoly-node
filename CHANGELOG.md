@@ -3,6 +3,7 @@
 * Microsoft login Bugfix
 * Verbesserungen Login/Security (AuthToken)
 * Bugfix Reception: Parkplatzgewinn wurde nicht richtig angezeigt (#15)
+* Summary: schönere Karte (wie Reception, #18)
 
 ## v3.1.1 6.6.22
 * Bugfix: Logout in Passport benötigt neu Callback
