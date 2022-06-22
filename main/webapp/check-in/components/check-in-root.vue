@@ -72,7 +72,7 @@ export default {
       helpUrls: {
         'panel-overview'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/overview',
         'panel-map'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/map',
-        'panel-statistic' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/statistic',
+        'panel-property' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/property',
         'panel-accounting': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/accounting',
         'panel-pricelist' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/pricelist',
         'panel-rules'     : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/rules'
