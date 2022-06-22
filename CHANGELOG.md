@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+## v3.1.2 22.6.22
 * Microsoft login Bugfix
 * Verbesserungen Login/Security (AuthToken)
 * Bugfix Reception: Parkplatzgewinn wurde nicht richtig angezeigt (#15)
