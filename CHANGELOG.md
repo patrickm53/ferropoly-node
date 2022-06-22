@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Dependency updates
+
 ## v3.1.2 22.6.22
 * Microsoft login Bugfix
 * Verbesserungen Login/Security (AuthToken)
