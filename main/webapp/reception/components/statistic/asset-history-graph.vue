@@ -37,6 +37,7 @@ export default {
       this.teams.forEach(t => {
         let se  = {
           name: t.data.name,
+          color: t.color,
           data: []
         }
         let tac = this.$store.getters.teamAccountData(t.uuid);

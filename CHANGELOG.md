@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+* Bugfix: Farben in Vermögensverlauf entsprechen Team-Farben
 * Dependency updates
 
 ## v3.1.2 22.6.22
