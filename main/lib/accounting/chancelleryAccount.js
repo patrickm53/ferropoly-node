@@ -152,7 +152,9 @@ function playChancellery(gameplay, team, callback) {
               teamId: team.uuid
             }
           },
-          callback);
+          function (err) {
+            return callback(err, retVal);
+          });
       });
     });
   } else {
