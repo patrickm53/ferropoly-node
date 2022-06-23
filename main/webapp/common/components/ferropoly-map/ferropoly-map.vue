@@ -28,6 +28,7 @@ const mapOptionsDefaults = {
     lng: 7.90781
   },
   zoom             : 8,
+  maxZoom          : 18,
   streetViewControl: false,
   fullscreenControl: false,
   restriction      : {
@@ -56,8 +57,8 @@ export default {
      * How many pixels shall be the map smaller than filling the screen to bottom???
      */
     ySizeReduction: {
-      type: String,
-      default: function() {
+      type   : String,
+      default: function () {
         return '0';
       }
     }
@@ -93,7 +94,7 @@ export default {
       }
       console.log('mapOptions', mapOptions);
 
-      self.map     = new google.maps.Map(document.getElementById('map'), mapOptions);
+      self.map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
       // Saving map-types to the local storage
       self.map.addListener('maptypeid_changed', () => {
@@ -113,7 +114,7 @@ export default {
       });
 
       self.map.mapTypes.set('swisstopo', swissMap);
-      self.map.setMapTypeId(getItem('ferropoly-map','roadmap'));
+      self.map.setMapTypeId(getItem('ferropoly-map', 'roadmap'));
       self.resizeHandler();
 
       self.map.addListener('center_changed', () => {
