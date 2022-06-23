@@ -4,6 +4,7 @@
 * Bugfix: Bei unbekannter Position in Checkin wird Zentrum der Spielkarte ausgewählt
 * Bugfix: GPS Range Kreis in Checkin wird nachgeführt #16
 * Bugfix: Farben in Vermögensverlauf entsprechen Team-Farben #19
+* Bugfix: GPS Daten wurden nur einmal beim Start des Check-in übertragen #17
 * Dependency updates
 
 ## v3.1.2 22.6.22

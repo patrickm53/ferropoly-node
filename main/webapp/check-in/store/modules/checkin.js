@@ -6,8 +6,6 @@
 
 
 import {createHelpers} from 'vuex-map-fields';
-import {DateTime} from 'luxon';
-import {setString, getItem} from '../../../common/lib/localStorage';
 
 const {getCheckInField, updateCheckInField} = createHelpers({
   getterType  : 'getCheckInField',
@@ -37,26 +35,14 @@ const CheckIn = {
     propertyValue   : 0,
     gps             : {
       usageAllowed: false,
-      active      : true,
-      nextUpdate  : DateTime.fromISO(getItem('nextGpsUpdate', '2020-02-20T02:20:22'))
+      active      : true
     }
   }),
   getters  : {
-    getCheckInField,
-    gpsUpdateNeeded(state) {
-      return state.gps.nextUpdate < DateTime.now();
-    }
+    getCheckInField
   },
   mutations: {
     updateCheckInField,
-    /**
-     * Sets the timestamp for the next update
-     * @param state
-     */
-    setNextUpdate(state) {
-      state.gps.nextUpdate = DateTime.now().plus({minutes: 5});
-      setString('nextGpsUpdate', state.gps.nextUpdate);
-    },
     setPanel(state, panel) {
       state.menuElements.forEach(e => {
         e.active = (e.eventParam === panel);

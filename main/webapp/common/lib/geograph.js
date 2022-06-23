@@ -103,7 +103,7 @@ class Geograph extends EventEmitter {
     let self = this;
     setInterval(() => {
       self.localize();
-    }, 15000);
+    }, 10000);
   }
 
 }

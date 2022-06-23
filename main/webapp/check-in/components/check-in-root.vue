@@ -44,7 +44,7 @@ import PricelistRoot from './pricelist/pricelist-root.vue';
 import PropertyRoot from './property/property-root.vue';
 import RulesRoot from './rules/rules-root.vue';
 import AccountingRoot from './accounting/accounting-root.vue';
-import {getItem, setBoolean} from '../../common/lib/localStorage';
+import {getItem, setBoolean, setString} from '../../common/lib/localStorage';
 import {mapFields} from 'vuex-map-fields';
 import geograph from '../../common/lib/geograph';
 import {DateTime} from 'luxon';
@@ -69,14 +69,15 @@ export default {
   props     : {},
   data      : function () {
     return {
-      helpUrls: {
+      helpUrls     : {
         'panel-overview'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/overview',
         'panel-map'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/map',
-        'panel-property' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/property',
+        'panel-property'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/property',
         'panel-accounting': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/accounting',
         'panel-pricelist' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/pricelist',
         'panel-rules'     : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/checkin/rules'
-      }
+      },
+      nextGpsUpdate: DateTime.fromISO(getItem('nextGpsUpdate', '2020-02-20T02:20:22'))
     };
   },
   computed  : {
@@ -167,13 +168,32 @@ export default {
       console.warn('Usage of GPS was denied, that\'s not what we call fairplay!');
     },
     /**
+     * Returns true, when it's time to send new GPS coordinates to the system
+     * @returns {boolean}
+     */
+    gpsUpdateNeeded() {
+      let now = DateTime.now();
+      // console.log('GPS Update needed', this.nextGpsUpdate.toISO(), now.toISO());
+      return this.nextGpsUpdate < now;
+    },
+    /**
+     * Sets the timestamp for the next update
+     * @param state
+     */
+    setNextUpdate(state) {
+      this.nextGpsUpdate = DateTime.now().plus({minutes: 5});
+      setString('nextGpsUpdate', this.nextGpsUpdate);
+    },
+    /**
      * Activates GPS and cyclic scans
      */
     activateGps() {
       let self = this;
       console.log('Activating GPS', geograph.getLastLocation());
       geograph.on('player-position-update', (pos) => {
-        if (self.$parent.fsocket && this.$store.getters['gameIsActive'] && this.$store.getters.gpsUpdateNeeded) {
+        //console.log('GPS on player-position-update', self.$parent.fsocket, this.$store.getters['gameIsActive'], this.gpsUpdateNeeded());
+
+        if (self.$parent.fsocket && this.$store.getters['gameIsActive'] && this.gpsUpdateNeeded()) {
           // An entry sent to the system is returned with the systems timestamp. Therefore, do not add
           // to the store
           console.log('Sending GPS info to system', pos);
@@ -182,7 +202,7 @@ export default {
             position : pos,
             timestamp: DateTime.now()
           });
-          self.$store.commit('setNextUpdate');
+          this.setNextUpdate();
         } else {
           // This is temporary, for this session: adding the current location to the store
           this.$store.dispatch({
