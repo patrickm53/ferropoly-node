@@ -1,6 +1,6 @@
 # Changelog Ferropoly Spiel
 
-
+## v3.1.3 23.6.22
 * Bugfix: Bei unbekannter Position in Checkin wird Zentrum der Spielkarte ausgewählt
 * Bugfix: GPS Range Kreis in Checkin wird nachgeführt #16
 * Bugfix: Farben in Vermögensverlauf entsprechen Team-Farben #19
