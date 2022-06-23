@@ -50,6 +50,7 @@ class TeamTrack {
     if (this.map) {
       this.updateMarker();
       this.updatePolyline();
+      this.drawAccuracyCircle();
     }
   }
 
@@ -68,6 +69,7 @@ class TeamTrack {
     this.track = [];
     this.updateMarker();
     this.updatePolyline();
+    this.drawAccuracyCircle();
   }
 
   /**

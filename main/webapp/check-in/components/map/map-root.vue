@@ -35,7 +35,8 @@ export default {
       teamId          : 'checkin.team.uuid',
       travelLog       : 'travelLog.log',
       propertyRegister: 'propertyRegister.register',
-      gameId          : 'gameId'
+      gameId          : 'gameId',
+      bounds          : 'map.bounds'
     }),
   },
   created   : function () {
@@ -54,11 +55,22 @@ export default {
       travelLog.setTrackColor('red');
       // If we were here before, use the same settings as before
       if (zoom < 0) {
-        this.$refs.map.fitBounds(travelLog.getBounds());
+        this.$refs.map.fitBounds(this.bounds);
       } else {
         this.$refs.map.setZoom(zoom);
       }
 
+      let latestLocation = travelLog.getLatestLocation();
+      console.log('latestLocation', latestLocation);
+      let center = this.$store.getters.getMapCenter;
+      console.log('default center', center);
+      if (latestLocation) {
+        let latestPosition = latestLocation.getPosition();
+        if (latestPosition.lng) {
+          center = latestPosition;
+        }
+      }
+      console.log('final center', center);
       this.$refs.map.setCenter(travelLog.getLatestLocation().getPosition());
       // mhm, this leaves me back with a bad feeling... why do I need to
       // set the bounds delayed...?
