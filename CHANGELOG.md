@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## v3.1.4 24.6.22
+* Bugfix: GPS Daten werden erst übertragen, wenn der Socket offe ist #17
+
 ## v3.1.3 23.6.22
 * Bugfix: Bei unbekannter Position in Checkin wird Zentrum der Spielkarte ausgewählt
 * Bugfix: GPS Range Kreis in Checkin wird nachgeführt #16
