@@ -197,11 +197,14 @@ export default {
           // An entry sent to the system is returned with the systems timestamp. Therefore, do not add
           // to the store
           console.log('Sending GPS info to system', pos);
-          self.$parent.fsocket.emitToGame('player-position', {
+          if (!self.$parent.fsocket.emitToGame('player-position', {
             cmd      : 'positionUpdate',
             position : pos,
             timestamp: DateTime.now()
-          });
+          })) {
+            console.log('GPS sending over socket failed, retry later');
+            return;
+          }
           this.setNextUpdate();
         } else {
           // This is temporary, for this session: adding the current location to the store

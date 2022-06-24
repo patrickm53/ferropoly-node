@@ -16,6 +16,8 @@ class FerropolySocket extends EventEmitter {
     this.store      = options.store;
     this.options    = options;
     this.logEnabled = true;
+    this.connected  = false;
+
     console.log('Socket created');
 
     this.handlers = this.getHandlers();
@@ -23,10 +25,12 @@ class FerropolySocket extends EventEmitter {
     this.socket.on('connect', () => {
       console.log('socket.io connect');
       self.store.commit('connected');
+      self.connected = true;
     })
     this.socket.on('disconnect', () => {
       console.log('socket.io disconnect');
       self.store.commit('disconnected');
+      self.connected = false;
     })
 
     // Handler for all events
@@ -146,8 +150,13 @@ class FerropolySocket extends EventEmitter {
 
   emitToGame(channel, payload) {
     let self = this;
-    this.logSocketEvent(`Sending on channel ${channel}`, payload);
+    if (!self.connected) {
+      console.log('socket is disconnected', channel, payload);
+      return false;
+    }
+    this.logSocketEvent(channel, payload);
     self.socket.emit(channel, payload);
+    return true;
   }
 }
 
