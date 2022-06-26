@@ -61,10 +61,12 @@ $(document).ready(function () {
         // Set the static data
         this.$store.dispatch({type: 'fetchStaticData', err, data});
         this.$store.dispatch({type:'updateProperties'});
+        let authToken = get(data, 'authToken', 'none');
+        console.log(`Static data says we have authToken ${authToken}`)
         // Connect to Ferropoly Instance
         this.fsocket = new FerropolySocket({
           url      : get(data, 'socketUrl', '/'),
-          authToken: get(data, 'authToken', 'none'),
+          authToken: authToken,
           user     : get(data, 'user', 'none'),
           gameId   : gameId,
           store    : this.$store

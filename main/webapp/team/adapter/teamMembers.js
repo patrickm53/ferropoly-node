@@ -5,7 +5,7 @@
  **/
 
 import axios from 'axios';
-import {getAuthToken} from '../../common/adapter/authToken';
+import {getAuthToken} from '../../common/adapters/authToken';
 import {get} from 'lodash';
 
 function getTeamMembers(gameId, teamId, callback) {

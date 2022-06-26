@@ -12,6 +12,7 @@ const gamecache        = require('../lib/gameCache');
 const _                = require('lodash');
 const pricelist        = require('../../common/lib/pricelist');
 const authTokenManager = require('../../common/lib/authTokenManager');
+const logger           = require('../../common/lib/logger').getLogger('static');
 const settings         = require('../settings');
 
 
@@ -57,16 +58,21 @@ router.get('/:gameId', function (req, res) {
               return res.status(500).send({message: 'Interner Fehler beim Erstellen des Tokens.'});
             }
             req.session.authToken = token;
-            res.send({
-              authToken    : token,
-              socketUrl    : '/',
-              gameplay     : gp,
-              pricelist    : pl,
-              team         : team,
-              teams        : _.values(teams),
-              currentGameId: gameId,
-              mapApiKey    : settings.maps.apiKey,
-              user         : req.session.passport.user
+            req.session.save(err => {
+              if (err) {
+                logger.error(err);
+              }
+              res.send({
+                authToken    : token,
+                socketUrl    : '/',
+                gameplay     : gp,
+                pricelist    : pl,
+                team         : team,
+                teams        : _.values(teams),
+                currentGameId: gameId,
+                mapApiKey    : settings.maps.apiKey,
+                user         : req.session.passport.user
+              });
             });
           }
         );

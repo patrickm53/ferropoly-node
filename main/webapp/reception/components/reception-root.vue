@@ -42,7 +42,7 @@ import CallRoot from './call/call-root.vue';
 import MapRoot from '../../lib/components/travel-map/map-root.vue';
 import StatisticRoot from './statistic/statistic-root.vue';
 
-import {getAuthToken} from '../../common/adapter/authToken';
+import {getAuthToken, verifyAuthToken} from '../../common/adapters/authToken';
 
 export default {
   name      : 'ReceptionRoot',
@@ -109,11 +109,28 @@ export default {
   created   : function () {
     getAuthToken((err, token) => {
       if (err) {
-        console.error('Auth Token error', err);
+        console.error('authToken error update 1', err);
         return;
       }
-      console.log('AuthToken retrieved', token);
+      console.log(`authToken update from ${this.authToken} to ${token}`);
       this.authToken = token;
+
+      // Verify it! See issue #20, some times this did not work
+      verifyAuthToken(this.authToken, err => {
+        if (err) {
+          console.warn('authToken Error, this should not happen', this.authToken);
+          getAuthToken((err, token) => {
+            if (err) {
+              console.error('authToken error update 2', err);
+              return;
+            }
+            console.log(`authToken update 2 from ${this.authToken} to ${token}`);
+            this.authToken = token;
+          })
+        } else {
+          console.log('authToken verification is OK');
+        }
+      });
     })
   },
   methods   : {

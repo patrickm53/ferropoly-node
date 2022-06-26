@@ -9,7 +9,7 @@ import {getField, updateField} from 'vuex-map-fields';
 import $ from 'jquery';
 import {checkNames, checkPhone} from '../../common/lib/playerValidator';
 import {assign, get} from 'lodash';
-import {getAuthToken} from '../../common/adapter/authToken';
+import {getAuthToken} from '../../common/adapters/authToken';
 import axios from 'axios';
 import {DateTime} from 'luxon';
 

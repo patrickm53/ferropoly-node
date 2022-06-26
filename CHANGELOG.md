@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Bugfix: Problem mit Authentisierung (Auth-Token) behoben bzw. zusätzlich abgesichert #20
+
 ## v3.1.4 24.6.22
 * Bugfix: GPS Daten werden erst übertragen, wenn der Socket offe ist #17
 
