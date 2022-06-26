@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+# v3.1.5 26.6.22
 * Bugfix: Problem mit Authentisierung (Auth-Token) behoben bzw. zusätzlich abgesichert #20
 
 ## v3.1.4 24.6.22
