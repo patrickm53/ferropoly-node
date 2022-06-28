@@ -5,7 +5,7 @@
 -->
 <template lang="pug">
   div
-    ferro-card(title="Spielinfo")
+    ferro-card(title="Spiel-Log")
       b-table(
         borderless
         hover
