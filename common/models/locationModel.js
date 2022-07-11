@@ -21,13 +21,15 @@ const locationSchema = mongoose.Schema({
   position     : {lat: String, lng: String},   // position of the location
   accessibility: String,                       // How do we access it?
   maps         : {
-    zvv    : Boolean,
-    sbb    : Boolean,
-    ostwind: {type: Boolean, default: false},
-    libero : {type: Boolean, default: false},
-    tva    : {type: Boolean, default: false},
-    tvlu   : {type: Boolean, default: false},
-    tnw    : {type: Boolean, default: false}
+    zvv      : {type: Boolean, default: false},
+    zvv110   : {type: Boolean, default: false},
+    sbb      : {type: Boolean, default: false},
+    ostwind  : {type: Boolean, default: false},
+    libero   : {type: Boolean, default: false},
+    libero100: {type: Boolean, default: false},
+    tva      : {type: Boolean, default: false},
+    tvlu     : {type: Boolean, default: false},
+    tnw      : {type: Boolean, default: false}
   }
 }, {autoIndex: true});
 
@@ -37,10 +39,10 @@ const locationSchema = mongoose.Schema({
 const Location = mongoose.model('Location', locationSchema);
 
 /**
- * Returns all locations in ferropoly style
+ * Returns all locations in ferropoly style, LEAN
  * @param callback
  */
-function getAllLocations(callback) {
+function getAllLocationsLean(callback) {
   Location.find({}).lean().exec(function (err, docs) {
     if (err) {
       logger.error('Location.find failed: ', err);
@@ -51,6 +53,20 @@ function getAllLocations(callback) {
       locations.push(convertModelDataToObject(docs[i]));
     }
     return callback(null, locations);
+  });
+}
+
+/**
+ * Returns all locations in ferropoly style, COMPLETE OBJECTS
+ * @param callback
+ */
+function getAllLocations(callback) {
+  Location.find({}).exec(function (err, docs) {
+    if (err) {
+      logger.error('Location.find failed: ', err);
+      return callback(err);
+    }
+    return callback(null, docs);
   });
 }
 
@@ -110,8 +126,7 @@ function countLocations(callback) {
   Location.countDocuments({}, function (err, nb) {
     if (err) {
       retVal.all = 0;
-    }
-    else {
+    } else {
       retVal.all = nb;
     }
 
@@ -168,9 +183,14 @@ module.exports = {
   Model: Location,
 
   /**
-   * Get all locations
+   * Get all locations in a lean style (not as model objects, just the data)
    */
-  getAllLocations: getAllLocations,
+  getAllLocations: getAllLocationsLean,
+
+  /**
+   * Get all locations as Model objects, ready to be saved
+   */
+  getAllLocationsAsModel: getAllLocations,
 
   /**
    * Gets all locations for a map
@@ -179,7 +199,7 @@ module.exports = {
   /**
    * Get one single location by its UUID (or null, if it does not exist)
    */
-  getLocationByUuid    : getLocationByUuid,
+  getLocationByUuid: getLocationByUuid,
 
   /**
    * Save the location

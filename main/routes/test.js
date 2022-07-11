@@ -1,16 +1,15 @@
 /**
- * A temporary test route
- *
- * Created by kc on 10.05.15.
+ * This is the route for component and other tests
+ * Created by kc on 30.4.2021
  */
-
-
-var express = require('express');
-var router = express.Router();
-
-/* GET home page. */
+const express = require('express');
+const router  = express.Router();
+const path    = require('path');
+/**
+ * Send Component Test Homepage
+ */
 router.get('/', function (req, res) {
-  res.render('test', {title: 'Ferropoly', ngController: 'indexCtrl', ngApp: 'indexApp', ngFile: 'r'});
+  res.sendFile(path.join(__dirname, '..', 'public', 'html', 'test.html'));
 });
 
 module.exports = router;

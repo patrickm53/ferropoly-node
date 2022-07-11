@@ -3,40 +3,35 @@
  * Created by kc on 07.04.16.
  */
 
-
 const express = require('express');
 const router  = express.Router();
 
-const settings     = require('../settings');
 const errorHandler = require('../lib/errorHandler');
 const teams        = require('../../common/models/teamModel');
 const users        = require('../../common/models/userModel');
 const _            = require('lodash');
 const accessor     = require('../lib/accessor');
 const async        = require('async');
-let ngFile         = '/js/teamctrl.js';
-if (settings.minifiedjs) {
-  ngFile = '/js/min/teamctrl.min.js';
-}
+const gameCache    = require('../lib/gameCache');
+const path         = require('path');
 
-/* GET the page where the team leader can add / remove other team members. Make sure
- * that the user logged in is really the team leader
+
+/**
+ * Send HTML Page
  */
-router.get('/edit/:gameId/:teamId', (req, res) => {
+router.get('/edit/:gameId/:teamId', function (req, res) {
   teams.getTeam(req.params.gameId, req.params.teamId, (err, team) => {
     if (err) {
       return errorHandler(res, 'Interner Fehler beim Laden des Users.', err, 500);
     }
     if (_.get(team, 'data.teamLeader.email', 'x') !== req.session.passport.user) {
-      return errorHandler(res, 'Nicht berechtigt.', new Error('Not authorized or not found'), 404);
+      return errorHandler(res, 'Nicht berechtigt.', new Error('Not authorized or not found'), 403);
     }
-    res.render('team', {
-      title       : 'Teamverwaltung',
-      ngController: 'teamCtrl',
-      ngApp       : 'teamApp',
-      gameId      : req.params.gameId,
-      teamId      : req.params.teamId,
-      ngFile      : ngFile
+    gameCache.getGameData(req.params.gameId, (err, gameData) => {
+      if (err || !gameData) {
+        return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
+      }
+      res.sendFile(path.join(__dirname, '..', 'public', 'html', 'team.html'));
     });
   });
 });
@@ -48,10 +43,13 @@ router.get('/edit/:gameId/:teamId', (req, res) => {
  * @param callback
  */
 function getFullMemberList(gameId, teamId, callback) {
-  var retVal = [];
+  let retVal = [];
 
   teams.getTeam(gameId, teamId, (err, team) => {
-    var members = _.get(team, 'data.members', []);
+    if (err) {
+      return callback(err);
+    }
+    let members = _.get(team, 'data.members', []);
 
     async.each(members,
       function (member, cb) {
@@ -61,8 +59,7 @@ function getFullMemberList(gameId, teamId, callback) {
           }
           if (user) {
             retVal.push({login: member, personalData: user.personalData});
-          }
-          else {
+          } else {
             retVal.push({login: member});
           }
           cb(null);
@@ -71,7 +68,7 @@ function getFullMemberList(gameId, teamId, callback) {
       function (err) {
         callback(err, retVal);
       }
-    )
+    );
   });
 }
 
@@ -112,7 +109,13 @@ router.post('/members/:gameId/:teamId', (req, res) => {
         return errorHandler(res, 'Internes Problem .', err, 500);
       }
       team.data.members = team.data.members || [];
-      team.data.members.push(req.body.newMemberLogin);
+
+      // Add only if not already in team
+      if (!_.find(team.data.members, m => {
+        return (m === req.body.newMemberLogin) ;
+      })) {
+        team.data.members.push(req.body.newMemberLogin);
+      }
 
       teams.updateTeam(team, (err) => {
         if (err) {
@@ -135,10 +138,10 @@ router.post('/members/:gameId/:teamId', (req, res) => {
  */
 router.delete('/members/:gameId/:teamId', (req, res) => {
   if (!req.body.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (1)'});
+    return res.status(401).send({status: 'error', message: 'Permission denied (1)'});
   }
   if (req.body.authToken !== req.session.authToken) {
-    return res.send({status: 'error', message: 'Permission denied (2)'});
+    return res.status(401).send({status: 'error', message: 'Permission denied (2)'});
   }
 
   teams.getTeam(req.params.gameId, req.params.teamId, (err, team) => {
@@ -146,7 +149,9 @@ router.delete('/members/:gameId/:teamId', (req, res) => {
       return errorHandler(res, 'Internes Problem .', err, 500);
     }
     team.data.members = team.data.members || [];
-    _.remove(team.data.members, (m) => { return m === req.body.memberToDelete; });
+    _.remove(team.data.members, (m) => {
+      return m === req.body.memberToDelete;
+    });
 
     teams.updateTeam(team, (err) => {
       if (err) {

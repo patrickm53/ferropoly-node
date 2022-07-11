@@ -4,9 +4,8 @@
  * Created by kc on 01.05.15.
  */
 
-var gameplayModel = require('../models/gameplayModel');
-var eventModel = require('../models/schedulerEventModel');
-var moment = require('moment');
+const eventModel = require('../models/schedulerEventModel');
+const moment = require('moment');
 
 /**
  * Create all events for a gameplay (during finalization) and insert them in the DB
@@ -14,25 +13,25 @@ var moment = require('moment');
  * @param callback
  */
 function createEvents(gameplay, callback) {
-  var events = [];
+  let events = [];
 
   // Pre-Start
-  var prestart = eventModel.createEvent(gameplay.internal.gameId,
+  let prestart = eventModel.createEvent(gameplay.internal.gameId,
     moment(gameplay.scheduling.gameStartTs).subtract({minutes: 5}).toDate(),
     'prestart');
   events.push(prestart);
 
   // Start
-  var start = eventModel.createEvent(gameplay.internal.gameId,
+  let start = eventModel.createEvent(gameplay.internal.gameId,
     gameplay.scheduling.gameStartTs,
     'start'
   );
   events.push(start);
 
   // Interests
-  var m = moment(gameplay.scheduling.gameStartTs);
+  let m = moment(gameplay.scheduling.gameStartTs);
   while (m < gameplay.scheduling.gameEndTs) {
-    var interest = eventModel.createEvent(gameplay.internal.gameId,
+    let interest = eventModel.createEvent(gameplay.internal.gameId,
       new Date(m.toDate()),
       'interest');
     events.push(interest);
@@ -41,11 +40,18 @@ function createEvents(gameplay, callback) {
   }
 
   // End
-  var end = eventModel.createEvent(gameplay.internal.gameId,
+  let end = eventModel.createEvent(gameplay.internal.gameId,
     gameplay.scheduling.gameEndTs,
     'end'
   );
   events.push(end);
+
+  // Summary available
+  let summary = eventModel.createEvent(gameplay.internal.gameId,
+    moment(gameplay.scheduling.gameStartTs).endOf('day').toDate(),
+    'summary'
+  );
+  events.push(summary);
 
   eventModel.saveEvents(events, function (err) {
     callback(err);

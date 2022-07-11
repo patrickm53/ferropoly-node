@@ -158,7 +158,7 @@ function resetProperty(gameId, property, reason, callback) {
         return callback(err);
       }
 
-      var pt         = new propertyTransaction.Model();
+      let pt         = new propertyTransaction.Model();
       pt.gameId      = gameId;
       pt.propertyId  = property.uuid;
       pt.transaction = {
@@ -204,7 +204,7 @@ function buyBuilding(gameplay, property, team, callback) {
     if (err) {
       return callback(err);
     }
-    var retVal = {
+    let retVal = {
       amount      : Math.abs(getBuildingPrice(property)) * (-1),
       buildingNb  : property.gamedata.buildings,
       property    : property.uuid,
@@ -212,7 +212,7 @@ function buyBuilding(gameplay, property, team, callback) {
     };
 
     // Save a property transaction
-    var pt         = new propertyTransaction.Model();
+    let pt         = new propertyTransaction.Model();
     pt.gameId      = gameplay.internal.gameId;
     pt.propertyId  = property.uuid;
     pt.transaction = {
@@ -260,8 +260,8 @@ function payInterest(gameplay, register, callback) {
 
   async.each(register,
     function (prop, cb) {
-      logger.info('Book propertyAccount transaction for property', prop);
-      var pt         = new propertyTransaction.Model();
+      logger.debug('Book propertyAccount transaction for property', prop);
+      let pt         = new propertyTransaction.Model();
       pt.gameId      = gameplay.internal.gameId;
       pt.propertyId  = prop.uuid;
       pt.transaction = {
@@ -291,7 +291,7 @@ function getRentRegister(gameplay, team, callback) {
       return callback(err);
     }
 
-    var info = {
+    let info = {
       register   : [],
       totalAmount: 0,
       teamId     : team.uuid
@@ -328,9 +328,9 @@ function getRentRegister(gameplay, team, callback) {
  * @param p3
  */
 function getAccountStatement(gameId, propertyId, p1, p2, p3) {
-  var tsStart  = p1;
-  var tsEnd    = p2;
-  var callback = p3;
+  let tsStart  = p1;
+  let tsEnd    = p2;
+  let callback = p3;
   if (_.isFunction(p1)) {
     callback = p1;
     tsStart  = undefined;
@@ -358,8 +358,8 @@ function getAccountStatement(gameId, propertyId, p1, p2, p3) {
  * @param p2 callback
  */
 function getBalance(gameId, propertyId, p1, p2) {
-  var callback = p2;
-  var ts       = p1;
+  let callback = p2;
+  let ts       = p1;
   if (_.isFunction(p1)) {
     callback = p1;
     ts       = moment();
@@ -369,8 +369,8 @@ function getBalance(gameId, propertyId, p1, p2) {
     if (err) {
       return callback(err);
     }
-    var saldo = 0;
-    var i;
+    let saldo = 0;
+    let i;
     for (i = 0; i < data.length; i++) {
       saldo += data[i].transaction.amount;
     }
@@ -380,7 +380,9 @@ function getBalance(gameId, propertyId, p1, p2) {
 
 /**
  * Returns the value of the property for rent and interest
+ * @param gameplay
  * @param property
+ * @param callback
  * @returns {*}
  */
 function getPropertyValue(gameplay, property, callback) {
@@ -388,19 +390,19 @@ function getPropertyValue(gameplay, property, callback) {
     if (err) {
       return callback(err);
     }
-    var sameGroup = 0;
-    for (var i = 0; i < properties.length; i++) {
+    let sameGroup = 0;
+    for (let i = 0; i < properties.length; i++) {
       if (properties[i].gamedata.owner === property.gamedata.owner) {
         sameGroup++;
       }
     }
 
-    var retVal = {
+    let retVal = {
       propertyName: property.location.name,
       property    : property.uuid
     };
 
-    var factor = 1;
+    let factor = 1;
     if ((properties.length > 1) && (sameGroup === properties.length)) {
       // all properties in a group belong the same team, pay more!
       logger.info('Properties in same group, paying more!');
@@ -408,8 +410,8 @@ function getPropertyValue(gameplay, property, callback) {
       retVal.allPropertiesOfGroup = true;
     }
 
-    var rent       = 0;
-    var buildingNb = property.gamedata.buildings || 0;
+    let rent       = 0;
+    let buildingNb = property.gamedata.buildings || 0;
 
     switch (buildingNb) {
       case 0:
@@ -443,7 +445,7 @@ function getPropertyValue(gameplay, property, callback) {
 /**
  * Get the price for a building
  * @param property
- * @returns {propertySchema.pricelist.pricePerHouse|*}
+ * @returns {*}
  */
 function getBuildingPrice(property) {
   return property.pricelist.pricePerHouse;
@@ -463,13 +465,13 @@ function getPropertyProfitability(gameId, propertyId, callback) {
  * Handles the commands received over the ferroSocket
  * @param req
  */
-var socketCommandHandler = function (req) {
+let socketCommandHandler = function (req) {
   logger.info('propertyAccount socket handler: ' + req.cmd);
   switch (req.cmd.name) {
     case 'getAccountStatement':
       logger.error(new Error('OBSOLETE, replace socket.io getAccountStatement by GET request'));
       getAccountStatement(req.gameId, req.propertyId, req.start, req.end, function (err, data) {
-        var resp = {
+        let resp = {
           err : err,
           cmd : 'accountStatement',
           data: data

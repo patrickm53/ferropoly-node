@@ -4,9 +4,10 @@
  * Created by kc on 22.03.15.
  */
 
-const mongoose = require('mongoose');
-const uuid     = require('uuid/v4');
-const logger   = require('../lib/logger').getLogger('teamModel');
+const mongoose   = require('mongoose');
+const logger     = require('../lib/logger').getLogger('teamModel');
+const {v4: uuid} = require('uuid');
+const userModel  = require('./userModel');
 
 /**
  * The mongoose schema for a property
@@ -16,14 +17,15 @@ let teamSchema = mongoose.Schema({
   gameId: String, // Gameplay this team plays with
   uuid  : {type: String, index: {unique: true}},     // UUID of this team (index)
   data  : {
-    name              : String, // Name of the team
-    organization      : String, // Organization the team belongs to
+    name              : {type: String, default: ''}, // Name of the team
+    organization      : {type: String, default: ''}, // Organization the team belongs to
     teamLeader        : {
-      name : String,
-      email: String,
-      phone: String
+      name    : {type: String, default: ''},
+      email   : {type: String, default: ''},
+      phone   : {type: String, default: ''},
+      hasLogin: {type: Boolean, default: false} // Info whether the team leader has a login or not
     },
-    remarks           : String,
+    remarks           : {type: String, default: ''},
     confirmed         : {type: Boolean, default: true},
     onlineRegistration: {type: Boolean},
     registrationDate  : {type: Date, default: Date.now},
@@ -52,7 +54,7 @@ let createTeam = function (newTeam, gameId, callback) {
   team._id    = gameId + '-' + team.uuid;
   team.save(function (err, savedTeam) {
     callback(err, savedTeam);
-  })
+  });
 };
 
 /**
@@ -66,6 +68,7 @@ let updateTeam = function (team, callback) {
       return callback(err);
     }
     if (!docs || docs.length === 0) {
+      // Team not available yet, create it
       if (!team.gameId) {
         return callback(new Error('no game id'));
       }
@@ -75,19 +78,36 @@ let updateTeam = function (team, callback) {
         }
         return callback(null, newTeam);
       });
+    } else {
+      if (!team.data.teamLeader.hasLogin) {
+        // Check for Login
+        userModel.getUserByMailAddress(team.data.teamLeader.email, (err, user) => {
+          if (err) {
+            // Not critical!!! ES-Lint requires this if, nothing to do.
+          }
+          if (user) {
+            // When the teamleader has a login, set to true. This never becomes false as logins can not be deleted
+            team.data.teamLeader.hasLogin = true;
+          }
+          docs[0].data = team.data;
+          docs[0].save(function (err, team) {
+            callback(err, team);
+          });
+        });
+      } else {
+        // Team leader has a login, just save
+        docs[0].data = team.data;
+        docs[0].save(function (err, team) {
+          callback(err, team);
+        });
+      }
     }
-    else {
-      docs[0].data = team.data;
-      docs[0].save(function (err, team) {
-        callback(err, team);
-      });
-    }
-  })
+  });
 };
 
 /**
  * Delete a team
- * @param team
+ * @param teamId
  * @param callback
  */
 let deleteTeam = function (teamId, callback) {
@@ -100,8 +120,8 @@ let deleteTeam = function (teamId, callback) {
     }
     docs[0].delete(function (err) {
       return callback(err);
-    })
-  })
+    });
+  });
 };
 
 /**
@@ -167,7 +187,7 @@ function countTeams(gameId, callback) {
     return callback(new Error('No gameId supplied'));
   }
   Team.countDocuments({gameId: gameId}, callback);
-};
+}
 
 /**
  * Returns the teams as object, each team accessible using team[teamId]
@@ -214,6 +234,7 @@ function getMyTeams(email, callback) {
 
 /**
  * Returns my team for a gameplay where I am assigned as team leader
+ * @param gameId
  * @param email
  * @param callback
  */

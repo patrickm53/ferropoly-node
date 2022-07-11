@@ -9,16 +9,16 @@
  * 17.1.15 KC
  *
  */
-const mongoose = require('mongoose');
-const crypto   = require('crypto');
-const uuid     = require('uuid/v4');
-const pbkdf2   = require('pbkdf2-sha256');
-const logger   = require('../lib/logger').getLogger('userModel');
-const _        = require('lodash');
+const mongoose   = require('mongoose');
+const crypto     = require('crypto');
+const pbkdf2     = require('pbkdf2-sha256');
+const logger     = require('../lib/logger').getLogger('userModel');
+const _          = require('lodash');
+const {v4: uuid} = require('uuid');
 /**
  * The mongoose schema for an user
  */
-let userSchema = mongoose.Schema({
+let userSchema   = mongoose.Schema({
   _id         : {type: String},
   id          : String,
   personalData: {
@@ -33,14 +33,15 @@ let userSchema = mongoose.Schema({
     player: {type: Boolean, default: true}
   },
   login       : {
-    passwordSalt     : String,
-    passwordHash     : String,
-    verifiedEmail    : {type: Boolean, default: false},
-    verificationText : String,
-    facebookProfileId: String,
-    googleProfileId  : String,
-    dropboxProfileId : String,
-    twitterUserName  : String
+    passwordSalt      : String,
+    passwordHash      : String,
+    verifiedEmail     : {type: Boolean, default: false},
+    verificationText  : String,
+    facebookProfileId : String,
+    googleProfileId   : String,
+    dropboxProfileId  : String,
+    microsoftProfileId: String,
+    twitterUserName   : String
   },
   info        : {
     registrationDate: Date,
@@ -48,6 +49,7 @@ let userSchema = mongoose.Schema({
     facebook        : Object,
     google          : Object,
     dropbox         : Object,
+    microsoft       : Object,
     agbAccepted     : {type: Number, default: 0}
   }
 }, {autoIndex: true});
@@ -222,7 +224,7 @@ function getUser(id, callback) {
     }
     callback(null, docs[0]);
   });
-};
+}
 
 /**
  * Returns a user by its facebook profile
@@ -248,6 +250,23 @@ function getFacebookUser(profileId, callback) {
  */
 function getGoogleUser(profileId, callback) {
   User.find({'login.googleProfileId': profileId}, function (err, docs) {
+    if (err) {
+      return callback(err);
+    }
+    if (docs.length === 0) {
+      return callback();
+    }
+    callback(null, docs[0]);
+  });
+}
+
+/**
+ * Returns a user by its microsoft profile
+ * @param profileId
+ * @param callback
+ */
+function getMicrosoftUser(profileId, callback) {
+  User.find({'login.microsoftProfileId': profileId}, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -454,7 +473,26 @@ function findOrCreateGoogleUser(profile, callback) {
     }
     if (!user) {
       // The user is not here, try to find him with the email-address
-      let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
+      let emailAddress = '';
+      if (_.isArray(profile.emails)) {
+        emailAddress = profile.emails[0].value;
+      } else if (_.isString(profile.email)) {
+        emailAddress = profile.email;
+      } else {
+        emailAddress = 'error';
+        logger.error('unable to set google email address', profile);
+      }
+      // Avatar: different options
+      let avatar = '';
+      if (_.isArray(profile.photos)) {
+        avatar = profile.photos[0].value;
+      } else if (_.isString(profile.picture)) {
+        avatar = profile.picture;
+      } else {
+        avatar = undefined;
+        logger.info('unable to set google avatar', profile);
+      }
+      logger.info(`Google login with email Address ${emailAddress}`, profile);
 
       function saveNewGoogleUser() {
         let newUser                   = new User();
@@ -465,8 +503,8 @@ function findOrCreateGoogleUser(profile, callback) {
         newUser.login.verifiedEmail   = true; // Google does not need verification
         newUser.personalData.forename = profile.name.givenName;
         newUser.personalData.surname  = profile.name.familyName;
-        newUser.personalData.email    = emailAddress ? emailAddress : profile.id; // using google profile id as email alternative
-        newUser.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.personalData.email    = emailAddress;
+        newUser.personalData.avatar   = avatar;
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -490,7 +528,7 @@ function findOrCreateGoogleUser(profile, callback) {
             user.personalData.forename = profile.name.givenName;
             user.personalData.surname  = profile.name.familyName;
             user.login.googleProfileId = profile.id;
-            user.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.personalData.avatar   = avatar;
             user.save(function (err) {
               if (err) {
                 return callback(err);
@@ -513,6 +551,114 @@ function findOrCreateGoogleUser(profile, callback) {
 
     // User found, update
     user.info.google         = profile;
+    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+    updateUser(user, null, callback);
+  });
+}
+
+
+/**
+ * Find or create a user logging in with Microsoft
+ * @param profile
+ * @param callback
+ * @returns {*}
+ */
+function findOrCreateMicrosoftUser(profile, callback) {
+  logger.info('findOrCreateMicrosoftUser', profile);
+  if (!_.isObject(profile) || !_.isString(profile.id)) {
+    return callback(new Error('invalid profile supplied'));
+  }
+
+  if (profile.provider !== 'microsoft') {
+    logger.info('This is not a microsoft account: ' + profile.provider);
+    callback(new Error('not a microsoft account: ' + profile.provider));
+  }
+
+  // Try to get the user
+  getMicrosoftUser(profile.id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      // The user is not here, try to find him with the email-address
+      let emailAddress = '';
+      if (_.isArray(profile.emails)) {
+        emailAddress = profile.emails[0].value;
+      } else if (_.isString(profile.email)) {
+        emailAddress = profile.email;
+      } else {
+        emailAddress = 'error';
+        logger.error('unable to set microsoft email address', profile);
+      }
+      // Avatar: different options
+      let avatar = '';
+      if (_.isArray(profile.photos)) {
+        avatar = profile.photos[0].value;
+      } else if (_.isString(profile.picture)) {
+        avatar = profile.picture;
+      } else {
+        avatar = undefined;
+        logger.info('unable to set Microsoft avatar');
+      }
+      logger.info(`Microsoft login with email Address ${emailAddress}`, profile);
+
+      function saveNewMicrosoftUser() {
+        let newUser                      = new User();
+        newUser._id                      = emailAddress || profile.id;
+        newUser.login.microsoftProfileId = profile.id;
+        newUser.info.microsoft           = profile;
+        newUser.info.registrationDate    = new Date();
+        newUser.login.verifiedEmail      = true; // MS does not need verification
+        newUser.personalData.forename    = profile.name.givenName;
+        newUser.personalData.surname     = profile.name.familyName;
+        newUser.personalData.email       = emailAddress;
+        newUser.personalData.avatar      = avatar;
+        newUser.save(function (err, savedUser) {
+          if (err) {
+            return callback(err);
+          }
+          logger.info('Created microsoft user', savedUser);
+          // Recursive call, now we'll find this user
+          return findOrCreateMicrosoftUser(profile, callback);
+        });
+      }
+
+      if (emailAddress) {
+        getUserByMailAddress(emailAddress, function (err, user) {
+          if (err) {
+            return callback(err);
+          }
+          if (user) {
+            // Ok, we know this user. Update profile for microsoft access
+            user.info.microsoft           = profile;
+            user.info.registrationDate    = new Date();
+            user.login.verifiedEmail      = true; // Google does not need verification
+            user.personalData.forename    = profile.name.givenName;
+            user.personalData.surname     = profile.name.familyName;
+            user.login.microsoftProfileId = profile.id;
+            user.personalData.avatar      = avatar;
+            user.save(function (err) {
+              if (err) {
+                return callback(err);
+              }
+              logger.info('Upgraded user ' + emailAddress + ' for microsoft access');
+              // Recursive call, now we'll find this user
+              return findOrCreateMicrosoftUser(profile, callback);
+            });
+            return;
+          }
+
+          // We do not know this user. Add him/her to the list.
+          saveNewMicrosoftUser();
+        });
+        return;
+      }
+      // No email address (somehow an annonymous google user). Add as new User
+      return saveNewMicrosoftUser();
+    }
+
+    // User found, update
+    user.info.microsoft      = profile;
     user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
     updateUser(user, null, callback);
   });
@@ -653,19 +799,19 @@ function findOrCreateTwitterUser(profile, callback) {
       let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
 
       function saveNewTwitterUser() {
-        let newUser                    = new User();
-        newUser._id                    = emailAddress || username;
-        newUser.login.twitterUserName  = username;
-        newUser.info.twitter           = {
+        let newUser                   = new User();
+        newUser._id                   = emailAddress || username;
+        newUser.login.twitterUserName = username;
+        newUser.info.twitter          = {
           username   : _.get(profile, 'username', []),
           displayName: _.get(profile, 'displayName', '?')
         };
-        newUser.info.registrationDate  = new Date();
-        newUser.login.verifiedEmail    = true; // Twitter does not need verification
-        newUser.personalData.forename  = _.get(profile, 'name.givenName', '');
-        newUser.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
-        newUser.personalData.email     = emailAddress ? emailAddress : username; // using profile id as email alternative
-        newUser.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        newUser.info.registrationDate = new Date();
+        newUser.login.verifiedEmail   = true; // Twitter does not need verification
+        newUser.personalData.forename = _.get(profile, 'name.givenName', '');
+        newUser.personalData.surname  = _.get(profile, 'name.familyName', profile.displayName);
+        newUser.personalData.email    = emailAddress ? emailAddress : username; // using profile id as email alternative
+        newUser.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -683,16 +829,16 @@ function findOrCreateTwitterUser(profile, callback) {
           }
           if (user) {
             // Ok, we know this user. Update profile for twitter access
-            user.info.twitter           = {
+            user.info.twitter          = {
               username   : _.get(profile, 'username', []),
               displayName: _.get(profile, 'displayName', '?')
             };
-            user.info.registrationDate  = new Date();
-            user.login.verifiedEmail    = true; // Twitter does not need verification
-            user.personalData.forename  = _.get(profile, 'name.givenName', '');
-            user.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
-            user.login.twitterUserName  = username;
-            user.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            user.info.registrationDate = new Date();
+            user.login.verifiedEmail   = true; // Twitter does not need verification
+            user.personalData.forename = _.get(profile, 'name.givenName', '');
+            user.personalData.surname  = _.get(profile, 'name.familyName', profile.displayName);
+            user.login.twitterUserName = username;
+            user.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
             user.save(function (err) {
               if (err) {
                 return callback(err);
@@ -726,16 +872,17 @@ function findOrCreateTwitterUser(profile, callback) {
 module.exports = {
   Model: User,
 
-  updateUser              : updateUser,
-  generatePasswordHash    : generatePasswordHash,
-  verifyPassword          : verifyPassword,
-  getUserByMailAddress    : getUserByMailAddress,
-  removeUser              : removeUser,
-  getAllUsers             : getAllUsers,
-  getUser                 : getUser,
-  countUsers              : countUsers,
-  findOrCreateFacebookUser: findOrCreateFacebookUser,
-  findOrCreateGoogleUser  : findOrCreateGoogleUser,
-  findOrCreateDropboxUser : findOrCreateDropboxUser,
-  findOrCreateTwitterUser : findOrCreateTwitterUser
+  updateUser               : updateUser,
+  generatePasswordHash     : generatePasswordHash,
+  verifyPassword           : verifyPassword,
+  getUserByMailAddress     : getUserByMailAddress,
+  removeUser               : removeUser,
+  getAllUsers              : getAllUsers,
+  getUser                  : getUser,
+  countUsers               : countUsers,
+  findOrCreateFacebookUser : findOrCreateFacebookUser,
+  findOrCreateGoogleUser   : findOrCreateGoogleUser,
+  findOrCreateDropboxUser  : findOrCreateDropboxUser,
+  findOrCreateTwitterUser  : findOrCreateTwitterUser,
+  findOrCreateMicrosoftUser: findOrCreateMicrosoftUser,
 };

@@ -6,10 +6,10 @@
  */
 
 // Logging has highest prio
-const settings     = require('./settings');
-const logging      = require('../common/lib/logger');
+const settings = require('./settings');
+const logging  = require('../common/lib/logger');
 logging.init({debugLevel: settings.logger.debugLevel});
-const logger       = logging.getLogger('editor-app');
+const logger = logging.getLogger('editor-app');
 
 
 const express      = require('express');
@@ -20,14 +20,13 @@ const passport     = require('passport');
 const flash        = require('connect-flash');
 const session      = require('express-session');
 const compression  = require('compression');
-const MongoStore   = require('connect-mongo')(session);
+const MongoStore   = require('connect-mongo');
 const moment       = require('moment');
-const uuid         = require('uuid');
+const {v4: uuid}   = require('uuid');
 
 // Model includes
 const users        = require('../common/models/userModel');
 const ferropolyDb  = require('../common/lib/ferropolyDb');
-const logs         = require('../common/models/logModel');
 const teamPosition = require('./lib/teams/teamPosition');
 
 // Routes includes
@@ -37,7 +36,8 @@ const authtoken    = require('./routes/authtoken');
 const ferroSocket  = require('./lib/ferroSocket');
 const autopilot    = require('./lib/autopilot');
 const authStrategy = require('../common/lib/authStrategy')(settings, users);
-
+const infoRoute    = require('../common/routes/info');
+const aboutRoute   = require('../common/routes/about');
 
 require('../common/lib/mailer').init(settings);
 
@@ -51,16 +51,14 @@ const app = express();
 /**
  * Initialize DB connection, has to be only once for all models
  */
-ferropolyDb.init(settings, function (err, db) {
+ferropolyDb.init(settings, function (err) {
   if (err) {
     logger.warning('Failed to init ferropolyDb');
     logger.error(err);
     return;
   }
 
-  logs.init(settings);
-
-  var server = require('http').Server(app);
+  let server = require('http').Server(app);
 
   // view engine setup
   app.set('views', path.join(__dirname, 'views'));
@@ -78,12 +76,14 @@ ferropolyDb.init(settings, function (err, db) {
   app.use('/info', require('./routes/info'));
   app.use('/summary', require('./routes/summary'));
   app.use('/rules', require('./routes/rules'));
+  app.use('/appinfo', infoRoute(settings));
 
   // Define Strategy, login
   passport.use(authStrategy.facebookStrategy);
   passport.use(authStrategy.googleStrategy);
   passport.use(authStrategy.dropboxStrategy);
   passport.use(authStrategy.localStrategy);
+  passport.use(authStrategy.microsoftStrategy);
   // Session serializing of the user
   passport.serializeUser(authStrategy.serializeUser);
   // Session deserialisation of the user
@@ -97,9 +97,9 @@ ferropolyDb.init(settings, function (err, db) {
       secure: 'auto'
     },
     genid            : function () {
-      return 'S_' + moment().format('YYMMDD-HHmmss-') + uuid.v4();
+      return 'S_' + moment().format('YYMMDD-HHmmss-') + uuid();
     },
-    store            : new MongoStore({mongooseConnection: db, ttl: 2 * 24 * 60 * 60}),
+    store            : MongoStore.create({mongoUrl: settings.locationDbSettings.mongoDbUrl, ttl: 2 * 24 * 60 * 60}),
     name             : 'ferropoly-spiel'
   }));
   app.use(passport.initialize());
@@ -120,7 +120,6 @@ ferropolyDb.init(settings, function (err, db) {
   app.use('/statistics', require('./routes/statistics'));
   app.use('/properties', require('./routes/properties'));
   app.use('/download', require('./routes/download'));
-  app.use('/about', require('./routes/about'));
   app.use('/gamecache/', require('./routes/gamecache'));
   app.use('/teamAccount', require('./routes/teamAccount'));
   app.use('/propertyAccount', require('./routes/propertyAccount'));
@@ -132,9 +131,11 @@ ferropolyDb.init(settings, function (err, db) {
   app.use('/checkin', require('./routes/checkin'));
   app.use('/gameplays', require('./routes/gameplays'));
   app.use('/team', require('./routes/team'));
+  app.use('/static', require('./routes/static'));
   app.use('/agb', require('../common/routes/agb'));
   app.use('/join', joinRoute);
   app.use('/anmelden', joinRoute);
+  aboutRoute.init(app, settings);
   authtoken.init(app);
 
   app.set('port', settings.server.port);
@@ -144,6 +145,8 @@ ferropolyDb.init(settings, function (err, db) {
   // Now it is time to start the scheduler (after initializing ferroSocket, is required by marketplace)
   const gameScheduler = require('./lib/gameScheduler');
   const marketplace   = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
+  const summaryMailer = require('./lib/summaryMailer').createMailer(gameScheduler);
+
   gameScheduler.update(err => {
     if (err) {
       logger.info('Error while updating scheduler');

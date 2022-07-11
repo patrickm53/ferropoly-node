@@ -5,7 +5,7 @@
  * Created by kc on 31.01.16.
  */
 
-var ferroSocket;
+let ferroSocket;
 const logger         = require('../../../common/lib/logger').getLogger('teams:teamPositions');
 const travelLogModel = require('../../../common/models/travelLogModel');
 const gameCache      = require('../gameCache');
@@ -17,14 +17,16 @@ function addLog(data) {
       return logger.error(err);
     }
 
+    logger.debug('Player position', data);
+
     /**
      * Privacy: we log the position of the teams only during the game, not when they access
      * the web page before or afterwards. But there is a certain tolerance given, log also
      * a little before and after the game (could be helpful if one team is missing on the
      * way to the game respectively when coming home after the game)
      */
-    var start = moment(gc.gameplay.scheduling.gameStartTs).subtract(2, 'hours');
-    var end   = moment(gc.gameplay.scheduling.gameEndTs).add(60, 'minutes');
+    let start = moment(gc.gameplay.scheduling.gameStartTs).subtract(2, 'hours');
+    let end   = moment(gc.gameplay.scheduling.gameEndTs).add(60, 'minutes');
     if (moment().isAfter(end) || moment().isBefore(start)) {
       return;
     }
@@ -33,16 +35,24 @@ function addLog(data) {
       lat     : data.position.lat,
       lng     : data.position.lng,
       accuracy: data.position.accuracy
-    }, err => {
+    }, (err, entry) => {
       if (err) {
-        logger.error(err);
+        return logger.error(err);
       }
+      // Same style as returned by the team log
+      ferroSocket.emitToAdmins(data.gameId, 'player-position', entry);
+      ferroSocket.emitToTeam(data.gameId, data.teamId,'player-position', entry);
     });
   });
 
 }
 
+/**
+ * Event for the player location
+ * @param data
+ */
 function onPlayerLocation(data) {
+
   switch (data.cmd) {
     case 'positionUpdate':
       addLog(data);

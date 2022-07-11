@@ -6,14 +6,14 @@
  * Created by kc on 17.01.15.
  */
 
-const LocalStrategy    = require('passport-local').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
-const GoogleStrategy   = require('passport-google-oauth20').Strategy;
-const DropboxStrategy  = require('passport-dropbox-oauth2').Strategy;
-const TwitterStrategy  = require('passport-twitter').Strategy;
-const crypto           = require('crypto');
-const logger           = require('./logger').getLogger('authStrategy');
-const util             = require('util');
+const LocalStrategy     = require('passport-local').Strategy;
+const FacebookStrategy  = require('passport-facebook').Strategy;
+const GoogleStrategy    = require('passport-google-oauth20').Strategy;
+const DropboxStrategy   = require('passport-dropbox-oauth2').Strategy;
+const TwitterStrategy   = require('passport-twitter').Strategy;
+const MicrosoftStrategy = require('passport-microsoft').Strategy;
+const logger            = require('./logger').getLogger('authStrategy');
+const util              = require('util');
 
 module.exports = function (settings, users) {
 
@@ -23,7 +23,7 @@ module.exports = function (settings, users) {
    * @param done
    */
   function serializeUser(user, done) {
-    logger.debug("serializeUser:" + user);
+    logger.debug('serializeUser:' + user);
     done(null, user.personalData.email);
   }
 
@@ -34,10 +34,10 @@ module.exports = function (settings, users) {
    * @returns {*}
    */
   function deserializeUser(userId, done) {
-    logger.debug("deserializeUser:" + userId);
+    logger.debug('deserializeUser:' + userId);
     return users.getUserByMailAddress(userId, function (err, foundUser) {
       if (err || !foundUser) {
-        return done(new Error("not logged in"), null);
+        return done(new Error('not logged in'), null);
       }
       return done(null, foundUser);
     });
@@ -109,6 +109,26 @@ module.exports = function (settings, users) {
   );
 
   /**
+   * Microsoft Strategy
+   * Configured in https://portal.azure.com/
+   */
+  const microsoftStrategy = new MicrosoftStrategy({
+      clientID    : settings.oAuth.microsoft.clientId,
+      clientSecret: settings.oAuth.microsoft.clientSecret,
+      callbackURL : settings.oAuth.microsoft.callbackURL,
+      scope       : ['user.read']
+    },
+
+    function (accessToken, refreshToken, profile, done) {
+      console.log('Microsoft Profile:', profile);
+
+      users.findOrCreateMicrosoftUser(profile, function (err, foundUser) {
+        return done(err, foundUser);
+      });
+    }
+  );
+
+  /**
    * Dropbox Strategy
    * Not applicable right now, not registered in dropbox
    */
@@ -148,12 +168,13 @@ module.exports = function (settings, users) {
 
 
   return {
-    localStrategy   : localStrategy,
-    facebookStrategy: facebookStrategy,
-    googleStrategy  : googleStrategy,
-    dropboxStrategy : dropboxStrategy,
-    twitterStrategy : twitterStrategy,
-    deserializeUser : deserializeUser,
-    serializeUser   : serializeUser
-  }
+    localStrategy    : localStrategy,
+    facebookStrategy : facebookStrategy,
+    googleStrategy   : googleStrategy,
+    dropboxStrategy  : dropboxStrategy,
+    twitterStrategy  : twitterStrategy,
+    microsoftStrategy: microsoftStrategy,
+    deserializeUser  : deserializeUser,
+    serializeUser    : serializeUser
+  };
 };

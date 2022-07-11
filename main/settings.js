@@ -3,11 +3,12 @@
  * Created by kc on 14.04.15.
  */
 
-const pkg    = require('./../package.json')
-const fs     = require('fs');
-const _      = require('lodash');
-const path   = require('path');
-const logger = require('../common/lib/logger').getLogger('settings');
+const pkg        = require('./../package.json');
+const fs         = require('fs');
+const _          = require('lodash');
+const path       = require('path');
+const logger     = require('../common/lib/logger').getLogger('settings');
+const {v4: uuid} = require('uuid');
 
 // Set default
 var deployType = process.env.DEPLOY_TYPE || 'local';
@@ -38,6 +39,7 @@ var settings = {
   version: pkg.version,
   debug  : debug,
   preview: preview,
+  appPath: 'main', // folder where the app resides
 
   oAuth: {
     facebook: {
@@ -52,12 +54,6 @@ var settings = {
       callbackURL : 'none' // is set in settings file for environment
     },
 
-    microsoft: {
-      appId      : process.env.FERROPOLY_MICROSOFT_APP_ID || 'nodos',
-      secret     : process.env.FERROPOLY_MICROSOFT_APP_SECRET || 'no_secret',
-      callbackURL: 'none' // is set in settings file for environment
-    },
-
     dropbox: {
       clientId    : process.env.FERROPOLY_DROPBOX_CLIENT_ID || 'none',
       clientSecret: process.env.FERROPOLY_DROPBOX_CLIENT_SECRET || 'no_secret',
@@ -68,6 +64,12 @@ var settings = {
       consumerKey   : process.env.FERROPOLY_TWITTER_CONSUMER_KEY || 'none',
       consumerSecret: process.env.FERROPOLY_TWITTER_CONSUMER_SECRET || 'no_secret',
       callbackURL   : 'none' // is set in settings file for environment
+    },
+
+    microsoft: {
+      clientId    : process.env.FERROPOLY_MICROSOFT_CLIENT_ID || 'none',
+      clientSecret: process.env.FERROPOLY_MICROSOFT_CLIENT_SECRET || 'no_secret',
+      callbackURL : 'none' // is set in settings file for environment
     }
   }
 };
@@ -75,12 +77,20 @@ var settings = {
 settings.mailer = {
   senderAddress: process.env.MAILER_SENDER,
   host         : process.env.MAILER_HOST,
-  port         : 465,
+  port         : process.env.MAILER_PORT || 465,
   secure       : true,
   auth         : {
     pass: process.env.MAILER_PASS,
     user: process.env.MAILER_USER
   }
+};
+
+// This is a secret for debugging routes
+settings.debugSecret = process.env.FERROPOLY_DEBUG_SECRET || uuid();
+
+// Maps settings
+settings.maps = {
+  apiKey: process.env.FERROPOLY_GOOGLE_MAPS_API_KEY || 'none'
 };
 
 if (debug) {

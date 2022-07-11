@@ -10,7 +10,6 @@
  */
 
 const mongoose = require('mongoose');
-const crypto   = require('crypto');
 const Moniker  = require('moniker');
 const _        = require('lodash');
 const moment   = require('moment-timezone');
@@ -87,11 +86,14 @@ const gameplaySchema = mongoose.Schema({
     map                    : String,                          // map to use
     finalized              : {type: Boolean, default: false}, // finalized means no edits anymore,
     priceListPendingChanges: {type: Boolean, default: false}, // Are there pending changes?
-    creatingInstance       : String                           // Instance creating this gameplay
+    creatingInstance       : String,                          // Instance creating this gameplay
+    gameDataPublic         : {type: Boolean, default: false}, // After the game, the complete game is "public"
+    isDemo                 : {type: Boolean, default: false}  // Demo games have some special behaviour
   },
   joining   : {
     possibleUntil: {type: Date},
-    infotext     : String
+    infotext     : String,
+    url          : String, // This is the URL for joining the game
   },
   rules     : {
     // The rules are currently part of the gameplay. In a next version, the rules are probably
@@ -128,6 +130,7 @@ let createGameplay      = function (gpOptions, callback) {
 
   gp.internal.map              = gpOptions.map;
   gp.internal.owner            = gpOptions.ownerId || gpOptions.ownerEmail;
+  gp.internal.isDemo           = gpOptions.isDemo || false;
   gp.owner.organisatorEmail    = gpOptions.ownerEmail;
   gp.owner.organisatorName     = gpOptions.organisatorName;
   gp.scheduling.gameDate       = gpOptions.gameDate;
@@ -138,6 +141,7 @@ let createGameplay      = function (gpOptions, callback) {
   gp.joining.infotext          = gpOptions.infoText;
   gp.gamename                  = gpOptions.name;
   gp.internal.gameId           = gpOptions.gameId || Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
+  gp.joining.url               = _.get(gpOptions, 'mainInstances[0]', 'https://spiel.ferropoly.ch') + '/anmelden/' + gp.internal.gameId;
   gp.internal.creatingInstance = gpOptions.instance;
   gp.mobile                    = gpOptions.mobile || {level: MOBILE_NONE};
   gp._id                       = gp.internal.gameId;
@@ -153,14 +157,13 @@ let createGameplay      = function (gpOptions, callback) {
       // generate new gameID
       gpOptions.gameId = Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
       return createGameplay(gpOptions, callback);
-    }
-    else {
+    } else {
       gp.save(function (err, savedGp) {
         if (err) {
           return callback(err);
         }
         return callback(null, savedGp);
-      })
+      });
     }
   });
 };
@@ -256,8 +259,7 @@ let getGameplay = function (gameId, ownerId, callback) {
   //  var params = {'internal.owner': ownerId, 'internal.gameId': gameId};
   if (ownerId === null) {
     params = {'internal.gameId': gameId};
-  }
-  else if (ownerId === undefined) {
+  } else if (ownerId === undefined) {
     return callback(new Error('undefined is not a valid value for ownerId'));
   }
   Gameplay.find(params, function (err, docs) {
@@ -281,7 +283,7 @@ let getAllGameplays = function (callback) {
       return callback(err);
     }
     callback(null, docs);
-  })
+  });
 };
 
 /**
@@ -339,14 +341,14 @@ let finalize = function (gameId, ownerId, callback) {
       // nothing to do, is already finalized
       return callback(null, gp);
     }
-    if (gp.owner.organisatorEmail !== ownerId) {
+    if (gp.internal.owner !== ownerId) {
       return callback(new Error('Wrong user, not allowed to finalize'));
     }
     if (gp.log.priceListVersion === 0) {
       return callback(new Error('Can only finalize gameplays with pricelist'));
     }
     if (gp.internal.priceListPendingChanges) {
-      return callback(new Error('Pricelist params changed, list not up to date!'))
+      return callback(new Error('Pricelist params changed, list not up to date!'));
     }
     gp.internal.finalized     = true;
     gp.scheduling.gameStartTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameStart);
@@ -359,7 +361,7 @@ let finalize = function (gameId, ownerId, callback) {
       logger.info('Gameplay finalized: ' + gpSaved.internal.gameId);
       callback(null, gpSaved);
     });
-  })
+  });
 };
 
 /**
@@ -367,7 +369,7 @@ let finalize = function (gameId, ownerId, callback) {
  * @param gameId
  * @param callback
  */
-let isFinalized    = function (gameId, callback) {
+let isFinalized           = function (gameId, callback) {
   if (finalizedGameplays[gameId]) {
     // return cached value
     logger.info('return cached value');
@@ -387,11 +389,43 @@ let isFinalized    = function (gameId, callback) {
   });
 };
 /**
+ * Updates a gameplay with partial data. GameId and Owner must be supplied
+ * @param gp
+ * @param callback
+ */
+let updateGameplayPartial = function (gp, callback) {
+  getGameplay(gp.internal.gameId, gp.internal.owner, function (err, loadedGp) {
+    if (err) {
+      logger.info('Error while loading gameplay: ' + err.message);
+      return callback(err);
+    }
+    let internal = loadedGp.internal;
+    _.merge(loadedGp, gp);
+    _.set(loadedGp, 'internal', internal);
+
+    // Save in DB
+    if (loadedGp.internal.finalized) {
+      // We can't save it, it is finalized!
+      return callback(new Error('already finalized'));
+    }
+
+    _.set(loadedGp, 'log.lastEdited', new Date());
+
+    loadedGp.save(function (err, gpSaved, nbAffected) {
+      if (err) {
+        return callback(err);
+      }
+      logger.info('Gameplay update: ' + gpSaved.internal.gameId + ' #' + nbAffected);
+      callback(null, gpSaved);
+    });
+  });
+};
+/**
  * Updates a gameplay
  * @param gp
  * @param callback
  */
-let updateGameplay = function (gp, callback) {
+let updateGameplay        = function (gp, callback) {
   gp.log.lastEdited = new Date();
 
   if (!gp.save) {
@@ -400,7 +434,7 @@ let updateGameplay = function (gp, callback) {
     return getGameplay(gp.internal.gameId, gp.internal.owner, function (err, loadedGp) {
       if (err) {
         logger.info('Error while loading gameplay: ' + err.message);
-        return (err);
+        return callback(err);
       }
       // we need to assign the data now to this gameplay loaded
       loadedGp.gamename   = gp.gamename;
@@ -417,7 +451,7 @@ let updateGameplay = function (gp, callback) {
       // Call update again (this is recursive)
       return updateGameplay(loadedGp, function (err, gp2) {
         return callback(err, gp2);
-      })
+      });
     });
   }
   // Save in DB
@@ -534,8 +568,7 @@ function updateRules(gameId, ownerId, info, callback) {
         version: gp.rules.version,
         changes: 'Automatisch erstellte Grundversion'
       });
-    }
-    else {
+    } else {
       gp.rules.version++;
       gp.rules.text = info.text;
       gp.rules.changelog.push({ts: new Date(), version: gp.rules.version, changes: info.changes});
@@ -544,7 +577,7 @@ function updateRules(gameId, ownerId, info, callback) {
       return callback(err);
     });
   });
-};
+}
 
 /**
  * Saves a new revision of the pricelist: updates date and version
@@ -561,8 +594,7 @@ let saveNewPriceListRevision = function (gameplay, callback) {
   gameplay.log.priceListCreated             = new Date();
   if (!gameplay.log.priceListVersion) {
     gameplay.log.priceListVersion = 1;
-  }
-  else {
+  } else {
     gameplay.log.priceListVersion++;
   }
   gameplay.save(function (err) {
@@ -594,9 +626,10 @@ module.exports = {
   finalize                      : finalize,
   getAllGameplays               : getAllGameplays,
   invalidatePricelist           : invalidatePricelist,
+  updateGameplayPartial         : updateGameplayPartial,
   // Constants
-  MOBILE_NONE                   : MOBILE_NONE,
-  MOBILE_BASIC                  : MOBILE_BASIC,
-  MOBILE_FULL                   : MOBILE_FULL
+  MOBILE_NONE : MOBILE_NONE,
+  MOBILE_BASIC: MOBILE_BASIC,
+  MOBILE_FULL : MOBILE_FULL
 
 };

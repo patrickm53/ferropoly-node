@@ -9,6 +9,7 @@ module.exports = function (settings) {
   settings.server = {
     port: 3004,
     host: 'app.ferropoly.ch',
+    url: 'https://spiel.ferropoly.ch',
     serverId: 'spiel.ferropoly.ch-v' + settings.version
   };
 
@@ -38,6 +39,8 @@ module.exports = function (settings) {
   settings.oAuth.google.callbackURL = 'https://spiel.ferropoly.ch/auth/google/callback';
   // Dropbox settings
   settings.oAuth.dropbox.callbackURL = 'https://spiel.ferropoly.ch/auth/dropbox/callback';
+  // Microsoft settings
+  settings.oAuth.microsoft.callbackURL  = 'https://spiel.ferropoly.ch/auth/microsoft/callback';
 
   // Logger
   settings.logger = {

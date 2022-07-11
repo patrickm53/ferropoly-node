@@ -8,12 +8,27 @@ const router           = express.Router();
 const _                = require('lodash');
 const settings         = require('../settings');
 const pricelist        = require('../../common/lib/pricelist');
-const authTokenManager = require('../lib/authTokenManager');
+const authTokenManager = require('../../common/lib/authTokenManager');
 const gamecache        = require('../lib/gameCache');
 const errorHandler     = require('../lib/errorHandler');
+const gameCache        = require('../lib/gameCache');
+const path             = require('path');
+
+/**
+ * Send HTML Page
+ */
+router.get('/:gameId', function (req, res) {
+  gameCache.getGameData(req.params.gameId, (err, gameData) => {
+    if (err || !gameData) {
+      return errorHandler(res, 'Spiel nicht gefunden.', err, 404);
+    }
+    res.sendFile(path.join(__dirname, '..', 'public', 'html', 'checkin.html'));
+  });
+});
+
 
 /* GET the checkin of a game */
-router.get('/:gameId', function (req, res) {
+router.get('/old/:gameId', function (req, res) {
   let gameId = req.params.gameId;
 
   gamecache.refreshCache(function (err) {
@@ -59,11 +74,11 @@ router.get('/:gameId', function (req, res) {
           return errorHandler(res, 'Die Preisliste ist leer.', new Error('Empty pricelist'), 500);
         }
 
-        authTokenManager.getNewToken(req.session.passport.user, function (err, token) {
+        authTokenManager.getNewToken({user: req.session.passport.user, proposedToken: req.session.authToken}, function (err, token) {
           if (err) {
             return errorHandler(res, 'Interner Fehler beim Erstellen des Tokens.', err, 500);
           }
-          req.session.ferropolyToken = token;
+          req.session.authToken = token;
 
           res.render('checkin/checkin', {
             title        : 'Ferropoly',

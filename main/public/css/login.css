@@ -1,64 +1,120 @@
-body {
-    /* background-image: url("/images/ferropoly_background01.jpg");*/
-    background-clip : border-box;
-    background-size : cover;
-}
 
 .bg1 {
-    background-image : url("/images/ferropoly_background01.jpg");
+    background: url("/images/ferropoly_background01.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-body.bg2 {
-    background-image : url("/images/ferropoly_background02.jpg");
+.bg2 {
+    background: url("/images/ferropoly_background02.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .bg3 {
-    background-image : url("/images/ferropoly_background03.jpg");
+    background: url("/images/ferropoly_background03.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .bg4 {
-    background-image : url("/images/ferropoly_background04.jpg");
+    background: url("/images/ferropoly_background04.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .bg5 {
-    background-image : url("/images/ferropoly_background05.jpg");
+    background: url("/images/ferropoly_background05.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .bg6 {
-    background-image : url("/images/ferropoly_background06.jpg");
+    background: url("/images/ferropoly_background06.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .bg7 {
-    background-image : url("/images/ferropoly_background07.jpg");
+    background: url("/images/ferropoly_background07.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .bg8 {
-    background-image : url("/images/ferropoly_background08.jpg");
+    background: url("/images/ferropoly_background08.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-.login-box {
-    max-width : 330px;
+.bg9 {
+    background: url("/images/ferropoly_background09.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-.signup-box {
-    max-width : 600px;
+.bg10 {
+    background: url("/images/ferropoly_background10.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-.agb-box {
-    max-width : 80%;
-    overflow  : auto;
-
+.bg11 {
+    background: url("/images/ferropoly_background11.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-.agb-contents {
-    height         : inherit;
-    margin-bottom  : 10px;
-    padding-bottom : 20px;
+.bg12 {
+    background: url("/images/ferropoly_background12.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-.ls-box-shape {
-    padding          : 15px;
-    margin           : 0 auto;
-    background-color : rgba(255, 255, 255, 0.8);
-    border-radius    : 5px;
+.bg13 {
+    background: url("/images/ferropoly_background13.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bg14 {
+    background: url("/images/ferropoly_background14.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bg15 {
+    background: url("/images/ferropoly_background15.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }

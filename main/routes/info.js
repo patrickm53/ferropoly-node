@@ -10,37 +10,46 @@ const router  = express.Router();
 const gameplayModel     = require('../../common/models/gameplayModel');
 const pricelist         = require('../../common/lib/pricelist');
 const teamModel         = require('../../common/models/teamModel');
-const errorHandler      = require('../lib/errorHandler');
 const logger            = require('../../common/lib/logger').getLogger('routes:info');
 const priceListDownload = require('../../common/routes/downloadPricelist');
 const _                 = require('lodash');
+const path              = require('path');
 
-/* GET home page. */
+
+/**
+ * Send HTML Page
+ */
 router.get('/:gameId', function (req, res) {
+  res.sendFile(path.join(__dirname, '..', 'public', 'html', 'game-info.html'));
+});
+
+
+/* GET the data for the page */
+router.get('/data/:gameId', function (req, res) {
   let gameId = req.params.gameId;
 
   gameplayModel.getGameplay(gameId, null, function (err, gp) {
     if (err) {
-      logger.error(err);
-      return errorHandler(res, 'Interner Fehler', err, 500);
+      logger.error();
+      return res.status(500).send({message: 'Interner Fehler: auslesen Gameplay'});
     }
     if (!gp) {
-      return errorHandler(res, 'Interner Fehler: gp ist null.', new Error('gp is undefined'), 500);
+      return res.status(500).send({message: 'Interner Fehler: gp ist null'});
     }
 
     pricelist.getPricelist(gameId, function (err2, pl) {
       if (err2) {
-        logger.error(err2);
-        return errorHandler(res, 'Interner Fehler', err2, 500);
+        logger.error();
+        return res.status(500).send({message: 'Interner Fehler'});
       }
       if (!pl) {
-        return errorHandler(res, 'Interner Fehler: pl ist null.', new Error('pl is undefined'), 500);
+        return res.status(500).send({message: 'Interner Fehler: pl ist null'});
       }
 
       teamModel.getTeams(gameId, function (err3, foundTeams) {
         if (err3) {
-          logger.error(err3);
-          return errorHandler(res, 'Interner Fehler', err3, 500);
+          logger.error();
+          return res.status(500).send({message: 'Interner Fehler: auslesen Tea,s'});
         }
         // Filter some info
         let teams = [];
@@ -52,15 +61,7 @@ router.get('/:gameId', function (req, res) {
           });
         }
 
-        res.render('info/info', {
-          title     : 'Ferropoly',
-          ngFile    : '/js/infoctrl.js',
-          hideLogout: true,
-          gameId    : gameId,
-          gameplay  : JSON.stringify(gp),
-          pricelist : JSON.stringify(pl),
-          teams     : JSON.stringify(teams)
-        });
+        res.send({gameplay: gp, pricelist: pl, teams});
       });
     });
   });

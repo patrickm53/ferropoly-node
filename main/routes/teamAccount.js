@@ -4,50 +4,43 @@
  */
 
 
-const express     = require('express');
-const router      = express.Router();
-const teamAccount = require('../lib/accounting/teamAccount');
-const _           = require('lodash');
-const accessor    = require('../lib/accessor');
-const moment      = require('moment');
+const express                 = require('express');
+const router                  = express.Router();
+const accessor                = require('../lib/accessor');
+const collectAccountStatement = require('../lib/accounting/collectAccountStatement');
+
 
 router.get('/get/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-  if (req.params.teamId === 'undefined') {
+  if (req.params.teamId === 'undefined' || req.params.teamId === 'all') {
     req.params.teamId = undefined;
   }
+
   accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+
     if (err) {
-      return res.status(401).send({message: err.message});
-    }
-    let teamBalance = {};
-    let query       = req.query || {};
-    let tsStart     = query.start ? moment(query.start) : undefined;
-    let tsEnd       = query.end ? moment(query.end) : undefined;
-
-    teamAccount.getAccountStatement(req.params.gameId, req.params.teamId, tsStart, tsEnd, function (err, data) {
-      if (err) {
-        return res.status(500).send({message: err.message});
-      }
-
-      for (let i = 0; i < data.length; i++) {
-
-        if (!(tsStart || tsEnd)) {
-          // The balance is only available if ALL data is requested. Otherwise it does not make sense!
-          if (_.isUndefined(teamBalance[data[i].teamId])) {
-            teamBalance[data[i].teamId] = 0;
-          }
-          teamBalance[data[i].teamId] += data[i].transaction.amount;
-          data[i].balance = teamBalance[data[i].teamId];
+      // This is not the admin. How abaout a player with valid TeamID?
+      accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, function (err) {
+        if (err) {
+          return res.status(401).send({message: err.message});
         }
-
-        //  data[i].transaction = _.omit(data[i].transaction, 'origin');
-        data[i] = _.omit(data[i], ['_id', 'gameId', '__v']);
-      }
-      res.send({accountData: data});
-    });
+        collectAccountStatement(req, (err, accountData) => {
+          if (err) {
+            return res.status(500).send({message: err.message});
+          }
+          res.send(accountData);
+        });
+      })
+    } else {
+      collectAccountStatement(req, (err, accountData) => {
+        if (err) {
+          return res.status(500).send({message: err.message});
+        }
+        res.send(accountData);
+      });
+    }
   });
 });
 

@@ -11,13 +11,13 @@ globals:
   describeSaga: false
   describeEvent: false
   describeCommand: false
-  before: false
   it: false
   xit: false
   window : false
   beforeEach : false
   afterEach : false
   after : false
+  before : false
   beforeEachChapter: false
   describeScenario: false
   describeChapter: false
@@ -44,13 +44,11 @@ rules:
   curly: [2, "multi-line"]
 
   # WARNINGS
-  semi-spacing: 1
   no-empty: 1
   handle-callback-err: 1
   eqeqeq: 1
   quotes: [1, 'single']
   no-unused-expressions: 1
-  no-throw-literal: 1
   semi: 1
   block-scoped-var: 1
   no-alert: 1
@@ -74,9 +72,13 @@ rules:
   no-wrap-func: 0
   comma-dangle: 0
   no-extra-semi: 0
-  no-use-before-define: 0
+  no-use-before-define: [0, 'nofunc']
 
   # AUTOMATED BY EDITORCONFIG
   eol-last: 0
   no-trailing-spaces: 0
   indent: 0
+
+parserOptions:
+  sourceType: module
+  ecmaVersion: latest

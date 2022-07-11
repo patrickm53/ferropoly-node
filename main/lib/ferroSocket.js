@@ -5,13 +5,15 @@
  */
 
 const EventEmitter     = require('events').EventEmitter;
-const authTokenManager = require('./authTokenManager');
+const authTokenManager = require('../../common/lib/authTokenManager');
 const logger           = require('../../common/lib/logger').getLogger('ferroSocket');
 const settings         = require('../settings');
 const _                = require('lodash');
 const util             = require('util');
 const accessor         = require('./accessor');
-const uuid             = require('uuid').v4;
+const {v4: uuid}       = require('uuid');
+const gameLogModel     = require('../../common/models/gameLogModel');
+const moment           = require('moment');
 
 let ferroSocket;
 
@@ -23,11 +25,11 @@ let ferroSocket;
 function FerroSocket(server) {
   EventEmitter.call(this);
   let self = this;
-  this.io  = require('socket.io').listen(server);
+  this.io  = require('socket.io')(server);
 
   this.sockets = {};
 
-  this.io.on('connect', function (socket) {
+  this.io.on('connect', function () {
     logger.info('io connect event');
   });
   this.io.on('connection', function (socket) {
@@ -44,22 +46,22 @@ function FerroSocket(server) {
     logger.info('io connect_error event');
     logger.info(obj);
   });
-  this.io.on('connect_timeout', function (socket) {
+  this.io.on('connect_timeout', function () {
     logger.info('io connect_timeout event');
   });
-  this.io.on('reconnect', function (socket) {
+  this.io.on('reconnect', function () {
     logger.info('io reconnect event');
   });
-  this.io.on('reconnect_attempt', function (socket) {
+  this.io.on('reconnect_attempt', function () {
     logger.info('io reconnect_attempt event');
   });
-  this.io.on('reconnecting', function (socket) {
+  this.io.on('reconnecting', function () {
     logger.info('io reconnecting event');
   });
-  this.io.on('reconnect_error', function (socket) {
+  this.io.on('reconnect_error', function () {
     logger.info('io reconnect_error event');
   });
-  this.io.on('reconnect_failed', function (socket) {
+  this.io.on('reconnect_failed', function () {
     logger.info('io reconnect_failed event');
   });
   /**
@@ -95,6 +97,7 @@ function FerroSocket(server) {
               self.addSocket(socket, data.user, data.gameId);
               self.registerChannels(socket);
               self.emit('player-connected', {gameId: data.gameId, teamId: data.teamId, user: data.user});
+              self.emitGameMessagesAfterConnect(data.gameId, socket);
             });
             return;
           }
@@ -108,7 +111,7 @@ function FerroSocket(server) {
           self.addSocket(socket, data.user, data.gameId);
           self.emit('admin-connected', {gameId: data.gameId, user: data.user});
           self.registerChannels(socket);
-
+          self.emitGameMessagesAfterConnect(data.gameId, socket);
         });
       });
     });
@@ -125,6 +128,7 @@ util.inherits(FerroSocket, EventEmitter);
 /**
  * Add a socket after connection
  * @param socket
+ * @param userId
  * @param gameId
  */
 FerroSocket.prototype.addSocket = function (socket, userId, gameId) {
@@ -146,7 +150,7 @@ FerroSocket.prototype.addSocket = function (socket, userId, gameId) {
  * @param socket
  */
 FerroSocket.prototype.removeSocket = function (socket) {
-  _.forIn(this.sockets, function (value, key) {
+  _.forIn(this.sockets, function (value) {
     if (_.isArray(value)) {
       _.remove(value, function (s) {
         return s === socket;
@@ -187,7 +191,7 @@ FerroSocket.prototype.registerChannels = function (socket) {
     registerChannel('player-position');
   }
   // Say the socket that we are operative
-  socket.emit('initialized', {result: true});
+  socket.emit('initialized', {result: true, isAdmin: socket.ferropoly.isAdmin, isPlayer: socket.ferropoly.isPlayer});
 };
 
 
@@ -205,8 +209,7 @@ FerroSocket.prototype.emitToClients = function (gameId, channel, data) {
       if (this.sockets[gameId][i].ferropoly.isAdmin) {
         // For admins all messages are sent
         this.sockets[gameId][i].emit(channel, data);
-      }
-      else if (_.startsWith(channel, this.sockets[gameId][i].ferropoly.teamId)) {
+      } else if (_.startsWith(channel, this.sockets[gameId][i].ferropoly.teamId)) {
         // forward only messages to a teams channel.
         // The channel name is formatted as follows:  'teamId-channelName'
         this.sockets[gameId][i].emit(channel, data);
@@ -235,6 +238,7 @@ FerroSocket.prototype.emitToAdmins = function (gameId, channel, data) {
 /**
  * Emit data to a specific team of the game
  * @param gameId
+ * @param teamId
  * @param channel
  * @param data
  */
@@ -253,6 +257,7 @@ FerroSocket.prototype.emitToTeam = function (gameId, teamId, channel, data) {
 /**
  * Emit data to a specific team of the game with CC to admins
  * @param gameId
+ * @param teamId
  * @param channel
  * @param data
  */
@@ -274,12 +279,62 @@ FerroSocket.prototype.emitToTeamAndAdmin = function (gameId, teamId, channel, da
  * @param data
  */
 FerroSocket.prototype.emitToGame = function (gameId, channel, data) {
-  logger.info('ferroSockets.emitToGame: ' + gameId + ' ' + channel);
+  logger.info(`ferroSockets.emitToGame: ${gameId}, ${channel}`);
+
   if (this.sockets[gameId]) {
     this.sockets[gameId].forEach(function (socket) {
       socket.emit(channel, data);
     });
   }
+};
+
+/**
+ * Emit Game Log data to all participants of a game (admins and players)
+ * @param gameId
+ * @param message
+ */
+FerroSocket.prototype.emitGameLogMessageToGame = function (gameId, message) {
+  logger.info(`ferroSockets.emitGameLogMessageToGame: ${gameId}`);
+
+  if (this.sockets[gameId]) {
+    let adminMessage    = _.clone(message);
+    let playerMessage   = _.clone(message);
+    playerMessage.title = _.get(playerMessage, 'saveTitle', playerMessage.title);
+    delete playerMessage.saveTitle;
+
+    this.sockets[gameId].forEach(function (socket) {
+      if (socket.ferropoly.isAdmin) {
+        socket.emit('game-log', adminMessage);
+      } else {
+        socket.emit('game-log', playerMessage);
+      }
+    });
+  }
+};
+
+/**
+ * Emits all game messages to a single socket after connecting
+ */
+FerroSocket.prototype.emitGameMessagesAfterConnect = function (gameId, socket) {
+  gameLogModel.getLogEntries(gameId, null, moment().subtract(30, 'minutes'), null, (err, entries) => {
+    if (err) {
+      return logger.error(err);
+    }
+
+    entries.forEach(e => {
+      let message = {
+        title    : e.saveTitle,
+        message  : e.message,
+        category : e.category,
+        timestamp: e.timestamp,
+        id       : e._id
+      }
+      if (socket.ferropoly.isAdmin) {
+        message.title = e.title;
+      }
+      socket.emit('game-log', message);
+    });
+  })
 };
 
 /**

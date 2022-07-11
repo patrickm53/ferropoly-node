@@ -12,6 +12,7 @@ const chancelleryAccount = require('./chancelleryAccount');
 const propertyActions    = require('../../../components/checkin-datastore/lib/properties/actions');
 const logger             = require('../../../common/lib/logger').getLogger('marketplace');
 const travelLog          = require('../../../common/models/travelLogModel');
+const gameLog            = require('../gameLog');
 const async              = require('async');
 const moment             = require('moment');
 const EventEmitter       = require('events').EventEmitter;
@@ -81,7 +82,11 @@ function Marketplace(scheduler) {
      */
     this.scheduler.on('start', function (event) {
       marketLog(event.gameId, 'Marketplace: onStart');
-      event.callback(null, event);
+      gameLog.addEntry({
+        gameId   : event.gameId,
+        category : gameLog.CAT_GENERAL,
+        saveTitle: 'Spielstart'
+      }, event.callback(null, event));
     });
     /**
      * This is the 'end' event launched by the gameScheduler. Pay the final rents & interests
@@ -95,7 +100,12 @@ function Marketplace(scheduler) {
           return;
         }
         marketLog(event.gameId, 'Timed interests paid');
-        event.callback(null, event);
+        marketLog(event.gameId, 'Marketplace: onStart');
+        gameLog.addEntry({
+          gameId   : event.gameId,
+          category : gameLog.CAT_GENERAL,
+          saveTitle: 'Spielende'
+        }, event.callback(null, event));
       });
     });
   }
@@ -152,11 +162,14 @@ Marketplace.prototype.buyProperty = function (options, callback) {
     if (err) {
       return callback(err);
     }
-    travelLog.addPropertyEntry(options.gameId, options.teamId, property, function (err) {
+    travelLog.addPropertyEntry(options.gameId, options.teamId, property, function (err, logEntry) {
+      // we do not care about this return, it's asynchronous and that's ok
       if (err) {
         logger.error(err);
+      } else {
+        ferroSocket.emitToAdmins(options.gameId, 'player-position', logEntry);
+        ferroSocket.emitToTeam(options.gameId, options.teamId, 'player-position', logEntry);
       }
-      // we do not care about this return, it's asynchronous and that's ok
     });
     if (!property) {
       return callback(new Error('No property for this location'), {message: 'Dieses Ort kann nicht gekauft werden'});
@@ -193,15 +206,16 @@ Marketplace.prototype.buyProperty = function (options, callback) {
             if (err) {
               return callback(err, {message: 'Fehler beim Grundstückkauf'});
             }
-            if (ferroSocket) {
-              // Inform others that the team bought an (annonymous) village
-              ferroSocket.emitToGame(options.gameId, 'general', {
-                teamId : options.teamId,
-                message: `"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`
-              });
-            }
-            // that's it!
-            return callback(null, {property: property, amount: info.amount});
+            gameLog.addEntry({
+              gameId   : options.gameId,
+              category : gameLog.CAT_PROPERTY,
+              title    : `"${team.data.name}" kaufen ${property.location.name} für ${info.amount} Fr.`,
+              saveTitle: `"${team.data.name}" kaufen ein Ort für ${info.amount} Fr.`,
+              options  : {teamId: team.uuid}
+            }, () => {
+              // that's it!
+              return callback(null, {property: property, amount: info.amount});
+            });
           });
         });
       }
@@ -219,15 +233,17 @@ Marketplace.prototype.buyProperty = function (options, callback) {
           if (err) {
             return callback(err, {message: 'Fehler beim Grundstückkauf'});
           }
-          if (ferroSocket) {
-            // Inform others about paying a rent
-            let targetTeam = _.get(gameData.teams[info.owner], 'data.name', 'unbekannt');
-            ferroSocket.emitToGame(options.gameId, 'general', {
-              teamId : options.teamId,
-              message: `"${team.data.name}" zahlen Miete an "${targetTeam}": ${info.amount} Fr.`
-            });
-          }
-          callback(null, info);
+          let targetTeam = _.get(gameData.teams[info.owner], 'data.name', 'unbekannt');
+          gameLog.addEntry({
+            gameId   : options.gameId,
+            category : gameLog.CAT_PROPERTY,
+            title    : `"${team.data.name}" zahlen für ${property.location.name} Miete an "${targetTeam}": ${info.amount} Fr.`,
+            saveTitle: `"${team.data.name}" zahlen ${info.amount} Fr. Miete an "${targetTeam}"`,
+            options  : {teamId: team.uuid}
+          }, () => {
+            // that's it!
+            return callback(null, info);
+          });
         });
       }
     });
@@ -329,6 +345,10 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
   propWrap.getProperty(gameId, propertyId, function (err, property) {
     if (err) {
       return callback(err);
+    }
+
+    if (!property) {
+      return callback(new Error(`Property ${propertyId} for ${teamId} in ${gameId} not found`));
     }
 
     if (property.gamedata.owner !== teamId) {
@@ -451,6 +471,9 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
 /**
  * Pay Interest (this is the fix value) for all teams.
  * Money: bank->team
+ *
+ * @param gameId
+ * @param tolerance
  * @param callback
  */
 Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
@@ -485,6 +508,7 @@ Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
 /**
  * Checks for a negative asset and pays to the chancellery if so
  * @param gameId
+ * @param tolerance
  * @param callback
  */
 Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback) {
@@ -528,6 +552,7 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback
  * Pays the rents (each hour) for a team
  * @param gp
  * @param team
+ * @param tolerance
  * @param callback
  */
 Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback) {
@@ -623,6 +648,10 @@ Marketplace.prototype.payRents = function (options, callback) {
               self.payRentsForTeam(gp, team, tolerance, callback);
             },
             function (err) {
+              if (ferroSocket) {
+                // Inform clients that the can build again
+                ferroSocket.emitToGame(gameId, 'general', {message: 'Die Mieten wurden ausbezahlt'});
+              }
               callback(err);
             }
           );
@@ -772,6 +801,7 @@ module.exports = {
     chancelleryAccount.init();
 
     ferroSocket = require('../ferroSocket').get();
+    gameLog.initSocket(ferroSocket);
 
     return marketplace;
   },
@@ -779,7 +809,7 @@ module.exports = {
    * Gets the marketplace, throws an error, if not defined
    * @returns {*}
    */
-  getMarketplace   : function () {
+  getMarketplace: function () {
     if (!marketplace) {
       throw new Error('You must create a marketplace first before getting it');
     }

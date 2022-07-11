@@ -4,13 +4,14 @@
  */
 
 
-const express     = require('express');
-const router      = express.Router();
-const chancellery = require('../lib/accounting/chancelleryAccount');
-const gameCache   = require('../lib/gameCache');
-const logger      = require('../../common/lib/logger').getLogger('routes:chancellery');
-const accessor    = require('../lib/accessor');
-const _           = require('lodash');
+const express        = require('express');
+const router         = express.Router();
+const chancellery    = require('../lib/accounting/chancelleryAccount');
+const gameCache      = require('../lib/gameCache');
+const logger         = require('../../common/lib/logger').getLogger('routes:chancellery');
+const accessor       = require('../lib/accessor');
+const _              = require('lodash');
+const marketplaceApi = require('../lib/accounting/marketplace');
 
 /**
  * Get the amount of the chancellery
@@ -55,7 +56,7 @@ router.get('/account/statement/:gameId', function (req, res) {
 /**
  * play chancellery
  */
-router.get('/play/:gameId/:teamId', function (req, res) {
+router.post('/play/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId || !req.params.teamId) {
     return res.status(400).send({message: 'No gameId or teamId supplied'});
   }
@@ -85,11 +86,11 @@ router.get('/play/:gameId/:teamId', function (req, res) {
  * Gambling
  */
 router.post('/gamble/:gameId/:teamId', function (req, res) {
-  logger.info(req.body);
+
   if (!req.body.authToken) {
     return res.status(401).send({message: 'Permission denied (1)'});
   }
-  if (req.body.authToken !== req.session.ferropolyToken) {
+  if (req.body.authToken !== req.session.authToken) {
     return res.status(401).send({message: 'Permission denied (2)'});
   }
   if (!req.params.gameId || !req.params.teamId || !req.body.amount) {
@@ -111,6 +112,11 @@ router.post('/gamble/:gameId/:teamId', function (req, res) {
       }
       let gp   = data.gameplay;
       let team = data.teams[req.params.teamId];
+
+      let marketplace = marketplaceApi.getMarketplace();
+      if (!marketplace.isOpen(gp)) {
+        return res.status(500).send({message: 'Marketplace is closed!'});
+      }
 
       chancellery.gamble(gp, team, amount, function (err, data) {
         if (err) {

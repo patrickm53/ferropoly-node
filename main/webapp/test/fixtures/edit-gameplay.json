@@ -1,0 +1,4494 @@
+{
+  "authToken": "6e67afa3-0039-42dc-b38d-bd80965b5650",
+  "socketUrl": "http://localhost:3004",
+  "gameplay": {
+    "_id": "local-demo-game",
+    "owner": {
+      "organisatorEmail": "demo@ferropoly.ch",
+      "organisatorName": "Max Muster"
+    },
+    "admins": {
+      "logins": []
+    },
+    "scheduling": {
+      "gameDate": "2022-01-08T07:34:33.351Z",
+      "gameStart": "04:00",
+      "gameEnd": "23:30",
+      "deleteTs": "2022-02-07T22:59:33.351Z",
+      "gameEndTs": "2022-01-08T22:30:00.351Z",
+      "gameStartTs": "2022-01-08T03:00:00.351Z"
+    },
+    "gameParams": {
+      "presets": "moderate",
+      "interestInterval": 60,
+      "interest": 4000,
+      "interestCyclesAtEndOfGame": 2,
+      "startCapital": 4000,
+      "debtInterest": 20,
+      "housePrices": 0.5,
+      "properties": {
+        "lowestPrice": 1000,
+        "highestPrice": 4000,
+        "numberOfPriceLevels": 7,
+        "numberOfPropertiesPerGroup": 2
+      },
+      "rentFactors": {
+        "noHouse": 0.2,
+        "oneHouse": 0.8,
+        "twoHouses": 2.5,
+        "threeHouses": 3.5,
+        "fourHouses": 4,
+        "hotel": 5,
+        "allPropertiesOfGroup": 2
+      },
+      "chancellery": {
+        "minLottery": 1000,
+        "maxLottery": 5000,
+        "minGambling": 1000,
+        "maxGambling": 50000,
+        "maxJackpotSize": 500000,
+        "probabilityWin": 0.45,
+        "probabilityLoose": 0.45
+      }
+    },
+    "mobile": {
+      "level": 5
+    },
+    "internal": {
+      "finalized": true,
+      "priceListPendingChanges": false,
+      "isDemo": true,
+      "map": "sbb",
+      "owner": "demo@ferropoly.ch",
+      "gameId": "local-demo-game",
+      "creatingInstance": "localhost-editor"
+    },
+    "joining": {
+      "possibleUntil": "2022-01-03T19:00:00.351Z"
+    },
+    "rules": {
+      "version": 0,
+      "text": "<h1>Spielregeln Ferropoly</h1><h2>Spielzeit</h2><p>Das Spiel beginnt Punkt 04:00 Uhr, ab diesem Zeitpunkt werden Anrufe entgegen genommen. Bis 23:30 Uhr werden Anrufe entgegen genommen. </p><h2>Geld</h2><p>Jede Gruppe hat zu Beginn des Spiels Fr. 4’000 auf ihrem Konto. Das Startgeld von Fr. 4’000  wird zu jeder neuen Spielrunde zusammen mit dem Zins ausbezahlt. (Erste Auszahlung des Startgeldes bei Spielbeginn, eine Spielrunde dauert 60 Minuten.)</p><p>Bei Spielende wird das Startgeld noch 2 Mal ausbezahlt.</p><h2>Grundstück kaufen</h2><p>Um ein Grundstück zu kaufen muss ein Beweis des Besuches erbracht werden. Dies kann eine Entwertung einer Kartonkarte im Billetentwerter oder ein Selfie mit Bahnhofsuhr und –schild sein. Erst nach Aufnahme dieses Beweisstücks darf die Zentrale angerufen werden. Stempeln zwei Gruppen zur selben Zeit, so erhält die Gruppe das Grundstück die zuerst anruft. Die Beweisstücke werden am Ende des Spieles stichprobenweise kontrolliert. </p><h2>\"bereits verkauft\"</h2><p>Ruft eine Gruppe aus einem bereits verkauften Ort an, muss sie die aktuelle Miete an die Eigentümergruppe bezahlen. Dies muss sie aber nur, wenn sie versucht das betreffende Ort zu kaufen. Wer nur anruft um Häuser zu bauen bezahlt nichts, erfährt aber auch nichts über die nächsten Orte. Die Miete vervielfacht sich (Faktor 2) falls die Eigentümergruppe die ganze Ortsgruppe besitzt. </p><h2>Häuser</h2><p>Um ein Haus zu kaufen muss die Gruppe weder die vollständige Serie haben noch muss sie am entsprechenden Ort sein. Pro Grundstück kann jede Spielrunde maximal ein Haus gekauft werden. Häuser können nicht für die letzte Spielrunde nachbezogen werden.</p><p>Der Preis eines Hauses ist in der Preisliste ersichtlich und ist abhängig vom Kaufpreis des Ortes.</p><h2>Chance-Kanzlei-Parkplatz</h2><p>Bei jedem Anruf hat man die Chance Geld zu gewinnen - oder zu verlieren. Es handelt sich dabei um Zufallsbeträge zwischen Fr. 1’000 bis Fr. 5’000. Beim Parkplatzgewinn erhält die Gruppe dessen ganzen Inhalt. </p><p>Ab und zu stellen wir Euch am Telephon eine Frage. Ihr könnt einen Betrag bis Fr. 50’000 als Einsatz setzen. Ist die Antwort dann richtig, gewinnt ihr denselben Betrag. Im andern Fall ist der Einsatz futsch. (No risk - No fun...)</p><p>Sämtliche Bankgewinne (ausser Häuserbau) landen auf dem Parkplatz.</p><h2>Sieger</h2><p>Gewonnen hat, wer am Schluss am meisten Geld und spätestens zum vereinbarten Zeitpunkt am vom Organisator angegebenen Treffpunkt ist. </p><h2>Zentrale</h2><p>Die Telefonnummer der Zentrale wird vor dem Spiel den Teams noch bekannt gegeben.</p><p>Folgende Infos werden den anrufenden Teams auf Wunsch bekannt gegeben:</p><ul><li>Der eigene Kontostand</li><li>Die Besitzverhältnisse in der Region (nur ungefähr, keine konkreten Orte. Damit soll verhindert werden, dass sich die Teams alle in derselben Gegend auf die Füsse treten) </li></ul><p>Und das sagen wir nicht:</p><ul><li>Ob das Ort, das ihr kaufen wollt, frei ist oder nicht</li><li>Wo genau sich die anderen Gruppen befinden und was diese für Pläne haben</li><li>Euren aktuellen Rang</li></ul><p>Die Infos könnt ihr auch per Smartphone in dieser App aufrufen (Login nötig).</p><h2>Diverses & Tipps</h2><ul><li>Die Gruppen müssen während der ganzen Spielzeit zusammenbleiben. Wenn aus irgendwelchen Gründen die Gruppe aufgeteilt wird (medizinischer Notfall), muss die Zentrale umgehend informiert werden. Es darf dann  nur noch ein Gruppenteil aktiv am Spiel teilnehmen.</li><li>Prüft, ob es Orte ennet der Landesgrenze gibt. In diesem Fall wären ein paar Euros in der Tasche sicher gut.</li><li>Nicht alle Orte können mit dem Billet gratis angefahren werden. Zum Teil müssen selbst GA Besitzer noch einen Aufpreis bezahlen. Diese Orte sind in der Preisliste nicht speziell markiert (da dies immer mal wieder ändert), prüft dies selbst! Dies ist meist nur bei touristischen Orten (z.B. Buslinien über Pässe) der Fall.</li><li>Es ist erlaubt, zuerst ein paar Orte abzustempeln und danach die Zentrale anzurufen. Die Anrufe müssen aber immer von unterwegs kommen, Mitspieler zu Hause sind nicht erlaubt. Es dürfen aber im Gegenzu unbeteiligte Zugspassagiere für einen Anruf eingespannt werden (das Risiko, ob diese Person dann auch anruft oder nicht, ist in jedem Fall bei der Gruppe).</li><li>Die Gruppen dürfen nur öffentliche Verkehrsmittel (inkl. Velo und Autostopp, aber keine \"Privattaxis\") benutzen.</li></ul><h2>Fairplay</h2><p>Die Teams sind angehalten die Spielregeln einzuhalten und bei Unklarheiten bei der Spielleitung sich umgehend zu informieren. Sollte die Spielleitung feststellen, dass sich eine Gruppe die Spielregeln etwas gar nach ihrem Geschmack auslegt oder sie gar bricht, dann wird diese Gruppe mit einem beliebigen Geldabzug bis hin zur Disqualifikation bestraft. </p><h2>Disclaimer</h2><p>Das Spiel wird per Software ausgewertet, welche trotz intensiven Tests Fehler aufweisen kann. Sollte es dennoch zu einer Fehlbuchung kommen, dann gilt jederzeit der vom Spiel angegebene Konto- und Besitzstand.</p>",
+      "changelog": [
+        {
+          "ts": "2022-01-08T07:34:37.824Z",
+          "version": 0,
+          "changes": "Automatisch erstellte Grundversion"
+        }
+      ],
+      "date": "2022-01-08T07:34:37.822Z"
+    },
+    "log": {
+      "priceListVersion": 1,
+      "created": "2022-01-08T07:34:33.361Z",
+      "lastEdited": "2022-01-08T07:34:33.361Z",
+      "priceListCreated": "2022-01-08T07:34:37.720Z"
+    },
+    "gamename": "Demo Spiel",
+    "__v": 0
+  },
+  "pricelist": [
+    {
+      "location": {
+        "position": {
+          "lat": "47.645411",
+          "lng": "8.876535999999987"
+        },
+        "name": "Eschenz",
+        "uuid": "f7b5fecb-4d83-4415-c336-da81bb09e34c",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T07:36:56.478Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 0,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 1
+      },
+      "_id": "local-demo-game-eschenz-92358724",
+      "gameId": "local-demo-game",
+      "uuid": "00bcb34c-52f0-4c19-8017-19f74cc2fe4e",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.36886562889189",
+          "lng": "8.878498077392578"
+        },
+        "name": "Bauma",
+        "uuid": "8568f8fe-9bd8-4d1f-d0f4-0a74f427ce2c",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 1,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 1
+      },
+      "_id": "local-demo-game-bauma-11904591",
+      "gameId": "local-demo-game",
+      "uuid": "0e7d924d-362e-4206-ab42-67e17116fa5b",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.29991593925077",
+          "lng": "8.841848373413086"
+        },
+        "name": "Hinwil",
+        "uuid": "45062dca-f22a-4397-bc84-23ca19e3bb91",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 2,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 2
+      },
+      "_id": "local-demo-game-hinwil-14987627",
+      "gameId": "local-demo-game",
+      "uuid": "96a16fe2-bcad-4b8b-a9f0-85b89c28a55b",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.351008",
+          "lng": "9.62176599999998"
+        },
+        "name": "Vicosoprano, Plazza",
+        "uuid": "7cd62baf-f664-4a68-af9f-bf76d62a9ce6",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 3,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 2
+      },
+      "_id": "local-demo-game-vicosoprano-plazza-50985657",
+      "gameId": "local-demo-game",
+      "uuid": "cc4d46f3-d3a9-40e7-8989-23f4d68b5efb",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.251483",
+          "lng": "7.4195700000000215"
+        },
+        "name": "St-Léonard",
+        "uuid": "d1aed700-ed36-48e6-cf0b-67767073140e",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 4,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 3
+      },
+      "_id": "local-demo-game-st-leonard-62443842",
+      "gameId": "local-demo-game",
+      "uuid": "c3375ba9-0325-4731-8073-93d3339deaaf",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.223456",
+          "lng": "7.092441000000008"
+        },
+        "name": "Tramelan-Chalet",
+        "uuid": "15b63331-6cba-4e8d-b7c9-8f1d783e7aa0",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "5be94a39-15dd-40fc-8e9c-387a84b2e282",
+        "boughtTs": "2022-01-08T07:54:00.675Z",
+        "buildings": 0,
+        "buildingEnabled": true
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 5,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 3
+      },
+      "_id": "local-demo-game-tramelan-chalet-66516723",
+      "gameId": "local-demo-game",
+      "uuid": "f5f26da4-7566-4107-a161-e046b50d7616",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.359592",
+          "lng": "9.075135000000046"
+        },
+        "name": "Bütschwil",
+        "uuid": "0d833753-a1cf-4d40-c166-9a5ba9cbd066",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 6,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 4
+      },
+      "_id": "local-demo-game-butschwil-98959062",
+      "gameId": "local-demo-game",
+      "uuid": "90a40a90-5e1b-465f-8f13-c34051931ae0",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.390882",
+          "lng": "8.434712999999988"
+        },
+        "name": "Urdorf",
+        "uuid": "b51c019f-686c-485d-f41b-ecb7ea8b4bb8",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 7,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 4
+      },
+      "_id": "local-demo-game-urdorf-78476956",
+      "gameId": "local-demo-game",
+      "uuid": "38165b2c-c7b7-4742-b4a5-f26b8c6298a1",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.975068",
+          "lng": "7.192797000000041"
+        },
+        "name": "Kerzers",
+        "uuid": "54538216-03c1-4414-cca3-66207c5bfcb7",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "5be94a39-15dd-40fc-8e9c-387a84b2e282",
+        "boughtTs": "2022-01-08T07:48:59.628Z",
+        "buildings": 0,
+        "buildingEnabled": true
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 8,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 5
+      },
+      "_id": "local-demo-game-kerzers-18604160",
+      "gameId": "local-demo-game",
+      "uuid": "cf5dfa1d-a1fb-48ca-be4b-5274de9ed7e8",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.178493",
+          "lng": "7.576224000000025"
+        },
+        "name": "Grimentz, poste",
+        "uuid": "16faac42-1d07-4ef0-a702-346e69f961b0",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 9,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 5
+      },
+      "_id": "local-demo-game-grimentz-poste-62848302",
+      "gameId": "local-demo-game",
+      "uuid": "6de45a2f-d09d-45c6-853a-3100c3462517",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.114598",
+          "lng": "7.842720999999983"
+        },
+        "name": "Huttwil",
+        "uuid": "df749696-0acc-450d-8a88-d5c29485dd92",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 10,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 6
+      },
+      "_id": "local-demo-game-huttwil-17985031",
+      "gameId": "local-demo-game",
+      "uuid": "c9bd2590-3757-4f85-9973-f4fba5b6ec73",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.023878",
+          "lng": "8.939904999999953"
+        },
+        "name": "Klöntal, Plätz",
+        "uuid": "53eb78d1-c80c-48b7-c47b-43103c721e4b",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T08:20:03.344Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 11,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 6
+      },
+      "_id": "local-demo-game-klontal-platz-58770143",
+      "gameId": "local-demo-game",
+      "uuid": "4a64c0c6-ea6b-4a15-a6b0-faf7b14d4b07",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.166975",
+          "lng": "8.288685999999984"
+        },
+        "name": "Hochdorf",
+        "uuid": "a77d5442-6b96-49ca-e3d6-1770bfb618aa",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 12,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 7
+      },
+      "_id": "local-demo-game-hochdorf-20036969",
+      "gameId": "local-demo-game",
+      "uuid": "8dd66ae7-e183-4914-97a4-f60b7791b5fa",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.086456",
+          "lng": "7.5221500000000106"
+        },
+        "name": "Fraubrunnen",
+        "uuid": "28bf499c-7424-40cb-e0d2-bccd27b61dba",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 13,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 7
+      },
+      "_id": "local-demo-game-fraubrunnen-49240702",
+      "gameId": "local-demo-game",
+      "uuid": "d55698b0-2647-4d5c-8dbc-7ec73cc9ba6c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.321931",
+          "lng": "7.073623999999995"
+        },
+        "name": "Col-de-Bretaye",
+        "uuid": "850b375e-75db-416d-a52f-c00f47c23f51",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T08:02:02.877Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 14,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 8
+      },
+      "_id": "local-demo-game-col-de-bretaye-26974723",
+      "gameId": "local-demo-game",
+      "uuid": "03591dd9-f430-4865-ab61-2556ceff81f4",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.119872",
+          "lng": "9.312971000000061"
+        },
+        "name": "Walenstadt",
+        "uuid": "f83d03c0-e4af-4266-dd5f-d3b390239939",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "8765af2d-f97d-4e36-aba5-a76f03b86bfe",
+        "boughtTs": "2022-01-08T08:14:01.644Z",
+        "buildings": 0,
+        "buildingEnabled": true
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 15,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 8
+      },
+      "_id": "local-demo-game-walenstadt-83570351",
+      "gameId": "local-demo-game",
+      "uuid": "0651fe6a-8ffc-4128-a82d-59bdfe574b98",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.697668",
+          "lng": "10.089940999999953"
+        },
+        "name": "Zernez",
+        "uuid": "26b884ca-b549-40e4-b069-f197e4de5ecf",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T07:41:57.879Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 16,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 9
+      },
+      "_id": "local-demo-game-zernez-13524987",
+      "gameId": "local-demo-game",
+      "uuid": "a95129a9-3a5a-4cf8-9287-7cc60fd862d4",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.204181",
+          "lng": "7.542684000000008"
+        },
+        "name": "Solothurn",
+        "uuid": "7977e376-2736-441e-dc68-6d3d8990f51d",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 200,
+          "oneHouse": 800,
+          "twoHouses": 2500,
+          "threeHouses": 3500,
+          "fourHouses": 4000,
+          "hotel": 5000
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 17,
+        "price": 1000,
+        "pricePerHouse": 500,
+        "propertyGroup": 9
+      },
+      "_id": "local-demo-game-solothurn-97432448",
+      "gameId": "local-demo-game",
+      "uuid": "e4dd8977-7dc1-4a38-b1b9-7012a504f803",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.217301",
+          "lng": "7.784708000000023"
+        },
+        "name": "Langenthal",
+        "uuid": "62a90825-1463-4f85-e399-7cfed964d213",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 18,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 10
+      },
+      "_id": "local-demo-game-langenthal-97185445",
+      "gameId": "local-demo-game",
+      "uuid": "ee4a8b57-e1c9-4d20-906d-799940d75ed9",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.455156",
+          "lng": "8.938489000000004"
+        },
+        "name": "Acquarossa-Comprovasco",
+        "uuid": "d7f8a7e3-716a-4512-eba5-dfc1dc94a4b5",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 0,
+        "positionInPriceRange": -1,
+        "position": 19,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 10
+      },
+      "_id": "local-demo-game-acquarossa-comprovasco-96217557",
+      "gameId": "local-demo-game",
+      "uuid": "7d700052-0d27-4ed3-8741-8c32e9e9fc90",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.267975",
+          "lng": "8.638475999999969"
+        },
+        "name": "Meilen Autoquai",
+        "uuid": "4c3df1d8-d4ae-4f32-c8a3-6b3333d7d97e",
+        "accessibility": "boat"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T08:28:04.917Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 20,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 11
+      },
+      "_id": "local-demo-game-meilen-autoquai-65187965",
+      "gameId": "local-demo-game",
+      "uuid": "38c115b6-3133-4d35-931e-aafbdc8b5550",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.53743",
+          "lng": "6.336917999999969"
+        },
+        "name": "Bière",
+        "uuid": "1bb934fe-24fa-4a1e-a953-a0c1beb015bc",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 21,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 11
+      },
+      "_id": "local-demo-game-biere-35670142",
+      "gameId": "local-demo-game",
+      "uuid": "743945eb-9e49-4f0d-ac01-a190431cad77",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.493833",
+          "lng": "6.76568599999996"
+        },
+        "name": "Puidoux-Chexbres",
+        "uuid": "54fbb3bd-14b1-4291-c2e1-25f1edd9f2b7",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T07:57:01.145Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 22,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 12
+      },
+      "_id": "local-demo-game-puidoux-chexbres-64408942",
+      "gameId": "local-demo-game",
+      "uuid": "7d405aae-57b3-496c-a8fd-c097c47ec518",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.154177",
+          "lng": "8.60155199999997"
+        },
+        "name": "Ribellasca",
+        "uuid": "f78b2bd2-324e-487e-bcc6-991dba62fd1a",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 23,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 12
+      },
+      "_id": "local-demo-game-ribellasca-59604485",
+      "gameId": "local-demo-game",
+      "uuid": "6cf7147a-f081-46f8-a029-28db9b6ab67c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.68547",
+          "lng": "8.752279000000044"
+        },
+        "name": "Diessenhofen",
+        "uuid": "6e19b9e8-6eaf-4fd6-99a1-1f3646c0c90f",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T08:22:03.823Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 24,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 13
+      },
+      "_id": "local-demo-game-diessenhofen-33059206",
+      "gameId": "local-demo-game",
+      "uuid": "529b6648-18f2-4a60-a367-09d75d6ee92e",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.664506",
+          "lng": "8.981007999999974"
+        },
+        "name": "Steckborn",
+        "uuid": "bf80110d-d439-4a91-8091-ca794e98c0f7",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T07:49:59.911Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 25,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 13
+      },
+      "_id": "local-demo-game-steckborn-39319216",
+      "gameId": "local-demo-game",
+      "uuid": "b0fb1ac5-8b0a-472a-9c2b-a9c48ea5113d",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.520474",
+          "lng": "8.932964999999967"
+        },
+        "name": "Matzingen",
+        "uuid": "42c2a324-a32c-43a9-9812-343a50f3b4e0",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T07:51:00.085Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 26,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 14
+      },
+      "_id": "local-demo-game-matzingen-17159985",
+      "gameId": "local-demo-game",
+      "uuid": "b65e253c-2ba0-4eb9-81f9-87077016510c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.446416",
+          "lng": "9.536769999999933"
+        },
+        "name": "Heiden",
+        "uuid": "52f0df86-fcc9-48d3-cc41-e5d89a549492",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "8765af2d-f97d-4e36-aba5-a76f03b86bfe",
+        "boughtTs": "2022-01-08T08:31:05.225Z",
+        "buildings": 0,
+        "buildingEnabled": true
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 27,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 14
+      },
+      "_id": "local-demo-game-heiden-74001092",
+      "gameId": "local-demo-game",
+      "uuid": "8228d06d-3c45-46c8-aa68-eb40d72ea39f",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.611223",
+          "lng": "8.308162000000038"
+        },
+        "name": "Handegg, Gelmerbahn",
+        "uuid": "ab4a5f5e-5587-4191-8903-daa5cb35569b",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 28,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 15
+      },
+      "_id": "local-demo-game-handegg-gelmerbahn-92095488",
+      "gameId": "local-demo-game",
+      "uuid": "3e05cf6c-8faf-45c3-9abb-c4cb01647618",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.915346",
+          "lng": "7.9363610000000335"
+        },
+        "name": "Escholzmatt",
+        "uuid": "d72e1cb0-a4ae-4800-aef4-b9be13eea251",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 29,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 15
+      },
+      "_id": "local-demo-game-escholzmatt-82514563",
+      "gameId": "local-demo-game",
+      "uuid": "80b8f8a4-c396-4736-9668-108ac3577297",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.715403",
+          "lng": "10.33472699999993"
+        },
+        "name": "S-charl",
+        "uuid": "d7af772b-7be7-44ff-f3ea-cf579cec083c",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 30,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 16
+      },
+      "_id": "local-demo-game-s-charl-25898248",
+      "gameId": "local-demo-game",
+      "uuid": "4e4e4220-4768-47c5-a721-3624849256a9",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.016648",
+          "lng": "8.732864999999947"
+        },
+        "name": "Ibergeregg, Passhöhe",
+        "uuid": "bf05c1bb-1c7d-4d76-8385-ffb76bca3e52",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T08:21:03.565Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 31,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 16
+      },
+      "_id": "local-demo-game-ibergeregg-passhohe-42643298",
+      "gameId": "local-demo-game",
+      "uuid": "32bb0433-b167-49ad-87f8-fc825cac93a9",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.942174",
+          "lng": "7.234400000000051"
+        },
+        "name": "Gümmenen",
+        "uuid": "b867b96c-ab37-4515-a72b-47ec6eab6b64",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T11:28:57.843Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 32,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 17
+      },
+      "_id": "local-demo-game-gummenen-40764057",
+      "gameId": "local-demo-game",
+      "uuid": "d37d2345-10c7-41ea-a7dd-7ac623435c0c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.553347",
+          "lng": "8.752957000000038"
+        },
+        "name": "Dinhard",
+        "uuid": "022ca465-556b-40ae-feb8-bf8c166036a5",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T08:15:01.944Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 33,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 17
+      },
+      "_id": "local-demo-game-dinhard-10014316",
+      "gameId": "local-demo-game",
+      "uuid": "a2315516-e76d-4a43-8c86-9959b1d28335",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.105828",
+          "lng": "7.079121999999984"
+        },
+        "name": "Martigny",
+        "uuid": "13f375e6-3f08-483d-df27-5180d5041ee4",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T08:05:03.866Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 300,
+          "oneHouse": 1200,
+          "twoHouses": 3750,
+          "threeHouses": 5250,
+          "fourHouses": 6000,
+          "hotel": 7500
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 34,
+        "price": 1500,
+        "pricePerHouse": 750,
+        "propertyGroup": 18
+      },
+      "_id": "local-demo-game-martigny-97238478",
+      "gameId": "local-demo-game",
+      "uuid": "7e499812-af49-4197-875c-5ab57d7adc0f",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.417612",
+          "lng": "6.927858000000015"
+        },
+        "name": "Veytaux-Chillon",
+        "uuid": "73f4e71a-7569-4c9b-c2dd-a131fa5ffbcf",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "f6428731-3f97-4528-a696-0f09ab005640",
+        "boughtTs": "2022-01-08T07:38:56.886Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 35,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 18
+      },
+      "_id": "local-demo-game-veytaux-chillon-28846399",
+      "gameId": "local-demo-game",
+      "uuid": "3f38e287-14c6-45aa-856a-d792cbc57b02",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.423272",
+          "lng": "9.369300000000067"
+        },
+        "name": "St. Gallen",
+        "uuid": "52b99872-5d42-4547-fc6f-1b23a456c301",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T07:59:01.817Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 36,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 19
+      },
+      "_id": "local-demo-game-st-gallen-51411377",
+      "gameId": "local-demo-game",
+      "uuid": "d4781f95-1f0f-4d1e-ab9b-acfe4561d6b5",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.42541616935588",
+          "lng": "8.686237335205078"
+        },
+        "name": "Effretikon",
+        "uuid": "5cb65bd0-8ed9-4661-c2ce-ae87521ad657",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T08:27:04.769Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 37,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 19
+      },
+      "_id": "local-demo-game-effretikon-39465730",
+      "gameId": "local-demo-game",
+      "uuid": "5609e931-5abe-488b-bdf5-823fd6e08ff0",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.062825",
+          "lng": "7.095219000000043"
+        },
+        "name": "La Neuveville",
+        "uuid": "6ba3f6fd-336e-46bf-dc3a-c451908e08d1",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "5be94a39-15dd-40fc-8e9c-387a84b2e282",
+        "boughtTs": "2022-01-08T07:53:00.483Z",
+        "buildings": 0,
+        "buildingEnabled": true
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 38,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 20
+      },
+      "_id": "local-demo-game-la-neuveville-33952406",
+      "gameId": "local-demo-game",
+      "uuid": "8c762903-477c-45c7-abde-f145d2f2226b",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.541597",
+          "lng": "7.948822000000064"
+        },
+        "name": "Stein-Säckingen",
+        "uuid": "2ecc7b29-1e17-4e13-e581-bf59271f2206",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 1,
+        "positionInPriceRange": -1,
+        "position": 39,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 20
+      },
+      "_id": "local-demo-game-stein-sackingen-25467856",
+      "gameId": "local-demo-game",
+      "uuid": "f1ee0dda-ff6c-4737-8106-85b93b9c9f5d",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.485587",
+          "lng": "9.392012000000022"
+        },
+        "name": "Roggwil-Berg",
+        "uuid": "ae647e8b-16db-4239-b166-4b38c557aec9",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T07:56:00.941Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 40,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 21
+      },
+      "_id": "local-demo-game-roggwil-berg-29535665",
+      "gameId": "local-demo-game",
+      "uuid": "7d28d64b-9f69-4c32-9a67-478dd97d695b",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.833141",
+          "lng": "9.453164000000015"
+        },
+        "name": "Domat/Ems",
+        "uuid": "6cf155ea-6912-4dcc-dbe3-3b9ff329e875",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T11:34:58.249Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 41,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 21
+      },
+      "_id": "local-demo-game-domat-ems-67820339",
+      "gameId": "local-demo-game",
+      "uuid": "c9055295-c1fe-4848-961a-245817c9dae7",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.88645",
+          "lng": "7.388106999999991"
+        },
+        "name": "Niederscherli",
+        "uuid": "2d99c4f5-e1b1-43fa-e061-855f1c794f4f",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T08:34:05.674Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 42,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 22
+      },
+      "_id": "local-demo-game-niederscherli-41815407",
+      "gameId": "local-demo-game",
+      "uuid": "00202e11-1a6a-44d2-b1fc-a72f2b45b591",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.362001",
+          "lng": "7.350053000000003"
+        },
+        "name": "Delémont",
+        "uuid": "c49bb995-894c-47e8-9f12-d6a08e4e8e70",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 43,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 22
+      },
+      "_id": "local-demo-game-delemont-35600205",
+      "gameId": "local-demo-game",
+      "uuid": "a6a3f391-1411-401b-9f55-3f6a76530199",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.227546",
+          "lng": "7.35919100000001"
+        },
+        "name": "Sion",
+        "uuid": "3e26f640-6dc3-4ec8-9a59-5deb1a672a97",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 44,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 23
+      },
+      "_id": "local-demo-game-sion-77263876",
+      "gameId": "local-demo-game",
+      "uuid": "2bb9ae0c-14ad-4ce1-a170-795613a10c70",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.441794",
+          "lng": "9.982303000000002"
+        },
+        "name": "Bernina Diavolezza",
+        "uuid": "40309549-e478-4486-def8-385fa10693a6",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T07:55:00.849Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 45,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 23
+      },
+      "_id": "local-demo-game-bernina-diavolezza-62659905",
+      "gameId": "local-demo-game",
+      "uuid": "030c6c94-11cf-4e70-85e6-e3acd64fc3dd",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.285024",
+          "lng": "7.70985399999995"
+        },
+        "name": "Oensingen",
+        "uuid": "adeb5326-82d0-448e-c4bc-e2e228860dd0",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 46,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 24
+      },
+      "_id": "local-demo-game-oensingen-62165149",
+      "gameId": "local-demo-game",
+      "uuid": "684dac77-4c65-47d1-89ee-d6035d7b4d15",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.169745",
+          "lng": "7.5651849999999286"
+        },
+        "name": "Gerlafingen",
+        "uuid": "b651266d-2a98-4224-89b1-1f9c9b743679",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 47,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 24
+      },
+      "_id": "local-demo-game-gerlafingen-66181120",
+      "gameId": "local-demo-game",
+      "uuid": "32ae91fc-73e0-4fdf-9187-23928e633c09",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.513913",
+          "lng": "6.260786000000053"
+        },
+        "name": "St-George, village",
+        "uuid": "947f9dd6-a858-4ef7-ebce-7c84cccbb06a",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 48,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 25
+      },
+      "_id": "local-demo-game-st-george-village-96471148",
+      "gameId": "local-demo-game",
+      "uuid": "7d75fc64-0ebe-4d90-bfce-fb700621c0ab",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.702221",
+          "lng": "8.232490999999982"
+        },
+        "name": "Innertkirchen MIB",
+        "uuid": "db7170b7-8573-463e-de0a-15faf022c6d4",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 49,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 25
+      },
+      "_id": "local-demo-game-innertkirchen-mib-26163076",
+      "gameId": "local-demo-game",
+      "uuid": "44f1430d-07fe-4160-8923-564071b9902c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.802425",
+          "lng": "8.279228999999987"
+        },
+        "name": "Stöckalp",
+        "uuid": "c608f302-0ec7-42ac-c915-f26eb06e8420",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 50,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 26
+      },
+      "_id": "local-demo-game-stockalp-63296778",
+      "gameId": "local-demo-game",
+      "uuid": "820c3ee3-9bae-4e8c-b5cf-e48e06de3ea9",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.066741",
+          "lng": "8.966881000000058"
+        },
+        "name": "Tesserete, Paese",
+        "uuid": "40d220ee-bd81-468d-fe70-be5eb4dc07e3",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 400,
+          "oneHouse": 1600,
+          "twoHouses": 5000,
+          "threeHouses": 7000,
+          "fourHouses": 8000,
+          "hotel": 10000
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 51,
+        "price": 2000,
+        "pricePerHouse": 1000,
+        "propertyGroup": 26
+      },
+      "_id": "local-demo-game-tesserete-paese-75267573",
+      "gameId": "local-demo-game",
+      "uuid": "c36ab15f-3dfe-4b53-ba01-dbd718cebc40",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.333415",
+          "lng": "9.51406099999997"
+        },
+        "name": "Castasegna, Vecchia Dogana",
+        "uuid": "ccf23b7a-71a3-4f51-ca0e-15f7c91cb72c",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 52,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 27
+      },
+      "_id": "local-demo-game-castasegna-vecchia-dogana-37126448",
+      "gameId": "local-demo-game",
+      "uuid": "02058659-e984-49f5-8a1f-002263739e76",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.663879",
+          "lng": "9.572864999999979"
+        },
+        "name": "Tiefencastel",
+        "uuid": "4c3a0f3c-5eb2-4669-92ec-951f3db3d179",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T11:18:55.872Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 53,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 27
+      },
+      "_id": "local-demo-game-tiefencastel-49484268",
+      "gameId": "local-demo-game",
+      "uuid": "74cd1301-0ddb-4fdc-ad46-23528d168684",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.09872",
+          "lng": "9.069943999999964"
+        },
+        "name": "Näfels-Mollis",
+        "uuid": "abd204ba-7452-49f5-abec-eb264831ed46",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "8765af2d-f97d-4e36-aba5-a76f03b86bfe",
+        "boughtTs": "2022-01-08T07:44:58.405Z",
+        "buildings": 1,
+        "buildingEnabled": true
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 54,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 28
+      },
+      "_id": "local-demo-game-nafels-mollis-46873231",
+      "gameId": "local-demo-game",
+      "uuid": "bbdd698e-5259-4abe-a896-6803113d3232",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.452159",
+          "lng": "8.571718000000033"
+        },
+        "name": "Zürich Flughafen, Fracht",
+        "uuid": "d4277cb6-507d-4b5b-af3b-7e9ca6e10021",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T08:36:06.165Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 55,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 28
+      },
+      "_id": "local-demo-game-zurich-flughafen-fracht-47809104",
+      "gameId": "local-demo-game",
+      "uuid": "70307a76-d94c-401b-b896-72e8ddc17e94",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.767861",
+          "lng": "9.419609000000037"
+        },
+        "name": "Rothenbrunnen",
+        "uuid": "f90f0ac2-c7a3-40bd-8b7e-8c297d14326d",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T11:22:57.088Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 56,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 29
+      },
+      "_id": "local-demo-game-rothenbrunnen-76225127",
+      "gameId": "local-demo-game",
+      "uuid": "4cc8ef2d-b840-46e0-9d2a-1ebe857d00eb",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.177665",
+          "lng": "8.702269000000001"
+        },
+        "name": "Intragna",
+        "uuid": "32049a16-d93d-4536-c779-0b9beee088b9",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 57,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 29
+      },
+      "_id": "local-demo-game-intragna-63693640",
+      "gameId": "local-demo-game",
+      "uuid": "be4842ba-8183-4f90-a723-bb5a65b3cdcd",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.775557",
+          "lng": "10.152479999999969"
+        },
+        "name": "Guarda, cumün",
+        "uuid": "8c77ea98-bb71-45fa-d85e-b5553a5eb08c",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T07:40:57.431Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 58,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 30
+      },
+      "_id": "local-demo-game-guarda-cumun-65854501",
+      "gameId": "local-demo-game",
+      "uuid": "1eb19b49-74a8-4eef-ab7b-20abcd2f77f3",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.999082",
+          "lng": "6.735285999999974"
+        },
+        "name": "Les Ponts-de-Martel",
+        "uuid": "863a81dc-0bd8-47e9-efd7-1938705f87f4",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 2,
+        "positionInPriceRange": -1,
+        "position": 59,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 30
+      },
+      "_id": "local-demo-game-les-ponts-de-martel-68073320",
+      "gameId": "local-demo-game",
+      "uuid": "76032bb2-0e67-4674-9f46-b1f4a8b5a572",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.19758",
+          "lng": "8.73431400000004"
+        },
+        "name": "Wilen bei Wollerau",
+        "uuid": "b32b9ae6-473e-4778-d938-2613331beda2",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T08:23:03.898Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 60,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 31
+      },
+      "_id": "local-demo-game-wilen-bei-wollerau-52676415",
+      "gameId": "local-demo-game",
+      "uuid": "32c08542-4d93-46a8-9e80-d30b366d1c73",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.294025",
+          "lng": "7.881458000000066"
+        },
+        "name": "Visp",
+        "uuid": "ca09e1ea-6781-439b-828a-e871f1c8e645",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 61,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 31
+      },
+      "_id": "local-demo-game-visp-26392318",
+      "gameId": "local-demo-game",
+      "uuid": "004f95f0-e2e5-488f-b343-aaadea3b7ce4",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.538491",
+          "lng": "7.724119999999971"
+        },
+        "name": "Kaiseraugst",
+        "uuid": "fca4aa85-0cf6-4f30-e753-73315a5dae21",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 62,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 32
+      },
+      "_id": "local-demo-game-kaiseraugst-77661538",
+      "gameId": "local-demo-game",
+      "uuid": "2fef4d9d-c83d-4d97-9049-921b97313424",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.38581",
+          "lng": "6.8532410000000255"
+        },
+        "name": "Bouveret",
+        "uuid": "be58a882-f595-4d01-9b97-e37c314dec9a",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "f6428731-3f97-4528-a696-0f09ab005640",
+        "boughtTs": "2022-01-08T07:37:56.625Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 63,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 32
+      },
+      "_id": "local-demo-game-bouveret-40840005",
+      "gameId": "local-demo-game",
+      "uuid": "6b319ef2-5d24-4dcd-897d-d35765c0479d",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.595517",
+          "lng": "9.600883000000067"
+        },
+        "name": "Savognin, posta",
+        "uuid": "acf8017f-0044-4dd8-eae6-b42226bb9337",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T08:37:06.228Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 64,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 33
+      },
+      "_id": "local-demo-game-savognin-posta-65325456",
+      "gameId": "local-demo-game",
+      "uuid": "e22df976-8e14-4f70-8590-ab38b8b00dd6",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.403029",
+          "lng": "8.132628999999952"
+        },
+        "name": "Fiesch",
+        "uuid": "2e5fb09f-1554-4602-fe2b-fb6bf8022903",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 65,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 33
+      },
+      "_id": "local-demo-game-fiesch-65030590",
+      "gameId": "local-demo-game",
+      "uuid": "4fd21742-8dc8-456c-bdc9-cb36b0d33594",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.102336",
+          "lng": "6.997700000000009"
+        },
+        "name": "Le Trétien",
+        "uuid": "2336b159-3702-491e-950e-2c2eb171ddf7",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 66,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 34
+      },
+      "_id": "local-demo-game-le-tretien-91516863",
+      "gameId": "local-demo-game",
+      "uuid": "7bca1f6c-7ba2-445d-abda-e2bf76cdbc3d",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.632706",
+          "lng": "7.899703999999929"
+        },
+        "name": "Zweilütschinen",
+        "uuid": "69c98ad8-5264-4ece-bd88-8d7c334efbbd",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 67,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 34
+      },
+      "_id": "local-demo-game-zweilutschinen-60075102",
+      "gameId": "local-demo-game",
+      "uuid": "c5f39944-5c5f-447f-a9cf-332bb34b27f1",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.419534",
+          "lng": "7.819511000000034"
+        },
+        "name": "Blatten (Lötschen), Post",
+        "uuid": "1598a1c8-c31b-40a9-d373-b73c525a06ef",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 500,
+          "oneHouse": 2000,
+          "twoHouses": 6250,
+          "threeHouses": 8750,
+          "fourHouses": 10000,
+          "hotel": 12500
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 68,
+        "price": 2500,
+        "pricePerHouse": 1250,
+        "propertyGroup": 35
+      },
+      "_id": "local-demo-game-blatten-lotschen-post-11684478",
+      "gameId": "local-demo-game",
+      "uuid": "f8351aaf-3b5a-4585-bf95-351ff52c7e6d",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.899066",
+          "lng": "6.781025"
+        },
+        "name": "Gorgier-St-Aubin",
+        "uuid": "efb6a634-9a1f-43de-a21d-4727117155c6",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "f6428731-3f97-4528-a696-0f09ab005640",
+        "boughtTs": "2022-01-08T08:26:04.490Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 69,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 35
+      },
+      "_id": "local-demo-game-gorgier-st-aubin-77383437",
+      "gameId": "local-demo-game",
+      "uuid": "8dd1fae6-98d6-4e83-ba8b-0ab50e15bd40",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.481",
+          "lng": "7.459054000000037"
+        },
+        "name": "Rodersdorf",
+        "uuid": "fe35dd02-63db-457e-cf94-fd468f0ce9e8",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 70,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 36
+      },
+      "_id": "local-demo-game-rodersdorf-71903851",
+      "gameId": "local-demo-game",
+      "uuid": "7286d5c5-3b48-4c9b-a23a-4720c5c745c6",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.627373",
+          "lng": "7.390247000000045"
+        },
+        "name": "Boltigen",
+        "uuid": "287b54be-e431-4c22-955b-cd9743ef47e8",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T08:16:02.110Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 71,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 36
+      },
+      "_id": "local-demo-game-boltigen-52344144",
+      "gameId": "local-demo-game",
+      "uuid": "30028514-2979-4e99-91bf-42870f0dcb07",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.757764",
+          "lng": "8.138644"
+        },
+        "name": "Brünig-Hasliberg",
+        "uuid": "bd58027c-761d-4fb2-8b30-317e47ae9014",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 72,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 37
+      },
+      "_id": "local-demo-game-brunig-hasliberg-16512682",
+      "gameId": "local-demo-game",
+      "uuid": "6d499a13-d9bb-4f1f-b0eb-ffb520dfa65c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.040214",
+          "lng": "8.530790000000025"
+        },
+        "name": "Kräbel",
+        "uuid": "62476fff-d455-4ad7-df22-761a7decab43",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T11:33:58.207Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 73,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 37
+      },
+      "_id": "local-demo-game-krabel-95158731",
+      "gameId": "local-demo-game",
+      "uuid": "6cfe1e90-c9d3-4db7-b963-1d55c3fbe97e",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.352624",
+          "lng": "8.553125000000023"
+        },
+        "name": "Zürich, Zürichhorn Casino",
+        "uuid": "ce893a1b-fc21-419e-9f11-b7aad893a6a4",
+        "accessibility": "boat"
+      },
+      "gamedata": {
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T08:32:05.334Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 74,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 38
+      },
+      "_id": "local-demo-game-zurich-zurichhorn-casino-70144645",
+      "gameId": "local-demo-game",
+      "uuid": "bf42d956-b31c-4a01-ab73-a6ca05dc6908",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.780307",
+          "lng": "9.543720000000008"
+        },
+        "name": "Churwalden, Post",
+        "uuid": "fdd23f8b-d701-4d71-9e77-7f2a3668c3da",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 75,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 38
+      },
+      "_id": "local-demo-game-churwalden-post-68505823",
+      "gameId": "local-demo-game",
+      "uuid": "4c1a243d-2a4c-40d1-a835-69319ccb284f",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.117841",
+          "lng": "9.173001999999997"
+        },
+        "name": "Mühlehorn",
+        "uuid": "e5b0fb96-d4dd-4591-8033-4b45463bbab1",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T07:58:01.466Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 76,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 39
+      },
+      "_id": "local-demo-game-muhlehorn-69872744",
+      "gameId": "local-demo-game",
+      "uuid": "abd0eacd-1d11-4ace-a2cc-458c1938e6b5",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.37475",
+          "lng": "10.031149000000028"
+        },
+        "name": "Alp Grüm",
+        "uuid": "00a50531-358c-453c-c0d0-e5155c8caaba",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T08:19:03.135Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 77,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 39
+      },
+      "_id": "local-demo-game-alp-grum-11112532",
+      "gameId": "local-demo-game",
+      "uuid": "a4f428f3-5e71-472e-940f-738cb70f016c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.488576",
+          "lng": "7.260277999999971"
+        },
+        "name": "Saanen",
+        "uuid": "a97c1cbd-466b-41a2-a1a8-94dd746ac2a8",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T08:12:01.208Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 78,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 40
+      },
+      "_id": "local-demo-game-saanen-15552211",
+      "gameId": "local-demo-game",
+      "uuid": "fd88afb9-df88-44db-a1d9-6bd641196ad5",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.12256",
+          "lng": "7.997061000000031"
+        },
+        "name": "Willisau",
+        "uuid": "7322d7a5-79e6-4d35-f634-53bb9bc8ae3b",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 3,
+        "positionInPriceRange": -1,
+        "position": 79,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 40
+      },
+      "_id": "local-demo-game-willisau-80344869",
+      "gameId": "local-demo-game",
+      "uuid": "41b9b684-10c0-4d75-b68a-64ddfe43f54d",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.669996",
+          "lng": "9.085653999999977"
+        },
+        "name": "Ermatingen",
+        "uuid": "edb5fe72-ac2a-4ccc-a58e-181a5d93a13d",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 80,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 41
+      },
+      "_id": "local-demo-game-ermatingen-63401612",
+      "gameId": "local-demo-game",
+      "uuid": "4c9a4044-6cf2-4a40-9704-a732ef045206",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.160442",
+          "lng": "8.973924000000011"
+        },
+        "name": "S. Antonino",
+        "uuid": "15583eaf-ef06-446f-b9b1-18eb690c5813",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 81,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 41
+      },
+      "_id": "local-demo-game-s-antonino-11686450",
+      "gameId": "local-demo-game",
+      "uuid": "b0f51bdc-e429-4a63-817e-93e818e4a9b8",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.149139",
+          "lng": "8.780724999999961"
+        },
+        "name": "Ascona, Lido",
+        "uuid": "d7d4087c-6f0d-4924-9859-2a8316d17ea8",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 82,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 42
+      },
+      "_id": "local-demo-game-ascona-lido-29085436",
+      "gameId": "local-demo-game",
+      "uuid": "82194e58-0b5b-42d0-b107-c9cc1603bc32",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.38527540480932",
+          "lng": "8.516936302185059"
+        },
+        "name": "Zürich Hardbrücke",
+        "uuid": "59270c39-f82d-4b2f-ee2d-d8744f47c458",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T11:17:55.161Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 83,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 42
+      },
+      "_id": "local-demo-game-zurich-hardbrucke-35508533",
+      "gameId": "local-demo-game",
+      "uuid": "a326f549-06d8-4072-a8bc-3367b468321a",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.775359",
+          "lng": "9.207437000000027"
+        },
+        "name": "Ilanz",
+        "uuid": "e9c86443-b799-4411-c696-9bc1010591c8",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T11:21:56.913Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 84,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 43
+      },
+      "_id": "local-demo-game-ilanz-71606064",
+      "gameId": "local-demo-game",
+      "uuid": "83cbca3b-25f2-4f99-b443-a926db36bd50",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.105577",
+          "lng": "8.91975500000001"
+        },
+        "name": "Innerthal, Post",
+        "uuid": "553007d1-72d7-44c3-f321-7f0ca8918d7c",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "owner": "8765af2d-f97d-4e36-aba5-a76f03b86bfe",
+        "boughtTs": "2022-01-08T07:42:58.031Z",
+        "buildings": 1,
+        "buildingEnabled": true
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 600,
+          "oneHouse": 2400,
+          "twoHouses": 7500,
+          "threeHouses": 10500,
+          "fourHouses": 12000,
+          "hotel": 15000
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 85,
+        "price": 3000,
+        "pricePerHouse": 1500,
+        "propertyGroup": 43
+      },
+      "_id": "local-demo-game-innerthal-post-71135623",
+      "gameId": "local-demo-game",
+      "uuid": "0f62ba7d-ac12-42f0-983f-1101c6babf55",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.73114",
+          "lng": "8.42749200000003"
+        },
+        "name": "Steingletscher, Susten",
+        "uuid": "a4753636-0573-4af4-db5a-fb5a8a8dee6e",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 86,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 44
+      },
+      "_id": "local-demo-game-steingletscher-susten-32563266",
+      "gameId": "local-demo-game",
+      "uuid": "69fe63ef-4754-4057-9d2c-11d7d504db94",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.436232",
+          "lng": "6.214574999999968"
+        },
+        "name": "Genolier",
+        "uuid": "e458a2e6-9c93-4f32-ba1f-d7fc002f9732",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 87,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 44
+      },
+      "_id": "local-demo-game-genolier-99876629",
+      "gameId": "local-demo-game",
+      "uuid": "522c1712-4194-4bfe-bd2e-ffac017bd884",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.654845",
+          "lng": "6.665756999999985"
+        },
+        "name": "Sugnens",
+        "uuid": "c7621b13-2cd7-4c63-dc02-55374e02db14",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "f6428731-3f97-4528-a696-0f09ab005640",
+        "boughtTs": "2022-01-08T08:25:04.293Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 88,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 45
+      },
+      "_id": "local-demo-game-sugnens-12732050",
+      "gameId": "local-demo-game",
+      "uuid": "f79ae1d9-01f8-4d8c-96c0-daab8677912c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.894139",
+          "lng": "7.299852999999985"
+        },
+        "name": "Neuenegg",
+        "uuid": "8a31a1ab-e751-4cba-faa4-90037f77670f",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T08:24:04.129Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 89,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 45
+      },
+      "_id": "local-demo-game-neuenegg-28369301",
+      "gameId": "local-demo-game",
+      "uuid": "d034c371-379e-4812-9b3d-3f8ee015e45c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.114712",
+          "lng": "7.4940070000000105"
+        },
+        "name": "Evolène, Village",
+        "uuid": "53f70ca9-fc54-459b-b0fa-0c4d53aa7265",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 90,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 46
+      },
+      "_id": "local-demo-game-evolene-village-94932123",
+      "gameId": "local-demo-game",
+      "uuid": "b20deed5-e93a-4821-b12b-7f568e9c687e",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.375213",
+          "lng": "8.091682999999989"
+        },
+        "name": "Grengiols",
+        "uuid": "26e9af70-497e-45b9-8901-e05b9d8e1057",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 91,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 46
+      },
+      "_id": "local-demo-game-grengiols-63099443",
+      "gameId": "local-demo-game",
+      "uuid": "30a53dfc-221a-4044-bea5-64357966c0fd",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.422418",
+          "lng": "9.415437999999995"
+        },
+        "name": "Schwarzer Bären (St. Gallen)",
+        "uuid": "fa5ae2bd-4d86-4bd0-87e8-bc82a94cee73",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T07:47:59.308Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 92,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 47
+      },
+      "_id": "local-demo-game-schwarzer-baren-st-gallen-38860492",
+      "gameId": "local-demo-game",
+      "uuid": "207dc1aa-298e-4735-b916-9b58e792ba64",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.360826",
+          "lng": "9.495171000000028"
+        },
+        "name": "Stoss AR",
+        "uuid": "dcd4a176-f773-42e2-8a4b-50d41fb830ac",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T08:04:03.683Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 93,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 47
+      },
+      "_id": "local-demo-game-stoss-ar-78897621",
+      "gameId": "local-demo-game",
+      "uuid": "ff9533ba-ad3c-4922-b196-a094c5e832c2",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.208368",
+          "lng": "8.70745999999997"
+        },
+        "name": "Richterswil",
+        "uuid": "5be9da8f-01e2-484d-9802-6390c28fd8eb",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T11:20:56.823Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 94,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 48
+      },
+      "_id": "local-demo-game-richterswil-41664947",
+      "gameId": "local-demo-game",
+      "uuid": "c4737930-b5a0-4744-8af0-bf4e45cb04e2",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.549907",
+          "lng": "9.888475999999969"
+        },
+        "name": "Bever",
+        "uuid": "f40496d0-0d7a-414a-a048-da5a81dc70a1",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T08:30:05.106Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 95,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 48
+      },
+      "_id": "local-demo-game-bever-19621905",
+      "gameId": "local-demo-game",
+      "uuid": "d3d4a3a2-cce4-4799-aff0-d44cc8b65d4b",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.35621",
+          "lng": "8.04713700000002"
+        },
+        "name": "Mörel",
+        "uuid": "aa6c40ae-2634-4f52-cabc-10bdb1e2a240",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 96,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 49
+      },
+      "_id": "local-demo-game-morel-36231479",
+      "gameId": "local-demo-game",
+      "uuid": "91177b0e-fbe1-436d-b00d-12db8362854c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.982613",
+          "lng": "8.310164999999984"
+        },
+        "name": "Hergiswil",
+        "uuid": "39322d9d-403d-4718-ec73-cc45bdd449b8",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T11:39:58.712Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 97,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 49
+      },
+      "_id": "local-demo-game-hergiswil-85736308",
+      "gameId": "local-demo-game",
+      "uuid": "540a0c5c-122c-4563-b30d-128fce48907f",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.462668",
+          "lng": "6.842333999999937"
+        },
+        "name": "Vevey",
+        "uuid": "2127bef5-ed87-4a1d-de26-4fcadb83720d",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T07:35:56.376Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 98,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 50
+      },
+      "_id": "local-demo-game-vevey-72409701",
+      "gameId": "local-demo-game",
+      "uuid": "073bf1e0-ec98-426e-b8ce-1e5629feafae",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.195133",
+          "lng": "8.850718000000029"
+        },
+        "name": "Diga Verzasca",
+        "uuid": "560aa509-90e6-49bb-ed33-e99f3da964f8",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 4,
+        "positionInPriceRange": -1,
+        "position": 99,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 50
+      },
+      "_id": "local-demo-game-diga-verzasca-44027572",
+      "gameId": "local-demo-game",
+      "uuid": "28291919-d81d-4708-8b33-3b4a2d557e6b",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.636893",
+          "lng": "8.593274000000065"
+        },
+        "name": "Andermatt",
+        "uuid": "6762bc88-7d05-4e23-b0d4-1f4175ba79bf",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 100,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 51
+      },
+      "_id": "local-demo-game-andermatt-35191127",
+      "gameId": "local-demo-game",
+      "uuid": "019c28e2-d1cb-4619-8007-26b4e6136d3c",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.233217",
+          "lng": "10.142071999999985"
+        },
+        "name": "Campocologno",
+        "uuid": "320d9422-f469-4277-f80b-57f17773661e",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 101,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 51
+      },
+      "_id": "local-demo-game-campocologno-71309476",
+      "gameId": "local-demo-game",
+      "uuid": "bce97617-2495-40ba-a98a-f38c72915bff",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.039921",
+          "lng": "9.071551"
+        },
+        "name": "Glarus",
+        "uuid": "5f4ae02b-2a45-4372-bcd2-1eced1f30abe",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T08:01:02.641Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 700,
+          "oneHouse": 2800,
+          "twoHouses": 8750,
+          "threeHouses": 12250,
+          "fourHouses": 14000,
+          "hotel": 17500
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 102,
+        "price": 3500,
+        "pricePerHouse": 1750,
+        "propertyGroup": 52
+      },
+      "_id": "local-demo-game-glarus-17125576",
+      "gameId": "local-demo-game",
+      "uuid": "df82cba9-9c72-4912-adcf-a3e370bd8307",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.607898",
+          "lng": "8.869574000000057"
+        },
+        "name": "Hüttwilen, Post",
+        "uuid": "2f4b7294-663d-4dd9-bbea-dac5092b133a",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 103,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 52
+      },
+      "_id": "local-demo-game-huttwilen-post-76292052",
+      "gameId": "local-demo-game",
+      "uuid": "63d5b4e4-b34e-4bac-8f5f-0f5ccb37c067",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.219839",
+          "lng": "7.201634000000013"
+        },
+        "name": "Tavannes",
+        "uuid": "b63e9638-44fc-4f4e-aa4c-0a7e5a10f36d",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 104,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 53
+      },
+      "_id": "local-demo-game-tavannes-64801993",
+      "gameId": "local-demo-game",
+      "uuid": "ca8a7b95-e8c0-4143-9a46-a16a990c0c42",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.038577",
+          "lng": "8.181952000000024"
+        },
+        "name": "Malters",
+        "uuid": "be2b2c78-c760-4260-d87d-763953a1758c",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 105,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 53
+      },
+      "_id": "local-demo-game-malters-17668450",
+      "gameId": "local-demo-game",
+      "uuid": "c9671b50-afb2-480a-b7f7-6e931e160941",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.039721",
+          "lng": "8.932121999999936"
+        },
+        "name": "Lamone-Cadempino",
+        "uuid": "49174fd5-6d52-4e80-b759-55defe6a4395",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 106,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 54
+      },
+      "_id": "local-demo-game-lamone-cadempino-37530321",
+      "gameId": "local-demo-game",
+      "uuid": "dec9fe74-645e-4a32-a9d2-099ef1913198",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.168371",
+          "lng": "9.50795400000004"
+        },
+        "name": "Schaan-Vaduz",
+        "uuid": "b49d2ed8-b75b-4232-97b2-159839997fdf",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T08:00:02.144Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 107,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 54
+      },
+      "_id": "local-demo-game-schaan-vaduz-78485815",
+      "gameId": "local-demo-game",
+      "uuid": "ad01a1cc-d675-4d4f-b3d4-e6b57776291a",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.297168",
+          "lng": "7.123943999999938"
+        },
+        "name": "Bollement",
+        "uuid": "400b7420-5ce2-46a5-ccd0-27080a36a750",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 108,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 55
+      },
+      "_id": "local-demo-game-bollement-46827188",
+      "gameId": "local-demo-game",
+      "uuid": "188c80e3-25d1-4c8b-bad3-f1eaefe2af1a",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.00936",
+          "lng": "7.056440000000066"
+        },
+        "name": "Gampelen",
+        "uuid": "1bfab310-9115-47b2-8682-cca8b975a7ae",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T11:29:57.891Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 109,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 55
+      },
+      "_id": "local-demo-game-gampelen-21258952",
+      "gameId": "local-demo-game",
+      "uuid": "30ac66bc-a6e8-42f3-951c-be3fa99f49a4",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.392125",
+          "lng": "7.856213000000025"
+        },
+        "name": "Läufelfingen",
+        "uuid": "9b5c4e7e-b556-4471-e3b6-379773931549",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 110,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 56
+      },
+      "_id": "local-demo-game-laufelfingen-87223972",
+      "gameId": "local-demo-game",
+      "uuid": "26757b03-5b38-487a-8573-e2866b671100",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.235984",
+          "lng": "7.493762999999944"
+        },
+        "name": "Oberdorf SO",
+        "uuid": "be9bfd87-5be6-4a22-998a-c99f8bbe81f4",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 111,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 56
+      },
+      "_id": "local-demo-game-oberdorf-so-61720201",
+      "gameId": "local-demo-game",
+      "uuid": "36db1d08-e491-4cf5-97e0-7fa7a34f0a77",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.455922",
+          "lng": "6.997718999999961"
+        },
+        "name": "Les Cases",
+        "uuid": "1ee634e8-d5cc-465e-e038-b46a67e7ff5c",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T07:46:59.010Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 112,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 57
+      },
+      "_id": "local-demo-game-les-cases-46864671",
+      "gameId": "local-demo-game",
+      "uuid": "a28ebeb4-35b1-49bf-8b09-3b0880163733",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.711661",
+          "lng": "7.9642109999999775"
+        },
+        "name": "Iseltwald, Dorfplatz",
+        "uuid": "56128692-8eb9-4ae0-c539-f6c24c121153",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 113,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 57
+      },
+      "_id": "local-demo-game-iseltwald-dorfplatz-28875088",
+      "gameId": "local-demo-game",
+      "uuid": "eaa2b28f-bb97-4232-a4df-d4a8c6729743",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.052205",
+          "lng": "8.58526299999994"
+        },
+        "name": "Steinerberg",
+        "uuid": "b3421044-80ee-48da-b892-b35b0087883f",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+        "boughtTs": "2022-01-08T11:30:57.943Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 114,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 58
+      },
+      "_id": "local-demo-game-steinerberg-80102899",
+      "gameId": "local-demo-game",
+      "uuid": "f54bd272-22bb-4875-ab63-c9c0376cf8b6",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.873346",
+          "lng": "7.559429000000023"
+        },
+        "name": "Münsingen",
+        "uuid": "699c4e44-115d-48d8-86d3-0e37cfef7d18",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "38919591-b08a-4d76-9165-1c5f4e50e768",
+        "boughtTs": "2022-01-08T08:17:02.450Z",
+        "buildings": 1,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 115,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 58
+      },
+      "_id": "local-demo-game-munsingen-92898287",
+      "gameId": "local-demo-game",
+      "uuid": "2b21ea2d-beec-47b8-a94a-aaca0e6f4063",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.379788",
+          "lng": "7.626408999999967"
+        },
+        "name": "Leukerbad",
+        "uuid": "4a50bd73-4a64-47ed-b5d7-153c9a0f0962",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 116,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 59
+      },
+      "_id": "local-demo-game-leukerbad-91792188",
+      "gameId": "local-demo-game",
+      "uuid": "0c6bfa03-6b41-4d0b-9509-721307d9f380",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.079855",
+          "lng": "8.627232000000049"
+        },
+        "name": "Sattel-Aegeri",
+        "uuid": "c931673d-87d1-4920-a4c1-238beafc9e41",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "buildingEnabled": false,
+        "owner": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+        "boughtTs": "2022-01-08T11:25:57.594Z",
+        "buildings": 0
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 117,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 59
+      },
+      "_id": "local-demo-game-sattel-aegeri-19324963",
+      "gameId": "local-demo-game",
+      "uuid": "2ba3f433-c51c-44e0-93ab-84ac5c2d7679",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "46.664057",
+          "lng": "10.210297999999966"
+        },
+        "name": "Il Fuorn P6",
+        "uuid": "0f719eb5-56b9-463f-c2a4-8bcdfb135445",
+        "accessibility": "bus"
+      },
+      "gamedata": {
+        "owner": "a66c414a-cd89-414d-b298-875674bc4a3f",
+        "boughtTs": "2022-01-08T07:45:58.662Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 118,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 60
+      },
+      "_id": "local-demo-game-il-fuorn-p-6-38909091",
+      "gameId": "local-demo-game",
+      "uuid": "fdf1730f-3bef-459f-b5fa-ce5eff4353c0",
+      "__v": 0
+    },
+    {
+      "location": {
+        "position": {
+          "lat": "47.390168",
+          "lng": "9.276802999999973"
+        },
+        "name": "Herisau",
+        "uuid": "6a8ffa83-26cf-4471-c5bf-21269a51def0",
+        "accessibility": "train"
+      },
+      "gamedata": {
+        "owner": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+        "boughtTs": "2022-01-08T07:39:57.236Z",
+        "buildings": 2,
+        "buildingEnabled": false
+      },
+      "pricelist": {
+        "rents": {
+          "noHouse": 800,
+          "oneHouse": 3200,
+          "twoHouses": 10000,
+          "threeHouses": 14000,
+          "fourHouses": 16000,
+          "hotel": 20000
+        },
+        "priceRange": 5,
+        "positionInPriceRange": -1,
+        "position": 119,
+        "price": 4000,
+        "pricePerHouse": 2000,
+        "propertyGroup": 60
+      },
+      "_id": "local-demo-game-herisau-67917840",
+      "gameId": "local-demo-game",
+      "uuid": "f265593a-4598-44b4-ae0b-dab4b83bcd78",
+      "__v": 0
+    }
+  ],
+  "teams": [
+    {
+      "_id": "local-demo-game-0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+      "data": {
+        "name": "Bahnfreaks",
+        "organization": "Cevi Bern",
+        "teamLeader": {
+          "name": "Marius Garatti",
+          "email": "team2@ferropoly.ch",
+          "phone": "079 000 00 02"
+        }
+      },
+      "uuid": "0ef872ff-5f9f-4810-b008-cb845bd0c75b",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 1,
+      "internalName": "team01"
+    },
+    {
+      "_id": "local-demo-game-8765af2d-f97d-4e36-aba5-a76f03b86bfe",
+      "data": {
+        "name": "Bahnschwellen",
+        "organization": "Sek Hinwil",
+        "teamLeader": {
+          "name": "Sylvia Balmer",
+          "email": "team3@ferropoly.ch",
+          "phone": "079 000 00 03"
+        }
+      },
+      "uuid": "8765af2d-f97d-4e36-aba5-a76f03b86bfe",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 2,
+      "internalName": "team02"
+    },
+    {
+      "_id": "local-demo-game-cc82ace7-4a5e-4475-bf46-a34760b29829",
+      "data": {
+        "name": "Ferropoly Riders",
+        "organization": "Pfadi Züri Oberland",
+        "teamLeader": {
+          "name": "Nora Reichle",
+          "email": "team1@ferropoly.ch",
+          "phone": "079 000 00 01"
+        }
+      },
+      "uuid": "cc82ace7-4a5e-4475-bf46-a34760b29829",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 3,
+      "internalName": "team03"
+    },
+    {
+      "_id": "local-demo-game-5be94a39-15dd-40fc-8e9c-387a84b2e282",
+      "data": {
+        "name": "Pufferbillies",
+        "organization": "Oberstufe Basel",
+        "teamLeader": {
+          "name": "Christine Huber",
+          "email": "team5@ferropoly.ch",
+          "phone": "079 000 00 05"
+        }
+      },
+      "uuid": "5be94a39-15dd-40fc-8e9c-387a84b2e282",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 5,
+      "internalName": "team05"
+    },
+    {
+      "_id": "local-demo-game-a66c414a-cd89-414d-b298-875674bc4a3f",
+      "data": {
+        "name": "Mecaronis",
+        "organization": "Mechatronik Team",
+        "teamLeader": {
+          "name": "Martin Schiess",
+          "email": "team6@ferropoly.ch",
+          "phone": "079 000 00 06"
+        }
+      },
+      "uuid": "a66c414a-cd89-414d-b298-875674bc4a3f",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 4,
+      "internalName": "team04"
+    },
+    {
+      "_id": "local-demo-game-597658c3-5b3d-4b42-a313-b61bcb2ba963",
+      "data": {
+        "name": "Schmalspurfans",
+        "organization": "Gewerbeschule Chur",
+        "teamLeader": {
+          "name": "Jonas Tobler",
+          "email": "team4@ferropoly.ch",
+          "phone": "079 000 00 04"
+        },
+        "remarks": "Siegerteam letztes Jahr"
+      },
+      "uuid": "597658c3-5b3d-4b42-a313-b61bcb2ba963",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 7,
+      "internalName": "team07"
+    },
+    {
+      "_id": "local-demo-game-38919591-b08a-4d76-9165-1c5f4e50e768",
+      "data": {
+        "name": "Sackbahnhof",
+        "organization": "Jungwacht St. Gallen",
+        "teamLeader": {
+          "name": "Thomas Kunz",
+          "email": "team8@ferropoly.ch",
+          "phone": "079 000 00 08"
+        }
+      },
+      "uuid": "38919591-b08a-4d76-9165-1c5f4e50e768",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 6,
+      "internalName": "team06"
+    },
+    {
+      "_id": "local-demo-game-f6428731-3f97-4528-a696-0f09ab005640",
+      "data": {
+        "name": "Ticketeria",
+        "organization": "Team Kriens",
+        "teamLeader": {
+          "name": "Lea Kuster",
+          "email": "team7@ferropoly.ch",
+          "phone": "079 000 00 07"
+        }
+      },
+      "uuid": "f6428731-3f97-4528-a696-0f09ab005640",
+      "gameId": "local-demo-game",
+      "__v": 0,
+      "index": 8,
+      "internalName": "team08"
+    }
+  ],
+  "currentGameId": "local-demo-game",
+  "mapApiKey": "none",
+  "user": "demo@ferropoly.ch"
+}

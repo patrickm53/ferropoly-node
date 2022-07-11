@@ -5,10 +5,10 @@
  * Created by kc on 10.07.15.
  */
 
-const gamecache = require('./gameCache');
-const gameplays = require('../../common/models/gameplayModel');
-const _         = require('lodash');
-const logger    = require('../../common/lib/logger').getLogger('lib:accessor');
+const gamecache  = require('./gameCache');
+const gameplays  = require('../../common/models/gameplayModel');
+const _          = require('lodash');
+const logger     = require('../../common/lib/logger').getLogger('lib:accessor');
 
 const PLAYER = 1;
 const ADMIN  = 2;
@@ -66,7 +66,7 @@ module.exports = {
           // The gameplay is here, refresh cache
           gamecache.refreshCache(function () {
             if (userHasAdminRights(userId, gc.gameplay)) {
-              return callback();
+              return callback(null, {hasAdminRights: true});
             }
             logger.debug('No access rights granted for ' + userId);
             return callback(new Error('No access rights granted'));
@@ -74,8 +74,14 @@ module.exports = {
         });
       } else if (userHasAdminRights(userId, gc.gameplay)) {
         // it's the admin and the game is in the cache, return always ok
-        return callback();
+        return callback(null, {hasAdminRights: true});
       }
+
+      // If the game is over, the game data gets public
+      if (_.get(gc, 'gameplay.internal.gameDataPublic', false)) {
+        return callback(null, {userHasAdminRights: false});
+      }
+
       // Todo: handle player rights for future features
       logger.debug('No access rights granted for ' + userId);
       return callback(new Error('No access rights granted'));
@@ -90,7 +96,7 @@ module.exports = {
 
       let team = gc.teams[teamId];
       if (!team) {
-        return callback(new Error('Unknown teamId'));
+        return callback(new Error(`Unknown teamId "${teamId}", not allowed`));
       }
 
       if (team.data.teamLeader.email === userId) {
@@ -98,8 +104,8 @@ module.exports = {
       }
 
       if (_.find(team.data.members, function (m) {
-          return m === userId;
-        })) {
+        return m === userId;
+      })) {
         return callback();
       }
 
