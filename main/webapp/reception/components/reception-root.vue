@@ -71,7 +71,7 @@ export default {
         'panel-statistic'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/statistic',
         'panel-accounting' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/accounting',
         'panel-chancellery': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/chancellery',
-        'panel-pricelist'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/pricelist',
+        'panel-properties' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/pricelist',
         'panel-rules'      : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/rules'
       }
     };

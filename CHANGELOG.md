@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+* Bugfix: Hilfe URL in Reception / Preisliste gefixt
 * Textliche anpassungen
 
 # v3.1.5 26.6.22
