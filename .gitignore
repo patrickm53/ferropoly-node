@@ -50,3 +50,4 @@ main/public/js/checkin.*
 
 checkin.min.js
 /main/views/error/generic.html
+/yarn.lock
