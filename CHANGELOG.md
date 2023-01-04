@@ -1,5 +1,18 @@
 # Changelog Ferropoly Spiel
 
+# v3.1.7
+* Sync mit Editor: Kein weiteres Login mit Dropbox oder Twitter
+* Dependency Updates (sehr viele!), diese sind bewusst fix (Vue 3):
+```
+Package               Current Wanted  Latest Package Type    URL                                                                        
+bootstrap             4.6.0   4.6.0   5.2.3  devDependencies https://getbootstrap.com/                                                  
+vue                   2.6.14  2.6.14  3.2.45 devDependencies https://github.com/vuejs/core/tree/main/packages/vue#readme                
+vue-loader            15.10.1 15.10.1 17.0.1 devDependencies https://github.com/vuejs/vue-loader                                        
+vue-router            3.5.3   3.5.3   4.1.6  devDependencies https://github.com/vuejs/router#readme                                     
+vue-template-compiler 2.6.14  2.6.14  2.7.14 devDependencies https://github.com/vuejs/vue/tree/dev/packages/vue-template-compiler#readme
+vuex                  3.6.2   3.6.2   4.1.0  devDependencies https://github.com/vuejs/vuex#readme       
+```
+
 # v3.1.6 11.7.22
 * Bugfix: Hilfe URL in Reception / Preisliste gefixt
 * Textliche anpassungen
