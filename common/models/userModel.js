@@ -15,10 +15,12 @@ const pbkdf2     = require('pbkdf2-sha256');
 const logger     = require('../lib/logger').getLogger('userModel');
 const _          = require('lodash');
 const {v4: uuid} = require('uuid');
+const accountLog = require('./accountLogModel');
+
 /**
  * The mongoose schema for an user
  */
-let userSchema   = mongoose.Schema({
+let userSchema = mongoose.Schema({
   _id         : {type: String},
   id          : String,
   personalData: {
@@ -39,9 +41,7 @@ let userSchema   = mongoose.Schema({
     verificationText  : String,
     facebookProfileId : String,
     googleProfileId   : String,
-    dropboxProfileId  : String,
     microsoftProfileId: String,
-    twitterUserName   : String
   },
   info        : {
     registrationDate: Date,
@@ -152,6 +152,7 @@ function updateUser(user, password, callback) {
         generatePasswordHash(user, password);
         user.info.registrationDate = new Date();
         user._id                   = user.personalData.email;
+        accountLog.addNewUserEntry(user.personalData.email, 'Email-Adresse');
         return user.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -194,14 +195,19 @@ function getUserByMailAddress(emailAddress, callback) {
 
     // Verify if this user already has an ID or not. If not, upgrade to new model
     let foundUser = docs[0];
-    if (!_.isString(foundUser._id)) {
-      foundUser._id = foundUser.personalData.email;
-      foundUser.save(function (err) {
+    if (!_.isString(foundUser._id) || foundUser._id !== foundUser.personalData.email) {
+      const id      = foundUser._id;
+      const newUser = new User();
+      copyUser(foundUser, newUser);
+      newUser._id = emailAddress;
+      newUser.save(function (err) {
         if (err) {
           return callback(err);
         }
-        logger.info('Updated user with email ' + foundUser.personalData.email);
-        callback(null, foundUser);
+        User.findByIdAndRemove(id, function (err) {
+          logger.info('Updated user with email ' + newUser.personalData.email);
+          callback(err, newUser);
+        });
       });
     } else {
       callback(null, foundUser);
@@ -267,41 +273,6 @@ function getGoogleUser(profileId, callback) {
  */
 function getMicrosoftUser(profileId, callback) {
   User.find({'login.microsoftProfileId': profileId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs[0]);
-  });
-}
-
-
-/**
- * Returns a user by its Dropbox profile
- * @param profileId
- * @param callback
- */
-function getDropboxUser(profileId, callback) {
-  User.find({'login.dropboxProfileId': profileId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs[0]);
-  });
-}
-
-/**
- * Returns a user by its Twitter profile
- * @param profileId
- * @param callback
- */
-function getTwitterUser(profileId, callback) {
-  User.find({'login.twitterUserName': profileId}, function (err, docs) {
     if (err) {
       return callback(err);
     }
@@ -387,7 +358,7 @@ function findOrCreateFacebookUser(profile, callback) {
       let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
 
       function createNewFacebookUser() {
-        newUser                         = new User();
+        let newUser                     = new User();
         newUser._id                     = emailAddress || profile.id;
         newUser.login.facebookProfileId = profile.id;
         newUser.info.facebook           = profile;
@@ -397,6 +368,7 @@ function findOrCreateFacebookUser(profile, callback) {
         newUser.personalData.surname    = profile.name.familyName;
         newUser.personalData.email      = emailAddress ? emailAddress : profile.id; // using facebook profile id as email alternative
         newUser.personalData.avatar     = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+        accountLog.addNewUserEntry(newUser._id, 'Facebook');
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -421,6 +393,7 @@ function findOrCreateFacebookUser(profile, callback) {
             user.personalData.surname    = profile.name.familyName;
             user.login.facebookProfileId = profile.id;
             user.personalData.avatar     = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+            accountLog.addNewUserEntry(emailAddress, 'Facebook');
             user.save(function (err) {
               if (err) {
                 return callback(err);
@@ -505,6 +478,7 @@ function findOrCreateGoogleUser(profile, callback) {
         newUser.personalData.surname  = profile.name.familyName;
         newUser.personalData.email    = emailAddress;
         newUser.personalData.avatar   = avatar;
+        accountLog.addNewUserEntry(newUser._id, 'Google');
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -529,6 +503,7 @@ function findOrCreateGoogleUser(profile, callback) {
             user.personalData.surname  = profile.name.familyName;
             user.login.googleProfileId = profile.id;
             user.personalData.avatar   = avatar;
+            accountLog.addNewUserEntry(emailAddress, 'Google');
             user.save(function (err) {
               if (err) {
                 return callback(err);
@@ -613,6 +588,7 @@ function findOrCreateMicrosoftUser(profile, callback) {
         newUser.personalData.surname     = profile.name.familyName;
         newUser.personalData.email       = emailAddress;
         newUser.personalData.avatar      = avatar;
+        accountLog.addNewUserEntry(newUser._id, 'Microsoft');
         newUser.save(function (err, savedUser) {
           if (err) {
             return callback(err);
@@ -632,11 +608,12 @@ function findOrCreateMicrosoftUser(profile, callback) {
             // Ok, we know this user. Update profile for microsoft access
             user.info.microsoft           = profile;
             user.info.registrationDate    = new Date();
-            user.login.verifiedEmail      = true; // Google does not need verification
+            user.login.verifiedEmail      = true; // MS does not need verification
             user.personalData.forename    = profile.name.givenName;
             user.personalData.surname     = profile.name.familyName;
             user.login.microsoftProfileId = profile.id;
             user.personalData.avatar      = avatar;
+            accountLog.addNewUserEntry(emailAddress, 'Microsoft');
             user.save(function (err) {
               if (err) {
                 return callback(err);
@@ -665,210 +642,6 @@ function findOrCreateMicrosoftUser(profile, callback) {
 }
 
 
-/**
- * Find or create a user logging in with Dropbox
- * @param profile
- * @param callback
- * @returns {*}
- */
-function findOrCreateDropboxUser(profile, callback) {
-  logger.info('findOrCreateDropboxUser', profile);
-  if (!_.isObject(profile) || !_.isString(profile.id)) {
-    return callback(new Error('invalid profile supplied'));
-  }
-
-
-  if (profile.provider !== 'dropbox') {
-    logger.info('This is not a dropbox account: ' + profile.provider);
-    callback(new Error('not a dropbox account: ' + profile.provider));
-  }
-
-  // Try to get the user
-  getDropboxUser(profile.id, function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      // The user is not here, try to find him with the email-address
-      let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
-
-      function saveNewDropboxUser() {
-        let newUser                    = new User();
-        newUser._id                    = emailAddress || profile.id;
-        newUser.login.dropboxProfileId = profile.id;
-        newUser.info.dropbox           = {
-          emails     : _.get(profile, 'emails', []),
-          name       : _.get(profile, 'name', {}),
-          displayName: _.get(profile, 'displayName', '?')
-        };
-        newUser.info.registrationDate  = new Date();
-        newUser.login.verifiedEmail    = true; // Dropbox does not need verification
-        newUser.personalData.forename  = _.get(profile, 'name.givenName', '');
-        newUser.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
-        newUser.personalData.email     = emailAddress ? emailAddress : profile.id; // using profile id as email alternative
-        newUser.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-        newUser.save(function (err, savedUser) {
-          if (err) {
-            return callback(err);
-          }
-          logger.info('Created dropbox user', savedUser);
-          // Recursive call, now we'll find this user
-          return findOrCreateDropboxUser(profile, callback);
-        });
-      }
-
-      if (emailAddress) {
-        getUserByMailAddress(emailAddress, function (err, user) {
-          if (err) {
-            return callback(err);
-          }
-          if (user) {
-            // Ok, we know this user. Update profile for dropbox access
-            user.info.dropbox           = {
-              emails     : _.get(profile, 'emails', []),
-              name       : _.get(profile, 'name', {}),
-              displayName: _.get(profile, 'displayName', '?')
-            };
-            user.info.registrationDate  = new Date();
-            user.login.verifiedEmail    = true; // Dropbox does not need verification
-            user.personalData.forename  = _.get(profile, 'name.givenName', '');
-            user.personalData.surname   = _.get(profile, 'name.familyName', profile.displayName);
-            user.login.dropboxProfileId = profile.id;
-            user.personalData.avatar    = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-            user.save(function (err) {
-              if (err) {
-                return callback(err);
-              }
-              logger.info('Upgraded user ' + emailAddress + ' for dropbox access');
-              // Recursive call, now we'll find this user
-              return findOrCreateDropboxUser(profile, callback);
-            });
-            return;
-          }
-
-          // We do not know this user. Add him/her to the list.
-          saveNewDropboxUser();
-        });
-        return;
-      }
-      // No email address (somehow an annonymous drobox user). Add as new User
-      return saveNewDropboxUser();
-    }
-
-    // User found, update
-    user.info.dropbox        = {
-      emails     : _.get(profile, 'emails', []),
-      name       : _.get(profile, 'name', {}),
-      displayName: _.get(profile, 'displayName', '?')
-    };
-    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-    updateUser(user, null, callback);
-  });
-}
-
-/**
- * Find or create a user logging in with Twitter. The username is the key for twitter profiles, we don't have
- * an email address!
- * @param profile
- * @param callback
- * @returns {*}
- */
-function findOrCreateTwitterUser(profile, callback) {
-  logger.info('findOrCreateTwitterUser', profile);
-  if (!_.isObject(profile) || !_.isString(profile.username)) {
-    return callback(new Error('invalid profile supplied'));
-  }
-
-  if (profile.provider !== 'twitter') {
-    logger.info('This is not a twitter account: ' + profile.provider);
-    callback(new Error('not a twitter account: ' + profile.provider));
-  }
-
-
-  // This is the twitter user name
-  let username = '@' + profile.username;
-
-
-  // Try to get the user
-  getTwitterUser(username, function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      // The user is not here, try to find him with the email-address
-      let emailAddress = _.isArray(profile.emails) ? profile.emails[0].value : undefined;
-
-      function saveNewTwitterUser() {
-        let newUser                   = new User();
-        newUser._id                   = emailAddress || username;
-        newUser.login.twitterUserName = username;
-        newUser.info.twitter          = {
-          username   : _.get(profile, 'username', []),
-          displayName: _.get(profile, 'displayName', '?')
-        };
-        newUser.info.registrationDate = new Date();
-        newUser.login.verifiedEmail   = true; // Twitter does not need verification
-        newUser.personalData.forename = _.get(profile, 'name.givenName', '');
-        newUser.personalData.surname  = _.get(profile, 'name.familyName', profile.displayName);
-        newUser.personalData.email    = emailAddress ? emailAddress : username; // using profile id as email alternative
-        newUser.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-        newUser.save(function (err, savedUser) {
-          if (err) {
-            return callback(err);
-          }
-          logger.info('Created twitter user', savedUser);
-          // Recursive call, now we'll find this user
-          return findOrCreateTwitterUser(profile, callback);
-        });
-      }
-
-      if (username) {
-        getUserByMailAddress(username, function (err, user) {
-          if (err) {
-            return callback(err);
-          }
-          if (user) {
-            // Ok, we know this user. Update profile for twitter access
-            user.info.twitter          = {
-              username   : _.get(profile, 'username', []),
-              displayName: _.get(profile, 'displayName', '?')
-            };
-            user.info.registrationDate = new Date();
-            user.login.verifiedEmail   = true; // Twitter does not need verification
-            user.personalData.forename = _.get(profile, 'name.givenName', '');
-            user.personalData.surname  = _.get(profile, 'name.familyName', profile.displayName);
-            user.login.twitterUserName = username;
-            user.personalData.avatar   = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-            user.save(function (err) {
-              if (err) {
-                return callback(err);
-              }
-              logger.info('Upgraded user ' + emailAddress + ' for twitter access');
-              // Recursive call, now we'll find this user
-              return findOrCreateTwitterUser(profile, callback);
-            });
-            return;
-          }
-
-          // We do not know this user. Add him/her to the list.
-          saveNewTwitterUser();
-        });
-        return;
-      }
-      // No email address (somehow an annonymous drobox user). Add as new User
-      return saveNewTwitterUser();
-    }
-
-    // User found, update
-    user.info.twitter        = {
-      username   : _.get(profile, 'username', []),
-      displayName: _.get(profile, 'displayName', '?')
-    };
-    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-    updateUser(user, null, callback);
-  });
-}
-
 module.exports = {
   Model: User,
 
@@ -882,7 +655,5 @@ module.exports = {
   countUsers               : countUsers,
   findOrCreateFacebookUser : findOrCreateFacebookUser,
   findOrCreateGoogleUser   : findOrCreateGoogleUser,
-  findOrCreateDropboxUser  : findOrCreateDropboxUser,
-  findOrCreateTwitterUser  : findOrCreateTwitterUser,
   findOrCreateMicrosoftUser: findOrCreateMicrosoftUser,
 };

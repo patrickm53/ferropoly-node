@@ -33,11 +33,12 @@ module.exports = {
     }
 
     // Connect to the MongoDb
-    let options  = {
+    let options = {
       maxPoolSize       : poolSize,
       useNewUrlParser   : true,
       useUnifiedTopology: true
     };
+    mongoose.set('strictQuery', false);
     mongooseThis = mongoose.connect(settings.locationDbSettings.mongoDbUrl, options);
     db           = mongoose.connection;
 
@@ -52,7 +53,7 @@ module.exports = {
 
     });
 
-    db.on('disconnected', function (err) {
+    db.on('disconnected', function () {
       logger.error('MongoDb Connection disconnected');
       if (!process.env.INTEGRATION_TEST) {
         logger.info('Killing myself, since I got a disconnect from the repo... (did you start mongodb?), starting kill timer...');
