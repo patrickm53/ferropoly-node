@@ -7,7 +7,7 @@
 const express = require('express');
 const router  = express.Router();
 const cors    = require('cors');
-const package = require('../../package.json');
+const pkg     = require('../../package.json');
 const moment  = require('moment');
 const _       = require('lodash');
 
@@ -43,14 +43,14 @@ module.exports = function (settings, customData) {
       res.send({
         copyright  : 'Ferropoly ©2015 Christian Kuster, CH-8342 Wernetshausen, Sources provided under GPL licence, see www.ferropoly.ch for details.',
         app        : {
-          name: package.name,
-          title: package.title,
-          version: package.version
+          name   : pkg.name,
+          title  : pkg.title,
+          version: pkg.version
         },
-        settings: {
-          serverId: settings.server.serverId,
+        settings   : {
+          serverId     : settings.server.serverId,
           debugInstance: settings.debug,
-          preview: settings.preview
+          preview      : settings.preview
         },
         memory     : memUsage,
         nodeVersion: versions,
@@ -67,12 +67,32 @@ module.exports = function (settings, customData) {
     })
   }
 
-  router.get('/:apiKey', function (req, res) {
+  router.get('/detailed/:apiKey', function (req, res) {
     if (req.params.apiKey !== _.get(settings, 'apiKey', 'none')) {
       return res.status(401).send('1 + 2 * 2 * 2 * 2 * 5 * 5');
     }
     handler(req, res);
   });
-  router.get('/', cors(corsOptions), handler)
+  router.get('/', cors(corsOptions), handler);
+
+
+  /**
+   * Used for login screens
+   */
+  router.get('/login', cors(corsOptions), (req, res) => {
+    res.send({
+      app     : {
+        name   : pkg.name,
+        title  : pkg.title,
+        version: pkg.version
+      },
+      settings: {
+        serverId     : settings.server.serverId,
+        debugInstance: settings.debug,
+        preview      : settings.preview
+      },
+    });
+  });
+
   return router;
 }

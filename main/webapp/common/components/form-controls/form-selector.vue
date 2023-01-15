@@ -14,6 +14,7 @@
       @inputw="update"
       @change="update"
       aria-describedby="input-help input-feedback"
+      :disabled="disabled"
     )
     b-form-invalid-feedback(v-if="feedback") {{feedback}}
     b-form-text(v-if="help") {{help}}
@@ -24,7 +25,11 @@
 import InputMixin from './inputMixin';
 
 export default {
-  name      : 'form-selector',
+  name      : 'FormSelector',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
   props     : {
     value  : {
       default: () => {
@@ -41,9 +46,6 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
-  created   : function () {
-  },
   computed  : {
     state() {
       return this.calculateState();
@@ -56,6 +58,8 @@ export default {
         this.$emit('input', e);
       }
     }
+  },
+  created   : function () {
   },
   methods   : {
     update(e) {
@@ -72,10 +76,7 @@ export default {
       this.$emit('state', {id: this._uid, state: s});
       return s;
     }
-  },
-  components: {},
-  filters   : {},
-  mixins    : [InputMixin]
+  }
 }
 </script>
 

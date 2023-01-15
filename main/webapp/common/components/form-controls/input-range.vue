@@ -15,6 +15,7 @@
       :step="step"
       @input="update"
       aria-describedby="input-help input-feedback"
+      :disabled="disabled"
     )
     div.value {{val}}
     b-form-invalid-feedback(v-if="feedback") {{feedback}}
@@ -26,7 +27,11 @@
 import InputMixin from './inputMixin.js'
 
 export default {
-  name      : 'input-range',
+  name      : 'InputRange',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
   props     : {
     value    : {
       type   : Number,
@@ -47,8 +52,9 @@ export default {
       }
     },
     step     : {
+      type   : String,
       default: () => {
-        return 1
+        return '1';
       }
     },
     formatter: {
@@ -62,22 +68,18 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
-  created   : function () {
-  },
   computed  : {
     val() {
       return this.formatter(this.value);
     }
   },
+  created   : function () {
+  },
   methods   : {
     update(e) {
       this.$emit('input', parseFloat(e));
     }
-  },
-  components: {},
-  filters   : {},
-  mixins    : [InputMixin]
+  }
 }
 </script>
 

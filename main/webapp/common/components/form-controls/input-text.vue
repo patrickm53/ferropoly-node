@@ -25,7 +25,11 @@
 import InputMixin from './inputMixin.js'
 
 export default {
-  name      : 'input-text',
+  name      : 'InputText',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
   props     : {
     value   : {
       type   : String,
@@ -44,12 +48,6 @@ export default {
         return '100';
       }
     },
-    disabled: {
-      type   : Boolean,
-      default: () => {
-        return false;
-      }
-    },
     state   : {
       type   : Boolean,
       default: () => {
@@ -60,18 +58,14 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
+  computed  : {},
   created   : function () {
   },
-  computed  : {},
   methods   : {
     update(e) {
       this.$emit('input', e);
     }
-  },
-  components: {},
-  filters   : {},
-  mixins    : [InputMixin]
+  }
 }
 </script>
 

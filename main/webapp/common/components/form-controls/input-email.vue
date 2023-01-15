@@ -11,6 +11,7 @@
       type="email"
       :value="value"
       :state="state"
+      :disabled="disabled"
       @input="update"
       trim=true
       aria-describedby="input-help input-feedback"
@@ -24,7 +25,11 @@
 import InputMixin from './inputMixin.js'
 
 export default {
-  name      : 'input-email',
+  name      : 'InputEmail',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
   props     : {
     value: {
       type   : String,
@@ -42,18 +47,14 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
+  computed  : {},
   created   : function () {
   },
-  computed  : {},
   methods   : {
     update(e) {
       this.$emit('input', e);
     }
-  },
-  components: {},
-  filters   : {},
-  mixins    : [InputMixin]
+  }
 }
 </script>
 

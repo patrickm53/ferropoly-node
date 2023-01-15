@@ -15,6 +15,7 @@
       locale="de"
       @input="update"
       aria-describedby="input-help input-feedback"
+      :disabled="disabled"
     )
     b-form-invalid-feedback(v-if="feedback") {{feedback}}
     b-form-text(v-if="help") {{help}}
@@ -25,7 +26,11 @@ import {DateTime} from 'luxon';
 import InputMixin from './inputMixin';
 
 export default {
-  name      : 'input-date',
+  name      : 'InputDate',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
   props     : {
     value: {
       type   : String,
@@ -49,9 +54,6 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
-  created   : function () {
-  },
   computed  : {
     state() {
       let val = DateTime.fromISO(this.value);
@@ -66,14 +68,13 @@ export default {
       return DateTime.fromISO(this.max);
     }
   },
+  created   : function () {
+  },
   methods   : {
     update(e) {
       this.$emit('input', e);
     }
-  },
-  components: {},
-  filters   : {},
-  mixins    : [InputMixin]
+  }
 }
 </script>
 

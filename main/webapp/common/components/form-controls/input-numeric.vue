@@ -16,6 +16,7 @@
       :step="step"
       @input="update"
       aria-describedby="input-help input-feedback"
+      :disabled="disabled"
     )
     b-form-invalid-feedback(v-if="feedback") {{feedback}}
     b-form-text(v-if="help") {{help}}
@@ -26,53 +27,57 @@ import InputMixin from './inputMixin.js'
 import {round} from 'lodash';
 
 export default {
-  name: 'input-numeric',
-  props: {
-    value: {
-      type: Number,
+  name      : 'InputNumeric',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
+  props     : {
+    value      : {
+      type   : Number,
       default: () => {
         return 0.0;
       }
     },
-    min: {
-      type: String,
+    min        : {
+      type   : String,
       default: () => {
         return '0.0';
       }
     },
-    max: {
-      type: String,
+    max        : {
+      type   : String,
       default: () => {
         return '10.0';
       }
     },
-    step: {
+    step       : {
+      type   : String,
       default: () => {
-        return 1
+        return '1';
       }
     },
-    state: {
-      type: Boolean,
+    state      : {
+      type   : Boolean,
       default: () => {
         return undefined;
       }
     },
     integerOnly: {
       // By default, we only accept integers
-      type: Boolean,
+      type   : Boolean,
       default: () => {
         return true;
       }
     }
   },
-  data: function () {
+  data      : function () {
     return {};
   },
-  model: {},
-  created: function () {
+  computed  : {},
+  created   : function () {
   },
-  computed: {},
-  methods: {
+  methods   : {
     update(e) {
       let val = parseFloat(e);
       if (this.integerOnly) {
@@ -80,10 +85,7 @@ export default {
       }
       this.$emit('input', val);
     }
-  },
-  components: {},
-  filters: {},
-  mixins: [InputMixin]
+  }
 }
 </script>
 

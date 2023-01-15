@@ -13,12 +13,14 @@
           v-model="formDate"
           :min="min"
           :max="max"
+          :disabled="disabled"
         )
       b-col(xs="12" sm="12" md="6")
         b-form-timepicker(
           v-model="formTime"
           locale="de"
           aria-describedby="input-help input-feedback"
+          :disabled="disabled"
         )
     b-form-invalid-feedback(v-if="feedback") {{feedback}}
     b-form-text(v-if="help") {{help}}
@@ -30,7 +32,11 @@ import InputMixin from './inputMixin.js';
 import {DateTime} from 'luxon';
 
 export default {
-  name      : 'input-date-time',
+  name      : 'InputDateTime',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
   props     : {
     value: {
       type   : String,
@@ -54,9 +60,6 @@ export default {
   },
   data      : function () {
     return {};
-  },
-  model     : {},
-  created   : function () {
   },
   computed  : {
     formDate: {
@@ -82,12 +85,11 @@ export default {
       }
     }
   },
+  created   : function () {
+  },
   methods   : {
 
-  },
-  components: {},
-  filters   : {},
-  mixins    : [InputMixin]
+  }
 }
 </script>
 

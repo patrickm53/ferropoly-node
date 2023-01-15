@@ -14,6 +14,7 @@
       @input="update"
       trim=true
       aria-describedby="input-help input-feedback"
+      :disabled="disabled"
     )
     b-form-invalid-feedback(v-if="feedback") {{feedback}}
     b-form-text(v-if="help") {{help}}
@@ -24,7 +25,11 @@
 import InputMixin from './inputMixin.js'
 
 export default {
-  name      : 'input-phone',
+  name      : 'InputPhone',
+  components: {},
+  filters   : {},
+  mixins    : [InputMixin],
+  model     : {},
   props     : {
     value: {
       type   : String,
@@ -42,18 +47,14 @@ export default {
   data      : function () {
     return {};
   },
-  model     : {},
+  computed  : {},
   created   : function () {
   },
-  computed  : {},
   methods   : {
     update(e) {
       this.$emit('input', e);
     }
-  },
-  components: {},
-  filters   : {},
-  mixins    : [InputMixin]
+  }
 }
 </script>
 

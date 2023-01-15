@@ -23,6 +23,12 @@ export default {
       default: () => {
         return null;
       }
+    },
+    disabled: {
+      type: Boolean,
+      default: () => {
+        return false;
+      }
     }
   },
   computed: {
