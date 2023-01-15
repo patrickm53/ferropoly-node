@@ -1,6 +1,6 @@
 # Changelog Ferropoly Spiel
 
-# v3.1.8
+# v3.1.9 15.1.23
 * Sync mit Editor: Überarbeitung Logins, Link auf auth.ferropoly.ch
 
 # v3.1.7
