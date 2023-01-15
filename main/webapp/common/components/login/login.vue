@@ -77,10 +77,6 @@ export default {
   },
   created   : function () {
     let self = this;
-    // Set background randomly
-    let i = Math.floor(((new Date().getMilliseconds() / 10) % 15) + 1);
-    console.log('Background', i);
-    $('body').addClass('bg' + i);
 
     axios.get('/appinfo/login')
         .then(resp => {
@@ -142,6 +138,7 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
 
 
 </style>

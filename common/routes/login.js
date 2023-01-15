@@ -4,7 +4,7 @@
  * Created by kc on 16.04.15.
  */
 
-
+const fs       = require('fs');
 const express  = require('express');
 const passport = require('passport');
 const url      = require('url');
@@ -21,6 +21,29 @@ router.get('/', function (req, res) {
   let appPath = _.get(settings, 'appPath', 'none');
   res.sendFile(path.join(__dirname, '..', '..', appPath, 'public', 'html', 'login.html'));
 });
+
+
+/**
+ * Gets a random background for the login page
+ */
+router.get('/background.jpg', function (req, res) {
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  }
+
+  fs.readdir(path.join(__dirname, 'ressources', 'backgrounds'), (err, files) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    let file = files[getRandomInt(0, files.length )];
+    res.set('Content-Type', 'image/jpeg');
+    res.sendFile(path.join(__dirname, 'ressources', 'backgrounds', file));
+  });
+});
+
 
 /**
  * Showing this page if it fails
@@ -73,7 +96,7 @@ module.exports = {
         if (err) {
           logger.error(err);
         }
-        res.send({goodbye:'mate'});
+        res.send({goodbye: 'mate'});
       });
     });
 

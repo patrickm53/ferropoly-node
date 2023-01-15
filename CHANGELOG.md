@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+# v3.1.8
+* Sync mit Editor: Überarbeitung Logins, Link auf auth.ferropoly.ch
+
 # v3.1.7
 * Sync mit Editor: Kein weiteres Login mit Dropbox oder Twitter
 * Dependency Updates (sehr viele!), diese sind bewusst fix (Vue 3):
