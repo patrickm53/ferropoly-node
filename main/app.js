@@ -79,7 +79,6 @@ ferropolyDb.init(settings, function (err) {
   app.use('/appinfo', infoRoute(settings));
 
   // Define Strategy, login
-  passport.use(authStrategy.facebookStrategy);
   passport.use(authStrategy.googleStrategy);
   passport.use(authStrategy.localStrategy);
   passport.use(authStrategy.microsoftStrategy);

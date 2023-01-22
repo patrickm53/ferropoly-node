@@ -11,8 +11,6 @@
           | {{getElement('id')}}
           h4 Email-Adresse
           | {{getElement('email')}}
-          h4 Avatar
-          img.avatar(:src="getElement('avatar')")
 </template>
 
 <script>

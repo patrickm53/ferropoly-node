@@ -12,15 +12,17 @@
           p Teile diesen Loginname der Spielleitung mit, damit Du mit Deinem Login auf sein Spiel zugreifen kannst.
           h4 Zugang mit Loginname / Passwort
           div(v-if="!getElement('socialMediaActive')")
-            | Aktiv. Gegenwärtig kann das Passwort leider nicht geändert werden.
+            | Aktiv. Du kannst Dein Passwort&nbsp;
+            a(href="https://auth.ferropoly.ch" target="_blank") hier ändern.
           div(v-if="getElement('socialMediaActive')")
-            | Inaktiv, Login über soziale Netzwerke aktiv.
+            | Inaktiv, Login über soziale Netzwerke aktiv. Du kannst ein Passwort für Deinen Account&nbsp;
+            a(href="https://auth.ferropoly.ch" target="_blank") hier erstellen.
           h4 Registrierungsdatum
           | {{getElement('registrationDate') | formatDateTime}}
           div
             h4 Avatar
             img.avatar(:src="avatarUrl")
-            p Als Avatar wird entweder Dein Facebook- oder Google-Profilbild verwendet. Wenn dies nicht vorhanden ist, dann wird der Service von&nbsp;
+            p Als Avatar wird entweder Dein Microsoft- oder Google-Profilbild verwendet. Wenn dies nicht vorhanden ist, dann wird der Service von&nbsp;
               a(href='https://de.gravatar.com/' target='_blank') Gravatar
               | &nbsp;verwendet. Melde Dich dort an und hinterlege dort Dein Profilbild falls gewünscht.
 

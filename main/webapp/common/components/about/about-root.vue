@@ -18,7 +18,7 @@
               a(href="https://www.ferropoly.ch" target="_blank") www.ferropoly.ch
 
           ferro-card(title="Datenschutz")
-            div Es werden nur für das Spiel notwendige Daten erfasst. Mit dem Login über Google und Facebook sind die öffentlich zugänglichen Daten:
+            div Es werden nur für das Spiel notwendige Daten erfasst. Mit dem Login über Google und Microsoft sind die öffentlich zugänglichen Daten:
             ul
               li Name
               li Email-Adresse

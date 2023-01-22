@@ -7,11 +7,9 @@
  */
 
 const LocalStrategy     = require('passport-local').Strategy;
-const FacebookStrategy  = require('passport-facebook').Strategy;
 const GoogleStrategy    = require('passport-google-oauth20').Strategy;
 const MicrosoftStrategy = require('passport-microsoft').Strategy;
 const logger            = require('./logger').getLogger('authStrategy');
-const util              = require('util');
 
 module.exports = function (settings, users) {
 
@@ -67,26 +65,6 @@ module.exports = function (settings, users) {
   );
 
   /**
-   * Facebook strategy for users using their facebook account
-   */
-  const facebookStrategy = new FacebookStrategy({
-      clientID     : settings.oAuth.facebook.appId,
-      clientSecret : settings.oAuth.facebook.secret,
-      callbackURL  : settings.oAuth.facebook.callbackURL,
-      enableProof  : false,
-      profileFields: ['id', 'cover', 'picture', 'email', 'name']
-    },
-    function (accessToken, refreshToken, profile, done) {
-      //console.log('ACCESS-TOKEN  ' + util.inspect(accessToken));
-      //console.log('REFRESH-TOKEN ' + util.inspect(refreshToken));
-      console.log('FACEBOOK Profile:' + util.inspect(profile));
-      users.findOrCreateFacebookUser(profile, function (err, user) {
-        return done(err, user);
-      });
-    }
-  );
-
-  /**
    * Google Strategy
    */
   const googleStrategy = new GoogleStrategy({
@@ -128,7 +106,6 @@ module.exports = function (settings, users) {
 
   return {
     localStrategy    : localStrategy,
-    facebookStrategy : facebookStrategy,
     googleStrategy   : googleStrategy,
     microsoftStrategy: microsoftStrategy,
     deserializeUser  : deserializeUser,

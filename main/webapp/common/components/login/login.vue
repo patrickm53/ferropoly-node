@@ -17,13 +17,10 @@
               br
               button#button-login.btn.btn-primary.btn-block(type='submit') Login mit Passwort
           b-col.mt-3(xs="12" sm="12" md="6")
-            b-button(href='/auth/google' block large variant="danger")
+            b-button(href='/auth/google' block size="lg" variant="danger")
               b-icon-google
               | &nbsp;Login mit Google
-            b-button.mt-3(href='/auth/facebook' block large variant="primary")
-              b-icon-facebook
-              | &nbsp;Login mit Facebook
-            b-button.mt-3(href='/auth/microsoft' block large variant="success")
+            b-button.mt-3(href='/auth/microsoft' block size="lg" variant="success")
               font-awesome-icon.no-url(:icon="['fab', 'windows']")
               | &nbsp;Login mit Microsoft
         b-row.mt-3(v-if="preview")
@@ -43,7 +40,7 @@
 <script>
 import $ from 'jquery'
 import MenuBar from '../menu-bar/menu-bar.vue'
-import {BIconGoogle, BIconFacebook} from 'bootstrap-vue';
+import {BIconGoogle} from 'bootstrap-vue';
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faWindows} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
@@ -55,7 +52,7 @@ library.add(faWindows);
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name      : 'Login',
-  components: {MenuBar, BIconGoogle, BIconFacebook, FontAwesomeIcon},
+  components: {MenuBar, BIconGoogle, FontAwesomeIcon},
   filters   : {},
   model     : {},
   props     : {
