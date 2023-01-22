@@ -110,6 +110,7 @@ ferropolyDb.init(settings, function (err) {
 
   // Routes initialisation
   app.use('/appinfo', require('../common/routes/info'));
+  app.use('/images', require('../common/routes/images'));
   login.init(app, settings);
   app.use('/', require('./routes/index'));
   app.use('/test', require('./routes/test'));
