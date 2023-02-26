@@ -24,6 +24,7 @@ const db = require('../common/lib/ferropolyDb');
 const settings = require('../main/settings.js');
 const picBucket = require('../main/lib/picBucket')(settings);
 
+console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS)
 
 db.init(settings, ()=> {
   picBucket.announceUpload('demoId', 'teamId', {}, (err, data) => {

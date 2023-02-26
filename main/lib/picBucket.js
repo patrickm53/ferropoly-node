@@ -31,6 +31,16 @@ const picBucketSchema = mongoose.Schema({
 const picBucket = mongoose.model('PicBucket', picBucketSchema);
 const storage   = new Storage();
 
+/**
+ *
+ * TODO: create a class with event emitter, inform subscribers when a file was uploaded
+ *
+ *
+ *
+ *
+ * @param settings
+ * @returns {{confirmUpload: confirmUpload, announceUpload: announceUpload, list: list}}
+ */
 module.exports = function (settings) {
 
   const bucketName     = _.get(settings, 'picBucket.bucket', null);

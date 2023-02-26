@@ -51,6 +51,7 @@ module.exports = function (settings) {
   settings.picBucket = {
     bucket: 'ferropoly'
   }
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = '/home/kc/ferropoly/ferropoly-service.json'
 
   return settings;
 };

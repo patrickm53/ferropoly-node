@@ -54,5 +54,10 @@ module.exports = function (settings) {
     debugLevel: 'silly'
   };
 
+  // Picture Bucket in Google Storage
+  settings.picBucket = {
+    bucket: 'ferropoly-test'
+  }
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = '/Users/kc/Code/ferropoly/ferropoly-service.json'
   return settings;
 };

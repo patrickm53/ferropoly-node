@@ -16,7 +16,7 @@ let preview    = true;
 let debug      = process.env.DEBUG || false;
 
 // Set specific deploy type
- if (process.env.DEPLOY_TYPE === 'contabo') {
+if (process.env.DEPLOY_TYPE === 'contabo') {
   // check which instance
   let rootPath = path.join(__dirname, '..');
   console.log('Root path: ' + rootPath);
@@ -91,10 +91,12 @@ settings.maps = {
 };
 
 // Picture Bucket in Google Storage
-settings.picBucket = {
-  bucket: 'ferropoly-test',
+settings.picBucket                         = {
+  bucket : 'ferropoly-test',
   baseUrl: 'https://storage.googleapis.com'
 }
+process.env.GOOGLE_APPLICATION_CREDENTIALS = null;
+
 
 if (debug) {
   logger.info('DEBUG Settings used');
