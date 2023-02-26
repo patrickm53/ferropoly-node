@@ -54,6 +54,9 @@ module.exports = function (settings) {
     debugLevel: 'debug'
   };
 
-
+  // Picture Bucket in Google Storage
+  settings.picBucket = {
+    bucket: 'ferropoly-rc'
+  }
   return settings;
 };

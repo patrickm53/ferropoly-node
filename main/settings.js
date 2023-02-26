@@ -11,17 +11,14 @@ const logger     = require('../common/lib/logger').getLogger('settings');
 const {v4: uuid} = require('uuid');
 
 // Set default
-var deployType = process.env.DEPLOY_TYPE || 'local';
-var preview    = true;
-var debug      = process.env.DEBUG || false;
+let deployType = process.env.DEPLOY_TYPE || 'local';
+let preview    = true;
+let debug      = process.env.DEBUG || false;
 
 // Set specific deploy type
-if (process.env.OPENSHIFT_NODEJS_IP) {
-  deployType = 'openshift';
-  preview    = false;
-} else if (process.env.DEPLOY_TYPE === 'contabo') {
+ if (process.env.DEPLOY_TYPE === 'contabo') {
   // check which instance
-  var rootPath = path.join(__dirname, '..');
+  let rootPath = path.join(__dirname, '..');
   console.log('Root path: ' + rootPath);
   if (_.endsWith(rootPath, 'preview')) {
     deployType = 'contabo_preview';
@@ -33,7 +30,7 @@ if (process.env.OPENSHIFT_NODEJS_IP) {
   }
 }
 
-var settings = {
+let settings = {
   name   : pkg.name,
   appName: pkg.title,
   version: pkg.version,
@@ -92,6 +89,12 @@ settings.debugSecret = process.env.FERROPOLY_DEBUG_SECRET || uuid();
 settings.maps = {
   apiKey: process.env.FERROPOLY_GOOGLE_MAPS_API_KEY || 'none'
 };
+
+// Picture Bucket in Google Storage
+settings.picBucket = {
+  bucket: 'ferropoly-test',
+  baseUrl: 'https://storage.googleapis.com'
+}
 
 if (debug) {
   logger.info('DEBUG Settings used');
