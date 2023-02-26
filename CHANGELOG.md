@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+* Dependency Updates
 * Sync mit Editor: Hingergrundbilder mit neuer Route
 
 # v3.2.0 22.1.22
