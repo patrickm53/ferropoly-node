@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Dependency Updates
+
 # v3.2.0 22.1.22
 * Goodbye Facebook: kein Login mit Facebook mehr möglich, der administrative Aufwand wurde zu gross.
 * Neuer Login Bildschirm mit Link auf auth.ferropoly.ch
