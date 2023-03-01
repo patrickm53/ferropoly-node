@@ -48,4 +48,46 @@ router.post('/confirm/:id', (req, res) => {
     res.send(doc);
   })
 });
+
+/**
+ * Returns ALL images for a game, for admins only
+ */
+router.get('/:gameId', (req, res) => {
+  const gameId = req.params.gameId;
+  const user   = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, gameId, accessor.admin, err => {
+    if (err) {
+      return res.status(403).send({message: 'Access right error: ' + err.message});
+    }
+    picBucket.list(gameId, {}, (err, list) => {
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+      res.send(list);
+    })
+  })
+});
+
+
+/**
+ * Returns the images of a team
+ */
+router.get('/:gameId/:teamId', (req, res) => {
+  const gameId = req.params.gameId;
+  const teamId = req.params.teamId;
+  const user   = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verifyPlayer(user, gameId, teamId, err => {
+    if (err) {
+      return res.status(403).send({message: 'Access right error: ' + err.message});
+    }
+    picBucket.list(gameId, {}, (err, list) => {
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+      res.send(list);
+    })
+  })
+});
+
+
 module.exports = router;
