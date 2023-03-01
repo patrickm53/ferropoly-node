@@ -7,12 +7,12 @@
  * Created: 26.02.23
  **/
 
-const mongoose   = require('mongoose');
-const logger     = require('../../common/lib/logger').getLogger('picBucket');
-const {DateTime} = require('luxon');
-const _          = require('lodash');
-const {Storage}  = require('@google-cloud/storage');
-
+const mongoose        = require('mongoose');
+const logger          = require('../../common/lib/logger').getLogger('picBucket');
+const _               = require('lodash');
+const {Storage}       = require('@google-cloud/storage');
+const EventEmitter    = require('./eventEmitter');
+const {v4: uuidv4}    = require('uuid');
 /**
  * The mongoose schema for a picture
  */
@@ -32,18 +32,24 @@ const picBucket = mongoose.model('PicBucket', picBucketSchema);
 const storage   = new Storage();
 
 /**
+ * PicBucket Class
  *
- * TODO: create a class with event emitter, inform subscribers when a file was uploaded
- *
- *
- *
- *
- * @param settings
- * @returns {{confirmUpload: confirmUpload, announceUpload: announceUpload, list: list}}
+ * Events:
+ *   new: when a new file was uploaded (confirmed), data of the new file as payload
+ *   error: when a failure in the access of the google storage was detected
  */
-module.exports = function (settings) {
+class PicBucket extends EventEmitter {
+  /**
+   * Constructor
+   * @param settings
+   */
+  constructor(settings) {
+    super();
+    this.bucketName = _.get(settings, 'bucket', null);
+    this.settings   = settings;
+  }
 
-  const bucketName     = _.get(settings, 'picBucket.bucket', null);
+
   /**
    * Announces an upload of a picture
    * @param gameId
@@ -51,9 +57,10 @@ module.exports = function (settings) {
    * @param options
    * @param callback
    */
-  const announceUpload = function (gameId, teamId, options, callback) {
-    let fileBase        = _.get(options, 'filename', `${DateTime.now().toMillis()}.jpg`);
-    let filename        = `${gameId}/${fileBase}`
+  announceUpload(gameId, teamId, options, callback) {
+    let self            = this;
+    let fileBase        = _.get(options, 'filename', `${uuidv4()}.jpg`);
+    let filename        = `${gameId}/${teamId}/${fileBase}`
     const uploadOptions = {
       version    : 'v4',
       action     : 'write',
@@ -62,7 +69,7 @@ module.exports = function (settings) {
     };
 
     // Get a v4 signed URL for uploading file
-    const bucket = storage.bucket(bucketName);
+    const bucket = storage.bucket(self.bucketName);
     const file   = bucket.file(filename);
     file.getSignedUrl(uploadOptions)
         .then(data => {
@@ -73,9 +80,9 @@ module.exports = function (settings) {
           pic.teamId     = teamId;
           pic.filename   = filename;
           pic.message    = _.get(options, 'message', undefined);
-          pic.url        = `${settings.picBucket.baseUrl}/${bucketName}/${filename}`;
+          pic.url        = `${self.settings.baseUrl}/${self.bucketName}/${filename}`;
           pic.propertyId = _.get(options, 'propertyId', undefined);
-          pic._id        = `${gameId}-${teamId}-${fileBase}`;
+          pic._id        = `${gameId}-${fileBase}`;
           pic.save(err => {
             if (err) {
               return callback(err);
@@ -89,18 +96,21 @@ module.exports = function (settings) {
         });
   };
 
+
   /**
    * Confirms the upload of an announced file
    * @param id of the entry created while announcing
    * @param callback
    */
-  const confirmUpload = function (id, callback) {
+  confirmUpload(id, callback) {
+    let self = this;
     picBucket.find({_id: id}, (err, docs) => {
       if (err) {
         return callback(err);
       }
-      let entry = docs[0];
+      let entry      = docs[0];
       entry.uploaded = true;
+      self.emit('new', docs[0]);
       entry.save(callback);
     })
   }
@@ -111,7 +121,7 @@ module.exports = function (settings) {
    * @param options see in the function
    * @param callback
    */
-  const list = function(gameId, options, callback) {
+  list(gameId, options, callback) {
     let filter = {gameId: gameId};
 
     // Not providing a teamId in the options returns ALL teams
@@ -126,7 +136,7 @@ module.exports = function (settings) {
       filter.uploaded = uploaded;
     }
 
-    picBucket.find(filter, (err, docs)=>{
+    picBucket.find(filter, (err, docs) => {
       if (err) {
         return callback(err);
       }
@@ -134,6 +144,39 @@ module.exports = function (settings) {
     });
   }
 
+  /**
+   * Deletes the pics in the DB ONLY. The pics on the server will be cleaned
+   * up automatically using a server rule there.
+   * @param gameId
+   * @param callback
+   * @returns {*}
+   */
+  deleteAllPics(gameId, callback) {
+    if (!gameId) {
+      return callback(new Error('No gameId supplied'));
+    }
+    picBucket.deleteMany({gameId: gameId}, callback)
+  }
 
-  return {announceUpload, confirmUpload, list}
+
+}
+
+
+/// Now exporting the whole thing: there is only one single picBucket object
+let picBucketObject = undefined;
+/**
+ * @param settings is the picBucket part of the settings
+ * @returns {{confirmUpload: confirmUpload, announceUpload: announceUpload, list: list}}
+ */
+module.exports = function (settings) {
+  if (!picBucketObject) {
+    if (!settings) {
+      throw(new Error('settings must be supplied in first call'))
+    }
+    if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+      throw(new Error('GOOGLE_APPLICATION_CREDENTIALS must be defined and point to a valid json file'));
+    }
+    picBucketObject = new PicBucket(settings);
+  }
+  return picBucketObject;
 }

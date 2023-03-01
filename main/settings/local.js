@@ -2,7 +2,7 @@
  * Settings for local debugging
  * Created by kc on 14.04.15.
  */
-
+const path = require('path');
 
 module.exports = function (settings) {
 
@@ -58,6 +58,6 @@ module.exports = function (settings) {
   settings.picBucket = {
     bucket: 'ferropoly-test'
   }
-  process.env.GOOGLE_APPLICATION_CREDENTIALS = '/Users/kc/Code/ferropoly/ferropoly-service.json'
+  process.env.GOOGLE_APPLICATION_CREDENTIALS =  path.join(__dirname, '..', '..', '..', 'ferropoly-service.json');
   return settings;
 };
