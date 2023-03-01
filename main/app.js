@@ -30,14 +30,15 @@ const ferropolyDb  = require('../common/lib/ferropolyDb');
 const teamPosition = require('./lib/teams/teamPosition');
 
 // Routes includes
-const login        = require('./routes/login');
-const joinRoute    = require('./routes/join');
-const authtoken    = require('./routes/authtoken');
-const ferroSocket  = require('./lib/ferroSocket');
-const autopilot    = require('./lib/autopilot');
-const authStrategy = require('../common/lib/authStrategy')(settings, users);
-const infoRoute    = require('../common/routes/info');
-const aboutRoute   = require('../common/routes/about');
+const login          = require('./routes/login');
+const joinRoute      = require('./routes/join');
+const authtoken      = require('./routes/authtoken');
+const ferroSocket    = require('./lib/ferroSocket');
+const autopilot      = require('./lib/autopilot');
+const authStrategy   = require('../common/lib/authStrategy')(settings, users);
+const infoRoute      = require('../common/routes/info');
+const aboutRoute     = require('../common/routes/about');
+const picBucketRoute = require('./routes/picBucketRoute');
 
 require('../common/lib/mailer').init(settings);
 
@@ -134,6 +135,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/agb', require('../common/routes/agb'));
   app.use('/join', joinRoute);
   app.use('/anmelden', joinRoute);
+  app.use('/picbucket', picBucketRoute);
   aboutRoute.init(app, settings);
   authtoken.init(app);
 
