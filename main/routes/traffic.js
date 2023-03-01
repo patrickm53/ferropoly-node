@@ -9,6 +9,7 @@ const express    = require('express');
 const router     = express.Router();
 const accessor   = require('../lib/accessor');
 const gameCache  = require('../lib/gameCache');
+const _          = require("lodash");
 
 /**
  * Get the traffic info
@@ -17,7 +18,8 @@ router.get('/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.send({status: 'error', message: 'No gameId supplied'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(500).send({message: err.message});
     }

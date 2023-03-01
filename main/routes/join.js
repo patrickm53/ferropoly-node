@@ -12,6 +12,7 @@ const logger       = require('../../common/lib/logger').getLogger('routes:join')
 const mailer       = require('../../common/lib/mailer');
 const errorHandler = require('../lib/errorHandler');
 const path         = require('path');
+const _            = require("lodash");
 
 /**
  * Send HTML Page
@@ -29,6 +30,8 @@ router.get('/:gameId', function (req, res) {
  * Returns the data displayed on the joining page
  */
 router.get('/data/:gameId', function (req, res) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+
   gameCache.getGameData(req.params.gameId, (err, gameData) => {
     if (err) {
       return res.status(500).send({message: err.message});
@@ -42,7 +45,7 @@ router.get('/data/:gameId', function (req, res) {
       gameplay = gameData.gameplay;
     }
 
-    users.getUserByMailAddress(req.session.passport.user, (err, userInfo) => {
+    users.getUserByMailAddress(user, (err, userInfo) => {
       if (err) {
         logger.error(err);
         return res.status(500).send(err.message);
@@ -50,7 +53,7 @@ router.get('/data/:gameId', function (req, res) {
       if (!userInfo) {
         return res.status(404).send({message: 'User not found'});
       }
-      teams.getMyTeam(req.params.gameId, req.session.passport.user, (err, team) => {
+      teams.getMyTeam(req.params.gameId, user, (err, team) => {
           if (err) {
             logger.error(err);
             return res.status(500).send(err.message);
@@ -83,6 +86,8 @@ router.post('/:gameId', (req, res) => {
   if (req.body.authToken !== req.session.authToken) {
     return res.status(401).send({message: 'Permission denied, invalid authToken'});
   }
+  const user = _.get(req.session, 'passport.user', 'nobody');
+
   gameCache.getGameData(req.params.gameId, (err, gameData) => {
     if (err) {
       logger.error(err);
@@ -91,7 +96,7 @@ router.post('/:gameId', (req, res) => {
     if (!gameData) {
       return res.status(404).send({message: 'Game not found'});
     }
-    users.getUserByMailAddress(req.session.passport.user, (err, userInfo) => {
+    users.getUserByMailAddress(user, (err, userInfo) => {
         if (err) {
           logger.error(err);
           return res.status(500).send(err.message);
@@ -100,7 +105,7 @@ router.post('/:gameId', (req, res) => {
           return res.status(404).send({message: 'User not found'});
         }
 
-        teams.getMyTeam(req.params.gameId, req.session.passport.user, (err, team) => {
+        teams.getMyTeam(req.params.gameId, user, (err, team) => {
           if (err) {
             logger.error(err);
             return res.status(500).send(err.message);

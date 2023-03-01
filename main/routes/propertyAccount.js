@@ -12,6 +12,7 @@ const logger          = require('../../common/lib/logger').getLogger('routes:pro
 const accessor        = require('../lib/accessor');
 const async           = require('async');
 const propertyModel   = require('../../common/models/propertyModel');
+const _               = require("lodash");
 
 /**
  * Get all acount Info for a team
@@ -20,7 +21,8 @@ router.get('/getRentRegister/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId || !req.params.teamId) {
     return res.status(400).send({message: 'Missing parameters'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
@@ -53,7 +55,8 @@ router.get('/getAccountStatement/:gameId/:propertyId', function (req, res) {
   if (!req.params.gameId) {
     return res.status(400).send({message: 'Missing parameters'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
@@ -74,8 +77,8 @@ router.get('/getAccountStatement/:gameId/:propertyId', function (req, res) {
  * Get profitability of all properties
  */
 router.get('/propertyProfitability/:gameId/', function (req, res) {
-
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
@@ -94,8 +97,8 @@ router.get('/propertyProfitability/:gameId/', function (req, res) {
  * Get profitability of a teams property
  */
 router.get('/propertyProfitability/:gameId/:teamId', function (req, res) {
-
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }

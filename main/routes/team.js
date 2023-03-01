@@ -20,11 +20,12 @@ const path         = require('path');
  * Send HTML Page
  */
 router.get('/edit/:gameId/:teamId', function (req, res) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
   teams.getTeam(req.params.gameId, req.params.teamId, (err, team) => {
     if (err) {
       return errorHandler(res, 'Interner Fehler beim Laden des Users.', err, 500);
     }
-    if (_.get(team, 'data.teamLeader.email', 'x') !== req.session.passport.user) {
+    if (_.get(team, 'data.teamLeader.email', 'x') !== user) {
       return errorHandler(res, 'Nicht berechtigt.', new Error('Not authorized or not found'), 403);
     }
     gameCache.getGameData(req.params.gameId, (err, gameData) => {
@@ -76,7 +77,8 @@ function getFullMemberList(gameId, teamId, callback) {
  * Get all team members
  */
 router.get('/members/:gameId/:teamId', (req, res) => {
-  accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, (err) => {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verifyPlayer(user, req.params.gameId, req.params.teamId, (err) => {
     if (err) {
       return errorHandler(res, 'Zugriff nicht möglich.', err, 404);
     }
@@ -99,8 +101,9 @@ router.post('/members/:gameId/:teamId', (req, res) => {
   if (req.body.authToken !== req.session.authToken) {
     return res.send({status: 'error', message: 'Permission denied (2)'});
   }
+  const user = _.get(req.session, 'passport.user', 'nobody');
 
-  accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, (err) => {
+  accessor.verifyPlayer(user, req.params.gameId, req.params.teamId, (err) => {
     if (err) {
       return errorHandler(res, 'Zugriff nicht möglich.', err, 404);
     }

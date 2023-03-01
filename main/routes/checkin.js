@@ -30,7 +30,7 @@ router.get('/:gameId', function (req, res) {
 /* GET the checkin of a game */
 router.get('/old/:gameId', function (req, res) {
   let gameId = req.params.gameId;
-
+  const user = _.get(req.session, 'passport.user', 'nobody');
   gamecache.refreshCache(function (err) {
     if (err) {
       return errorHandler(res, 'Interner Fehler bei der Aktualisierung des Caches.', err, 404);
@@ -44,11 +44,11 @@ router.get('/old/:gameId', function (req, res) {
       let teams = gamedata.teams;
 
       let team = _.find(_.values(teams), function (t) {
-        if (t.data.teamLeader.email === req.session.passport.user) {
+        if (t.data.teamLeader.email === user) {
           return true;
         }
         return _.find(t.data.members, function (m) {
-          return m === req.session.passport.user;
+          return m === user;
         });
       });
 
@@ -74,7 +74,7 @@ router.get('/old/:gameId', function (req, res) {
           return errorHandler(res, 'Die Preisliste ist leer.', new Error('Empty pricelist'), 500);
         }
 
-        authTokenManager.getNewToken({user: req.session.passport.user, proposedToken: req.session.authToken}, function (err, token) {
+        authTokenManager.getNewToken({user: user, proposedToken: req.session.authToken}, function (err, token) {
           if (err) {
             return errorHandler(res, 'Interner Fehler beim Erstellen des Tokens.', err, 500);
           }
@@ -85,7 +85,7 @@ router.get('/old/:gameId', function (req, res) {
             minifiedjs   : settings.minifiedjs,
             hideLogout   : true,
             authToken    : token,
-            user         : req.session.passport.user,
+            user         : user,
             gameplay     : JSON.stringify(gp),
             pricelist    : JSON.stringify(pl),
             team         : JSON.stringify(team),

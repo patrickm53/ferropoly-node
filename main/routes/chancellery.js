@@ -17,10 +17,11 @@ const marketplaceApi = require('../lib/accounting/marketplace');
  * Get the amount of the chancellery
  */
 router.get('/balance/:gameId', function (req, res) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
   if (!req.params.gameId) {
     return res.status(400).send({message: 'No gameId supplied'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
@@ -37,10 +38,11 @@ router.get('/balance/:gameId', function (req, res) {
  * Get all account entries of the chancellery
  */
 router.get('/account/statement/:gameId', function (req, res) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
   if (!req.params.gameId) {
     return res.status(400).send({message: 'No gameId supplied'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
@@ -57,10 +59,11 @@ router.get('/account/statement/:gameId', function (req, res) {
  * play chancellery
  */
 router.post('/play/:gameId/:teamId', function (req, res) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
   if (!req.params.gameId || !req.params.teamId) {
     return res.status(400).send({message: 'No gameId or teamId supplied'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
@@ -86,7 +89,7 @@ router.post('/play/:gameId/:teamId', function (req, res) {
  * Gambling
  */
 router.post('/gamble/:gameId/:teamId', function (req, res) {
-
+  const user = _.get(req.session, 'passport.user', 'nobody');
   if (!req.body.authToken) {
     return res.status(401).send({message: 'Permission denied (1)'});
   }
@@ -97,7 +100,7 @@ router.post('/gamble/:gameId/:teamId', function (req, res) {
     return res.status(400).send({message: 'No gameId, teamId or amount supplied'});
   }
 
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(500).send({message: err.message});
     }

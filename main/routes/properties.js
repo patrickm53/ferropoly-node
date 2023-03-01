@@ -7,6 +7,7 @@ const express  = require('express');
 const router   = express.Router();
 const propWrap = require('../lib/propertyWrapper');
 const accessor = require('../lib/accessor');
+const _        = require("lodash");
 
 /**
  * Get all properties of a team
@@ -17,11 +18,11 @@ router.get('/get/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
     return res.status(400).send({message: 'No gameId supplied'});
   }
-
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       // definitely not an admin and game in process. Be careful what we return, only data of the calling team is returned
-     return accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, err => {
+     return accessor.verifyPlayer(user, req.params.gameId, req.params.teamId, err => {
        if (err) {
          return res.status(403).send({message: 'Access right error: ' + err.message});
        }

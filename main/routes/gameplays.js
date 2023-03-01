@@ -15,7 +15,8 @@ const _             = require('lodash');
  * Get the gameplays for the user, the ones owned and the ones as player
  */
 router.get('/', function (req, res) {
-  gameplayModel.getGameplaysForUser(req.session.passport.user, function (err, gameplays) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  gameplayModel.getGameplaysForUser(user, function (err, gameplays) {
     if (err) {
       logger.error('can not get gameplays for a user', err);
       return res.status(500).send({message: err.message});
@@ -33,7 +34,7 @@ router.get('/', function (req, res) {
       });
     }
 
-    teams.getMyTeams(req.session.passport.user, function (err, myTeams) {
+    teams.getMyTeams(user, function (err, myTeams) {
       if (err) {
         logger.error('can not get teams for a user', err);
         return res.status(500).send({message: err.message});
@@ -50,7 +51,6 @@ router.get('/', function (req, res) {
             if (err) {
               return cb(err);
             }
-            console.log('XXX', req.session.passport.user, _.get(team, 'data.teamLeader.email', 'nomail'));
             retVal.games.push({
               internal  : gp.internal,
               gamename  : gp.gamename,
@@ -59,7 +59,7 @@ router.get('/', function (req, res) {
               mobile    : gp.mobile,
               team      : team,
               owner     : gp.owner,
-              isTeamLead: req.session.passport.user === _.get(team, 'data.teamLeader.email', 'nomail')
+              isTeamLead: user === _.get(team, 'data.teamLeader.email', 'nomail')
             });
             cb();
           });

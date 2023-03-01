@@ -20,12 +20,11 @@ router.get('/:gameId/:teamId', function (req, res) {
   if (!req.params.teamId) {
     return res.status(400).send({message: 'No teamId supplied'});
   }
-
+  const user = _.get(req.session, 'passport.user', 'nobody');
   let teamId = req.params.teamId;
   if (req.params.teamId === 'undefined') {
     teamId = undefined;
   }
-
 
   /**
    * Collect data and send it back
@@ -44,9 +43,9 @@ router.get('/:gameId/:teamId', function (req, res) {
     });
   }
 
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
-      accessor.verifyPlayer(req.session.passport.user, req.params.gameId, teamId, err => {
+      accessor.verifyPlayer(user, req.params.gameId, teamId, err => {
         if (err) {
           return res.status(401).send({message: err.message});
         }

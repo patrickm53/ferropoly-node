@@ -21,7 +21,8 @@ router.get('/rankingList/:gameId', function (req, res) {
   if (!req.params.gameId) {
     return res.status(400).send({message: 'No gameId supplied'});
   }
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(401).send({message: err.message});
     }
@@ -39,8 +40,8 @@ router.get('/rankingList/:gameId', function (req, res) {
  * Get the list with the income of all teams
  */
 router.get('/income/:gameId', function (req, res) {
-
-  accessor.verify(req.session.passport.user, req.params.gameId, accessor.admin, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verify(user, req.params.gameId, accessor.admin, function (err) {
     if (err) {
       return res.status(401).send({message: err.message});
     }
@@ -78,8 +79,8 @@ router.get('/income/:gameId', function (req, res) {
  * Get the list with the income of a specific team
  */
 router.get('/income/:gameId/:teamId', function (req, res) {
-
-  accessor.verifyPlayer(req.session.passport.user, req.params.gameId, req.params.teamId, function (err) {
+  const user = _.get(req.session, 'passport.user', 'nobody');
+  accessor.verifyPlayer(user, req.params.gameId, req.params.teamId, function (err) {
     if (err) {
       return res.status(401).send({message: err.message});
     }

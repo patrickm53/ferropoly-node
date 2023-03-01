@@ -18,6 +18,7 @@ const settings         = require('../settings');
 
 router.get('/:gameId', function (req, res) {
   let gameId = req.params.gameId;
+  const user = _.get(req.session, 'passport.user', 'nobody');
 
   gamecache.refreshCache(function (err) {
     if (err) {
@@ -37,11 +38,11 @@ router.get('/:gameId', function (req, res) {
 
       // The team is only returned if the requesting user is a player
       let team = _.find(_.values(teams), function (t) {
-        if (t.data.teamLeader.email === req.session.passport.user) {
+        if (t.data.teamLeader.email === user) {
           return true;
         }
         return _.find(t.data.members, function (m) {
-          return m === req.session.passport.user;
+          return m === user;
         });
       });
 
@@ -51,7 +52,7 @@ router.get('/:gameId', function (req, res) {
         }
 
         authTokenManager.getNewToken({
-            user         : req.session.passport.user,
+            user         : user,
             proposedToken: req.session.authToken
           }, function (err, token) {
             if (err) {
@@ -71,7 +72,7 @@ router.get('/:gameId', function (req, res) {
                 teams        : _.values(teams),
                 currentGameId: gameId,
                 mapApiKey    : settings.maps.apiKey,
-                user         : req.session.passport.user
+                user         : user
               });
             });
           }
