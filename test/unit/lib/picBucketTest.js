@@ -2,11 +2,11 @@
  * Tests for the Pic Bucket
  */
 
-const expect       = require('expect.js');
-const path         = require("path");
-const _            = require('lodash');
-const ferropolyDb  = require('../../../common/lib/ferropolyDb');
-let picBucket      = undefined;
+const expect      = require('expect.js');
+const path        = require("path");
+const _           = require('lodash');
+const ferropolyDb = require('../../../common/lib/ferropolyDb');
+let picBucket     = undefined;
 describe('PicBucket Tests Initialisation', () => {
 
   it('will fail without settings', () => {
@@ -94,6 +94,15 @@ describe('PicBucket operation', () => {
       done();
     })
   });
+
+  it('is possible to check the connectivity', done => {
+    picBucket.on('error', err => {
+      done(err);
+    })
+    picBucket.testConnectivity(() => {
+      done();
+    });
+  }).timeout(10000);
 
   it('will delete all files again', done => {
     picBucket.deleteAllPics(gameId, err => {

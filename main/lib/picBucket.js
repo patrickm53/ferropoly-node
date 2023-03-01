@@ -158,6 +158,23 @@ class PicBucket extends EventEmitter {
     picBucket.deleteMany({gameId: gameId}, callback)
   }
 
+  /**
+   * Tests the connectivity to Google storage, emit an error if this fails
+   * @param callback
+   */
+  testConnectivity(callback) {
+    let self = this;
+    storage.bucket(this.bucketName).getFiles({maxResults: 2}, (err, files) => {
+      if (err) {
+        self.emit('error', err);
+        logger.info('Google Storage Accessibility Test was NEGATIVE!!');
+        return callback(err);
+      }
+      logger.info(`Google Storage Accessibility Test was positive, found ${files.length} files`);
+      return callback();
+    });
+  }
+
 
 }
 
