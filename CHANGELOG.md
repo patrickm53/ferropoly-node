@@ -1,14 +1,15 @@
 # Changelog Ferropoly Spiel
 
+* Pic Bucket neu: Upload von Bilder während dem Spiel durch Teams
 * Dependency Updates
-* Sync mit Editor: Hingergrundbilder mit neuer Route
+* Sync mit Editor: Hintergrundbilder mit neuer Route
 * Potentielles Problem API behoben: session.passport wurde bei User Prüfung vorausgesetzt, ist jedoch nicht in 
   jedem Fall vorhanden (z.B. bei Exploration API mit 3rd party tools). In seltenen Fällen konnte dies dazu führen,
   dass session.passport nicht definiert war und damit der Zugriff auf den angemeldeten User zu einer unhandled
   Exception führte, was dann wiederum zum Neustart der Software führte. Problem präventiv korrigiert, Tests
   über alle Funktionen notwendig.
 
-# v3.2.0 22.1.22
+# v3.2.0 22.1.23
 * Goodbye Facebook: kein Login mit Facebook mehr möglich, der administrative Aufwand wurde zu gross.
 * Neuer Login Bildschirm mit Link auf auth.ferropoly.ch
 
