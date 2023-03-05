@@ -127,7 +127,7 @@ export default {
         alert('There was an error processing your file!');
       };
     },
-    onUpload(e) {
+    onUpload() {
       const self = this;
       console.log('having a file', this.file);
       let reader       = new FileReader();
@@ -141,8 +141,8 @@ export default {
         alert('There was an error reading the file!');
       }
 
-      reader.readAsBinaryString(self.file);
-     // reader.readAsDataURL(self.file);
+   //   reader.readAsBinaryString(self.file);
+      reader.readAsArrayBuffer(self.file);
     }
   }
 }
