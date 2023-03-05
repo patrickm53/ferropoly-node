@@ -132,14 +132,17 @@ export default {
       console.log('having a file', this.file);
       let reader       = new FileReader();
       reader.onloadend = function () {
-        self.processFile(reader.result, self.file.type);
+        console.log('Result', reader.result);
+       self.sendFile(reader.result);
+        // self.processFile(reader.result, self.file.type);
       }
 
       reader.onerror = function () {
         alert('There was an error reading the file!');
       }
 
-      reader.readAsDataURL(self.file);
+      reader.readAsBinaryString(self.file);
+     // reader.readAsDataURL(self.file);
     }
   }
 }

@@ -68,10 +68,11 @@ class PicBucket extends EventEmitter {
     let fileBase        = _.get(options, 'filename', `${uuidv4()}.jpg`);
     let filename        = `${gameId}/${teamId}/${fileBase}`
     const uploadOptions = {
-      version    : 'v4',
-      action     : 'write',
-      expires    : Date.now() + 15 * 60 * 1000, // 15 minutes
-      contentType: 'image/jpeg',
+      version           : 'v4',
+      action            : 'write',
+      expires           : Date.now() + 15 * 60 * 1000, // 15 minutes
+      contentType       : 'image/jpeg',
+      virtualHostedStyle: true
     };
 
     // Get a v4 signed URL for uploading file

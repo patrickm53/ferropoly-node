@@ -55,9 +55,7 @@ module.exports = function (settings) {
   };
 
   // Picture Bucket in Google Storage
-  settings.picBucket = {
-    bucket: 'ferropoly-rc'
-  }
+  settings.picBucket.bucket = 'ferropoly-rc'
   process.env.GOOGLE_APPLICATION_CREDENTIALS = '/home/kc/ferropoly/ferropoly-service.json'
 
   return settings;

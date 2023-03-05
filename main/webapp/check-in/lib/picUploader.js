@@ -7,7 +7,7 @@
 import axios from 'axios';
 import geograph from "../../common/lib/geograph";
 import {get} from "lodash";
-
+import $ from 'jquery'
 function announcePicture(gameId, teamId, options, callback) {
   const message    = get(options, 'message', undefined);
   const propertyId = get(options, 'propertyId', undefined);
@@ -26,14 +26,20 @@ function announcePicture(gameId, teamId, options, callback) {
   })
 }
 
+/**
+ * Uploads a picture
+ * @param uploadUrl
+ * @param imageData
+ * @param callback
+ */
 function uploadPicture(uploadUrl, imageData, callback) {
-  axios.post(uploadUrl, imageData, {
+  console.log('image', imageData);
+  axios.put(uploadUrl, imageData, {
       headers: {
-        'Content-Type': 'image/jpeg'
+        'Content-Type':  'image/jpeg'
       }
     }
   ).then(data => {
-    console.log('uploaded picture');
     callback(null);
   }).catch(err => {
       console.error(err);
@@ -41,7 +47,6 @@ function uploadPicture(uploadUrl, imageData, callback) {
     }
   )
 }
-
 function confirmPicture() {
 
 }
