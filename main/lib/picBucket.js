@@ -23,7 +23,13 @@ const picBucketSchema = mongoose.Schema({
   filename  : String,
   message   : String, // This is a message for the picture
   url       : String, // The public URL
+  user      : String,
   propertyId: String, // Property ID of an associated property (if any)
+  position  : {
+    lat     : Number,
+    lng     : Number,
+    accuracy: Number
+  },
   uploaded  : {type: Boolean, default: false},
   timestamp : {type: Date, default: Date.now}
 });
@@ -82,6 +88,12 @@ class PicBucket extends EventEmitter {
           pic.message    = _.get(options, 'message', undefined);
           pic.url        = `${self.settings.baseUrl}/${self.bucketName}/${filename}`;
           pic.propertyId = _.get(options, 'propertyId', undefined);
+          pic.user       = _.get(options, 'user', 'unbekannt');
+          pic.position   = {
+            lat     : Number(_.get(options, 'position.lat', '0')),
+            lng     : Number(_.get(options, 'position.lat', '0')),
+            accuracy: Number(_.get(options, 'position.lat', '10000')),
+          };
           pic._id        = `${gameId}-${fileBase}`;
           pic.save(err => {
             if (err) {
@@ -100,9 +112,10 @@ class PicBucket extends EventEmitter {
   /**
    * Confirms the upload of an announced file
    * @param id of the entry created while announcing
+   * @param options additional (updated) info
    * @param callback
    */
-  confirmUpload(id, callback) {
+  confirmUpload(id, options, callback) {
     let self = this;
     picBucket.find({_id: id}, (err, docs) => {
       if (err) {
@@ -110,6 +123,15 @@ class PicBucket extends EventEmitter {
       }
       let entry      = docs[0];
       entry.uploaded = true;
+      if (options.position) {
+        if (entry.position.accuracy > Number(_.get(options, 'position.accuracy', '10000'))) {
+          entry.position = {
+            lat     : Number(_.get(options, 'position.lat', '0')),
+            lng     : Number(_.get(options, 'position.lat', '0')),
+            accuracy: Number(_.get(options, 'position.lat', '10000')),
+          };
+        }
+      }
       self.emit('new', docs[0]);
       entry.save(callback);
     })

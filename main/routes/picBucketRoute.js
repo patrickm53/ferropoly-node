@@ -21,13 +21,14 @@ router.post('/announce/:gameId/:teamId', (req, res) => {
   const teamId     = req.params.teamId;
   const propertyId = req.body.propertyId;
   const message    = req.body.message;
+  const position   = req.body.position;
   const user       = _.get(req.session, 'passport.user', 'nobody');
 
   accessor.verifyPlayer(user, gameId, teamId, err => {
     if (err) {
       return res.status(401).send({message: 'Diese Aktion ist nicht erlaubt'});
     }
-    picBucket.announceUpload(gameId, teamId, {propertyId, message}, (err, info) => {
+    picBucket.announceUpload(gameId, teamId, {propertyId, message, user, position}, (err, info) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
@@ -41,7 +42,8 @@ router.post('/announce/:gameId/:teamId', (req, res) => {
  */
 router.post('/confirm/:id', (req, res) => {
   // No need for auth checks, the id is too specific for abuse, don't waste time
-  picBucket.confirmUpload(req.params.id, (err, doc) => {
+  const position = req.body.position;
+  picBucket.confirmUpload(req.params.id, {position}, (err, doc) => {
     if (err) {
       return res.status(500).send({message: err.message});
     }

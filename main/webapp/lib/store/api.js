@@ -14,12 +14,11 @@ const {getApiField, updateApiField} = createHelpers({
 const api = {
   state    : () => ({
     error         : {
-      active   : false,
-      infoText : '',
-      message  : '',
-      authToken: 'none',
-
+      active  : false,
+      infoText: '',
+      message : '',
     },
+    authToken     : 'none',
     requestPending: false,
     socketUrl     : '/none',
     online        : false,
@@ -38,7 +37,7 @@ const api = {
       state.online = false;
     }
   },
-  actions: {
+  actions  : {
     /**
      * Resets the API error from the last call, used when closing the modal dialog
      * @param state

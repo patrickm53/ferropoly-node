@@ -12,7 +12,7 @@ const accessor         = require('./accessor');
 const {v4: uuid}       = require('uuid');
 const gameLogModel     = require('../../common/models/gameLogModel');
 const moment           = require('moment');
-const picBucket        = require('./picBucket')(require('../settings.js'));
+const picBucket        = require('./picBucket')(require('../settings.js').picBucket);
 const EventEmitter     = require('./eventEmitter');
 
 let ferroSocket;

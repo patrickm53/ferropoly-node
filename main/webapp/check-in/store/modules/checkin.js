@@ -14,7 +14,7 @@ const {getCheckInField, updateCheckInField} = createHelpers({
 
 const CheckIn = {
   state    : () => ({
-    panel           : 'panel-overview', // panel displayed,
+    panel           : 'panel-pictures', //'panel-overview', // panel displayed,
     team            : {
       uuid: 'x',
       data: {
@@ -24,6 +24,7 @@ const CheckIn = {
     menuElements    : [
       {title: 'Übersicht', href: '#', event: 'panel-change', eventParam: 'panel-overview', active: true},
       {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map', active: false},
+      {title: 'Bild senden', href: '#', event: 'panel-change', eventParam: 'panel-pictures', active: false},
       {title: 'Besitz', href: '#', event: 'panel-change', eventParam: 'panel-property', active: false},
       {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting', active: false},
       {title: 'Preisliste', href: '#', event: 'panel-change', eventParam: 'panel-pricelist', active: false},
