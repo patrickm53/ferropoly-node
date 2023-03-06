@@ -17,18 +17,19 @@ router.post('/announce/:gameId/:teamId', (req, res) => {
     return res.status(401).send({message: 'Permission denied (2)'});
   }
 
-  const gameId     = req.params.gameId;
-  const teamId     = req.params.teamId;
-  const propertyId = req.body.propertyId;
-  const message    = req.body.message;
-  const position   = req.body.position;
-  const user       = _.get(req.session, 'passport.user', 'nobody');
+  const gameId           = req.params.gameId;
+  const teamId           = req.params.teamId;
+  const propertyId       = req.body.propertyId;
+  const message          = req.body.message;
+  const position         = req.body.position;
+  const lastModifiedDate = req.body.lastModifiedDate;
+  const user             = _.get(req.session, 'passport.user', 'nobody');
 
   accessor.verifyPlayer(user, gameId, teamId, err => {
     if (err) {
       return res.status(401).send({message: 'Diese Aktion ist nicht erlaubt'});
     }
-    picBucket.announceUpload(gameId, teamId, {propertyId, message, user, position}, (err, info) => {
+    picBucket.announceUpload(gameId, teamId, {propertyId, message, user, position, lastModifiedDate}, (err, info) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }

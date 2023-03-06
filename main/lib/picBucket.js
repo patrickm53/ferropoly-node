@@ -7,14 +7,14 @@
  * Created: 26.02.23
  **/
 
-const logger          = require('../../common/lib/logger').getLogger('picBucket');
-const _               = require('lodash');
-const {Storage}       = require('@google-cloud/storage');
-const EventEmitter    = require('./eventEmitter');
-const {v4: uuidv4}    = require('uuid');
-const picBucketModel  = require('../../common/models/picBucketModel');
+const logger         = require('../../common/lib/logger').getLogger('picBucket');
+const _              = require('lodash');
+const {Storage}      = require('@google-cloud/storage');
+const EventEmitter   = require('./eventEmitter');
+const {v4: uuidv4}   = require('uuid');
+const picBucketModel = require('../../common/models/picBucketModel');
 
-const storage   = new Storage();
+const storage = new Storage();
 
 /**
  * PicBucket Class
@@ -46,6 +46,7 @@ class PicBucket extends EventEmitter {
     let self            = this;
     let fileBase        = _.get(options, 'filename', `${uuidv4()}.jpg`);
     let filename        = `${gameId}/${teamId}/${fileBase}`
+    let thumbname       = `${gameId}/${teamId}/tn/${fileBase}`
     const uploadOptions = {
       version           : 'v4',
       action            : 'write',
@@ -57,30 +58,39 @@ class PicBucket extends EventEmitter {
     // Get a v4 signed URL for uploading file
     const bucket = storage.bucket(self.bucketName);
     const file   = bucket.file(filename);
+    const thumb  = bucket.file(thumbname);
     file.getSignedUrl(uploadOptions)
-        .then(data => {
-          logger.info(`${gameId} Data upload announced`);
+        .then(imageUrl => {
+          thumb.getSignedUrl(uploadOptions)
+               .then(thumbUrl => {
+                 logger.info(`${gameId} Data upload announced`);
 
-          let pic        = new picBucketModel.Model();
-          pic.gameId     = gameId;
-          pic.teamId     = teamId;
-          pic.filename   = filename;
-          pic.message    = _.get(options, 'message', undefined);
-          pic.url        = `${self.settings.baseUrl}/${self.bucketName}/${filename}`;
-          pic.propertyId = _.get(options, 'propertyId', undefined);
-          pic.user       = _.get(options, 'user', 'unbekannt');
-          pic.position   = {
-            lat     : Number(_.get(options, 'position.lat', '0')),
-            lng     : Number(_.get(options, 'position.lat', '0')),
-            accuracy: Number(_.get(options, 'position.lat', '10000')),
-          };
-          pic._id        = `${gameId}-${fileBase}`;
-          pic.save(err => {
-            if (err) {
-              return callback(err);
-            }
-            return callback(null, {uploadUrl: data[0], id: pic._id});
-          });
+                 let pic              = new picBucketModel.Model();
+                 pic.gameId           = gameId;
+                 pic.teamId           = teamId;
+                 pic.filename         = filename;
+                 pic.message          = _.get(options, 'message', undefined);
+                 pic.url              = `${self.settings.baseUrl}/${self.bucketName}/${filename}`;
+                 pic.thumbnail        = `${self.settings.baseUrl}/${self.bucketName}/${thumbname}`;
+                 pic.propertyId       = _.get(options, 'propertyId', undefined);
+                 pic.user             = _.get(options, 'user', 'unbekannt');
+                 pic.lastModifiedDate = _.get(options, 'lastModifiedDate', undefined);
+                 pic.position         = {
+                   lat     : Number(_.get(options, 'position.lat', '0')),
+                   lng     : Number(_.get(options, 'position.lng', '0')),
+                   accuracy: Number(_.get(options, 'position.accuracy', '10000')),
+                 };
+                 pic._id              = `${gameId}-${fileBase}`;
+                 pic.save(err => {
+                   if (err) {
+                     return callback(err);
+                   }
+                   return callback(null, {uploadUrl: imageUrl[0], thumbnailUrl: thumbUrl[0], id: pic._id});
+                 });
+               }).catch(err => {
+            logger.error(err);
+            return callback(err);
+          })
         })
         .catch(err => {
           logger.error(err);
@@ -107,8 +117,8 @@ class PicBucket extends EventEmitter {
         if (entry.position.accuracy > Number(_.get(options, 'position.accuracy', '10000'))) {
           entry.position = {
             lat     : Number(_.get(options, 'position.lat', '0')),
-            lng     : Number(_.get(options, 'position.lat', '0')),
-            accuracy: Number(_.get(options, 'position.lat', '10000')),
+            lng     : Number(_.get(options, 'position.lng', '0')),
+            accuracy: Number(_.get(options, 'position.accuracy', '10000')),
           };
         }
       }

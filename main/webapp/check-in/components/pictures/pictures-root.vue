@@ -27,6 +27,8 @@ b-container(fluid)
     font-awesome-icon(:icon="['fas', 'camera']")
     span &nbsp; Bild senden
     div &nbsp;
+  b-img(v-if="thumbUrl" :src="thumbUrl" fluid)
+  p thumbUrl: {{thumbUrl}}
 </template>
 
 <script>
@@ -35,6 +37,7 @@ import {faCamera} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {mapFields} from "vuex-map-fields";
 import {announcePicture, confirmPicture, uploadPicture} from "../../lib/picUploader";
+import {get} from "lodash";
 
 library.add(faCamera);
 export default {
@@ -46,7 +49,8 @@ export default {
   props     : {},
   data      : function () {
     return {
-      file: undefined
+      file    : undefined,
+      thumbUrl: undefined
     };
   },
   computed  : {
@@ -60,35 +64,56 @@ export default {
   created   : function () {
   },
   methods   : {
-    sendFile(fileData) {
-      const self   = this;
-      let formData = new FormData();
-
-      formData.append('imageData', fileData);
-      console.log('thats it', formData);
-      announcePicture(this.gameId, this.teamId, {authToken: self.authToken}, (err, info) => {
+    /**
+     * Sends a file, the whole process of announcing, uploading and confirming
+     * @param image Large image to save
+     * @param thumb Thumbnail
+     */
+    sendFile(image, thumb) {
+      const self = this;
+      announcePicture(this.gameId, this.teamId, {
+        authToken       : self.authToken,
+        lastModifiedDate: get(self, 'file.lastModifiedDate', undefined)
+      }, (err, info) => {
         if (err) {
           console.error(err);
           return;
         }
         console.info('can upload now');
-        uploadPicture(info.uploadUrl, fileData, err => {
+        uploadPicture(info.uploadUrl, image, err => {
           if (err) {
             return console.error(err);
           }
-          console.log('uploaded');
-          confirmPicture(info.id, {}, err => {
+          console.log('uploaded image');
+
+          uploadPicture(info.thumbnailUrl, thumb, err => {
             if (err) {
               return console.error(err);
             }
+            console.log('uploaded thumbnail');
+
+            confirmPicture(info.id, {}, (err, data) => {
+              if (err) {
+                return console.error(err);
+              }
+              console.log('Uploaded, finished', data);
+              self.thumbUrl = get(data, 'thumbnail');
+            })
           })
         })
       })
     },
-    processFile(dataURL, fileType) {
+    /**
+     * Processes a file, we do not upload the XXL file from the camera
+     * @param dataURL
+     * @param _options
+     * @param callback
+     */
+    processFile(dataURL, _options, callback) {
       const self      = this;
-      const maxWidth  = 800;
-      const maxHeight = 800;
+      let options     = _options || {};
+      const maxWidth  = options.maxWidth || 1200;
+      const maxHeight = options.maxHeight || 1200;
 
       let image = new Image();
       image.src = dataURL;
@@ -123,31 +148,32 @@ export default {
 
         context.drawImage(this, 0, 0, newWidth, newHeight);
 
-        dataURL = canvas.toDataURL(fileType);
-
-        self.sendFile(dataURL);
+        canvas.toBlob(callback, 'image/jpeg', 0.8)
       };
 
       image.onerror = function () {
         alert('There was an error processing your file!');
       };
     },
+    /**
+     * User wants to upload a file
+     */
     onUpload() {
       const self = this;
       console.log('having a file', this.file);
       let reader       = new FileReader();
       reader.onloadend = function () {
-        console.log('Result', reader.result);
-       self.sendFile(reader.result);
-        // self.processFile(reader.result, self.file.type);
+        self.processFile(reader.result, {}, large => {
+          self.processFile(reader.result, {maxWidth: 360, maxHeight: 360}, thumb => {
+            self.sendFile(large, thumb);
+          })
+        });
       }
 
       reader.onerror = function () {
         alert('There was an error reading the file!');
       }
-
-   //   reader.readAsBinaryString(self.file);
-      reader.readAsArrayBuffer(self.file);
+      reader.readAsDataURL(self.file);
     }
   }
 }

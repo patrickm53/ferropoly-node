@@ -7,16 +7,19 @@
 import axios from 'axios';
 import geograph from "../../common/lib/geograph";
 import {get} from "lodash";
+import {DateTime} from 'luxon';
 
 function announcePicture(gameId, teamId, options, callback) {
-  const message    = get(options, 'message', undefined);
-  const propertyId = get(options, 'propertyId', undefined);
-  const authToken  = get(options, 'authToken', 'nada');
+  const message          = get(options, 'message', undefined);
+  const propertyId       = get(options, 'propertyId', undefined);
+  const lastModifiedDate = get(options, 'lastModifiedDate', DateTime.now());
+  const authToken        = get(options, 'authToken', 'nada');
   axios.post(`/picbucket/announce/${gameId}/${teamId}`, {
     position: geograph.getLastLocation(),
     message,
     propertyId,
-    authToken
+    authToken,
+    lastModifiedDate
   }).then(resp => {
     console.log('announced', resp.data);
     return callback(null, resp.data);
@@ -33,10 +36,9 @@ function announcePicture(gameId, teamId, options, callback) {
  * @param callback
  */
 function uploadPicture(uploadUrl, imageData, callback) {
-  console.log('image', imageData);
   axios.put(uploadUrl, imageData, {
       headers: {
-        'Content-Type':  'image/jpeg'
+        'Content-Type': 'image/jpeg'
       }
     }
   ).then(() => {
