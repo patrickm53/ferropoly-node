@@ -7,34 +7,13 @@
  * Created: 26.02.23
  **/
 
-const mongoose        = require('mongoose');
 const logger          = require('../../common/lib/logger').getLogger('picBucket');
 const _               = require('lodash');
 const {Storage}       = require('@google-cloud/storage');
 const EventEmitter    = require('./eventEmitter');
 const {v4: uuidv4}    = require('uuid');
-/**
- * The mongoose schema for a picture
- */
-const picBucketSchema = mongoose.Schema({
-  _id       : String,
-  gameId    : String,
-  teamId    : String, // Set only if relevant, otherwise undefined
-  filename  : String,
-  message   : String, // This is a message for the picture
-  url       : String, // The public URL
-  user      : String,
-  propertyId: String, // Property ID of an associated property (if any)
-  position  : {
-    lat     : Number,
-    lng     : Number,
-    accuracy: Number
-  },
-  uploaded  : {type: Boolean, default: false},
-  timestamp : {type: Date, default: Date.now}
-});
+const picBucketModel  = require('../../common/models/picBucketModel');
 
-const picBucket = mongoose.model('PicBucket', picBucketSchema);
 const storage   = new Storage();
 
 /**
@@ -82,7 +61,7 @@ class PicBucket extends EventEmitter {
         .then(data => {
           logger.info(`${gameId} Data upload announced`);
 
-          let pic        = new picBucket();
+          let pic        = new picBucketModel.Model();
           pic.gameId     = gameId;
           pic.teamId     = teamId;
           pic.filename   = filename;
@@ -118,7 +97,7 @@ class PicBucket extends EventEmitter {
    */
   confirmUpload(id, options, callback) {
     let self = this;
-    picBucket.find({_id: id}, (err, docs) => {
+    picBucketModel.Model.find({_id: id}, (err, docs) => {
       if (err) {
         return callback(err);
       }
@@ -159,7 +138,7 @@ class PicBucket extends EventEmitter {
       filter.uploaded = uploaded;
     }
 
-    picBucket.find(filter, (err, docs) => {
+    picBucketModel.Model.find(filter, (err, docs) => {
       if (err) {
         return callback(err);
       }
@@ -178,7 +157,7 @@ class PicBucket extends EventEmitter {
     if (!gameId) {
       return callback(new Error('No gameId supplied'));
     }
-    picBucket.deleteMany({gameId: gameId}, callback)
+    picBucketModel.Model.deleteMany({gameId: gameId}, callback)
   }
 
   /**

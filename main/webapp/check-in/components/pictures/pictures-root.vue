@@ -34,7 +34,7 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {faCamera} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {mapFields} from "vuex-map-fields";
-import {announcePicture, uploadPicture} from "../../lib/picUploader";
+import {announcePicture, confirmPicture, uploadPicture} from "../../lib/picUploader";
 
 library.add(faCamera);
 export default {
@@ -77,6 +77,11 @@ export default {
             return console.error(err);
           }
           console.log('uploaded');
+          confirmPicture(info.id, {}, err => {
+            if (err) {
+              return console.error(err);
+            }
+          })
         })
       })
     },

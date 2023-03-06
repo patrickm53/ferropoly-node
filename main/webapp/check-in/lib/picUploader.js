@@ -7,7 +7,7 @@
 import axios from 'axios';
 import geograph from "../../common/lib/geograph";
 import {get} from "lodash";
-import $ from 'jquery'
+
 function announcePicture(gameId, teamId, options, callback) {
   const message    = get(options, 'message', undefined);
   const propertyId = get(options, 'propertyId', undefined);
@@ -39,7 +39,7 @@ function uploadPicture(uploadUrl, imageData, callback) {
         'Content-Type':  'image/jpeg'
       }
     }
-  ).then(data => {
+  ).then(() => {
     callback(null);
   }).catch(err => {
       console.error(err);
@@ -47,8 +47,24 @@ function uploadPicture(uploadUrl, imageData, callback) {
     }
   )
 }
-function confirmPicture() {
 
+/**
+ * Confirms the upload of a picture
+ * @param id
+ * @param options
+ * @param callback
+ */
+function confirmPicture(id, options, callback) {
+
+  axios.post(`/picbucket/confirm/${id}`, {
+    position: geograph.getLastLocation(),
+  }).then(resp => {
+    console.log('confirmed', resp.data);
+    return callback(null, resp.data);
+  }).catch(ex => {
+    console.error(ex);
+    callback(ex);
+  })
 }
 
-export {announcePicture, uploadPicture}
+export {announcePicture, uploadPicture, confirmPicture}
