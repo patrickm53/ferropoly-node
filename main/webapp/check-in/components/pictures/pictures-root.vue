@@ -57,8 +57,8 @@ export default {
     ...mapFields({
       teamId   : 'checkin.team.uuid',
       gameId   : 'gameId',
-      authToken: 'api.authToken'
-
+      authToken: 'api.authToken',
+      error    : 'api.error',
     }),
   },
   created   : function () {
@@ -77,23 +77,35 @@ export default {
       }, (err, info) => {
         if (err) {
           console.error(err);
+          self.error.active    = true;
+          self.error.infoText = 'Der Ferropoly Server meldet ein Problem bei der Anmeldung der Bilder:';
+          self.error.message  = err.message || err;
           return;
         }
         console.info('can upload now');
         uploadPicture(info.uploadUrl, image, err => {
           if (err) {
+            self.error.active    = true;
+            self.error.infoText = 'Der Google Server meldet ein Problem beim Upload des Hauptbildes:';
+            self.error.message  = err.message || err;
             return console.error(err);
           }
           console.log('uploaded image');
 
           uploadPicture(info.thumbnailUrl, thumb, err => {
             if (err) {
+              self.error.active    = true;
+              self.error.infoText = 'Der Google Server meldet ein Problem beim Upload des Thumbnails:';
+              self.error.message  = err.message || err;
               return console.error(err);
             }
             console.log('uploaded thumbnail');
 
             confirmPicture(info.id, {}, (err, data) => {
               if (err) {
+                self.error.active    = true;
+                self.error.infoText = 'Der Ferropoly Server meldet ein Problem beim Abschluss des Uploads:';
+                self.error.message  = err.message || err;
                 return console.error(err);
               }
               console.log('Uploaded, finished', data);

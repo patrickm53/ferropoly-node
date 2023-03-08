@@ -29,9 +29,33 @@ const store = new Vuex.Store({
     gameDataLoaded: false, // becomes true when static data was loaded
     gameId        : undefined,
   },
-  modules  : {map, teamAccount, gameplay, api, teams, checkin, rankingList, propertyRegister, gameLog, travelLog, chancellery},
+  modules  : {
+    map,
+    teamAccount,
+    gameplay,
+    api,
+    teams,
+    checkin,
+    rankingList,
+    propertyRegister,
+    gameLog,
+    travelLog,
+    chancellery
+  },
   getters  : {getField},
-  mutations: {updateField},
+  mutations: {
+    updateField,
+    /**
+     * Resets the API error from the last call, used when closing the modal dialog
+     * @param state
+     */
+    resetApiError(state) {
+      console.log('resetting api error');
+      state.api.error.active   = false;
+      state.api.error.infoText = '';
+      state.api.error.message  = '';
+    }
+  },
   actions  : {
     /**
      * Fetches the static data of a game, called once, when loading the page.
@@ -98,9 +122,11 @@ const store = new Vuex.Store({
         })
     },
     updateTravelLog({state, dispatch}, options) {
-      dispatch('travelLog/update', {gameId: state.gameId,
-        teams: state.teams.list,
-        teamUuid: get(options, 'teamUuid', 'shouldNotBeSo')})
+      dispatch('travelLog/update', {
+        gameId  : state.gameId,
+        teams   : state.teams.list,
+        teamUuid: get(options, 'teamUuid', 'shouldNotBeSo')
+      })
         .then(() => {
         })
         .catch(err => {
