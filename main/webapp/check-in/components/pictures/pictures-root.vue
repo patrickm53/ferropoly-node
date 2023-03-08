@@ -27,8 +27,11 @@ b-container(fluid)
     font-awesome-icon(:icon="['fas', 'camera']")
     span &nbsp; Bild senden
     div &nbsp;
-  b-img(v-if="thumbUrl" :src="thumbUrl" fluid)
-  p thumbUrl: {{thumbUrl}}
+  div(v-if="pictures.length > 0")
+    h2 Unsere Bilder
+    pictureCard(v-for="pic in pictures" :picture-info="pic" )
+
+
 </template>
 
 <script>
@@ -38,11 +41,12 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {mapFields} from "vuex-map-fields";
 import {announcePicture, confirmPicture, uploadPicture} from "../../lib/picUploader";
 import {get} from "lodash";
+import PictureCard from "../../../lib/components/pictureCard.vue";
 
 library.add(faCamera);
 export default {
   name      : "PicturesRoot",
-  components: {FontAwesomeIcon},
+  components: {FontAwesomeIcon, PictureCard},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -59,6 +63,7 @@ export default {
       gameId   : 'gameId',
       authToken: 'api.authToken',
       error    : 'api.error',
+      pictures : 'picBucketStore.pictures'
     }),
   },
   created   : function () {

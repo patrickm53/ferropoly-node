@@ -115,8 +115,11 @@ class FerropolySocket extends EventEmitter {
       },
       'player-position'         : (msg) => {
         self.store.dispatch({type: 'travelLog/updateGpsPosition', entry: msg});
+      },
+      'pic'                     : (msg) => {
+        console.log('new pic', msg);
+        self.store.dispatch({type: 'updatePictureList', info: msg});
       }
-
     };
   }
 

@@ -16,7 +16,8 @@ import rankingList from '../../lib/store/rankingList';
 import propertyRegister from '../../lib/store/propertyRegister';
 import chancellery from '../../lib/store/chancellery';
 import gameLog from '../../lib/store/gameLog';
-import travelLog from '../../lib/store/travelLog'
+import travelLog from '../../lib/store/travelLog';
+import picBucketStore from "../../lib/store/picBucketStore";
 import {get} from 'lodash';
 import assignObject from '../../lib/assignObject';
 import {GameProperties} from '../../lib/gameProperties';
@@ -40,7 +41,8 @@ const store = new Vuex.Store({
     propertyRegister,
     gameLog,
     travelLog,
-    chancellery
+    chancellery,
+    picBucketStore
   },
   getters  : {getField},
   mutations: {

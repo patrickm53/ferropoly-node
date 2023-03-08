@@ -61,7 +61,8 @@ $(document).ready(function () {
         // Set the static data
         this.$store.dispatch({type: 'fetchStaticData', err, data});
         this.$store.dispatch({type: 'updateProperties'});
-        let teamId   = get(data, 'team.uuid', 'none');
+        let teamId = get(data, 'team.uuid', 'none');
+        this.$store.dispatch({type: 'fetchPictures', gameId, teamId});
         // Connect to Ferropoly Instance
         this.fsocket = new FerropolySocket({
           url      : get(data, 'socketUrl', '/'),
