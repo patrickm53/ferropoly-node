@@ -11,7 +11,7 @@ div
   )
     b-card-text
       | {{pictureInfo.lastModifiedDate | formatDate}}
-
+      div {{extended}}
 </template>
 
 <script>
@@ -29,6 +29,12 @@ export default {
       type: Object,
       default: ()=> {
         return new PictureInfo({});
+      }
+    },
+    extended: {
+      type: Boolean,
+      default: ()=> {
+        return false;
       }
     }
   },

@@ -82,7 +82,7 @@ export default {
       }, (err, info) => {
         if (err) {
           console.error(err);
-          self.error.active    = true;
+          self.error.active   = true;
           self.error.infoText = 'Der Ferropoly Server meldet ein Problem bei der Anmeldung der Bilder:';
           self.error.message  = err.message || err;
           return;
@@ -90,7 +90,7 @@ export default {
         console.info('can upload now');
         uploadPicture(info.uploadUrl, image, err => {
           if (err) {
-            self.error.active    = true;
+            self.error.active   = true;
             self.error.infoText = 'Der Google Server meldet ein Problem beim Upload des Hauptbildes:';
             self.error.message  = err.message || err;
             return console.error(err);
@@ -99,7 +99,7 @@ export default {
 
           uploadPicture(info.thumbnailUrl, thumb, err => {
             if (err) {
-              self.error.active    = true;
+              self.error.active   = true;
               self.error.infoText = 'Der Google Server meldet ein Problem beim Upload des Thumbnails:';
               self.error.message  = err.message || err;
               return console.error(err);
@@ -108,7 +108,7 @@ export default {
 
             confirmPicture(info.id, {}, (err, data) => {
               if (err) {
-                self.error.active    = true;
+                self.error.active   = true;
                 self.error.infoText = 'Der Ferropoly Server meldet ein Problem beim Abschluss des Uploads:';
                 self.error.message  = err.message || err;
                 return console.error(err);
@@ -129,8 +129,9 @@ export default {
     processFile(dataURL, _options, callback) {
       const self      = this;
       let options     = _options || {};
-      const maxWidth  = options.maxWidth || 1200;
-      const maxHeight = options.maxHeight || 1200;
+      const thumbnail = options.thumbnail;
+      const maxWidth  = thumbnail ? 360 : 1400;
+      const maxHeight = thumbnail ? 240 : 1400;
 
       let image = new Image();
       image.src = dataURL;
@@ -149,22 +150,37 @@ export default {
         let newHeight;
 
         if (width > height) {
+          // landscape
           newHeight = height * (maxWidth / width);
           newWidth  = maxWidth;
         } else {
+          // portrait
           newWidth  = width * (maxHeight / height);
           newHeight = maxHeight;
         }
 
         let canvas = document.createElement('canvas');
 
-        canvas.width  = newWidth;
-        canvas.height = newHeight;
+
 
         let context = canvas.getContext('2d');
 
-        context.drawImage(this, 0, 0, newWidth, newHeight);
-
+        if (thumbnail) {
+          // see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage and
+          // https://stackoverflow.com/questions/26015497/how-to-resize-then-crop-an-image-with-canvas
+          const sx = 0;
+          const sw = width;
+          const sh = width / 4 * 3;
+          const sy = (height - sh) / 2;
+          console.log(`Thumb params: sx=${sx} sw=${sw} sy=${sy} sh=${sh} having image with w=${width} and h=${height}`);
+          canvas.width  = 360;
+          canvas.height = 270;
+          context.drawImage(this, sx, sy, sw, sh, 0, 0, 360, 270);
+        } else {
+          canvas.width  = newWidth;
+          canvas.height = newHeight;
+          context.drawImage(this, 0, 0, newWidth, newHeight);
+        }
         canvas.toBlob(callback, 'image/jpeg', 0.8)
       };
 
@@ -181,7 +197,7 @@ export default {
       let reader       = new FileReader();
       reader.onloadend = function () {
         self.processFile(reader.result, {}, large => {
-          self.processFile(reader.result, {maxWidth: 360, maxHeight: 360}, thumb => {
+          self.processFile(reader.result, {thumbnail: true}, thumb => {
             self.sendFile(large, thumb);
           })
         });

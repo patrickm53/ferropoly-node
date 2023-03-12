@@ -61,6 +61,7 @@ $(document).ready(function () {
         // Set the static data
         this.$store.dispatch({type: 'fetchStaticData', err, data});
         this.$store.dispatch({type:'updateProperties'});
+        this.$store.dispatch({type: 'fetchPictures', gameId});
         let authToken = get(data, 'authToken', 'none');
         console.log(`Static data says we have authToken ${authToken}`)
         // Connect to Ferropoly Instance

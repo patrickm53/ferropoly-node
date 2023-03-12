@@ -13,6 +13,7 @@ import propertyRegister from '../../lib/store/propertyRegister';
 import propertyAccount from './modules/propertyAccount';
 import rankingList from '../../lib/store/rankingList';
 import teamAccount from '../../lib/store/teamAccount';
+import picBucketStore from "../../lib/store/picBucketStore";
 import teams from '../../lib/store/teams';
 import travelLog from '../../lib/store/travelLog';
 import chancellery from '../../lib/store/chancellery';
@@ -36,6 +37,7 @@ const store = new Vuex.Store({
   },
   modules  : {
     gameplay,
+    picBucketStore,
     propertyRegister,
     propertyAccount,
     rankingList,

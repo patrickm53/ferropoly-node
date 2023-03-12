@@ -59,21 +59,17 @@ router.get('/:gameId', function (req, res) {
               return res.status(500).send({message: 'Interner Fehler beim Erstellen des Tokens.'});
             }
             req.session.authToken = token;
-            req.session.save(err => {
-              if (err) {
-                logger.error(err);
-              }
-              res.send({
-                authToken    : token,
-                socketUrl    : '/',
-                gameplay     : gp,
-                pricelist    : pl,
-                team         : team,
-                teams        : _.values(teams),
-                currentGameId: gameId,
-                mapApiKey    : settings.maps.apiKey,
-                user         : user
-              });
+            logger.debug(`Session saved for ${user} in ${gameId}`, req.session);
+            res.send({
+              authToken    : token,
+              socketUrl    : '/',
+              gameplay     : gp,
+              pricelist    : pl,
+              team         : team,
+              teams        : _.values(teams),
+              currentGameId: gameId,
+              mapApiKey    : settings.maps.apiKey,
+              user         : user
             });
           }
         );

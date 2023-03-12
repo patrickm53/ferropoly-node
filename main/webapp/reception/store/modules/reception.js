@@ -19,6 +19,7 @@ const Reception = {
       {title: 'Übersicht', href: '#', event: 'panel-change', eventParam: 'panel-overview', active: true},
       {title: 'Anruf behandeln', href: '#', event: 'panel-change', eventParam: 'panel-call', active: false},
       {title: 'Karte', href: '#', event: 'panel-change', eventParam: 'panel-map', active: false},
+      {title: 'Bilder', href: '#', event: 'panel-change', eventParam: 'panel-pictures', active: false},
       {title: 'Statistik', href: '#', event: 'panel-change', eventParam: 'panel-statistic', active: false},
       {title: 'Kontobuch', href: '#', event: 'panel-change', eventParam: 'panel-accounting', active: false},
       {title: 'Chance/Kanzlei', href: '#', event: 'panel-change', eventParam: 'panel-chancellery', active: false},

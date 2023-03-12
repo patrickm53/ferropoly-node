@@ -26,6 +26,7 @@
     call-root(v-if="panel==='panel-call'")
     map-root(v-if="panel==='panel-map'")
     statistic-root(v-if="panel==='panel-statistic'")
+    pictures-root(v-if="panel==='panel-pictures'")
 
 </template>
 
@@ -43,10 +44,12 @@ import MapRoot from '../../lib/components/travel-map/map-root.vue';
 import StatisticRoot from './statistic/statistic-root.vue';
 
 import {getAuthToken, verifyAuthToken} from '../../common/adapters/authToken';
+import PicturesRoot from "./pictures/pictures-root.vue";
 
 export default {
   name      : 'ReceptionRoot',
   components: {
+    PicturesRoot,
     MenuBar,
     ModalError,
     OverviewRoot,
@@ -68,6 +71,7 @@ export default {
         'panel-overview'   : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/overview',
         'panel-call'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/call',
         'panel-map'        : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/map',
+        'panel-pictures'   : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-1/reception/picutres',
         'panel-statistic'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/statistic',
         'panel-accounting' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/accounting',
         'panel-chancellery': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/chancellery',

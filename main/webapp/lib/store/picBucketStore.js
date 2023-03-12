@@ -65,6 +65,11 @@ const picBucket = {
              })
       });
     },
+    /**
+     * Adds a new pic, using socket.io socket.
+     * @param state
+     * @param options
+     */
     updatePictureList({state}, options) {
       state.pictures.push(new PictureInfo(options.info));
     }

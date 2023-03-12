@@ -9,14 +9,9 @@ const router    = express.Router();
 const accessor  = require('../lib/accessor');
 const _         = require('lodash');
 const picBucket = require('../lib/picBucket')(require('../settings').picBucket);
-router.post('/announce/:gameId/:teamId', (req, res) => {
-  if (!req.body.authToken) {
-    return res.status(401).send({message: 'Permission denied (1)'});
-  }
-  if (req.body.authToken !== req.session.authToken) {
-    return res.status(401).send({message: 'Permission denied (2)'});
-  }
+const logger    = require('../../common/lib/logger').getLogger('picBucketRoute');
 
+router.post('/announce/:gameId/:teamId', (req, res) => {
   const gameId           = req.params.gameId;
   const teamId           = req.params.teamId;
   const propertyId       = req.body.propertyId;
@@ -24,6 +19,14 @@ router.post('/announce/:gameId/:teamId', (req, res) => {
   const position         = req.body.position;
   const lastModifiedDate = req.body.lastModifiedDate;
   const user             = _.get(req.session, 'passport.user', 'nobody');
+
+  if (!req.body.authToken) {
+    return res.status(401).send({message: 'Permission denied (1)'});
+  }
+  if (req.body.authToken !== req.session.authToken) {
+    logger.info(`Authtoken mismatch for ${user}: ${req.body.authToken} vs ${req.session.authToken}`, req.session);
+    return res.status(401).send({message: 'Permission denied (2)'});
+  }
 
   accessor.verifyPlayer(user, gameId, teamId, err => {
     if (err) {
@@ -83,7 +86,7 @@ router.get('/:gameId/:teamId', (req, res) => {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
-    picBucket.list(gameId, {}, (err, list) => {
+    picBucket.list(gameId, {teamId}, (err, list) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
