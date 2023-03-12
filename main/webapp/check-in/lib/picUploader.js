@@ -14,6 +14,7 @@ function announcePicture(gameId, teamId, options, callback) {
   const propertyId       = get(options, 'propertyId', undefined);
   const lastModifiedDate = get(options, 'lastModifiedDate', DateTime.now());
   const authToken        = get(options, 'authToken', 'nada');
+  console.log(`Announcing pic with authtoken ${authToken}`);
   axios.post(`/picbucket/announce/${gameId}/${teamId}`, {
     position: geograph.getLastLocation(),
     message,

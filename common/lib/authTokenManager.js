@@ -7,6 +7,7 @@
 const {v4: uuid} = require('uuid');
 const mongoose   = require('mongoose');
 const tokens     = {};
+const logger = require('../lib/logger').getLogger('authTokenManager');
 
 const tokenSchema = mongoose.Schema({
   login     : String,
@@ -39,6 +40,7 @@ module.exports = {
    * @param callback
    */
   getNewToken: function (options, callback) {
+    logger.debug(`New authtokenn requested for ${options.user} suggessting '${options.proposedToken}'`)
     getToken(options.user, function (err, token) {
       if (err) {
         return callback(err);
@@ -49,6 +51,7 @@ module.exports = {
       token.id    = options.proposedToken || uuid();
       token.login = options.user;
       token.save(function (err) {
+        logger.debug(`User ${options.user} has now authtoken ${token.id}`);
         callback(err, token.id);
       });
     });
@@ -72,12 +75,14 @@ module.exports = {
         return callback(err);
       }
       if (!token) {
+        logger.info(`Not able to find an authtoken for '${user}'`);
         return callback(new Error('No token retrieved in verifyToken!'));
       }
       if (userToken === token.id) {
         tokens[user] = token;
         return callback(null);
       }
+      logger.info(`Authtoken invalid, supplied '${userToken}' but got ${token.id} for ${user}`);
       callback(new Error('invalid token'));
     });
   }
