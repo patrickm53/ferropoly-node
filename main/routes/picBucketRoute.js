@@ -50,7 +50,7 @@ router.post('/announce/:gameId/:teamId', (req, res) => {
 router.post('/confirm/:id', (req, res) => {
   // No need for auth checks, the id is too specific for abuse, don't waste time
   const position = req.body.position;
-  console.log(req);
+
   picBucket.confirmUpload(req.params.id, {position}, (err, doc) => {
     if (err) {
       return res.status(500).send({message: err.message});
