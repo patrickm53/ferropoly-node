@@ -4,15 +4,12 @@
   Created: 08.03.23
 -->
 <template lang="pug">
-div
-  b-card(
-    :img-src="pictureInfo.thumbnail"
-    :title="uploadDate"
-  )
-    b-card-text
-      | {{pictureInfo.lastModifiedDate | formatDate}}
-      div {{extended}}
-      b-button(@click="onZoom") Z
+div.card.mt-2
+  b-img(:src="pictureInfo.thumbnail" @click="onZoom")
+  h3 {{uploadDate}}
+  div(v-if="extended")
+    p {{$store.getters['teams/idToTeamName'](pictureInfo.teamId)}}
+    p(v-b-tooltip.hover :title="tooltipGps") {{pictureInfo.getLocationText()}}
 </template>
 
 <script>
@@ -40,7 +37,9 @@ export default {
     }
   },
   data      : function () {
-    return {};
+    return {
+      tooltipGps: 'Die Adresse wurde aufgrund des letzten GPS Standortes bestimmt'
+    };
   },
   computed  : {
     uploadDate() {
@@ -59,4 +58,8 @@ export default {
 
 <style lang="scss" scoped>
 
+.card {
+  border: solid silver;
+  border-width: 0;
+}
 </style>

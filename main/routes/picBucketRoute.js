@@ -11,6 +11,9 @@ const _         = require('lodash');
 const picBucket = require('../lib/picBucket')(require('../settings').picBucket);
 const logger    = require('../../common/lib/logger').getLogger('picBucketRoute');
 
+/**
+ * Route announcing a picture: intendion to upload, but pic is not uploaded yet
+ */
 router.post('/announce/:gameId/:teamId', (req, res) => {
   const gameId           = req.params.gameId;
   const teamId           = req.params.teamId;
@@ -47,6 +50,7 @@ router.post('/announce/:gameId/:teamId', (req, res) => {
 router.post('/confirm/:id', (req, res) => {
   // No need for auth checks, the id is too specific for abuse, don't waste time
   const position = req.body.position;
+  console.log(req);
   picBucket.confirmUpload(req.params.id, {position}, (err, doc) => {
     if (err) {
       return res.status(500).send({message: err.message});

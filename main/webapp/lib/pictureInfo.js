@@ -3,7 +3,7 @@
  * Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
  * Created: 08.03.23
  **/
-import {get, toNumber} from "lodash";
+import {get, split, toNumber} from "lodash";
 import {DateTime} from 'luxon';
 
 class PictureInfo {
@@ -21,6 +21,20 @@ class PictureInfo {
     }
     this.timestamp        = DateTime.fromISO(info.timestamp);
     this.lastModifiedDate = DateTime.fromISO(info.lastModifiedDate);
+    this.location         = info.location;
+  }
+
+  getLocationText() {
+    const self = this;
+    let results = get(self, 'location.results', null);
+    if (!results) {
+      return null;
+    }
+    let address = get(results, '[0].formatted_address', null);
+    if (!address) {
+      return null;
+    }
+    return split(address, ', Switzerland')[0];
   }
 }
 

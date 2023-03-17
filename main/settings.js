@@ -87,7 +87,8 @@ settings.debugSecret = process.env.FERROPOLY_DEBUG_SECRET || uuid();
 
 // Maps settings
 settings.maps = {
-  apiKey: process.env.FERROPOLY_GOOGLE_MAPS_API_KEY || 'none'
+  apiKey         : process.env.FERROPOLY_GOOGLE_MAPS_API_KEY || 'none',
+  geocodingApiKey: process.env.FERROPOLY_GOOGLE_GEOCODING_API_KEY || null
 };
 
 // Picture Bucket in Google Storage

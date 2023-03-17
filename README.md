@@ -24,19 +24,15 @@ languages).
  * ``MAILER_PORT``: Port, default 465
  * ``FERROPOLY_DEBUG_SECRET``: Used only for debugging routes
  * ``FERROPOLY_GOOGLE_MAPS_API_KEY``: API Key for maps
+ * ``FERROPOLY_GOOGLE_GEOCODING_API_KEY``: API Key for geocoding queries
 
 ### Credentials for Logins
 
  * ``FERROPOLY_GOOGLE_CLIENT_ID``
  * ``FERROPOLY_GOOGLE_CLIENT_SECRET``
- * ``FERROPOLY_FACEBOOK_APP_ID``
- * ``FERROPOLY_FACEBOOK_APP_SECRET``
- * ``FERROPOLY_MICROSOFT_APP_ID`` (not in use)
- * ``FERROPOLY_MICROSOFT_APP_SECRET`` (not in use)
- * ``FERROPOLY_DROPBOX_CLIENT_ID`` (not in use)
- * ``FERROPOLY_DROPBOX_CLIENT_SECRET`` (not in use)
- * ``FERROPOLY_TWITTER_CONSUMER_KEY`` (not in use)
- * ``FERROPOLY_TWITTER_CONSUMER_SECRET`` (not in use)
+ * ``FERROPOLY_MICROSOFT_APP_ID``
+ * ``FERROPOLY_MICROSOFT_APP_SECRET``
+
  
 ## Licence
 GPL V3

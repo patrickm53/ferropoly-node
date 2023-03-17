@@ -4,10 +4,13 @@
   Created: 17.03.23
 -->
 <template lang="pug">
-div
+b-container(fluid)
+  div(v-if="pictures.length === 0")
+    b-jumbotron(header="Bilder Gallerie" lead="Leider hat noch kein Team Bilder hochgeladen!")
+      p Sobald Bilder verfügbar sind, findest Du diese hier.
   div(v-if="pictureInfo === null")
     b-row
-      b-col(v-for="pic in pictures" cols="3")
+      b-col(v-for="pic in pictures" cols="12" sm="6" md="4" lg="3")
         pictureCard(:picture-info="pic" extended=true @zoom="onZoom" )
   div(v-if="pictureInfo")
     b-img(:src="pictureInfo.url" fluid center @click="onClose")

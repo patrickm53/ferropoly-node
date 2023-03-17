@@ -23,6 +23,7 @@ const picBucketSchema = mongoose.Schema({
     lng     : Number,
     accuracy: Number
   },
+  location        : Object,  // Object retrieved by google geocode API
   uploaded        : {type: Boolean, default: false},
   timestamp       : {type: Date, default: Date.now},
   lastModifiedDate: Date

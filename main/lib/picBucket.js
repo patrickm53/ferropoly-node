@@ -13,6 +13,7 @@ const {Storage}      = require('@google-cloud/storage');
 const EventEmitter   = require('./eventEmitter');
 const {v4: uuidv4}   = require('uuid');
 const picBucketModel = require('../../common/models/picBucketModel');
+const axios          = require('axios').default;
 
 const storage = new Storage();
 
@@ -122,8 +123,28 @@ class PicBucket extends EventEmitter {
           };
         }
       }
-      self.emit('new', docs[0]);
-      entry.save(callback);
+
+      // When Geolocation API is active, run the query
+      const apiKey= process.env.FERROPOLY_GOOGLE_GEOCODING_API_KEY || null;
+      if (entry.position.accuracy < 2000 && apiKey) {
+        const latlng = `${entry.position.lat},${entry.position.lng}`;
+        axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&location_type=ROOFTOP|RANGE_INTERPOLATED&key=${apiKey}`)
+          .then(resp => {
+            logger.info(`Geolocation API call ok for ${entry.gameId}`);
+            entry.location = resp.data;
+          })
+          .catch(err => {
+            logger.error('Fehler in Geocoding API', err);
+          })
+          .finally(()=>{
+            self.emit('new', entry);
+            return entry.save(callback);
+          })
+      }
+      else {
+        self.emit('new', entry);
+        entry.save(callback);
+      }
     })
   }
 
