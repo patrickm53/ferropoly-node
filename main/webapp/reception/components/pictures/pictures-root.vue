@@ -4,19 +4,16 @@
   Created: 12.03.23
 -->
 <template lang="pug">
-div
-  b-row
-    b-col(v-for="pic in pictures" cols="3")
-      pictureCard(:picture-info="pic" extended=true)
+reception-pictures
 </template>
 
 <script>
-import PictureCard from "../../../lib/components/pictureCard.vue";
 import {mapFields} from "vuex-map-fields";
+import ReceptionPictures from "./reception-pictures.vue";
 
 export default {
   name: "PicturesRoot",
-  components: {PictureCard},
+  components: {ReceptionPictures},
   filters   : {},
   mixins    : [],
   model     : {},

@@ -12,6 +12,7 @@ div
     b-card-text
       | {{pictureInfo.lastModifiedDate | formatDate}}
       div {{extended}}
+      b-button(@click="onZoom") Z
 </template>
 
 <script>
@@ -48,7 +49,11 @@ export default {
   },
   created   : function () {
   },
-  methods   : {}
+  methods   : {
+    onZoom() {
+      this.$emit('zoom', this.pictureInfo)
+    }
+  }
 }
 </script>
 
