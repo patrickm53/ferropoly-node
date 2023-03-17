@@ -16,14 +16,9 @@ router.get('/', function (req, res) {
       logger.error(err);
       return res.status(500).send({authToken: 'none', message: 'Error while creating AuthToken'});
     }
-    logger.info(`NEW auth token for ${req.session.passport.user}: was ${req.session.authToken}, becomes ${token}`);
-    req.session.save(err => {
-      if (err) {
-        logger.error(err);
-      }
-      req.session.authToken = token;
-      res.send({authToken: req.session.authToken, user: req.session.passport.user});
-    });
+    logger.info(`NEW authtoken for ${req.session.passport.user}: was ${req.session.authToken}, becomes ${token}`);
+    req.session.authToken = token;
+    res.send({authToken: req.session.authToken, user: req.session.passport.user});
   })
 });
 

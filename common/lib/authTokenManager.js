@@ -20,16 +20,16 @@ const Token = mongoose.model('Token', tokenSchema);
 
 function getToken(user, callback) {
   Token.find()
-    .where('login').equals(user)
-    .exec(function (err, docs) {
-      if (err) {
-        return callback(err);
-      }
-      if (!docs || docs.length === 0) {
-        return callback();
-      }
-      callback(err, docs[0]);
-    });
+       .where('login').equals(user)
+       .exec(function (err, docs) {
+         if (err) {
+           return callback(err);
+         }
+         if (!docs || docs.length === 0) {
+           return callback();
+         }
+         callback(err, docs[0]);
+       });
 }
 
 

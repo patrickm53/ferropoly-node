@@ -90,7 +90,7 @@ ferropolyDb.init(settings, function (err) {
   // required for passport: configuration
   app.use(session({
     secret           : 'ferropolyIsAGameWithAVeryLargePlayground',
-    resave           : true,
+    resave           : false,
     saveUninitialized: false,
     cookie           : {
       secure: 'auto'
