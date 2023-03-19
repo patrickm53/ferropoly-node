@@ -5,7 +5,7 @@
 -->
 <template lang="pug">
 div.card.mt-2
-  b-img(:src="pictureInfo.thumbnail" @click="onZoom")
+  b-img(:src="pictureInfo.thumbnail" @click="onClick")
   h3 {{uploadDate}}
   div(v-if="extended")
     p {{$store.getters['teams/idToTeamName'](pictureInfo.teamId)}}
@@ -49,7 +49,7 @@ export default {
   created   : function () {
   },
   methods   : {
-    onZoom() {
+    onClick() {
       this.$emit('zoom', this.pictureInfo)
     }
   }

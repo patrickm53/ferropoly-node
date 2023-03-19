@@ -9,20 +9,19 @@ b-container(fluid)
     b-jumbotron(header="Bilder Gallerie" lead="Leider hat noch kein Team Bilder hochgeladen!")
       p Sobald Bilder verfügbar sind, findest Du diese hier.
   div(v-if="pictureInfo === null")
-    b-row
-      b-col(v-for="pic in pictures" cols="12" sm="6" md="4" lg="3")
-        pictureCard(:picture-info="pic" extended=true @zoom="onZoom" )
+    picture-list(:pictures="pictures" @zoom="onZoom")
   div(v-if="pictureInfo")
     b-img(:src="pictureInfo.url" fluid center @click="onClose")
 </template>
 
 <script>
-import PictureCard from "../../../lib/components/pictureCard.vue";
+
+import PictureList from "../../../lib/components/pictureList.vue";
 import {mapFields} from "vuex-map-fields";
 
 export default {
   name      : "ReceptionPictures",
-  components: {PictureCard},
+  components: {PictureList},
   filters   : {},
   mixins    : [],
   model     : {},
