@@ -24,6 +24,10 @@ class PictureInfo {
     this.location         = info.location;
   }
 
+  /**
+   * Returns the location text out of the Google Geolocation data
+   * @returns {string|null}
+   */
   getLocationText() {
     const self = this;
     let results = get(self, 'location.results', null);
@@ -35,6 +39,18 @@ class PictureInfo {
       return null;
     }
     return split(address, ', Switzerland')[0];
+  }
+
+  /**
+   * Gets active when the modification date is much older than the upload date
+   * @returns {boolean}
+   */
+  warningTooOldPictureActive() {
+    if (!this.lastModifiedDate) {
+      return false;
+    }
+    const diff = this.timestamp.diff(this.lastModifiedDate, 'hours');
+    return diff > 12;
   }
 }
 

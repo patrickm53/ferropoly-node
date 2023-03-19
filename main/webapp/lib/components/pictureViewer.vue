@@ -10,11 +10,15 @@ b-container(fluid)
       h5 {{$store.getters['teams/idToTeamName'](picture.teamId)}}
       compact-info(title="Upload") {{picture.timestamp | formatTime}}
       compact-info(v-if="extended" title="Aufnahmedatum") {{picture.lastModifiedDate | formatDateTime}}
-      compact-info(v-if="picture.position" title="Position")
+        p(v-if="extended && picture.warningTooOldPictureActive()")
+          font-awesome-icon.no-url.warning(icon="fa-triangle-exclamation")
+          span &nbsp; Dieses Bild sollte überprüft werden: das Aufnahmedatum liegt deutlich vor dem Upload-Datum.
+      compact-info(v-if="picture.position" title="Position bei Upload (GPS)")
         a(:href="mapUrl" target="_blank") {{picture.position | formatPosition}}
-      compact-info(v-if="picture.getLocationText()" title="Adresse bei Upload (gemäss GPS)") {{picture.getLocationText()}}
+      compact-info(v-if="picture.getLocationText()" title="Adresse bei Upload") {{picture.getLocationText()}}
       compact-info(title="Bild in voller Auflösung öffnen")
         a(:href="picture.url" target="_blank") Auf neuer Seite öffnen
+
 
     b-col(sm="12" md="12" lg="8" xl="9")
       b-img(:src="picture.url" fluid center @click="onClose")
@@ -23,10 +27,13 @@ b-container(fluid)
 <script>
 import {formatTime, formatPosition, formatDateTime} from '../../common/lib/formatters';
 import CompactInfo from "./compactInfo.vue";
-
+import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {library} from '@fortawesome/fontawesome-svg-core';
+library.add(faTriangleExclamation);
 export default {
   name      : "PictureViewer",
-  components: {CompactInfo},
+  components: {CompactInfo, FontAwesomeIcon},
   filters   : {formatTime, formatPosition,formatDateTime},
   mixins    : [],
   model     : {},
@@ -71,5 +78,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.warning {
+  color: orange;
+}
 </style>

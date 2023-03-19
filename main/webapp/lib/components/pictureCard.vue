@@ -7,6 +7,10 @@
 div.card.mt-2(@click="onClick")
   b-img-lazy(:src="pictureInfo.thumbnail" blank-width="200" blank-height="150" )
   h3 {{uploadDate}}
+    font-awesome-icon.no-url.warning(v-if="extended && pictureInfo.warningTooOldPictureActive()"
+      icon="fa-triangle-exclamation"
+      v-b-tooltip.hover
+      :title="tooltipWarning")
   div(v-if="extended")
     p {{$store.getters['teams/idToTeamName'](pictureInfo.teamId)}}
     p(v-b-tooltip.hover :title="tooltipGps") {{pictureInfo.getLocationText()}}
@@ -15,10 +19,13 @@ div.card.mt-2(@click="onClick")
 <script>
 import PictureInfo from "../pictureInfo";
 import {formatTime} from '../../common/lib/formatters';
-
+import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {library} from '@fortawesome/fontawesome-svg-core';
+library.add(faTriangleExclamation);
 export default {
   name: "PictureCard",
-  components: {},
+  components: {FontAwesomeIcon},
   filters   : {formatTime},
   mixins    : [],
   model     : {},
@@ -38,7 +45,8 @@ export default {
   },
   data      : function () {
     return {
-      tooltipGps: 'Die Adresse wurde aufgrund des letzten GPS Standortes bestimmt'
+      tooltipGps: 'Die Adresse wurde aufgrund des letzten GPS Standortes bestimmt',
+      tooltipWarning: 'Dieses Bild benötigt eine Überprüfung'
     };
   },
   computed  : {
@@ -61,5 +69,9 @@ export default {
 .card {
   border: solid silver;
   border-width: 0;
+}
+
+.warning {
+  color: orange;
 }
 </style>
