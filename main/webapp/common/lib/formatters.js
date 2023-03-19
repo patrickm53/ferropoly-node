@@ -169,6 +169,21 @@ function booleanYesNo(b) {
 }
 
 /**
+ * Formats a position, which must be an object with lat/lng/accuracy
+ * @param position
+ */
+function formatPosition(position) {
+  if (!position || !position.lat || !position.lng) {
+    return '';
+  }
+  let retVal = `${position.lat}°N, ${position.lng}°E`;
+  if (position.accuracy) {
+    retVal += ` ±${position.accuracy}m`
+  }
+  return retVal;
+}
+
+/**
  * Returns the status of the building process
  * @param bs
  * @returns {string}
@@ -199,7 +214,6 @@ function buildingStatus(bs) {
 }
 
 
-
 export {
   formatMap,
   formatTime,
@@ -211,5 +225,6 @@ export {
   formatPriceRange,
   booleanYesNo,
   buildingStatus,
-  formatTimestampAsAgo
+  formatTimestampAsAgo,
+  formatPosition
 };

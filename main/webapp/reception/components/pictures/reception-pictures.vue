@@ -9,34 +9,49 @@ b-container(fluid)
     b-jumbotron(header="Bilder Gallerie" lead="Leider hat noch kein Team Bilder hochgeladen!")
       p Sobald Bilder verfügbar sind, findest Du diese hier.
   div(v-if="pictureInfo === null")
-    picture-list(:pictures="pictures" @zoom="onZoom")
+    b-row.mt-1
+      b-col
+        b-form(inline)
+          label.mr-2(for="filter") Filter:
+          b-form-select#filter(v-model="selectedFilter" :options="selectOptions")
+    picture-list(:pictures="pictures"  :filter="selectedFilter" @zoom="onZoom")
   div(v-if="pictureInfo")
-    b-img(:src="pictureInfo.url" fluid center @click="onClose")
+    picture-viewer(:picture="pictureInfo" extended=true @close="onClose")
 </template>
 
 <script>
 
 import PictureList from "../../../lib/components/pictureList.vue";
+import PictureViewer from "../../../lib/components/pictureViewer.vue";
 import {mapFields} from "vuex-map-fields";
 
 export default {
   name      : "ReceptionPictures",
-  components: {PictureList},
+  components: {PictureList, PictureViewer},
   filters   : {},
   mixins    : [],
   model     : {},
   props     : {},
   data      : function () {
     return {
-      pictureInfo: null
+      pictureInfo   : null,
+      selectOptions : [
+        {value: null, text: 'Alle'}
+      ],
+      selectedFilter: null
     };
   },
   computed  : {
     ...mapFields({
-      pictures: 'picBucketStore.pictures'
-    }),
+      pictures: 'picBucketStore.pictures',
+      teams   : 'teams.list'
+    })
   },
   created   : function () {
+    let self = this;
+    this.teams.forEach(t=> {
+      self.selectOptions.push({value: t.uuid, text: t.data.name});
+    })
   },
   methods   : {
     onZoom(info) {
@@ -44,8 +59,7 @@ export default {
       this.pictureInfo = info;
     },
     onClose() {
-      console.log('onClose');
-      this.pictureInfo = null;
+      this.pictureInfo=null;
     }
   }
 }

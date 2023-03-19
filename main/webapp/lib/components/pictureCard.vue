@@ -14,12 +14,12 @@ div.card.mt-2
 
 <script>
 import PictureInfo from "../pictureInfo";
-import {formatTime, formatDate} from '../../common/lib/formatters';
+import {formatTime} from '../../common/lib/formatters';
 
 export default {
   name: "PictureCard",
   components: {},
-  filters   : {formatTime, formatDate},
+  filters   : {formatTime},
   mixins    : [],
   model     : {},
   props     : {

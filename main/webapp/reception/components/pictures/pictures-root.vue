@@ -4,16 +4,19 @@
   Created: 12.03.23
 -->
 <template lang="pug">
-reception-pictures
+b-container(fluid)
+  call-active-warning
+  reception-pictures
 </template>
 
 <script>
 import {mapFields} from "vuex-map-fields";
 import ReceptionPictures from "./reception-pictures.vue";
+import CallActiveWarning from "../call-active-warning.vue";
 
 export default {
   name: "PicturesRoot",
-  components: {ReceptionPictures},
+  components: {ReceptionPictures,CallActiveWarning},
   filters   : {},
   mixins    : [],
   model     : {},
