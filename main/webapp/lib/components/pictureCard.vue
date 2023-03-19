@@ -4,8 +4,8 @@
   Created: 08.03.23
 -->
 <template lang="pug">
-div.card.mt-2
-  b-img(:src="pictureInfo.thumbnail" @click="onClick")
+div.card.mt-2(@click="onClick")
+  b-img-lazy(:src="pictureInfo.thumbnail" blank-width="200" blank-height="150" )
   h3 {{uploadDate}}
   div(v-if="extended")
     p {{$store.getters['teams/idToTeamName'](pictureInfo.teamId)}}
