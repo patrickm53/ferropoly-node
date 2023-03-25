@@ -6,7 +6,7 @@
 <template lang="pug">
 #image-list
   b-container(fluid)
-    b-row
+    b-row(align-h="center")
       b-col(v-for="pic in pictures"  v-if="filterMatch(pic)")
         pictureCard(:picture-info="pic" extended=true @zoom="onZoom" )
 
@@ -23,24 +23,31 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    pictures: {
+    pictures  : {
       type   : Array,
       default: () => {
         return [];
       }
     },
-    teamId  : {
+    teamId    : {
       type   : String,
       default: () => {
         return null;
       }
     },
-    propertyId  : {
+    propertyId: {
       type   : String,
       default: () => {
         return null;
       }
-    }
+    },
+    textFilter: {
+      type   : String,
+      default: () => {
+        return null;
+      }
+    },
+
   },
   data      : function () {
     return {};
@@ -77,13 +84,29 @@ export default {
      * @returns {boolean}
      */
     filterMatch(pictureInfo) {
+      let match = 0;
+      let filtersNbMustMatch = 1;
       if (this.teamId) {
-        return pictureInfo.teamId === this.teamId;
+        pictureInfo.teamId === this.teamId ? match++ : match;
+      }
+      if (!this.teamId) {
+        match++;
       }
       if (this.propertyId) {
-        return pictureInfo.propertyId === this.propertyId;
+        pictureInfo.propertyId === this.propertyId ? match++ : match;
+        filtersNbMustMatch++;
       }
-      return true;
+
+      // This filter is exclusive (AND)
+      if (this.textFilter) {
+        let prop = this.$store.getters['propertyRegister/getPropertyById'](pictureInfo.propertyId);
+        if (!prop) {
+          return false;
+        }
+        let re = new RegExp(this.textFilter, 'i');
+        return (match > 0) && ((prop.location.name.search(re) >= 0) || (pictureInfo.getLocationText() && pictureInfo.getLocationText().search(re) >= 0));
+      }
+      return match >= filtersNbMustMatch;
     }
   }
 }

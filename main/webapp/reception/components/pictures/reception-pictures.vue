@@ -14,7 +14,9 @@ b-container(fluid)
         b-form(inline)
           label.mr-2(for="filter") Team-Filter:
           b-form-select#filter(v-model="selectedFilter" :options="selectOptions")
-    picture-list(:pictures="pictures"  :team-id="selectedFilter" @zoom="onZoom")
+          label.mr-2.ml-4(for="text") Text-Filter:
+          b-form-input(v-model="textFilter" type="text")
+    picture-list.mt-2(:pictures="pictures"  :team-id="selectedFilter" :text-filter="textFilter" @zoom="onZoom")
   div(v-if="pictureInfo")
     picture-viewer(:picture="pictureInfo" :properties="propertyRegister.properties" extended=true @property-assigned="onPropertyAssigned" @close="onClose")
 </template>
@@ -38,7 +40,8 @@ export default {
       selectOptions : [
         {value: null, text: 'Alle'}
       ],
-      selectedFilter: null
+      selectedFilter: null,
+      textFilter    : null
     };
   },
   computed  : {
