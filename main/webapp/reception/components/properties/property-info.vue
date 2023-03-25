@@ -52,16 +52,21 @@
             b-td {{property.gamedata.boughtTs | formatTime}}
             b-td.title Bebaubar?
             b-td {{property.gamedata.buildingEnabled | booleanYesNo}}
+      div(v-if="hasPictures(property.uuid)")
+        h5 Bilder
+        picture-list(:pictures="pictures" :property-id="property.uuid")
 
 
 </template>
 
 <script>
 import {formatAccessibility, formatPrice, booleanYesNo, buildingStatus, formatTime} from '../../../common/lib/formatters';
+import PictureList from "../../../lib/components/pictureList.vue";
+import {mapFields} from "vuex-map-fields";
 
 export default {
   name      : 'PropertyInfo',
-  components: {},
+  components: {PictureList},
   filters   : {formatAccessibility, formatPrice, booleanYesNo, buildingStatus, formatTime},
   mixins    : [],
   model     : {},
@@ -74,12 +79,18 @@ export default {
   data      : function () {
     return {};
   },
-  computed  : {},
+  computed  : {
+    ...mapFields({
+      pictures        : 'picBucketStore.pictures',
+    })
+  },
   created   : function () {
   },
   methods   : {
     teamName(id) {
       return this.$store.getters['teams/idToTeamName'](id);
+    },    hasPictures(propertyId) {
+      return this.$store.getters['getPicsByProperty'](propertyId).length > 0;
     },
   }
 }

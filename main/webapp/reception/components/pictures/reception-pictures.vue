@@ -12,9 +12,9 @@ b-container(fluid)
     b-row.mt-1
       b-col
         b-form(inline)
-          label.mr-2(for="filter") Filter:
+          label.mr-2(for="filter") Team-Filter:
           b-form-select#filter(v-model="selectedFilter" :options="selectOptions")
-    picture-list(:pictures="pictures"  :filter="selectedFilter" @zoom="onZoom")
+    picture-list(:pictures="pictures"  :team-id="selectedFilter" @zoom="onZoom")
   div(v-if="pictureInfo")
     picture-viewer(:picture="pictureInfo" :properties="propertyRegister.properties" extended=true @property-assigned="onPropertyAssigned" @close="onClose")
 </template>

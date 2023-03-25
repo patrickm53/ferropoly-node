@@ -1,10 +1,10 @@
 <!---
-
+  A preview card for pictures
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 08.03.23
 -->
 <template lang="pug">
-div.card.mt-2(@click="onClick")
+div.card.mt-0(@click="onClick")
   b-img-lazy(:src="pictureInfo.thumbnail" blank-width="200" blank-height="150" )
   h3 {{uploadDate}}
     font-awesome-icon.no-url.warning(v-if="extended && pictureInfo.warningTooOldPictureActive()"
@@ -69,6 +69,7 @@ export default {
 .card {
   border: solid silver;
   border-width: 0;
+  width: 360px;
 }
 
 .warning {

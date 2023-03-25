@@ -7,7 +7,7 @@
 #image-list
   b-container(fluid)
     b-row
-      b-col(v-for="pic in pictures" cols="12" sm="6" md="4" lg="3" xl="2" v-if="filterMatch(pic)")
+      b-col(v-for="pic in pictures"  v-if="filterMatch(pic)")
         pictureCard(:picture-info="pic" extended=true @zoom="onZoom" )
 
 </template>
@@ -29,7 +29,13 @@ export default {
         return [];
       }
     },
-    filter  : {
+    teamId  : {
+      type   : String,
+      default: () => {
+        return null;
+      }
+    },
+    propertyId  : {
       type   : String,
       default: () => {
         return null;
@@ -71,8 +77,11 @@ export default {
      * @returns {boolean}
      */
     filterMatch(pictureInfo) {
-      if (this.filter) {
-        return pictureInfo.teamId === this.filter;
+      if (this.teamId) {
+        return pictureInfo.teamId === this.teamId;
+      }
+      if (this.propertyId) {
+        return pictureInfo.propertyId === this.propertyId;
       }
       return true;
     }

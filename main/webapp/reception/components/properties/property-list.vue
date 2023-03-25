@@ -5,25 +5,27 @@
   Created: 02.01.22
 -->
 <template lang="pug">
-  #property-list
-    b-table(striped
-    small
-    :items="propertyRegister.properties"
-      :fields="fields"
-      responsive="sm"
-      sort-icon-left
-      @row-clicked="onRowClicked")
-      // eslint-disable-next-line vue/valid-v-slot
-      template(#cell(pricelist.position)="data") {{data.item.pricelist.position + 1}}
-      template(#cell(pricelist.price)="data") {{data.item.pricelist.price | formatPrice}}
-      // {{teamName(data.item.gamedata.owner)}}
-      template(#cell(gamedata.buildings)="data")
-        font-awesome-icon.no-url(:icon="['fas', 'hotel']" v-if="data.item.gamedata.buildings===5")
-        font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showFirstHouse(data.item.gamedata.buildings)")
-        font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showSecondHouse(data.item.gamedata.buildings)")
-        font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showThirdHouse(data.item.gamedata.buildings)")
-        font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showFourthHouse(data.item.gamedata.buildings)")
-        font-awesome-icon.building-enabled.no-url(:icon="['fas', 'home']" v-if="showBuildingEnabled(data.item.gamedata)")
+#property-list
+  b-table(striped
+  small
+  :items="propertyRegister.properties"
+    :fields="fields"
+    responsive="sm"
+    sort-icon-left
+    @row-clicked="onRowClicked")
+    // eslint-disable-next-line vue/valid-v-slot
+    template(#cell(pricelist.position)="data") {{data.item.pricelist.position + 1}}
+    template(#cell(location.name)="data") {{data.item.location.name}}
+      font-awesome-icon.no-url.ml-1(:icon="['fas', 'camera']" v-if="hasPictures(data.item.uuid)")
+    template(#cell(pricelist.price)="data") {{data.item.pricelist.price | formatPrice}}
+    // {{teamName(data.item.gamedata.owner)}}
+    template(#cell(gamedata.buildings)="data")
+      font-awesome-icon.no-url(:icon="['fas', 'hotel']" v-if="data.item.gamedata.buildings===5")
+      font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showFirstHouse(data.item.gamedata.buildings)")
+      font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showSecondHouse(data.item.gamedata.buildings)")
+      font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showThirdHouse(data.item.gamedata.buildings)")
+      font-awesome-icon.no-url(:icon="['fas', 'home']" v-if="showFourthHouse(data.item.gamedata.buildings)")
+      font-awesome-icon.building-enabled.no-url(:icon="['fas', 'home']" v-if="showBuildingEnabled(data.item.gamedata)")
 
 </template>
 
@@ -32,13 +34,14 @@
 import {formatPrice} from '../../../common/lib/formatters';
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faHotel} from '@fortawesome/free-solid-svg-icons'
-import {faHome} from '@fortawesome/free-solid-svg-icons'
+import {faHome, faCamera} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import $ from 'jquery';
 import {GameProperties} from '../../../lib/gameProperties';
 
 
 library.add(faHotel);
+library.add(faCamera);
 library.add(faHome);
 
 export default {
@@ -107,6 +110,9 @@ export default {
     },
     showBuildingEnabled(gamedata) {
       return (gamedata.buildingEnabled && (gamedata.buildings < 5) && (gamedata.buildings > -1));
+    },
+    hasPictures(propertyId) {
+      return this.$store.getters['getPicsByProperty'](propertyId).length > 0;
     },
     /**
      * Creates the maximum Size of the list

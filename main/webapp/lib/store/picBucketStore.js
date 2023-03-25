@@ -7,7 +7,7 @@
 
 import {createHelpers} from 'vuex-map-fields';
 import axios from 'axios';
-import {findIndex, get} from 'lodash';
+import {filter, findIndex, get} from 'lodash';
 import PictureInfo from "../pictureInfo";
 
 const {getPicBucketField, updatePicBucketField} = createHelpers({
@@ -21,6 +21,18 @@ const picBucket = {
   }),
   getters  : {
     getPicBucketField,
+    /**
+     * Returns the pics by property
+     * @param state
+     * @returns {(function(*): ([]|*))|*}
+     */
+    getPicsByProperty: (state) => (propertyId) => {
+      let list = filter(state.pictures, {'propertyId': propertyId});
+      if (!list) {
+        return [];
+      }
+      return list;
+    }
   },
   mutations: {
     updatePicBucketField
@@ -73,13 +85,18 @@ const picBucket = {
     updatePictureList({state}, options) {
       state.pictures.push(new PictureInfo(options.info));
     },
+    /**
+     * Assign a property to the picture
+     * @param state
+     * @param options
+     */
     assignProperty({state}, options) {
       const picId      = get(options, 'picture.id', 'none');
       const propertyId = get(options, 'propertyId');
       axios.post(`/picbucket/assign/${picId}`, {propertyId})
            .then(() => {
              console.log(`updated picture ${picId}`);
-             let i = findIndex(state.pictures, {id:picId});
+             let i = findIndex(state.pictures, {id: picId});
              if (i === -1) {
                console.warn(`Image with id ${picId} not found in list`);
                return;
