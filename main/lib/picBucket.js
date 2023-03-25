@@ -125,23 +125,22 @@ class PicBucket extends EventEmitter {
       }
 
       // When Geolocation API is active, run the query
-      const apiKey= process.env.FERROPOLY_GOOGLE_GEOCODING_API_KEY || null;
+      const apiKey = process.env.FERROPOLY_GOOGLE_GEOCODING_API_KEY || null;
       if (entry.position.accuracy < 2000 && apiKey) {
         const latlng = `${entry.position.lat},${entry.position.lng}`;
         axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&location_type=ROOFTOP|RANGE_INTERPOLATED&key=${apiKey}`)
-          .then(resp => {
-            logger.info(`Geolocation API call ok for ${entry.gameId}`);
-            entry.location = resp.data;
-          })
-          .catch(err => {
-            logger.error('Fehler in Geocoding API', err);
-          })
-          .finally(()=>{
-            self.emit('new', entry);
-            return entry.save(callback);
-          })
-      }
-      else {
+             .then(resp => {
+               logger.info(`Geolocation API call ok for ${entry.gameId}`);
+               entry.location = resp.data;
+             })
+             .catch(err => {
+               logger.error('Fehler in Geocoding API', err);
+             })
+             .finally(() => {
+               self.emit('new', entry);
+               return entry.save(callback);
+             })
+      } else {
         self.emit('new', entry);
         entry.save(callback);
       }
@@ -206,6 +205,11 @@ class PicBucket extends EventEmitter {
       logger.info(`Google Storage Accessibility Test was positive, found ${files.length} files`);
       return callback();
     });
+  }
+
+
+  assignProperty(id, propertyId, callback) {
+    picBucketModel.Model.findOneAndUpdate({_id: id}, {propertyId: propertyId}, callback)
   }
 
 

@@ -42,11 +42,11 @@ export default {
 
 <style lang="scss" scoped>
 .compact-title {
-  background-color: rgba(240, 230, 220, 0.99);
+  background-color: #c6c9c9;
   padding-left: 4px;
 }
 .entry {
-  border-color: rgba(0, 0, 220, 0.99);
+  border-color: rgba(169, 168, 196, 0.99);
   border-bottom: 4px;
   padding-left: 3px;
 }

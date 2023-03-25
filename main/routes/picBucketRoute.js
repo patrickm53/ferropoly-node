@@ -60,6 +60,23 @@ router.post('/confirm/:id', (req, res) => {
 });
 
 /**
+ * assigns a picture to a location
+ */
+router.post('/assign/:id', (req, res) => {
+  // No need for auth checks, the id is too specific for abuse, don't waste time
+  const propertyId = req.body.propertyId;
+
+  picBucket.assignProperty(req.params.id, propertyId, (err) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.send({});
+  })
+});
+
+
+/**
  * Returns ALL images for a game, for admins only
  */
 router.get('/:gameId', (req, res) => {

@@ -18,6 +18,8 @@ b-container(fluid)
       compact-info(v-if="picture.getLocationText()" title="Adresse bei Upload") {{picture.getLocationText()}}
       compact-info(title="Bild in voller Auflösung öffnen")
         a(:href="picture.url" target="_blank") Auf neuer Seite öffnen
+      compact-info(v-if="properties.length > 0" title="Bild einem Ort zuweisen")
+        property-selector.mt-1(:properties="properties" :selectedPropertyId="picture.propertyId" @property-assigned="onPropertyAssigned")
 
 
     b-col(sm="12" md="12" lg="8" xl="9")
@@ -30,32 +32,40 @@ import CompactInfo from "./compactInfo.vue";
 import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {library} from '@fortawesome/fontawesome-svg-core';
+import PropertySelector from "../../lib/components/PropertySelector.vue";
+
 library.add(faTriangleExclamation);
 export default {
   name      : "PictureViewer",
-  components: {CompactInfo, FontAwesomeIcon},
-  filters   : {formatTime, formatPosition,formatDateTime},
+  components: {PropertySelector, CompactInfo, FontAwesomeIcon},
+  filters   : {formatTime, formatPosition, formatDateTime},
   mixins    : [],
   model     : {},
   props     : {
-    picture: {
+    picture   : {
       type   : Object,
       default: () => {
         return null;
       }
     },
-    extended: {
-      type: Boolean,
-      default: ()=> {
+    extended  : {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     },
-    disabled: {
-      type: Boolean,
-      default: ()=> {
+    disabled  : {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     },
+    properties: {
+      type   : Array,
+      default: () => {
+        return [];
+      }
+    }
   },
   data      : function () {
     return {};
@@ -72,6 +82,14 @@ export default {
     onClose() {
       console.log('onClose');
       this.$emit('close');
+    },
+    /**
+     * Property Selector assigned property, forward to next level
+     * @param obj
+     */
+    onPropertyAssigned(obj) {
+      let self = this;
+      this.$emit('property-assigned', {picture: self.picture, propertyId: obj.propertyId});
     }
   }
 }

@@ -16,7 +16,7 @@ b-container(fluid)
           b-form-select#filter(v-model="selectedFilter" :options="selectOptions")
     picture-list(:pictures="pictures"  :filter="selectedFilter" @zoom="onZoom")
   div(v-if="pictureInfo")
-    picture-viewer(:picture="pictureInfo" extended=true @close="onClose")
+    picture-viewer(:picture="pictureInfo" :properties="propertyRegister.properties" extended=true @property-assigned="onPropertyAssigned" @close="onClose")
 </template>
 
 <script>
@@ -43,13 +43,14 @@ export default {
   },
   computed  : {
     ...mapFields({
-      pictures: 'picBucketStore.pictures',
-      teams   : 'teams.list'
+      pictures        : 'picBucketStore.pictures',
+      teams           : 'teams.list',
+      propertyRegister: 'propertyRegister.register'
     })
   },
   created   : function () {
     let self = this;
-    this.teams.forEach(t=> {
+    this.teams.forEach(t => {
       self.selectOptions.push({value: t.uuid, text: t.data.name});
     })
   },
@@ -59,7 +60,16 @@ export default {
       this.pictureInfo = info;
     },
     onClose() {
-      this.pictureInfo=null;
+      this.pictureInfo = null;
+    },
+    /**
+     * A property was assigned to a picture
+     * @param obj
+     */
+    onPropertyAssigned(obj) {
+      // obj has "picture" and "propertyId"
+      console.log('property assigned', obj)
+      this.$store.dispatch('assignProperty', obj);
     }
   }
 }
