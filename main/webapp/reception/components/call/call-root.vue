@@ -21,6 +21,8 @@
       div(v-if="navBar[1].active")
         nav-content-property(:enabled="gameActive")
       div(v-if="navBar[2].active")
+        nav-content-pictures
+      div(v-if="navBar[3].active")
         nav-content-log
 
 </template>
@@ -36,10 +38,13 @@ import NavContentLog from './log-tab/nav-content-log.vue';
 import CallConfirmModal from './call-confirm-modal.vue';
 import axios from 'axios';
 import {formatPrice} from '../../../common/lib/formatters';
+import NavContentPictures from "./image-tab/NavContentPictures.vue";
 
 export default {
   name      : 'CallRoot',
-  components: {CallConfirmModal, NavContentLog, TeamSelector, FerroNav, NavContentBuy, NavContentProperty},
+  components: {
+    NavContentPictures,
+    CallConfirmModal, NavContentLog, TeamSelector, FerroNav, NavContentBuy, NavContentProperty},
   filters   : {},
   mixins    : [],
   model     : {},
@@ -49,6 +54,7 @@ export default {
       navBar: [
         {title: 'Kaufen', active: true},
         {title: 'Besitz', active: false},
+        {title: 'Bilder', active: false},
         {title: 'Log', active: false},
       ]
     };
