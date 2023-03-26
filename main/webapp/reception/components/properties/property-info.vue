@@ -61,7 +61,7 @@
 
 <script>
 import {formatAccessibility, formatPrice, booleanYesNo, buildingStatus, formatTime} from '../../../common/lib/formatters';
-import PictureList from "../../../lib/components/pictureList.vue";
+import PictureList from "../../../lib/components/PictureList.vue";
 import {mapFields} from "vuex-map-fields";
 
 export default {

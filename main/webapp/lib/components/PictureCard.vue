@@ -12,7 +12,7 @@ div.card.mt-0(@click="onClick")
       v-b-tooltip.hover
       :title="tooltipWarning")
   div(v-if="extended")
-    p {{$store.getters['teams/idToTeamName'](pictureInfo.teamId)}}
+    p {{getTeamNameById(pictureInfo.teamId)}}
     p(v-b-tooltip.hover :title="tooltipGps") {{pictureInfo.getLocationText()}}
 </template>
 
@@ -53,6 +53,16 @@ export default {
       default: ()=> {
         return false;
       }
+    },
+    /**
+     * Function for returning the team name for a given ID
+     */
+    getTeamNameById: {
+      type   : Function,
+      default: (p) => {
+        console.log('dummy only!', p);
+        return null;
+      }
     }
   },
   data      : function () {
@@ -79,8 +89,7 @@ export default {
 <style lang="scss" scoped>
 
 .card {
-  border: solid silver;
-  border-width: 0;
+  border: 0 solid silver;
   width: 360px;
 }
 

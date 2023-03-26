@@ -7,6 +7,8 @@
 div
   reception-pictures(no-pic-lead="Es gibt von diesem Spiel leider keine Bilder."
   no-pic-text=""
+  :get-property-by-id="getPropertyById"
+  :get-team-name-by-id="getTeamNameById"
   extended)
 
 </template>
@@ -27,7 +29,14 @@ export default {
   computed  : {},
   created   : function () {
   },
-  methods   : {}
+  methods   : {
+    getPropertyById(propertyId) {
+      return this.$store.getters['propertyRegister/getPropertyById'](propertyId);
+    },
+    getTeamNameById(teamId) {
+      return this.$store.getters['teams/idToTeamName'](teamId);
+    }
+  }
 }
 </script>
 

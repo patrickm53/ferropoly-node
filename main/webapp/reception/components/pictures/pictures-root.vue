@@ -6,7 +6,12 @@
 <template lang="pug">
 b-container(fluid)
   call-active-warning
-  reception-pictures(extended admin edit-allowed)
+  reception-pictures(
+    admin
+    edit-allowed
+    :get-property-by-id="getPropertyById"
+    :get-team-name-by-id="getTeamNameById"
+    extended)
 </template>
 
 <script>
@@ -26,7 +31,14 @@ export default {
   computed  : {},
   created   : function () {
   },
-  methods   : {}
+  methods   : {
+    getPropertyById(propertyId) {
+      return this.$store.getters['propertyRegister/getPropertyById'](propertyId);
+    },
+    getTeamNameById(teamId) {
+      return this.$store.getters['teams/idToTeamName'](teamId);
+    }
+  }
 }
 </script>
 

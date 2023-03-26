@@ -11,12 +11,13 @@
         picture-card(:picture-info="pic"
           :extended="extended"
           :admin="admin"
+          :get-team-name-by-id="getTeamNameById"
           @zoom="onZoom" )
 
 </template>
 
 <script>
-import PictureCard from './pictureCard.vue';
+import PictureCard from './PictureCard.vue';
 import $ from "jquery";
 
 export default {
@@ -26,36 +27,56 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    pictures  : {
+    pictures       : {
       type   : Array,
       default: () => {
         return [];
       }
     },
-    teamId    : {
+    teamId         : {
       type   : String,
       default: () => {
         return null;
       }
     },
-    propertyId: {
+    propertyId     : {
       type   : String,
       default: () => {
         return null;
       }
     },
-    textFilter: {
+    textFilter     : {
       type   : String,
       default: () => {
         return null;
       }
     },
     /**
+     * Function for returning the property object for a given ID
+     */
+    getPropertyById: {
+      type   : Function,
+      default: (p) => {
+          console.log('dummy only!', p);
+          return null;
+      }
+    },
+    /**
+     * Function for returning the team name for a given ID
+     */
+    getTeamNameById: {
+      type   : Function,
+      default: (p) => {
+          console.log('dummy only!', p);
+          return null;
+      }
+    },
+    /**
      * Extended true: shows more details, otherwise very basic
      */
     extended: {
-      type: Boolean,
-      default: ()=> {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     },
@@ -63,8 +84,8 @@ export default {
      * Admin true: shows infos for admins only
      */
     admin: {
-      type: Boolean,
-      default: ()=> {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     }
@@ -104,7 +125,7 @@ export default {
      * @returns {boolean}
      */
     filterMatch(pictureInfo) {
-      let match = 0;
+      let match              = 0;
       let filtersNbMustMatch = 1;
       if (this.teamId) {
         pictureInfo.teamId === this.teamId ? match++ : match;
@@ -119,7 +140,7 @@ export default {
 
       // This filter is exclusive (AND)
       if (this.textFilter) {
-        let prop = this.$store.getters['propertyRegister/getPropertyById'](pictureInfo.propertyId);
+        let prop = this.getPropertyById(pictureInfo.propertyId);
         if (!prop) {
           return false;
         }

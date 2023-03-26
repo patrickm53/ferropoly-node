@@ -41,7 +41,7 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {mapFields} from "vuex-map-fields";
 import {announcePicture, confirmPicture, uploadPicture} from "../../lib/picUploader";
 import {get} from "lodash";
-import PictureCard from "../../../lib/components/pictureCard.vue";
+import PictureCard from "../../../lib/components/PictureCard.vue";
 
 library.add(faCamera);
 export default {

@@ -24,6 +24,8 @@ b-container(fluid)
       :extended="extended"
       :admin="admin"
       :text-filter="textFilter"
+      :get-property-by-id="getPropertyById"
+      :get-team-name-by-id="getTeamNameById"
       @zoom="onZoom")
   div(v-if="pictureInfo")
     picture-viewer(:picture="pictureInfo"
@@ -37,8 +39,8 @@ b-container(fluid)
 
 <script>
 
-import PictureList from "./pictureList.vue";
-import PictureViewer from "./pictureViewer.vue";
+import PictureList from "./PictureList.vue";
+import PictureViewer from "./PictureViewer.vue";
 import {mapFields} from "vuex-map-fields";
 
 export default {
@@ -67,6 +69,16 @@ export default {
       }
     },
     /**
+     * Function for returning the property object for a given ID
+     */
+    getPropertyById: {
+      type   : Function,
+      default: (p) => {
+        console.log('dummy only!', p);
+        return null;
+      }
+    },
+    /**
      * Extended true: shows more details, otherwise very basic
      */
     extended: {
@@ -91,6 +103,16 @@ export default {
       type: Boolean,
       default: ()=> {
         return false;
+      }
+    },
+    /**
+     * Function for returning the team name for a given ID
+     */
+    getTeamNameById: {
+      type   : Function,
+      default: (p) => {
+        console.log('dummy only!', p);
+        return null;
       }
     }
   },

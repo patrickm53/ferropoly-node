@@ -17,9 +17,9 @@ b-container(fluid)
 </template>
 
 <script>
-import PictureList from "../../../../lib/components/pictureList.vue";
+import PictureList from "../../../../lib/components/PictureList.vue";
 import {mapFields} from "vuex-map-fields";
-import PictureViewer from "../../../../lib/components/pictureViewer.vue";
+import PictureViewer from "../../../../lib/components/PictureViewer.vue";
 
 export default {
   name      : "NavContentPictures",
