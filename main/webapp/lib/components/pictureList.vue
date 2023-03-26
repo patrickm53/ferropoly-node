@@ -8,7 +8,10 @@
   b-container(fluid)
     b-row(align-h="center")
       b-col(v-for="pic in pictures"  v-if="filterMatch(pic)")
-        pictureCard(:picture-info="pic" extended=true @zoom="onZoom" )
+        picture-card(:picture-info="pic"
+          :extended="extended"
+          :admin="admin"
+          @zoom="onZoom" )
 
 </template>
 
@@ -47,7 +50,24 @@ export default {
         return null;
       }
     },
-
+    /**
+     * Extended true: shows more details, otherwise very basic
+     */
+    extended: {
+      type: Boolean,
+      default: ()=> {
+        return false;
+      }
+    },
+    /**
+     * Admin true: shows infos for admins only
+     */
+    admin: {
+      type: Boolean,
+      default: ()=> {
+        return false;
+      }
+    }
   },
   data      : function () {
     return {};

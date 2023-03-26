@@ -10,7 +10,7 @@ b-container(fluid)
       h5 {{$store.getters['teams/idToTeamName'](picture.teamId)}}
       compact-info(title="Upload") {{picture.timestamp | formatTime}}
       compact-info(v-if="extended" title="Aufnahmedatum") {{picture.lastModifiedDate | formatDateTime}}
-        p(v-if="extended && picture.warningTooOldPictureActive()")
+        p(v-if="admin && picture.warningTooOldPictureActive()")
           font-awesome-icon.no-url.warning(icon="fa-triangle-exclamation")
           span &nbsp; Dieses Bild sollte überprüft werden: das Aufnahmedatum liegt deutlich vor dem Upload-Datum.
       compact-info(v-if="picture.position" title="Position bei Upload (GPS)")
@@ -18,8 +18,14 @@ b-container(fluid)
       compact-info(v-if="picture.getLocationText()" title="Adresse bei Upload") {{picture.getLocationText()}}
       compact-info(title="Bild in voller Auflösung öffnen")
         a(:href="picture.url" target="_blank") Auf neuer Seite öffnen
-      compact-info(v-if="properties.length > 0" title="Bild einem Ort zuweisen")
-        property-selector.mt-1(:properties="properties" :selectedPropertyId="picture.propertyId" @property-assigned="onPropertyAssigned")
+      div(v-if="properties.length > 0")
+        compact-info(v-if="editAllowed" title="Bild einem Ort zuweisen")
+          property-selector.mt-1(:properties="properties"
+            :selectedPropertyId="picture.propertyId"
+            @property-assigned="onPropertyAssigned")
+        compact-info(v-if="!editAllowed" title="Dem Bild zugewiesenes Ort")
+          p(v-if="!picture.propertyId") Kein Ort zugewiesen
+          p(v-if="picture.propertyId")  {{propertyName}}
 
 
     b-col(sm="12" md="12" lg="8" xl="9")
@@ -42,25 +48,46 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
-    picture   : {
+    picture: {
       type   : Object,
       default: () => {
         return null;
       }
     },
-    extended  : {
+    /**
+     * Extended true: shows more details, otherwise very basic
+     */
+    extended: {
       type   : Boolean,
       default: () => {
         return false;
       }
     },
-    disabled  : {
+    /**
+     * Admin true: shows infos for admins only
+     */
+    admin: {
       type   : Boolean,
       default: () => {
         return false;
       }
     },
-    properties: {
+    /**
+     * editAllowed true: basic edit functionality is available
+     */
+    editAllowed: {
+      type   : Boolean,
+      default: () => {
+        return false;
+      }
+    },
+    disabled   : {
+      type   : Boolean,
+      default: () => {
+        return false;
+      }
+    },
+    properties : {
       type   : Array,
       default: () => {
         return [];
@@ -73,6 +100,13 @@ export default {
   computed  : {
     mapUrl() {
       return `https://maps.google.com?q=${this.picture.position.lat},${this.picture.position.lng}`;
+    },
+    propertyName() {
+      let prop = this.$store.getters['propertyRegister/getPropertyById'](this.picture.propertyId);
+      if (!prop) {
+        return '';
+      }
+      return prop.location.name;
     }
   },
   created   : function () {

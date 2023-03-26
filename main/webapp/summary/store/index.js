@@ -21,6 +21,7 @@ import GameProperty from '../../lib/gameProperty';
 import {GameProperties} from '../../lib/gameProperties';
 import assignObject from '../../lib/assignObject';
 import summary from './modules/summary';
+import picBucketStore from "../../lib/store/picBucketStore";
 
 Vue.use(Vuex);
 
@@ -31,6 +32,7 @@ const store = new Vuex.Store({
   },
   modules  : {
     gameplay,
+    picBucketStore,
     propertyRegister,
     rankingList,
     teamAccount,

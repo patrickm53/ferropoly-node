@@ -21,6 +21,7 @@
       overview-root(v-if="panel==='panel-overview'")
       map-root(v-if="panel==='panel-map'")
       chancellery-view(v-if="panel==='panel-chancellery'")
+      summary-pictures-root(v-if="panel==='panel-pictures'")
 </template>
 
 <script>
@@ -31,10 +32,11 @@ import OverviewRoot from './overview/overview-root.vue';
 import MapRoot from '../../lib/components/travel-map/map-root.vue';
 import ChancelleryView from './overview/chancellery-view.vue';
 import TeamInfoRoot from './team-info/team-info-root.vue';
+import SummaryPicturesRoot from "./pictures/summary-pictures-root.vue";
 
 export default {
   name      : 'SummaryRoot',
-  components: {TeamInfoRoot, ChancelleryView, OverviewRoot, MenuBar, ModalError, MapRoot},
+  components: {SummaryPicturesRoot, TeamInfoRoot, ChancelleryView, OverviewRoot, MenuBar, ModalError, MapRoot},
   filters   : {},
   mixins    : [],
   model     : {},

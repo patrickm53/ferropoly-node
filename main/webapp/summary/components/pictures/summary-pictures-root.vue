@@ -1,21 +1,22 @@
 <!---
-  Panel with all pictures of a game
+
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
-  Created: 12.03.23
+  Created: 26.03.23
 -->
 <template lang="pug">
-b-container(fluid)
-  call-active-warning
-  reception-pictures(extended admin edit-allowed)
+div
+  reception-pictures(no-pic-lead="Es gibt von diesem Spiel leider keine Bilder."
+  no-pic-text=""
+  extended)
+
 </template>
 
 <script>
 import ReceptionPictures from "../../../lib/components/ReceptionPictures.vue";
-import CallActiveWarning from "../call-active-warning.vue";
 
 export default {
-  name      : "PicturesRoot",
-  components: {ReceptionPictures, CallActiveWarning},
+  name      : "SummaryPicturesRoot",
+  components: {ReceptionPictures},
   filters   : {},
   mixins    : [],
   model     : {},

@@ -7,7 +7,7 @@
 div.card.mt-0(@click="onClick")
   b-img-lazy(:src="pictureInfo.thumbnail" blank-width="200" blank-height="150" )
   h3 {{uploadDate}}
-    font-awesome-icon.no-url.warning(v-if="extended && pictureInfo.warningTooOldPictureActive()"
+    font-awesome-icon.no-url.warning(v-if="admin && pictureInfo.warningTooOldPictureActive()"
       icon="fa-triangle-exclamation"
       v-b-tooltip.hover
       :title="tooltipWarning")
@@ -36,7 +36,19 @@ export default {
         return new PictureInfo({});
       }
     },
+    /**
+     * Extended true: shows more details, otherwise very basic
+     */
     extended: {
+      type: Boolean,
+      default: ()=> {
+        return false;
+      }
+    },
+    /**
+     * Admin true: shows infos for admins only
+     */
+    admin: {
       type: Boolean,
       default: ()=> {
         return false;
