@@ -1,0 +1,6065 @@
+[
+  {
+    "position": {
+      "lat": 47.2971249,
+      "lng": 8.867712,
+      "accuracy": 20
+    },
+    "_id": "local-demo-game-4ba87e29-3e7a-4919-8b83-fcb13cca9589.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T21:22:03.424Z",
+    "gameId": "local-demo-game",
+    "teamId": "69fe7649-caab-464d-89f0-a1a4dafc0961",
+    "filename": "local-demo-game/69fe7649-caab-464d-89f0-a1a4dafc0961/4ba87e29-3e7a-4919-8b83-fcb13cca9589.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team4@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.2971249,
+      "lng": 8.8677125,
+      "accuracy": 20
+    },
+    "_id": "local-demo-game-0b2510d0-361e-4c1a-a069-c1ddd635a75f.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T21:22:53.295Z",
+    "gameId": "local-demo-game",
+    "teamId": "69fe7649-caab-464d-89f0-a1a4dafc0961",
+    "filename": "local-demo-game/69fe7649-caab-464d-89f0-a1a4dafc0961/0b2510d0-361e-4c1a-a069-c1ddd635a75f.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team4@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "7VW9+R3W Hinwil, Switzerland",
+        "global_code": "8FVC7VW9+R3W"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "21",
+              "short_name": "21",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Höhenstrasse",
+              "short_name": "Höhenstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8342",
+              "short_name": "8342",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Höhenstrasse 21, 8342 Wernetshausen, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.29717350000001,
+                "lng": 8.8677652
+              },
+              "southwest": {
+                "lat": 47.2970025,
+                "lng": 8.8675821
+              }
+            },
+            "location": {
+              "lat": 47.2970969,
+              "lng": 8.8676713
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.29843698029151,
+                "lng": 8.869022630291502
+              },
+              "southwest": {
+                "lat": 47.29573901970851,
+                "lng": 8.866324669708497
+              }
+            }
+          },
+          "place_id": "ChIJ8YThS1G4mkcRpPLgn1wpovM",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "24",
+              "short_name": "24",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Höhenstrasse",
+              "short_name": "Höhenstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8342",
+              "short_name": "8342",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Höhenstrasse 24, 8342 Hinwil, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.2969316,
+              "lng": 8.8678704
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.2982805802915,
+                "lng": 8.869219380291502
+              },
+              "southwest": {
+                "lat": 47.2955826197085,
+                "lng": 8.866521419708498
+              }
+            }
+          },
+          "place_id": "ChIJ-yDSSVG4mkcRP_wlUB0LXtI",
+          "plus_code": {
+            "compound_code": "7VW9+Q4 Hinwil, Switzerland",
+            "global_code": "8FVC7VW9+Q4"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "25",
+              "short_name": "25",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Höhenstrasse",
+              "short_name": "Höhenstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8342",
+              "short_name": "8342",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Höhenstrasse 25, 8342 Hinwil, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.2976241,
+              "lng": 8.867422699999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.2989730802915,
+                "lng": 8.868771680291502
+              },
+              "southwest": {
+                "lat": 47.2962751197085,
+                "lng": 8.866073719708497
+              }
+            }
+          },
+          "place_id": "ChIJN_O00y-5mkcRXzoRFinmGyg",
+          "plus_code": {
+            "compound_code": "7VX8+2X Hinwil, Switzerland",
+            "global_code": "8FVC7VX8+2X"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest",
+            "school"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "17",
+              "short_name": "17",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Höhenstrasse",
+              "short_name": "Höhenstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Hinwil",
+              "short_name": "Hinwil",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8342",
+              "short_name": "8342",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Höhenstrasse 17, 8342 Hinwil, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.29677299999999,
+              "lng": 8.867918399999999
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.2981219802915,
+                "lng": 8.8692673802915
+              },
+              "southwest": {
+                "lat": 47.2954240197085,
+                "lng": 8.866569419708496
+              }
+            }
+          },
+          "place_id": "EipIw7ZoZW5zdHJhc3NlIDE3LCA4MzQyIEhpbndpbCwgU3dpdHplcmxhbmQiGhIYChQKEgklGSc4UbiaRxGfQH5_cJLsNBAR",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": -47.349,
+      "lng": 8.7205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-b6417c79-7c91-4b59-bf01-68ef72456541.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T21:53:56.042Z",
+    "gameId": "local-demo-game",
+    "teamId": "987587e2-25fc-41c3-b025-6b08c0bd3154",
+    "filename": "local-demo-game/987587e2-25fc-41c3-b025-6b08c0bd3154/b6417c79-7c91-4b59-bf01-68ef72456541.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team2@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:22.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "global_code": "4F4CMP2C+C55"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.7205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-bdb008d9-f27a-4cb3-8806-c6617e3fc23d.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T21:55:44.872Z",
+    "gameId": "local-demo-game",
+    "teamId": "987587e2-25fc-41c3-b025-6b08c0bd3154",
+    "filename": "local-demo-game/987587e2-25fc-41c3-b025-6b08c0bd3154/bdb008d9-f27a-4cb3-8806-c6617e3fc23d.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team2@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "8PXC+H5X Uster, Switzerland",
+        "global_code": "8FVC8PXC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "7",
+              "short_name": "7",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 7, 8610 Uster, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.349159,
+                "lng": 8.7207013
+              },
+              "southwest": {
+                "lat": 47.3490149,
+                "lng": 8.7204882
+              }
+            },
+            "location": {
+              "lat": 47.349071,
+              "lng": 8.720581
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504359302915,
+                "lng": 8.721943730291501
+              },
+              "southwest": {
+                "lat": 47.3477379697085,
+                "lng": 8.719245769708497
+              }
+            }
+          },
+          "place_id": "ChIJkxrO3qikmkcRS_aTrlEAltw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "5",
+              "short_name": "5",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 5, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.349122,
+              "lng": 8.720454900000002
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504709802915,
+                "lng": 8.721803880291505
+              },
+              "southwest": {
+                "lat": 47.34777301970851,
+                "lng": 8.7191059197085
+              }
+            }
+          },
+          "place_id": "ChIJn3oc3KikmkcR3Ygter3EDOk",
+          "plus_code": {
+            "compound_code": "8PXC+J5 Uster, Switzerland",
+            "global_code": "8FVC8PXC+J5"
+          },
+          "types": [
+            "establishment",
+            "hair_care",
+            "point_of_interest"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "10",
+              "short_name": "10",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 10, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3489947,
+              "lng": 8.7205646
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3503436802915,
+                "lng": 8.721913580291503
+              },
+              "southwest": {
+                "lat": 47.3476457197085,
+                "lng": 8.719215619708498
+              }
+            }
+          },
+          "place_id": "EihGcmVpZXN0cmFzc2UgMTAsIDg2MTAgVXN0ZXIsIFN3aXR6ZXJsYW5kIhoSGAoUChIJq36C2KikmkcRPqHV5L9YYCAQCg",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.7205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-5d8d14c1-55bc-44b1-9bc5-b74a3a916bb7.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T21:57:41.020Z",
+    "gameId": "local-demo-game",
+    "teamId": "987587e2-25fc-41c3-b025-6b08c0bd3154",
+    "filename": "local-demo-game/987587e2-25fc-41c3-b025-6b08c0bd3154/5d8d14c1-55bc-44b1-9bc5-b74a3a916bb7.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team2@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:18.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "8PXC+H5X Uster, Switzerland",
+        "global_code": "8FVC8PXC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "7",
+              "short_name": "7",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 7, 8610 Uster, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.349159,
+                "lng": 8.7207013
+              },
+              "southwest": {
+                "lat": 47.3490149,
+                "lng": 8.7204882
+              }
+            },
+            "location": {
+              "lat": 47.349071,
+              "lng": 8.720581
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504359302915,
+                "lng": 8.721943730291501
+              },
+              "southwest": {
+                "lat": 47.3477379697085,
+                "lng": 8.719245769708497
+              }
+            }
+          },
+          "place_id": "ChIJkxrO3qikmkcRS_aTrlEAltw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "5",
+              "short_name": "5",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 5, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.349122,
+              "lng": 8.720454900000002
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504709802915,
+                "lng": 8.721803880291505
+              },
+              "southwest": {
+                "lat": 47.34777301970851,
+                "lng": 8.7191059197085
+              }
+            }
+          },
+          "place_id": "ChIJn3oc3KikmkcR3Ygter3EDOk",
+          "plus_code": {
+            "compound_code": "8PXC+J5 Uster, Switzerland",
+            "global_code": "8FVC8PXC+J5"
+          },
+          "types": [
+            "establishment",
+            "hair_care",
+            "point_of_interest"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "10",
+              "short_name": "10",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 10, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3489947,
+              "lng": 8.7205646
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3503436802915,
+                "lng": 8.721913580291503
+              },
+              "southwest": {
+                "lat": 47.3476457197085,
+                "lng": 8.719215619708498
+              }
+            }
+          },
+          "place_id": "EihGcmVpZXN0cmFzc2UgMTAsIDg2MTAgVXN0ZXIsIFN3aXR6ZXJsYW5kIhoSGAoUChIJq36C2KikmkcRPqHV5L9YYCAQCg",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.7205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-3e48a42b-0119-4bc0-9cef-5b86804283d4.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T21:57:54.632Z",
+    "gameId": "local-demo-game",
+    "teamId": "987587e2-25fc-41c3-b025-6b08c0bd3154",
+    "filename": "local-demo-game/987587e2-25fc-41c3-b025-6b08c0bd3154/3e48a42b-0119-4bc0-9cef-5b86804283d4.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team2@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:16.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "8PXC+H5X Uster, Switzerland",
+        "global_code": "8FVC8PXC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "7",
+              "short_name": "7",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 7, 8610 Uster, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.349159,
+                "lng": 8.7207013
+              },
+              "southwest": {
+                "lat": 47.3490149,
+                "lng": 8.7204882
+              }
+            },
+            "location": {
+              "lat": 47.349071,
+              "lng": 8.720581
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504359302915,
+                "lng": 8.721943730291501
+              },
+              "southwest": {
+                "lat": 47.3477379697085,
+                "lng": 8.719245769708497
+              }
+            }
+          },
+          "place_id": "ChIJkxrO3qikmkcRS_aTrlEAltw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "5",
+              "short_name": "5",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 5, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.349122,
+              "lng": 8.720454900000002
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504709802915,
+                "lng": 8.721803880291505
+              },
+              "southwest": {
+                "lat": 47.34777301970851,
+                "lng": 8.7191059197085
+              }
+            }
+          },
+          "place_id": "ChIJn3oc3KikmkcR3Ygter3EDOk",
+          "plus_code": {
+            "compound_code": "8PXC+J5 Uster, Switzerland",
+            "global_code": "8FVC8PXC+J5"
+          },
+          "types": [
+            "establishment",
+            "hair_care",
+            "point_of_interest"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "10",
+              "short_name": "10",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 10, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3489947,
+              "lng": 8.7205646
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3503436802915,
+                "lng": 8.721913580291503
+              },
+              "southwest": {
+                "lat": 47.3476457197085,
+                "lng": 8.719215619708498
+              }
+            }
+          },
+          "place_id": "EihGcmVpZXN0cmFzc2UgMTAsIDg2MTAgVXN0ZXIsIFN3aXR6ZXJsYW5kIhoSGAoUChIJq36C2KikmkcRPqHV5L9YYCAQCg",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.7205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-3640c787-3ca5-4368-b397-510f80b6bb81.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:00:16.524Z",
+    "gameId": "local-demo-game",
+    "teamId": "987587e2-25fc-41c3-b025-6b08c0bd3154",
+    "filename": "local-demo-game/987587e2-25fc-41c3-b025-6b08c0bd3154/3640c787-3ca5-4368-b397-510f80b6bb81.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team2@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "8PXC+H5X Uster, Switzerland",
+        "global_code": "8FVC8PXC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "7",
+              "short_name": "7",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 7, 8610 Uster, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.349159,
+                "lng": 8.7207013
+              },
+              "southwest": {
+                "lat": 47.3490149,
+                "lng": 8.7204882
+              }
+            },
+            "location": {
+              "lat": 47.349071,
+              "lng": 8.720581
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504359302915,
+                "lng": 8.721943730291501
+              },
+              "southwest": {
+                "lat": 47.3477379697085,
+                "lng": 8.719245769708497
+              }
+            }
+          },
+          "place_id": "ChIJkxrO3qikmkcRS_aTrlEAltw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "5",
+              "short_name": "5",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 5, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.349122,
+              "lng": 8.720454900000002
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3504709802915,
+                "lng": 8.721803880291505
+              },
+              "southwest": {
+                "lat": 47.34777301970851,
+                "lng": 8.7191059197085
+              }
+            }
+          },
+          "place_id": "ChIJn3oc3KikmkcR3Ygter3EDOk",
+          "plus_code": {
+            "compound_code": "8PXC+J5 Uster, Switzerland",
+            "global_code": "8FVC8PXC+J5"
+          },
+          "types": [
+            "establishment",
+            "hair_care",
+            "point_of_interest"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "10",
+              "short_name": "10",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Freiestrasse",
+              "short_name": "Freiestrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Uster",
+              "short_name": "Uster",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8610",
+              "short_name": "8610",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Freiestrasse 10, 8610 Uster, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3489947,
+              "lng": 8.7205646
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3503436802915,
+                "lng": 8.721913580291503
+              },
+              "southwest": {
+                "lat": 47.3476457197085,
+                "lng": 8.719215619708498
+              }
+            }
+          },
+          "place_id": "EihGcmVpZXN0cmFzc2UgMTAsIDg2MTAgVXN0ZXIsIFN3aXR6ZXJsYW5kIhoSGAoUChIJq36C2KikmkcRPqHV5L9YYCAQCg",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.5205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-22eb8c6b-db90-479c-b585-27b2f1da198c.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:04:01.061Z",
+    "gameId": "local-demo-game",
+    "teamId": "39f38b45-e74e-490c-9532-9f7e7c0de043",
+    "filename": "local-demo-game/39f38b45-e74e-490c-9532-9f7e7c0de043/22eb8c6b-db90-479c-b585-27b2f1da198c.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team1@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:14.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "8GXC+H5X Zürich, Switzerland",
+        "global_code": "8FVC8GXC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "30",
+              "short_name": "30",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Allmendstrasse",
+              "short_name": "Allmendstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8041",
+              "short_name": "8041",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Allmendstrasse 30, 8041 Zürich, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.3493477,
+                "lng": 8.5225328
+              },
+              "southwest": {
+                "lat": 47.3492876,
+                "lng": 8.5224425
+              }
+            },
+            "location": {
+              "lat": 47.3493201,
+              "lng": 8.5224844
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3506666302915,
+                "lng": 8.523836630291504
+              },
+              "southwest": {
+                "lat": 47.3479686697085,
+                "lng": 8.521138669708499
+              }
+            }
+          },
+          "place_id": "ChIJ4Zs1DOgJkEcRtGy4ZUJ0Row",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "61",
+              "short_name": "61",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Allmendstrasse",
+              "short_name": "Allmendstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8041",
+              "short_name": "8041",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Allmendstrasse 61, 8041 Zürich, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3479918,
+              "lng": 8.521951699999999
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3493407802915,
+                "lng": 8.5233006802915
+              },
+              "southwest": {
+                "lat": 47.3466428197085,
+                "lng": 8.520602719708496
+              }
+            }
+          },
+          "place_id": "EixBbGxtZW5kc3RyYXNzZSA2MSwgODA0MSBaw7xyaWNoLCBTd2l0emVybGFuZCIaEhgKFAoSCQlfjqnCCZBHEVawkDM08IG-ED0",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.5205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-ef9ebe20-739d-4df1-9cce-a1ebf17ab25c.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:04:45.412Z",
+    "gameId": "local-demo-game",
+    "teamId": "39f38b45-e74e-490c-9532-9f7e7c0de043",
+    "filename": "local-demo-game/39f38b45-e74e-490c-9532-9f7e7c0de043/ef9ebe20-739d-4df1-9cce-a1ebf17ab25c.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team1@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:20.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "8GXC+H5X Zürich, Switzerland",
+        "global_code": "8FVC8GXC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "30",
+              "short_name": "30",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Allmendstrasse",
+              "short_name": "Allmendstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8041",
+              "short_name": "8041",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Allmendstrasse 30, 8041 Zürich, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.3493477,
+                "lng": 8.5225328
+              },
+              "southwest": {
+                "lat": 47.3492876,
+                "lng": 8.5224425
+              }
+            },
+            "location": {
+              "lat": 47.3493201,
+              "lng": 8.5224844
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3506666302915,
+                "lng": 8.523836630291504
+              },
+              "southwest": {
+                "lat": 47.3479686697085,
+                "lng": 8.521138669708499
+              }
+            }
+          },
+          "place_id": "ChIJ4Zs1DOgJkEcRtGy4ZUJ0Row",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "61",
+              "short_name": "61",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Allmendstrasse",
+              "short_name": "Allmendstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "Zürich",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8041",
+              "short_name": "8041",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Allmendstrasse 61, 8041 Zürich, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3479918,
+              "lng": 8.521951699999999
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3493407802915,
+                "lng": 8.5233006802915
+              },
+              "southwest": {
+                "lat": 47.3466428197085,
+                "lng": 8.520602719708496
+              }
+            }
+          },
+          "place_id": "EixBbGxtZW5kc3RyYXNzZSA2MSwgODA0MSBaw7xyaWNoLCBTd2l0emVybGFuZCIaEhgKFAoSCQlfjqnCCZBHEVawkDM08IG-ED0",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.4205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-7ac56c82-a83e-456b-b243-3f77330ecf47.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:28:36.615Z",
+    "gameId": "local-demo-game",
+    "teamId": "8a6783a9-ac67-4446-aaf3-2f2df7704c4c",
+    "filename": "local-demo-game/8a6783a9-ac67-4446-aaf3-2f2df7704c4c/7ac56c82-a83e-456b-b243-3f77330ecf47.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team6@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T15:36:07.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "8CXC+H6R Birmensdorf, Switzerland",
+        "global_code": "8FVC8CXC+H6R"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "174",
+              "short_name": "174",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Bemer",
+              "short_name": "Bemer",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Birmensdorf",
+              "short_name": "Birmensdorf",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Dietikon",
+              "short_name": "Dietikon",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8903",
+              "short_name": "8903",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Bemer 174, 8903 Birmensdorf, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.3502306,
+                "lng": 8.4196289
+              },
+              "southwest": {
+                "lat": 47.3501106,
+                "lng": 8.4193772
+              }
+            },
+            "location": {
+              "lat": 47.35017759999999,
+              "lng": 8.419499499999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3515195802915,
+                "lng": 8.420852030291503
+              },
+              "southwest": {
+                "lat": 47.3488216197085,
+                "lng": 8.418154069708498
+              }
+            }
+          },
+          "place_id": "ChIJO2ic8cMOkEcRfkg8U1bew-I",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "169",
+              "short_name": "169",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Husmattstrasse",
+              "short_name": "Husmattstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Birmensdorf",
+              "short_name": "Birmensdorf",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Dietikon",
+              "short_name": "Dietikon",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8903",
+              "short_name": "8903",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Husmattstrasse 169, 8903 Birmensdorf, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3496898,
+              "lng": 8.418751499999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3510387802915,
+                "lng": 8.4201004802915
+              },
+              "southwest": {
+                "lat": 47.3483408197085,
+                "lng": 8.417402519708498
+              }
+            }
+          },
+          "place_id": "ChIJd5NklMMOkEcRB3Z-TxNcLkY",
+          "plus_code": {
+            "compound_code": "8CX9+VG Birmensdorf, Switzerland",
+            "global_code": "8FVC8CX9+VG"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "169",
+              "short_name": "169",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Bemer",
+              "short_name": "Bemer",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Birmensdorf",
+              "short_name": "Birmensdorf",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Dietikon",
+              "short_name": "Dietikon",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8903",
+              "short_name": "8903",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Bemer 169, 8903 Birmensdorf, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3496864,
+              "lng": 8.418691899999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3510353802915,
+                "lng": 8.420040880291502
+              },
+              "southwest": {
+                "lat": 47.3483374197085,
+                "lng": 8.417342919708497
+              }
+            }
+          },
+          "place_id": "ChIJ2w1blMMOkEcRCOxCBZDozTA",
+          "plus_code": {
+            "compound_code": "8CX9+VF Birmensdorf, Switzerland",
+            "global_code": "8FVC8CX9+VF"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "388",
+              "short_name": "388",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Bemer",
+              "short_name": "Bemer",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Birmensdorf",
+              "short_name": "Birmensdorf",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Dietikon",
+              "short_name": "Dietikon",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zürich",
+              "short_name": "ZH",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "8903",
+              "short_name": "8903",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Bemer 388, 8903 Birmensdorf, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3504843,
+              "lng": 8.4193793
+            },
+            "location_type": "RANGE_INTERPOLATED",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3518332802915,
+                "lng": 8.420728280291502
+              },
+              "southwest": {
+                "lat": 47.3491353197085,
+                "lng": 8.418030319708498
+              }
+            }
+          },
+          "place_id": "EihCZW1lciAzODgsIDg5MDMgQmlybWVuc2RvcmYsIFN3aXR6ZXJsYW5kIhsSGQoUChIJPVRO5cMOkEcRq0nPW4MMUR8QhAM",
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.1205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-6ad433f4-29a9-4a9d-95b7-c2817689f761.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:28:57.542Z",
+    "gameId": "local-demo-game",
+    "teamId": "8a6783a9-ac67-4446-aaf3-2f2df7704c4c",
+    "filename": "local-demo-game/8a6783a9-ac67-4446-aaf3-2f2df7704c4c/6ad433f4-29a9-4a9d-95b7-c2817689f761.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team6@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T15:36:07.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "84XC+H5X Gränichen, Switzerland",
+        "global_code": "8FVC84XC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "15",
+              "short_name": "15",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schürbergstrasse",
+              "short_name": "Schürbergstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Gränichen",
+              "short_name": "Gränichen",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aarau",
+              "short_name": "Aarau",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aargau",
+              "short_name": "AG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "5722",
+              "short_name": "5722",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schürbergstrasse 15, 5722 Gränichen, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3500989,
+              "lng": 8.120130399999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3514478802915,
+                "lng": 8.1214793802915
+              },
+              "southwest": {
+                "lat": 47.3487499197085,
+                "lng": 8.118781419708496
+              }
+            }
+          },
+          "place_id": "ChIJuy1Nrg09kEcRCYU-PqU3dBQ",
+          "plus_code": {
+            "compound_code": "942C+23 Gränichen, Switzerland",
+            "global_code": "8FVC942C+23"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "15",
+              "short_name": "15",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schürbergstrasse",
+              "short_name": "Schürbergstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Gränichen",
+              "short_name": "Gränichen",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aarau",
+              "short_name": "Aarau",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aargau",
+              "short_name": "AG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "5722",
+              "short_name": "5722",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schürbergstrasse 15, 5722 Gränichen, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3500989,
+              "lng": 8.120130399999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3514478802915,
+                "lng": 8.1214793802915
+              },
+              "southwest": {
+                "lat": 47.3487499197085,
+                "lng": 8.118781419708496
+              }
+            }
+          },
+          "place_id": "ChIJuy1Nrg09kEcRr72mhAGt5sM",
+          "plus_code": {
+            "compound_code": "942C+23 Gränichen, Switzerland",
+            "global_code": "8FVC942C+23"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "17",
+              "short_name": "17",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schürbergstrasse",
+              "short_name": "Schürbergstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Gränichen",
+              "short_name": "Gränichen",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aarau",
+              "short_name": "Aarau",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aargau",
+              "short_name": "AG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "5722",
+              "short_name": "5722",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schürbergstrasse 17, 5722 Gränichen, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.3502283,
+                "lng": 8.121844
+              },
+              "southwest": {
+                "lat": 47.35008269999999,
+                "lng": 8.1214885
+              }
+            },
+            "location": {
+              "lat": 47.35018100000001,
+              "lng": 8.121670500000002
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3515044802915,
+                "lng": 8.123015230291502
+              },
+              "southwest": {
+                "lat": 47.3488065197085,
+                "lng": 8.120317269708497
+              }
+            }
+          },
+          "place_id": "ChIJfzqDHA09kEcRv1XQjdhQLC0",
+          "types": [
+            "premise"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.1205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-2cb552bd-12a4-4362-9edc-65eb4dfb71be.jpg",
+    "uploaded": false,
+    "timestamp": "2023-03-17T22:29:12.084Z",
+    "gameId": "local-demo-game",
+    "teamId": "8a6783a9-ac67-4446-aaf3-2f2df7704c4c",
+    "filename": "local-demo-game/8a6783a9-ac67-4446-aaf3-2f2df7704c4c/2cb552bd-12a4-4362-9edc-65eb4dfb71be.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team6@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T15:36:07.000Z",
+    "__v": 0
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.1205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-656b5c4a-a8d6-43dd-87a0-4d615fcf7cd0.jpg",
+    "uploaded": false,
+    "timestamp": "2023-03-17T22:29:33.000Z",
+    "gameId": "local-demo-game",
+    "teamId": "8a6783a9-ac67-4446-aaf3-2f2df7704c4c",
+    "filename": "local-demo-game/8a6783a9-ac67-4446-aaf3-2f2df7704c4c/656b5c4a-a8d6-43dd-87a0-4d615fcf7cd0.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team6@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T15:36:07.000Z",
+    "__v": 0
+  },
+  {
+    "position": {
+      "lat": 47.349,
+      "lng": 8.1205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-d854460b-c8ab-4e85-a4b1-1d2ad09b507b.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:30:14.778Z",
+    "gameId": "local-demo-game",
+    "teamId": "8a6783a9-ac67-4446-aaf3-2f2df7704c4c",
+    "filename": "local-demo-game/8a6783a9-ac67-4446-aaf3-2f2df7704c4c/d854460b-c8ab-4e85-a4b1-1d2ad09b507b.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team6@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T11:11:48.631Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "84XC+H5X Gränichen, Switzerland",
+        "global_code": "8FVC84XC+H5X"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "15",
+              "short_name": "15",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schürbergstrasse",
+              "short_name": "Schürbergstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Gränichen",
+              "short_name": "Gränichen",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aarau",
+              "short_name": "Aarau",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aargau",
+              "short_name": "AG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "5722",
+              "short_name": "5722",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schürbergstrasse 15, 5722 Gränichen, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3500989,
+              "lng": 8.120130399999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3514478802915,
+                "lng": 8.1214793802915
+              },
+              "southwest": {
+                "lat": 47.3487499197085,
+                "lng": 8.118781419708496
+              }
+            }
+          },
+          "place_id": "ChIJuy1Nrg09kEcRCYU-PqU3dBQ",
+          "plus_code": {
+            "compound_code": "942C+23 Gränichen, Switzerland",
+            "global_code": "8FVC942C+23"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "15",
+              "short_name": "15",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schürbergstrasse",
+              "short_name": "Schürbergstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Gränichen",
+              "short_name": "Gränichen",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aarau",
+              "short_name": "Aarau",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aargau",
+              "short_name": "AG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "5722",
+              "short_name": "5722",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schürbergstrasse 15, 5722 Gränichen, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.3500989,
+              "lng": 8.120130399999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3514478802915,
+                "lng": 8.1214793802915
+              },
+              "southwest": {
+                "lat": 47.3487499197085,
+                "lng": 8.118781419708496
+              }
+            }
+          },
+          "place_id": "ChIJuy1Nrg09kEcRr72mhAGt5sM",
+          "plus_code": {
+            "compound_code": "942C+23 Gränichen, Switzerland",
+            "global_code": "8FVC942C+23"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "17",
+              "short_name": "17",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schürbergstrasse",
+              "short_name": "Schürbergstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Gränichen",
+              "short_name": "Gränichen",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aarau",
+              "short_name": "Aarau",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Aargau",
+              "short_name": "AG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "5722",
+              "short_name": "5722",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schürbergstrasse 17, 5722 Gränichen, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.3502283,
+                "lng": 8.121844
+              },
+              "southwest": {
+                "lat": 47.35008269999999,
+                "lng": 8.1214885
+              }
+            },
+            "location": {
+              "lat": 47.35018100000001,
+              "lng": 8.121670500000002
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.3515044802915,
+                "lng": 8.123015230291502
+              },
+              "southwest": {
+                "lat": 47.3488065197085,
+                "lng": 8.120317269708497
+              }
+            }
+          },
+          "place_id": "ChIJfzqDHA09kEcRv1XQjdhQLC0",
+          "types": [
+            "premise"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.949,
+      "lng": 8.1205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-bdc246b7-77fe-4e3a-aba5-2e7025b99b58.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:30:42.234Z",
+    "gameId": "local-demo-game",
+    "teamId": "8a6783a9-ac67-4446-aaf3-2f2df7704c4c",
+    "filename": "local-demo-game/8a6783a9-ac67-4446-aaf3-2f2df7704c4c/bdc246b7-77fe-4e3a-aba5-2e7025b99b58.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team6@ferropoly.ch",
+    "lastModifiedDate": "2023-03-12T08:37:15.623Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "W4XC+J55 Hasle, Switzerland",
+        "global_code": "8FRCW4XC+J55"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.09,
+      "lng": 8.1205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-1d472337-4a8a-45af-b007-867fd32dd7e8.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:31:21.143Z",
+    "gameId": "local-demo-game",
+    "teamId": "8a6783a9-ac67-4446-aaf3-2f2df7704c4c",
+    "filename": "local-demo-game/8a6783a9-ac67-4446-aaf3-2f2df7704c4c/1d472337-4a8a-45af-b007-867fd32dd7e8.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team6@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:16.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "34RC+255 Antrona Schieranco, Province of Verbano-Cusio-Ossola, Italy",
+        "global_code": "8FRC34RC+255"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.21,
+      "lng": 8.1205,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-205a8834-2c82-4bf6-ad64-9d2a4b8bb707.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:33:10.141Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/205a8834-2c82-4bf6-ad64-9d2a4b8bb707.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:22.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "646C+255 Geuensee, Switzerland",
+        "global_code": "8FVC646C+255"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.21082,
+      "lng": 8.41184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-8832e303-faaf-4ff9-8f49-85292ea5202e.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:33:57.101Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/8832e303-faaf-4ff9-8f49-85292ea5202e.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:20.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "6C66+8PG Hünenberg, Switzerland",
+        "global_code": "8FVC6C66+8PG"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "1",
+              "short_name": "1",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schachenmatt",
+              "short_name": "Schachenmatt",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hünenberg",
+              "short_name": "Hünenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "Zug",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "ZG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6331",
+              "short_name": "6331",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schachenmatt 1, 6331 Hünenberg, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.2121305,
+                "lng": 8.4091442
+              },
+              "southwest": {
+                "lat": 47.211858,
+                "lng": 8.408803
+              }
+            },
+            "location": {
+              "lat": 47.2119921,
+              "lng": 8.4089343
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.21334323029151,
+                "lng": 8.410322580291503
+              },
+              "southwest": {
+                "lat": 47.21064526970851,
+                "lng": 8.407624619708498
+              }
+            }
+          },
+          "place_id": "ChIJv0LM1lEBkEcRcWvM8NmdcWk",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "1",
+              "short_name": "1",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schachenmatt",
+              "short_name": "Schachenmatt",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hünenberg",
+              "short_name": "Hünenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "Zug",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "ZG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6331",
+              "short_name": "6331",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schachenmatt 1, 6331 Hünenberg, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.2119365,
+              "lng": 8.408911
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.2132854802915,
+                "lng": 8.410259980291503
+              },
+              "southwest": {
+                "lat": 47.2105875197085,
+                "lng": 8.407562019708498
+              }
+            }
+          },
+          "place_id": "ChIJjSBO0VEBkEcR6UwoNh-B5tU",
+          "plus_code": {
+            "compound_code": "6C65+QH Hünenberg, Switzerland",
+            "global_code": "8FVC6C65+QH"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "propertyId": ""
+  },
+  {
+    "position": {
+      "lat": 47.21082,
+      "lng": 8.41184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-55663f29-3123-4e7d-b4e7-ba7618508921.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:34:38.382Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/55663f29-3123-4e7d-b4e7-ba7618508921.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:22.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "6C66+8PG Hünenberg, Switzerland",
+        "global_code": "8FVC6C66+8PG"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "1",
+              "short_name": "1",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schachenmatt",
+              "short_name": "Schachenmatt",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hünenberg",
+              "short_name": "Hünenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "Zug",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "ZG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6331",
+              "short_name": "6331",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schachenmatt 1, 6331 Hünenberg, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.2121305,
+                "lng": 8.4091442
+              },
+              "southwest": {
+                "lat": 47.211858,
+                "lng": 8.408803
+              }
+            },
+            "location": {
+              "lat": 47.2119921,
+              "lng": 8.4089343
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.21334323029151,
+                "lng": 8.410322580291503
+              },
+              "southwest": {
+                "lat": 47.21064526970851,
+                "lng": 8.407624619708498
+              }
+            }
+          },
+          "place_id": "ChIJv0LM1lEBkEcRcWvM8NmdcWk",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "1",
+              "short_name": "1",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schachenmatt",
+              "short_name": "Schachenmatt",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hünenberg",
+              "short_name": "Hünenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "Zug",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "ZG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6331",
+              "short_name": "6331",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schachenmatt 1, 6331 Hünenberg, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.2119365,
+              "lng": 8.408911
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.2132854802915,
+                "lng": 8.410259980291503
+              },
+              "southwest": {
+                "lat": 47.2105875197085,
+                "lng": 8.407562019708498
+              }
+            }
+          },
+          "place_id": "ChIJjSBO0VEBkEcR6UwoNh-B5tU",
+          "plus_code": {
+            "compound_code": "6C65+QH Hünenberg, Switzerland",
+            "global_code": "8FVC6C65+QH"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.21082,
+      "lng": 8.41184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-eaedafb4-bf38-483c-8b41-d54006114f47.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:34:47.917Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/eaedafb4-bf38-483c-8b41-d54006114f47.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:20.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "6C66+8PG Hünenberg, Switzerland",
+        "global_code": "8FVC6C66+8PG"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "1",
+              "short_name": "1",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schachenmatt",
+              "short_name": "Schachenmatt",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hünenberg",
+              "short_name": "Hünenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "Zug",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "ZG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6331",
+              "short_name": "6331",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schachenmatt 1, 6331 Hünenberg, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.2121305,
+                "lng": 8.4091442
+              },
+              "southwest": {
+                "lat": 47.211858,
+                "lng": 8.408803
+              }
+            },
+            "location": {
+              "lat": 47.2119921,
+              "lng": 8.4089343
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.21334323029151,
+                "lng": 8.410322580291503
+              },
+              "southwest": {
+                "lat": 47.21064526970851,
+                "lng": 8.407624619708498
+              }
+            }
+          },
+          "place_id": "ChIJv0LM1lEBkEcRcWvM8NmdcWk",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "1",
+              "short_name": "1",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Schachenmatt",
+              "short_name": "Schachenmatt",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Hünenberg",
+              "short_name": "Hünenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "Zug",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Zug",
+              "short_name": "ZG",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6331",
+              "short_name": "6331",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Schachenmatt 1, 6331 Hünenberg, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.2119365,
+              "lng": 8.408911
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.2132854802915,
+                "lng": 8.410259980291503
+              },
+              "southwest": {
+                "lat": 47.2105875197085,
+                "lng": 8.407562019708498
+              }
+            }
+          },
+          "place_id": "ChIJjSBO0VEBkEcR6UwoNh-B5tU",
+          "plus_code": {
+            "compound_code": "6C65+QH Hünenberg, Switzerland",
+            "global_code": "8FVC6C65+QH"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.11082,
+      "lng": 8.41184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-39bd072e-489a-4c5f-a684-bdd802eb9702.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:34:56.974Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/39bd072e-489a-4c5f-a684-bdd802eb9702.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "4C66+8PG Root, Switzerland",
+        "global_code": "8FVC4C66+8PG"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.11082,
+      "lng": 8.21184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-895c958c-5a14-485d-8305-7f76151a9157.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:35:12.772Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/895c958c-5a14-485d-8305-7f76151a9157.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:16.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "4666+8PG Neuenkirch, Switzerland",
+        "global_code": "8FVC4666+8PG"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.01082,
+      "lng": 8.21184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-2de5f160-87aa-4a3e-8dd1-6b7ad4dc70a0.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:35:30.473Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/2de5f160-87aa-4a3e-8dd1-6b7ad4dc70a0.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:18.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "2666+8PG Schwarzenberg, Switzerland",
+        "global_code": "8FVC2666+8PG"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "3",
+              "short_name": "3",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Fuchsbühl",
+              "short_name": "Fuchsbühl",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Schwarzenberg",
+              "short_name": "Schwarzenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Luzern-Land",
+              "short_name": "Luzern-Land",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Kanton Luzern",
+              "short_name": "LU",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6013",
+              "short_name": "6013",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Fuchsbühl 3, 6013 Schwarzenberg, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 47.01078769999999,
+                "lng": 8.2122545
+              },
+              "southwest": {
+                "lat": 47.01064900000001,
+                "lng": 8.211850700000001
+              }
+            },
+            "location": {
+              "lat": 47.0106984,
+              "lng": 8.212058599999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.0120673302915,
+                "lng": 8.213401580291503
+              },
+              "southwest": {
+                "lat": 47.0093693697085,
+                "lng": 8.210703619708498
+              }
+            }
+          },
+          "place_id": "ChIJZdWS0m7lj0cRz3vG_7fiGEA",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "3",
+              "short_name": "3",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Fuchsbühl",
+              "short_name": "Fuchsbühl",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Schwarzenberg",
+              "short_name": "Schwarzenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Luzern-Land",
+              "short_name": "Luzern-Land",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Kanton Luzern",
+              "short_name": "LU",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6013",
+              "short_name": "6013",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Fuchsbühl 3, 6013 Schwarzenberg, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.0106664,
+              "lng": 8.2110679
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.0120153802915,
+                "lng": 8.212416880291501
+              },
+              "southwest": {
+                "lat": 47.0093174197085,
+                "lng": 8.209718919708497
+              }
+            }
+          },
+          "place_id": "ChIJI8XdTjzlj0cRCI6F4AdfSe0",
+          "plus_code": {
+            "compound_code": "2666+7C Schwarzenberg, Switzerland",
+            "global_code": "8FVC2666+7C"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "2",
+              "short_name": "2",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Fuchsbühl",
+              "short_name": "Fuchsbühl",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Schwarzenberg",
+              "short_name": "Schwarzenberg",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Luzern-Land",
+              "short_name": "Luzern-Land",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Kanton Luzern",
+              "short_name": "LU",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6013",
+              "short_name": "6013",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Fuchsbühl 2, 6013 Schwarzenberg, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.0106701,
+              "lng": 8.2110249
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.01201908029149,
+                "lng": 8.212373880291501
+              },
+              "southwest": {
+                "lat": 47.0093211197085,
+                "lng": 8.209675919708497
+              }
+            }
+          },
+          "place_id": "ChIJKS533G7lj0cRGtowLTB3DGU",
+          "plus_code": {
+            "compound_code": "2666+7C Schwarzenberg, Switzerland",
+            "global_code": "8FVC2666+7C"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.0102,
+      "lng": 8.31184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-22264276-8d3f-4133-ad7f-fb56aff9f543.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:35:47.608Z",
+    "gameId": "local-demo-game",
+    "teamId": "f3b907ba-a286-470d-845e-270077676ea3",
+    "filename": "local-demo-game/f3b907ba-a286-470d-845e-270077676ea3/22264276-8d3f-4133-ad7f-fb56aff9f543.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team8@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:20.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "2866+3PG Horw, Switzerland",
+        "global_code": "8FVC2866+3PG"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "3",
+              "short_name": "3",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Seebadstrasse",
+              "short_name": "Seebadstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Horw",
+              "short_name": "Horw",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Luzern-Land",
+              "short_name": "Luzern-Land",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Kanton Luzern",
+              "short_name": "LU",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "6048",
+              "short_name": "6048",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Seebadstrasse 3, 6048 Horw, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 47.0100212,
+              "lng": 8.3091501
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 47.0113701802915,
+                "lng": 8.310499080291503
+              },
+              "southwest": {
+                "lat": 47.0086722197085,
+                "lng": 8.307801119708499
+              }
+            }
+          },
+          "place_id": "ChIJSRMfDWr6j0cR9lQEBN9V3e8",
+          "plus_code": {
+            "compound_code": "2865+2M Horw, Switzerland",
+            "global_code": "8FVC2865+2M"
+          },
+          "types": [
+            "street_address"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.0102,
+      "lng": 8.11184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-82b6173e-2738-40d4-87cc-2f29ddb9485c.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:36:20.523Z",
+    "gameId": "local-demo-game",
+    "teamId": "21556d09-b229-4141-98cf-f827164db6d4",
+    "filename": "local-demo-game/21556d09-b229-4141-98cf-f827164db6d4/82b6173e-2738-40d4-87cc-2f29ddb9485c.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team7@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "2466+3PG Entlebuch, Switzerland",
+        "global_code": "8FVC2466+3PG"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    }
+  },
+  {
+    "position": {
+      "lat": 47.0102,
+      "lng": 8.11184,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-99f98ca6-9b3f-4c89-af0b-e95cfd34f800.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:36:34.921Z",
+    "gameId": "local-demo-game",
+    "teamId": "21556d09-b229-4141-98cf-f827164db6d4",
+    "filename": "local-demo-game/21556d09-b229-4141-98cf-f827164db6d4/99f98ca6-9b3f-4c89-af0b-e95cfd34f800.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team7@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "2466+3PG Entlebuch, Switzerland",
+        "global_code": "8FVC2466+3PG"
+      },
+      "results": [
+
+      ],
+      "status": "ZERO_RESULTS"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.94572,
+      "lng": 7.76401,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-658b9727-2092-468f-9727-5254dcd7a3a6.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:37:10.896Z",
+    "gameId": "local-demo-game",
+    "teamId": "21556d09-b229-4141-98cf-f827164db6d4",
+    "filename": "local-demo-game/21556d09-b229-4141-98cf-f827164db6d4/658b9727-2092-468f-9727-5254dcd7a3a6.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team7@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:20.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "WQW7+7JJ Langnau im Emmental, Switzerland",
+        "global_code": "8FR9WQW7+7JJ"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "330",
+              "short_name": "330",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 330, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 46.9457544,
+                "lng": 7.7639844
+              },
+              "southwest": {
+                "lat": 46.9454982,
+                "lng": 7.763497799999999
+              }
+            },
+            "location": {
+              "lat": 46.9456171,
+              "lng": 7.7637154
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9469752802915,
+                "lng": 7.765090080291501
+              },
+              "southwest": {
+                "lat": 46.9442773197085,
+                "lng": 7.762392119708498
+              }
+            }
+          },
+          "place_id": "ChIJlT0XhU7Jj0cRThviXiU05jw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.94592429999999,
+              "lng": 7.764321199999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472732802915,
+                "lng": 7.765670180291501
+              },
+              "southwest": {
+                "lat": 46.9445753197085,
+                "lng": 7.762972219708496
+              }
+            }
+          },
+          "place_id": "ChIJ-adYn07Jj0cR_5GQi9kB918",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hüselmatte",
+              "short_name": "Hüselmatte",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hüselmatte 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.9459254,
+              "lng": 7.764321799999998
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472743802915,
+                "lng": 7.765670780291501
+              },
+              "southwest": {
+                "lat": 46.9445764197085,
+                "lng": 7.762972819708496
+              }
+            }
+          },
+          "place_id": "ChIJTQUtoE7Jj0cRwhwleSb0z28",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.94572,
+      "lng": 7.76401,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-a71410ba-b778-4e2f-b51b-331d68956af2.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:37:22.912Z",
+    "gameId": "local-demo-game",
+    "teamId": "21556d09-b229-4141-98cf-f827164db6d4",
+    "filename": "local-demo-game/21556d09-b229-4141-98cf-f827164db6d4/a71410ba-b778-4e2f-b51b-331d68956af2.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team7@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:22.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "WQW7+7JJ Langnau im Emmental, Switzerland",
+        "global_code": "8FR9WQW7+7JJ"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "330",
+              "short_name": "330",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 330, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 46.9457544,
+                "lng": 7.7639844
+              },
+              "southwest": {
+                "lat": 46.9454982,
+                "lng": 7.763497799999999
+              }
+            },
+            "location": {
+              "lat": 46.9456171,
+              "lng": 7.7637154
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9469752802915,
+                "lng": 7.765090080291501
+              },
+              "southwest": {
+                "lat": 46.9442773197085,
+                "lng": 7.762392119708498
+              }
+            }
+          },
+          "place_id": "ChIJlT0XhU7Jj0cRThviXiU05jw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.94592429999999,
+              "lng": 7.764321199999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472732802915,
+                "lng": 7.765670180291501
+              },
+              "southwest": {
+                "lat": 46.9445753197085,
+                "lng": 7.762972219708496
+              }
+            }
+          },
+          "place_id": "ChIJ-adYn07Jj0cR_5GQi9kB918",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hüselmatte",
+              "short_name": "Hüselmatte",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hüselmatte 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.9459254,
+              "lng": 7.764321799999998
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472743802915,
+                "lng": 7.765670780291501
+              },
+              "southwest": {
+                "lat": 46.9445764197085,
+                "lng": 7.762972819708496
+              }
+            }
+          },
+          "place_id": "ChIJTQUtoE7Jj0cRwhwleSb0z28",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.94572,
+      "lng": 7.76401,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-92ed0a4c-7e60-478e-a138-7343cf03ba8c.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:37:27.059Z",
+    "gameId": "local-demo-game",
+    "teamId": "21556d09-b229-4141-98cf-f827164db6d4",
+    "filename": "local-demo-game/21556d09-b229-4141-98cf-f827164db6d4/92ed0a4c-7e60-478e-a138-7343cf03ba8c.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team7@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:18.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "WQW7+7JJ Langnau im Emmental, Switzerland",
+        "global_code": "8FR9WQW7+7JJ"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "330",
+              "short_name": "330",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 330, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 46.9457544,
+                "lng": 7.7639844
+              },
+              "southwest": {
+                "lat": 46.9454982,
+                "lng": 7.763497799999999
+              }
+            },
+            "location": {
+              "lat": 46.9456171,
+              "lng": 7.7637154
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9469752802915,
+                "lng": 7.765090080291501
+              },
+              "southwest": {
+                "lat": 46.9442773197085,
+                "lng": 7.762392119708498
+              }
+            }
+          },
+          "place_id": "ChIJlT0XhU7Jj0cRThviXiU05jw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.94592429999999,
+              "lng": 7.764321199999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472732802915,
+                "lng": 7.765670180291501
+              },
+              "southwest": {
+                "lat": 46.9445753197085,
+                "lng": 7.762972219708496
+              }
+            }
+          },
+          "place_id": "ChIJ-adYn07Jj0cR_5GQi9kB918",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hüselmatte",
+              "short_name": "Hüselmatte",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hüselmatte 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.9459254,
+              "lng": 7.764321799999998
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472743802915,
+                "lng": 7.765670780291501
+              },
+              "southwest": {
+                "lat": 46.9445764197085,
+                "lng": 7.762972819708496
+              }
+            }
+          },
+          "place_id": "ChIJTQUtoE7Jj0cRwhwleSb0z28",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.94572,
+      "lng": 7.76401,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-c453d287-c5e4-4429-a5fc-f970a615ee7d.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:37:33.348Z",
+    "gameId": "local-demo-game",
+    "teamId": "21556d09-b229-4141-98cf-f827164db6d4",
+    "filename": "local-demo-game/21556d09-b229-4141-98cf-f827164db6d4/c453d287-c5e4-4429-a5fc-f970a615ee7d.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team7@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "WQW7+7JJ Langnau im Emmental, Switzerland",
+        "global_code": "8FR9WQW7+7JJ"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "330",
+              "short_name": "330",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 330, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 46.9457544,
+                "lng": 7.7639844
+              },
+              "southwest": {
+                "lat": 46.9454982,
+                "lng": 7.763497799999999
+              }
+            },
+            "location": {
+              "lat": 46.9456171,
+              "lng": 7.7637154
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9469752802915,
+                "lng": 7.765090080291501
+              },
+              "southwest": {
+                "lat": 46.9442773197085,
+                "lng": 7.762392119708498
+              }
+            }
+          },
+          "place_id": "ChIJlT0XhU7Jj0cRThviXiU05jw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.94592429999999,
+              "lng": 7.764321199999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472732802915,
+                "lng": 7.765670180291501
+              },
+              "southwest": {
+                "lat": 46.9445753197085,
+                "lng": 7.762972219708496
+              }
+            }
+          },
+          "place_id": "ChIJ-adYn07Jj0cR_5GQi9kB918",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hüselmatte",
+              "short_name": "Hüselmatte",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hüselmatte 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.9459254,
+              "lng": 7.764321799999998
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472743802915,
+                "lng": 7.765670780291501
+              },
+              "southwest": {
+                "lat": 46.9445764197085,
+                "lng": 7.762972819708496
+              }
+            }
+          },
+          "place_id": "ChIJTQUtoE7Jj0cRwhwleSb0z28",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.94572,
+      "lng": 7.76401,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-d09e1b35-604e-4060-b0a5-9838e04a1522.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:37:44.303Z",
+    "gameId": "local-demo-game",
+    "teamId": "21556d09-b229-4141-98cf-f827164db6d4",
+    "filename": "local-demo-game/21556d09-b229-4141-98cf-f827164db6d4/d09e1b35-604e-4060-b0a5-9838e04a1522.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team7@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:14.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "WQW7+7JJ Langnau im Emmental, Switzerland",
+        "global_code": "8FR9WQW7+7JJ"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "330",
+              "short_name": "330",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 330, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 46.9457544,
+                "lng": 7.7639844
+              },
+              "southwest": {
+                "lat": 46.9454982,
+                "lng": 7.763497799999999
+              }
+            },
+            "location": {
+              "lat": 46.9456171,
+              "lng": 7.7637154
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9469752802915,
+                "lng": 7.765090080291501
+              },
+              "southwest": {
+                "lat": 46.9442773197085,
+                "lng": 7.762392119708498
+              }
+            }
+          },
+          "place_id": "ChIJlT0XhU7Jj0cRThviXiU05jw",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Burgdorfstrasse",
+              "short_name": "Burgdorfstrasse",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Burgdorfstrasse 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.94592429999999,
+              "lng": 7.764321199999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472732802915,
+                "lng": 7.765670180291501
+              },
+              "southwest": {
+                "lat": 46.9445753197085,
+                "lng": 7.762972219708496
+              }
+            }
+          },
+          "place_id": "ChIJ-adYn07Jj0cR_5GQi9kB918",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "335",
+              "short_name": "335",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hüselmatte",
+              "short_name": "Hüselmatte",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hüselmatte 335, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.9459254,
+              "lng": 7.764321799999998
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9472743802915,
+                "lng": 7.765670780291501
+              },
+              "southwest": {
+                "lat": 46.9445764197085,
+                "lng": 7.762972819708496
+              }
+            }
+          },
+          "place_id": "ChIJTQUtoE7Jj0cRwhwleSb0z28",
+          "plus_code": {
+            "compound_code": "WQW7+9P Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW7+9P"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.94572,
+      "lng": 7.76901,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-20fbf2b3-4bd4-46a7-a26b-4b0602b6e967.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:38:32.833Z",
+    "gameId": "local-demo-game",
+    "teamId": "39f38b45-e74e-490c-9532-9f7e7c0de043",
+    "filename": "local-demo-game/39f38b45-e74e-490c-9532-9f7e7c0de043/20fbf2b3-4bd4-46a7-a26b-4b0602b6e967.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team1@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:24.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "WQW9+7JJ Langnau im Emmental, Switzerland",
+        "global_code": "8FR9WQW9+7JJ"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "363",
+              "short_name": "363",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Bramerboden",
+              "short_name": "Bramerboden",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Bramerboden 363, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 46.9454371,
+                "lng": 7.768647899999999
+              },
+              "southwest": {
+                "lat": 46.94534059999999,
+                "lng": 7.7683769
+              }
+            },
+            "location": {
+              "lat": 46.94540540000001,
+              "lng": 7.768509099999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9467378302915,
+                "lng": 7.769861380291502
+              },
+              "southwest": {
+                "lat": 46.9440398697085,
+                "lng": 7.767163419708497
+              }
+            }
+          },
+          "place_id": "ChIJP-M_eEnJj0cRNXWjT8_pMxE",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "361",
+              "short_name": "361",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hübeli",
+              "short_name": "Hübeli",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hübeli 361, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.9453816,
+              "lng": 7.7698011
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9467305802915,
+                "lng": 7.771150080291502
+              },
+              "southwest": {
+                "lat": 46.9440326197085,
+                "lng": 7.768452119708497
+              }
+            }
+          },
+          "place_id": "ChIJDZc0jEnJj0cRlByjsOFJXpw",
+          "plus_code": {
+            "compound_code": "WQW9+5W Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW9+5W"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "364",
+              "short_name": "364",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hübeli",
+              "short_name": "Hübeli",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hübeli 364, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.94521599999999,
+              "lng": 7.770573
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.94656498029149,
+                "lng": 7.771921980291502
+              },
+              "southwest": {
+                "lat": 46.9438670197085,
+                "lng": 7.769224019708497
+              }
+            }
+          },
+          "place_id": "ChIJxVbO8UnJj0cRHeQwCKKiL_E",
+          "plus_code": {
+            "compound_code": "WQWC+36 Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQWC+36"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  {
+    "position": {
+      "lat": 46.94572,
+      "lng": 7.76901,
+      "accuracy": 150
+    },
+    "_id": "local-demo-game-c36f3ed9-dd07-4be9-91a0-bc8ce4de1476.jpg",
+    "uploaded": true,
+    "timestamp": "2023-03-17T22:38:44.397Z",
+    "gameId": "local-demo-game",
+    "teamId": "39f38b45-e74e-490c-9532-9f7e7c0de043",
+    "filename": "local-demo-game/39f38b45-e74e-490c-9532-9f7e7c0de043/c36f3ed9-dd07-4be9-91a0-bc8ce4de1476.jpg",
+    "url": "",
+    "thumbnail": "",
+    "user": "team1@ferropoly.ch",
+    "lastModifiedDate": "2022-11-12T06:10:18.000Z",
+    "__v": 0,
+    "location": {
+      "plus_code": {
+        "compound_code": "WQW9+7JJ Langnau im Emmental, Switzerland",
+        "global_code": "8FR9WQW9+7JJ"
+      },
+      "results": [
+        {
+          "address_components": [
+            {
+              "long_name": "363",
+              "short_name": "363",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Bramerboden",
+              "short_name": "Bramerboden",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Bramerboden 363, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "bounds": {
+              "northeast": {
+                "lat": 46.9454371,
+                "lng": 7.768647899999999
+              },
+              "southwest": {
+                "lat": 46.94534059999999,
+                "lng": 7.7683769
+              }
+            },
+            "location": {
+              "lat": 46.94540540000001,
+              "lng": 7.768509099999999
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9467378302915,
+                "lng": 7.769861380291502
+              },
+              "southwest": {
+                "lat": 46.9440398697085,
+                "lng": 7.767163419708497
+              }
+            }
+          },
+          "place_id": "ChIJP-M_eEnJj0cRNXWjT8_pMxE",
+          "types": [
+            "premise"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "361",
+              "short_name": "361",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hübeli",
+              "short_name": "Hübeli",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hübeli 361, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.9453816,
+              "lng": 7.7698011
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.9467305802915,
+                "lng": 7.771150080291502
+              },
+              "southwest": {
+                "lat": 46.9440326197085,
+                "lng": 7.768452119708497
+              }
+            }
+          },
+          "place_id": "ChIJDZc0jEnJj0cRlByjsOFJXpw",
+          "plus_code": {
+            "compound_code": "WQW9+5W Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQW9+5W"
+          },
+          "types": [
+            "street_address"
+          ]
+        },
+        {
+          "address_components": [
+            {
+              "long_name": "364",
+              "short_name": "364",
+              "types": [
+                "street_number"
+              ]
+            },
+            {
+              "long_name": "Hübeli",
+              "short_name": "Hübeli",
+              "types": [
+                "route"
+              ]
+            },
+            {
+              "long_name": "Langnau im Emmental",
+              "short_name": "Langnau im Emmental",
+              "types": [
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Emmental District",
+              "short_name": "Emmental District",
+              "types": [
+                "administrative_area_level_2",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Bern",
+              "short_name": "BE",
+              "types": [
+                "administrative_area_level_1",
+                "political"
+              ]
+            },
+            {
+              "long_name": "Switzerland",
+              "short_name": "CH",
+              "types": [
+                "country",
+                "political"
+              ]
+            },
+            {
+              "long_name": "3550",
+              "short_name": "3550",
+              "types": [
+                "postal_code"
+              ]
+            }
+          ],
+          "formatted_address": "Hübeli 364, 3550 Langnau im Emmental, Switzerland",
+          "geometry": {
+            "location": {
+              "lat": 46.94521599999999,
+              "lng": 7.770573
+            },
+            "location_type": "ROOFTOP",
+            "viewport": {
+              "northeast": {
+                "lat": 46.94656498029149,
+                "lng": 7.771921980291502
+              },
+              "southwest": {
+                "lat": 46.9438670197085,
+                "lng": 7.769224019708497
+              }
+            }
+          },
+          "place_id": "ChIJxVbO8UnJj0cRHeQwCKKiL_E",
+          "plus_code": {
+            "compound_code": "WQWC+36 Langnau im Emmental, Switzerland",
+            "global_code": "8FR9WQWC+36"
+          },
+          "types": [
+            "establishment",
+            "point_of_interest"
+          ]
+        }
+      ],
+      "status": "OK"
+    }
+  }
+]

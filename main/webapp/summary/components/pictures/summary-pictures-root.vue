@@ -9,12 +9,16 @@ div
   no-pic-text=""
   :get-property-by-id="getPropertyById"
   :get-team-name-by-id="getTeamNameById"
+  :pictures="pictures"
+  :teams="teams"
+  :properties="propertyRegister.properties"
   extended)
 
 </template>
 
 <script>
 import ReceptionPictures from "../../../lib/components/ReceptionPictures.vue";
+import {mapFields} from "vuex-map-fields";
 
 export default {
   name      : "SummaryPicturesRoot",
@@ -26,7 +30,13 @@ export default {
   data      : function () {
     return {};
   },
-  computed  : {},
+  computed  : {
+    ...mapFields({
+      pictures        : 'picBucketStore.pictures',
+      teams           : 'teams.list',
+      propertyRegister: 'propertyRegister.register'
+    })
+  },
   created   : function () {
   },
   methods   : {

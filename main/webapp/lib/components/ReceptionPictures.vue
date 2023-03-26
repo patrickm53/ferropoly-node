@@ -29,10 +29,12 @@ b-container(fluid)
       @zoom="onZoom")
   div(v-if="pictureInfo")
     picture-viewer(:picture="pictureInfo"
-      :properties="propertyRegister.properties"
+      :properties="properties"
       :extended="extended"
       :admin="admin"
       :edit-allowed="editAllowed"
+      :get-property-by-id="getPropertyById"
+      :get-team-name-by-id="getTeamNameById"
       @property-assigned="onPropertyAssigned"
       @close="onClose")
 </template>
@@ -41,7 +43,6 @@ b-container(fluid)
 
 import PictureList from "./PictureList.vue";
 import PictureViewer from "./PictureViewer.vue";
-import {mapFields} from "vuex-map-fields";
 
 export default {
   name      : "ReceptionPictures",
@@ -74,7 +75,7 @@ export default {
     getPropertyById: {
       type   : Function,
       default: (p) => {
-        console.log('dummy only!', p);
+        console.warn('getPropertyById not implemented!', p);
         return null;
       }
     },
@@ -114,7 +115,35 @@ export default {
         console.log('dummy only!', p);
         return null;
       }
-    }
+    },
+    /**
+     * Pictures to show
+     */
+    pictures: {
+      type: Array,
+      default: ()=> {
+        return [];
+      }
+    },
+    /**
+     * Teams
+     */
+    teams: {
+      type: Array,
+      default: ()=> {
+        return [];
+      }
+    },
+    /**
+     * Array from Property Register from the store
+     */
+    properties: {
+      type: Array,
+      default: ()=> {
+        return [];
+      }
+    },
+
   },
   data      : function () {
     return {
@@ -127,11 +156,7 @@ export default {
     };
   },
   computed  : {
-    ...mapFields({
-      pictures        : 'picBucketStore.pictures',
-      teams           : 'teams.list',
-      propertyRegister: 'propertyRegister.register'
-    })
+
   },
   created   : function () {
     let self = this;
@@ -154,7 +179,7 @@ export default {
     onPropertyAssigned(obj) {
       // obj has "picture" and "propertyId"
       console.log('property assigned', obj)
-      this.$store.dispatch('assignProperty', obj);
+      this.$emit('property-assigned', obj);
     }
   }
 }

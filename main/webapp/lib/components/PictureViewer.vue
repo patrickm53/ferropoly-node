@@ -7,7 +7,7 @@
 b-container(fluid)
   b-row
     b-col(sm="12" md="12" lg="4" xl="3")
-      h5 {{$store.getters['teams/idToTeamName'](picture.teamId)}}
+      h5 {{getTeamNameById(picture.teamId)}}
       compact-info(title="Upload") {{picture.timestamp | formatTime}}
       compact-info(v-if="extended" title="Aufnahmedatum") {{picture.lastModifiedDate | formatDateTime}}
         p(v-if="admin && picture.warningTooOldPictureActive()")
@@ -92,7 +92,27 @@ export default {
       default: () => {
         return [];
       }
-    }
+    },
+    /**
+     * Function for returning the team name for a given ID
+     */
+    getTeamNameById: {
+      type   : Function,
+      default: (p) => {
+        console.log('dummy only!', p);
+        return null;
+      }
+    },
+    /**
+     * Function for returning the property object for a given ID
+     */
+    getPropertyById: {
+      type   : Function,
+      default: (p) => {
+        console.log('dummy only!', p);
+        return null;
+      }
+    },
   },
   data      : function () {
     return {};
@@ -102,7 +122,7 @@ export default {
       return `https://maps.google.com?q=${this.picture.position.lat},${this.picture.position.lng}`;
     },
     propertyName() {
-      let prop = this.$store.getters['propertyRegister/getPropertyById'](this.picture.propertyId);
+      let prop = this.getPropertyById(this.picture.propertyId);
       if (!prop) {
         return '';
       }

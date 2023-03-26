@@ -18,6 +18,7 @@
       test-gambling-controls(v-if="panel==='gamblingControls'")
       test-team-selector(v-if="panel==='teamSelector'")
       test-graph(v-if="panel==='graph'")
+      test-reception-pictures(v-if="panel==='pictures'")
 </template>
 
 <script>
@@ -27,6 +28,7 @@ import TestPropertySelector from './test-property-selector.vue';
 import TestGamblingControls from './test-gambling-controls.vue';
 import TestTeamSelector from './test-team-selector.vue';
 import TestGraph from './test-graph.vue';
+import TestReceptionPictures from "./test-reception-pictures.vue";
 
 // EASY START
 const defaultPanel = getItem('test-panel', 'top');
@@ -34,6 +36,7 @@ const defaultPanel = getItem('test-panel', 'top');
 export default {
   name      : 'TestRoot',
   components: {
+    TestReceptionPictures,
     MenuBar,
     TestPropertySelector,
     TestGamblingControls,
@@ -55,6 +58,7 @@ export default {
             {title: 'Gambling Controls / Call Log', href: '#', event: 'panel-change', eventParam: 'gamblingControls'},
             {title: 'Team Selector', href: '#', event: 'panel-change', eventParam: 'teamSelector'},
             {title: 'Graph Playground', href: '#', event: 'panel-change', eventParam: 'graph'},
+            {title: 'Reception Pictures', href: '#', event: 'panel-change', eventParam: 'pictures'},
           ]
         },
       ],

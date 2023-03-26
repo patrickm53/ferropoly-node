@@ -13,7 +13,7 @@ class PictureInfo {
     this.message          = info.message;
     this.url              = info.url;
     this.thumbnail        = info.thumbnail;
-    this.propertyId       = info.propertyId;
+    this.propertyId       = info.propertyId || null;
     this.position         = {
       lat     : toNumber(get(info, 'position.lat', '0')),
       lng     : toNumber(get(info, 'position.lng', '0')),

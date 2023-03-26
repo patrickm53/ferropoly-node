@@ -26,5 +26,9 @@ function getOrdererdProperties(nb = 5000) {
   return props;
 }
 
+function getPropertyByIndex(index) {
+  return gameInfo.pricelist[index % gameInfo.pricelist.length];
+}
 
-export {getGameplay, getProperties, getOrdererdProperties};
+
+export {getGameplay, getProperties, getOrdererdProperties, getPropertyByIndex};

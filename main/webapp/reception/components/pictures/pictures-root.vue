@@ -7,16 +7,21 @@
 b-container(fluid)
   call-active-warning
   reception-pictures(
+    @property-assigned="onPropertyAssigned"
     admin
     edit-allowed
     :get-property-by-id="getPropertyById"
     :get-team-name-by-id="getTeamNameById"
+    :pictures="pictures"
+    :teams="teams"
+    :properties="propertyRegister.properties"
     extended)
 </template>
 
 <script>
 import ReceptionPictures from "../../../lib/components/ReceptionPictures.vue";
 import CallActiveWarning from "../call-active-warning.vue";
+import {mapFields} from "vuex-map-fields";
 
 export default {
   name      : "PicturesRoot",
@@ -28,7 +33,13 @@ export default {
   data      : function () {
     return {};
   },
-  computed  : {},
+  computed  : {
+    ...mapFields({
+      pictures        : 'picBucketStore.pictures',
+      teams           : 'teams.list',
+      propertyRegister: 'propertyRegister.register'
+    })
+  },
   created   : function () {
   },
   methods   : {
@@ -37,6 +48,9 @@ export default {
     },
     getTeamNameById(teamId) {
       return this.$store.getters['teams/idToTeamName'](teamId);
+    },
+    onPropertyAssigned(obj) {
+      this.$store.dispatch('assignProperty', obj);
     }
   }
 }
