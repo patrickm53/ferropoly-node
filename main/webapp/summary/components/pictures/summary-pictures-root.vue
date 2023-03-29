@@ -12,6 +12,7 @@ div
   :pictures="pictures"
   :teams="teams"
   :properties="propertyRegister.properties"
+
   extended)
 
 </template>

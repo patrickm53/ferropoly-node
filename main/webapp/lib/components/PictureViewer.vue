@@ -124,7 +124,7 @@ export default {
     propertyName() {
       let prop = this.getPropertyById(this.picture.propertyId);
       if (!prop) {
-        return '';
+        return '' + this.picture.propertyId;
       }
       return prop.location.name;
     }

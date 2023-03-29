@@ -6,14 +6,14 @@
 <template lang="pug">
 div.card.mt-0(@click="onClick")
   b-img-lazy(:src="pictureInfo.thumbnail" blank-width="200" blank-height="150" )
-  h3 {{uploadDate}}
+  h4 {{uploadDate}}
+    span(v-if="extended") &nbsp;{{getTeamNameById(pictureInfo.teamId)}}&nbsp;
     font-awesome-icon.no-url.warning(v-if="admin && pictureInfo.warningTooOldPictureActive()"
       icon="fa-triangle-exclamation"
       v-b-tooltip.hover
       :title="tooltipWarning")
-  div(v-if="extended")
-    p {{getTeamNameById(pictureInfo.teamId)}}
-    p(v-b-tooltip.hover :title="tooltipGps") {{pictureInfo.getLocationText()}}
+  div(v-if="pictureInfo.propertyId") {{propertyName}}
+  div(v-if="extended && pictureInfo.getLocationText()" v-b-tooltip.hover :title="tooltipGps") GPS: {{pictureInfo.getLocationText()}}
 </template>
 
 <script>
@@ -63,7 +63,17 @@ export default {
         console.log('dummy only!', p);
         return null;
       }
-    }
+    },
+    /**
+     * Function for returning the property object for a given ID
+     */
+    getPropertyById: {
+      type   : Function,
+      default: (p) => {
+        console.log('dummy only!', p);
+        return null;
+      }
+    },
   },
   data      : function () {
     return {
@@ -74,6 +84,13 @@ export default {
   computed  : {
     uploadDate() {
       return formatTime(this.pictureInfo.timestamp.toISO());
+    },
+    propertyName() {
+      let prop = this.getPropertyById(this.pictureInfo.propertyId);
+      if (!prop) {
+        return '';
+      }
+      return prop.location.name;
     }
   },
   created   : function () {
@@ -91,6 +108,11 @@ export default {
 .card {
   border: 0 solid silver;
   width: 360px;
+}
+
+.team-name {
+  font-weight: bold;
+  color: darkblue;
 }
 
 .warning {

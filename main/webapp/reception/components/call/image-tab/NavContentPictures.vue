@@ -1,5 +1,5 @@
 <!---
-
+  Navigation content in call for pictures
   Christian Kuster, CH-8342 Wernetshausen, christian@kusti.ch
   Created: 25.03.23
 -->
@@ -10,7 +10,9 @@ b-container(fluid)
   div(v-if="pictureInfo")
     picture-viewer(:picture="pictureInfo"
       :properties="propertyRegister.properties"
-      extended=true
+      :get-property-by-id="getPropertyById"
+      extended
+      edit-allowed
       @property-assigned="onPropertyAssigned"
       @close="onClose")
 
@@ -58,7 +60,10 @@ export default {
       // obj has "picture" and "propertyId"
       console.log('property assigned', obj)
       this.$store.dispatch('assignProperty', obj);
-    }
+    },
+    getPropertyById(propertyId) {
+      return this.$store.getters['propertyRegister/getPropertyById'](propertyId);
+    },
   }
 }
 </script>

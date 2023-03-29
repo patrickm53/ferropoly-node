@@ -12,6 +12,7 @@
           :extended="extended"
           :admin="admin"
           :get-team-name-by-id="getTeamNameById"
+          :get-property-by-id="getPropertyById"
           @zoom="onZoom" )
 
 </template>
