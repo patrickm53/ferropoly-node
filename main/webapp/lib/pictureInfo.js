@@ -49,8 +49,9 @@ class PictureInfo {
     if (!this.lastModifiedDate) {
       return false;
     }
-    const diff = this.timestamp.diff(this.lastModifiedDate, 'hours');
-    return diff > 12;
+    const diff = this.timestamp.diff(this.lastModifiedDate, 'hours').toObject();
+    console.log(`Diff is ${diff.hours} hours`, this.timestamp, this.lastModifiedDate);
+    return diff.hours > 12;
   }
 }
 
