@@ -186,7 +186,7 @@ export default {
      * Sets the timestamp for the next update
      * @param state
      */
-    setNextUpdate(state) {
+    setNextUpdate() {
       this.nextGpsUpdate = DateTime.now().plus({minutes: 5});
       setString('nextGpsUpdate', this.nextGpsUpdate);
     },
