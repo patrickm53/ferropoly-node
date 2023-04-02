@@ -12,7 +12,7 @@ b-container(fluid)
     b-jumbotron(header="Bilder Gallerie" :lead="noPicLead")
       p {{noPicText}}
   div(v-if="pictureInfo === null && pictures.length > 0")
-    b-row.mt-1
+    b-row.mt-1(v-if="!filterDisabled")
       b-col
         b-form(inline)
           label.mr-2(for="filter") Team-Filter:
@@ -51,6 +51,15 @@ export default {
   mixins    : [],
   model     : {},
   props     : {
+    /**
+     * Filter section enabled?
+     */
+    filterDisabled: {
+      type: Boolean,
+      default:()=>{
+        return false;
+      }
+    },
     /**
      * Lead / title of the jumbotron when no pictures are available
      */

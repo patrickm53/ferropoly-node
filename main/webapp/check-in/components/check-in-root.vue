@@ -23,6 +23,7 @@
     rules-root(v-if="panel==='panel-rules'")
     pricelist-root(v-if="panel==='panel-pricelist'")
     pictures-root(v-if="panel==='panel-pictures'")
+    upload-root(v-if="panel==='panel-upload'")
     div(v-if="gpsWarningMessageActive")
       no-gps-info(v-if="panel==='panel-accounting'")
       no-gps-info(v-if="panel==='panel-property'")
@@ -50,10 +51,12 @@ import {mapFields} from 'vuex-map-fields';
 import geograph from '../../common/lib/geograph';
 import {DateTime} from 'luxon';
 import PicturesRoot from "./pictures/pictures-root.vue";
+import UploadRoot from "./upload/upload-root.vue";
 
 export default {
   name      : 'CheckInRoot',
   components: {
+    UploadRoot,
     PicturesRoot,
     MenuBar,
     ModalError,
