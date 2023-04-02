@@ -20,6 +20,7 @@
 <script>
 import PictureCard from './PictureCard.vue';
 import $ from "jquery";
+import {delay} from "lodash";
 
 export default {
   name      : "PictureList",
@@ -96,11 +97,14 @@ export default {
   },
   computed  : {},
   mounted   : function () {
-    this.resizeHandler();
+    let self = this;
+    delay(()=>{
+      // Why the fuck is this necessary??? On mobile devices we have a "top" value of the control which is
+      // unreasonable!
+      self.resizeHandler();}, 250);
   },
   created   : function () {
     window.addEventListener('resize', this.resizeHandler);
-    this.resizeHandler();
   },
   destroyed() {
     window.removeEventListener('resize', this.resizeHandler);
@@ -113,6 +117,7 @@ export default {
       let element       = $('#image-list');
       let hDoc          = $(window).height();
       let offsetElement = element.offset();
+      console.log('Window:', hDoc, offsetElement);
       if (offsetElement) {
         element.height(hDoc - offsetElement.top);
       }
