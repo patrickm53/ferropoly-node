@@ -30,14 +30,9 @@ module.exports = function (settings) {
   };
 
   settings.autopilot = {
-    interval: 60000,
-    gameId  : 'local-demo-game',
-    active  : true
+    enabled  : true
   };
 
-  settings.traffic = {
-    simulation: true
-  };
 
   // Facebook settings
   settings.oAuth.facebook.callbackURL = 'http://localhost:3004/auth/facebook/callback';

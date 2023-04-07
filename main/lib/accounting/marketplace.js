@@ -153,6 +153,7 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
 Marketplace.prototype.buyProperty = function (options, callback) {
   let self = this;
   if (!options.gameId || !options.teamId || !options.propertyId) {
+    logger.info('Rather stupid options for buyProperty', options);
     return callback(new Error('At least gameId, teamId and property Id must be supplied'));
   }
 

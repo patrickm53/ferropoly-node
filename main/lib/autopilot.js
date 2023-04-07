@@ -4,24 +4,30 @@
  */
 
 
-const _           = require('lodash');
-const logger      = require('../../common/lib/logger').getLogger('autopilot');
-const moment      = require('moment');
-const gameCache   = require('./gameCache');
-const travelLog   = require('../../common/models/travelLogModel');
-const properties  = require('../../common/models/propertyModel');
-const marketplace = require('./accounting/marketplace');
+const _              = require('lodash');
+const logger         = require('../../common/lib/logger').getLogger('autopilot');
+const moment         = require('moment');
+const gameCache      = require('./gameCache');
+const travelLog      = require('../../common/models/travelLogModel');
+const properties     = require('../../common/models/propertyModel');
+const gameplays      = require('../../common/models/gameplayModel');
+const picBucketModel = require('../../common/models/picBucketModel');
+const marketplace    = require('./accounting/marketplace');
+const {v4: uuid}     = require('uuid');
+const {DateTime}     = require("luxon");
+let picBucket        = undefined;
 let settings;
 
 /**
  * Autoplay: called by the timer
+ * @param gameplay is the gameplay
  */
-function autoplay() {
+function autoplay(gameplay) {
   try {
-    gameCache.getGameData(settings.gameId, function (err, data) {
+    gameCache.getGameData(gameplay.internal.gameId, function (err, data) {
       if (err) {
         logger.error(err);
-        startTimer();
+        startTimer(gameplay);
         return;
       }
       let gp    = data.gameplay;
@@ -30,13 +36,13 @@ function autoplay() {
       if (moment().isBefore(moment(gp.scheduling.gameStartTs))) {
         logger.info('Game not started yet');
         // Make sure that we do not poll to often, fall back to a 15 minute cycle
-        startTimer((15 * 60 * 1000));
+        startTimer(gameplay, (15 * 60 * 1000));
         return;
       }
       if (moment().isAfter(moment(gp.scheduling.gameEndTs))) {
         logger.info('Game over, do nothing');
         // Make sure that we do not poll to often, fall back to a 15 minute cycle
-        startTimer((15 * 60 * 1000));
+        startTimer(gameplay, (15 * 60 * 1000));
         return;
       }
 
@@ -47,36 +53,67 @@ function autoplay() {
         return;
       }
       let team = teams[_.random(0, teams.length - 1)];
-      travelLog.getAllLogEntries(settings.gameId, team.uuid, function (err, log) {
+      travelLog.getAllLogEntries(gp.internal.gameId, team.uuid, function (err, log) {
         if (err) {
           logger.error(err);
-          startTimer();
+          startTimer(gameplay);
           return;
         }
 
-        properties.getPropertiesForGameplay(settings.gameId, {lean: true}, function (err, props) {
+        properties.getPropertiesForGameplay(gp.internal.gameId, {lean: true}, function (err, props) {
           if (err) {
             logger.error(err);
-            startTimer();
+            startTimer(gameplay);
             return;
           }
-          playRound(settings.gameId, team.uuid, log, props, function (err, info) {
+          playRound(gp.internal.gameId, team.uuid, log, props, function (err, info) {
             if (err) {
               logger.error(err);
-              startTimer();
+              startTimer(gameplay);
               return;
             }
             logger.debug('bought location', _.get(info, 'amount', 0));
-            startTimer();
+            startTimer(gameplay);
           });
         });
-
       });
     });
-  }
-  catch (exception) {
+  } catch (exception) {
     logger.error('Error in autoplay', exception);
   }
+}
+
+/**
+ * Creates a pic bucket entry
+ * @param options
+ * @param callback
+ */
+function createPicBucket(options, callback) {
+  let pic      = new picBucketModel.Model();
+  let seed     = uuid();
+  const gameId = options.gameId;
+
+  pic.gameId           = gameId;
+  pic.teamId           = options.teamId;
+  pic.filename         = options.filename || `${seed}.jpg`;
+  pic.message          = _.get(options, 'message', undefined);
+  pic.url              = `https://picsum.photos/seed/${seed}/1600/1200`;
+  pic.thumbnail        = `https://picsum.photos/seed/${seed}/1600/1200`;
+  pic.propertyId       = _.get(options, 'propertyId', undefined);
+  pic.user             = _.get(options, 'user', 'unbekannt');
+  pic.lastModifiedDate = DateTime.now();
+  pic.position         = {
+    lat     : Number(_.get(options, 'property.location.position.lat', '0')),
+    lng     : Number(_.get(options, 'property.location.position.lng', '0')),
+    accuracy: _.random(20, 800)
+  };
+  pic._id              = `${gameId}-${seed}`;
+  pic.save(err => {
+    if (err) {
+      return callback(err);
+    }
+    picBucket.confirmUpload(pic._id, {doGeolocationApiCall: false}, callback);
+  });
 }
 
 /**
@@ -84,16 +121,30 @@ function autoplay() {
  * @param gameId
  * @param teamId
  * @param travelLog
- * @param properties
+ * @param props
  * @param callback
  */
-function playRound(gameId, teamId, travelLog, properties, callback) {
+function playRound(gameId, teamId, travelLog, props, callback) {
   // play chancellery
   let mp = marketplace.getMarketplace();
   mp.chancellery(gameId, teamId, function () {
     mp.buildHouses(gameId, teamId, function () {
-      let propertyId = selectClosestsProperty(travelLog, properties);
-      mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, callback);
+      let propertyId = selectClosestsProperty(travelLog, props);
+      if (!propertyId) {
+        logger.info(`Was not able to find closest property for ${gameId} / ${teamId}`);
+        return callback();
+      }
+      mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, err => {
+        if (err) {
+          return callback(err);
+        }
+        properties.getPropertyById(gameId, propertyId, (err, prop) => {
+          if (err) {
+            return callback(err);
+          }
+          createPicBucket({gameId: gameId, teamId: teamId, propertyId: propertyId, property: prop}, callback);
+        })
+      });
     });
   });
   // build houses
@@ -143,7 +194,7 @@ function selectClosestsProperty(travelLog, properties) {
     // First property, just start random
     return properties[_.random(0, properties.length - 1)].uuid;
   }
-  let lastItem  = _.findLast(travelLog, tl => {
+  let lastItem = _.findLast(travelLog, tl => {
     // consider only entries with a propertyID, the other ones are GPS tracks
     return tl.propertyId;
   });
@@ -170,8 +221,15 @@ function selectClosestsProperty(travelLog, properties) {
   return closestPropertyId;
 }
 
-function startTimer(delay) {
-  _.delay(autoplay, delay || settings.interval);
+/**
+ * Starts the delay timer
+ * @paramId gp Gameplay
+ * @param delay
+ */
+function startTimer(gp, delay) {
+  _.delay(() => {
+    autoplay(gp);
+  }, delay || gp.autopilotInterval);
 }
 
 
@@ -181,18 +239,32 @@ module.exports = {
    * @param options
    */
   init: function (options) {
+    // This is the over all settings: Release version of Ferropoly does not have an autopilot at all
     if (!options.autopilot) {
-      logger.info('autopilot NOT CONFIGURED');
+      logger.info('autopilot NOT CONFIGURED and therefore not active');
       return;
     }
-    if (!options.autopilot.active) {
-      logger.info('autopilot NOT ACTIVE');
+    if (!options.autopilot.enabled) {
+      logger.info('autopilot NOT ENABLED');
       return;
     }
-    settings          = options.autopilot;
-    settings.interval = options.autopilot.interval || (5 * 60 * 1000);
-    settings.gameId   = options.autopilot.gameId || 'play-a-demo-game';
+    settings = options.autopilot;
+
     logger.info('autopilot ACTIVE');
-    startTimer();
+    gameplays.getAutopilotGameplays((err, gps) => {
+      if (err) {
+        return logger.error(err);
+      }
+      if (!gps || gps.length === 0) {
+        return logger.info('autopilot INACTIVE as there are no gameplays configured for it');
+      }
+      picBucket = require('./picBucket')();
+      gps.forEach(gp => {
+        // Just a shortcut
+        gp.autopilotInterval = _.get(gp, 'internal.autopilot.interval', (5 * 60 * 1000));
+        logger.info(`Autopilot for "${gp.internal.gameId}" ACTIVE with ${gp.autopilotInterval / 1000}s interval`);
+        startTimer(gp, _.random(gp.autopilotInterval / 2, gp.autopilotInterval));
+      })
+    })
   }
 };

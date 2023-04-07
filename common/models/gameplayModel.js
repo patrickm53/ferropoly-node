@@ -88,7 +88,12 @@ const gameplaySchema = mongoose.Schema({
     priceListPendingChanges: {type: Boolean, default: false}, // Are there pending changes?
     creatingInstance       : String,                          // Instance creating this gameplay
     gameDataPublic         : {type: Boolean, default: false}, // After the game, the complete game is "public"
-    isDemo                 : {type: Boolean, default: false}  // Demo games have some special behaviour
+    isDemo                 : {type: Boolean, default: false}, // Demo games have some special behaviour
+    autopilot              : {
+      active   : {type: Boolean, default: false},             // Autopilot active
+      picBucket: {type: Boolean, default: false},             // Generating pics for picbucket with autopilot
+      interval : {type: Number, default: (5 * 60 * 1000)}     // Interval in ms between rounds
+    }
   },
   joining   : {
     possibleUntil: {type: Date},
@@ -319,8 +324,7 @@ function finalizeTime(date, time) {
     newDate.hour(hour);
     newDate.second(0);
     return newDate.toDate();
-  }
-  catch (e) {
+  } catch (e) {
     logger.info('ERROR in finalizeTime: ' + e);
     return new Date();
   }
@@ -603,6 +607,14 @@ let saveNewPriceListRevision = function (gameplay, callback) {
 };
 
 /**
+ * Returns all active autoilot games
+ * @param callback
+ */
+let getAutopilotGameplays = function (callback) {
+  Gameplay.find({'internal.isDemo': true, 'internal.autopilot.active': true}).lean().exec(callback);
+}
+
+/**
  * Exports of this module
  * @type {{init: Function, close: Function, Model: (*|Model), createGameplay: Function, getGameplaysForUser: Function, removeGameplay: Function, updateGameplay: Function, getGameplay: Function}}
  */
@@ -627,6 +639,7 @@ module.exports = {
   getAllGameplays               : getAllGameplays,
   invalidatePricelist           : invalidatePricelist,
   updateGameplayPartial         : updateGameplayPartial,
+  getAutopilotGameplays         : getAutopilotGameplays,
   // Constants
   MOBILE_NONE : MOBILE_NONE,
   MOBILE_BASIC: MOBILE_BASIC,

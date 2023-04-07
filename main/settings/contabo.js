@@ -18,6 +18,10 @@ module.exports = function (settings) {
     poolSize: 10
   };
 
+  settings.autopilot = {
+    enabled: false
+  };
+
   settings.cron = {
     // [MINUTE] [HOUR] [DAY OF MONTH] [MONTH OF YEAR] [DAY OF WEEK] [YEAR (optional)]
   };

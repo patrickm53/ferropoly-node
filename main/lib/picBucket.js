@@ -108,6 +108,7 @@ class PicBucket extends EventEmitter {
    */
   confirmUpload(id, options, callback) {
     let self = this;
+    const doGeolocationApiCall = _.get(options, 'doGeolocationApiCall', true);
     picBucketModel.Model.find({_id: id}, (err, docs) => {
       if (err) {
         return callback(err);
@@ -126,7 +127,7 @@ class PicBucket extends EventEmitter {
 
       // When Geolocation API is active, run the query
       const apiKey = process.env.FERROPOLY_GOOGLE_GEOCODING_API_KEY || null;
-      if (entry.position.accuracy < 2000 && apiKey) {
+      if (doGeolocationApiCall && entry.position.accuracy < 2000 && apiKey) {
         const latlng = `${entry.position.lat},${entry.position.lng}`;
         axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&location_type=ROOFTOP|RANGE_INTERPOLATED&key=${apiKey}`)
              .then(resp => {

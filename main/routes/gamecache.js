@@ -9,6 +9,8 @@ const router        = express.Router();
 const gamecache     = require('../lib/gameCache');
 const gameScheduler = require('../lib/gameScheduler');
 const logger        = require('../../common/lib/logger').getLogger('routes:gamecache');
+const autopilot     = require('../lib/autopilot');
+const settings      = require('../settings');
 
 /**
  * Refreshing the game cache
@@ -24,6 +26,8 @@ router.post('/refresh', function (req, res) {
         logger.error('can not update scheduler', err);
         return res.status(500).send({message: 'gameScheduler.update error: ' + err.message});
       }
+      // Update Autopilot, restart with current game(s)
+      autopilot.init(settings);
       logger.info('Cache and scheduler updated');
       res.send({status: 'ok'});
     });
