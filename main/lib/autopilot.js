@@ -222,7 +222,7 @@ function selectClosestsProperty(travelLog, properties) {
 
 /**
  * Starts the delay timer
- * @paramId gp Gameplay
+ * @param gp Gameplay
  * @param delay
  */
 function startTimer(gp, delay) {

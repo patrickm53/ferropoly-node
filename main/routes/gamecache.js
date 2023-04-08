@@ -10,7 +10,6 @@ const gamecache     = require('../lib/gameCache');
 const gameScheduler = require('../lib/gameScheduler');
 const logger        = require('../../common/lib/logger').getLogger('routes:gamecache');
 const autopilot     = require('../lib/autopilot');
-const settings      = require('../settings');
 
 /**
  * Refreshing the game cache

@@ -146,8 +146,8 @@ ferropolyDb.init(settings, function (err) {
 
   // Now it is time to start the scheduler (after initializing ferroSocket, is required by marketplace)
   const gameScheduler = require('./lib/gameScheduler');
-  const marketplace   = require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
-  const summaryMailer = require('./lib/summaryMailer').createMailer(gameScheduler);
+  require('./lib/accounting/marketplace').createMarketplace(gameScheduler);
+  require('./lib/summaryMailer').createMailer(gameScheduler);
 
   gameScheduler.update(err => {
     if (err) {
@@ -156,10 +156,9 @@ ferropolyDb.init(settings, function (err) {
   });
 
   // catch 404 and forward to error handler
-  app.use(function (req, res, next) {
+  app.use(function (req, res) {
     logger.debug('Page not found', req.url);
-    const err = new Error('Not Found');
-    res.status(401);
+    res.status(404);
 
     res.render('error/404', {
       message: 'Nicht gefunden',
