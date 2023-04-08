@@ -26,10 +26,11 @@ router.post('/refresh', function (req, res) {
         logger.error('can not update scheduler', err);
         return res.status(500).send({message: 'gameScheduler.update error: ' + err.message});
       }
-      // Update Autopilot, restart with current game(s)
-      autopilot.init(settings);
       logger.info('Cache and scheduler updated');
       res.send({status: 'ok'});
+
+      // restart autopilot, not sensitive concerning time
+      autopilot.refreshActiveGames();
     });
   });
 });

@@ -40,9 +40,10 @@ const infoRoute      = require('../common/routes/info');
 const aboutRoute     = require('../common/routes/about');
 const picBucketRoute = require('./routes/picBucketRoute');
 
+require('./lib/mainCronjobs').init();
 require('../common/lib/mailer').init(settings);
 
-logger.info('Ferropoly Copyright (C) 2015-2018 Christian Kuster, CH-8342 Wernetshausen');
+logger.info('Ferropoly Copyright (C) 2015-2023 Christian Kuster, CH-8342 Wernetshausen');
 logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
 logger.info('This is free software, and you are welcome to redistribute it');
 logger.info('under certain conditions; see www.ferropoly.ch for details.');
@@ -78,7 +79,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/summary', require('./routes/summary'));
   app.use('/rules', require('./routes/rules'));
   app.use('/appinfo', infoRoute(settings));
-
+  app.use('/gamecache/', require('./routes/gamecache'));
   // Define Strategy, login
   passport.use(authStrategy.googleStrategy);
   passport.use(authStrategy.localStrategy);
@@ -120,7 +121,7 @@ ferropolyDb.init(settings, function (err) {
   app.use('/statistics', require('./routes/statistics'));
   app.use('/properties', require('./routes/properties'));
   app.use('/download', require('./routes/download'));
-  app.use('/gamecache/', require('./routes/gamecache'));
+
   app.use('/teamAccount', require('./routes/teamAccount'));
   app.use('/propertyAccount', require('./routes/propertyAccount'));
   app.use('/chancellery', require('./routes/chancellery'));

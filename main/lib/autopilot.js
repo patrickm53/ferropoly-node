@@ -16,6 +16,7 @@ const marketplace    = require('./accounting/marketplace');
 const {v4: uuid}     = require('uuid');
 const {DateTime}     = require("luxon");
 let picBucket        = undefined;
+let autoPilotGames   = [];
 let settings;
 
 /**
@@ -34,22 +35,20 @@ function autoplay(gameplay) {
       let teams = _.values(data.teams);
 
       if (moment().isBefore(moment(gp.scheduling.gameStartTs))) {
-        logger.info('Game not started yet');
-        // Make sure that we do not poll to often, fall back to a 15 minute cycle
+        logger.info(`Game ${gameplay.internal.gameId} not started yet`);
+        // Make sure that we do not poll to often, fall back to a 15-minute cycle
         startTimer(gameplay, (15 * 60 * 1000));
         return;
       }
       if (moment().isAfter(moment(gp.scheduling.gameEndTs))) {
-        logger.info('Game over, do nothing');
-        // Make sure that we do not poll to often, fall back to a 15 minute cycle
-        startTimer(gameplay, (15 * 60 * 1000));
+        logger.info(`Game over for ${gameplay.internal.gameId}, stopping autoplay`);
         return;
       }
 
       // Choose a team (random)
       if (!teams || teams.length === 0) {
         // happens only when the creation of the demo gameplay failed
-        logger.info('There is no team in the autoplay game!');
+        logger.info(`No team in  ${gameplay.internal.gameId} so stopping autoplay`);
         return;
       }
       let team = teams[_.random(0, teams.length - 1)];
@@ -72,14 +71,14 @@ function autoplay(gameplay) {
               startTimer(gameplay);
               return;
             }
-            logger.debug('bought location', _.get(info, 'amount', 0));
+            logger.debug(`${gameplay.internal.gameId} bought location`, _.get(info, 'amount', 0));
             startTimer(gameplay);
           });
         });
       });
     });
   } catch (exception) {
-    logger.error('Error in autoplay', exception);
+    logger.error(`Error in autoplay ${gameplay.internal.gameId}`, exception);
   }
 }
 
@@ -227,18 +226,49 @@ function selectClosestsProperty(travelLog, properties) {
  * @param delay
  */
 function startTimer(gp, delay) {
-  _.delay(() => {
+  gp.timer = _.delay(() => {
     autoplay(gp);
   }, delay || gp.autopilotInterval);
 }
 
+
+/**
+ * Refreshes the active games
+ */
+function refreshActiveGames() {
+  // Stopp the current autopilots
+  autoPilotGames.forEach(apg => {
+    if (apg.timer) {
+      logger.debug(`Deleting autopilot for ${apg.internal.gameId}`);
+      clearTimeout(apg.timer);
+    }
+  });
+  autoPilotGames = [];
+
+  gameplays.getAutopilotGameplays((err, gps) => {
+    if (err) {
+      return logger.error(err);
+    }
+    if (!gps || gps.length === 0) {
+      return logger.info('autopilot INACTIVE as there are no gameplays configured for it');
+    }
+    picBucket = require('./picBucket')();
+    gps.forEach(gp => {
+      // Just a shortcut
+      gp.autopilotInterval = _.get(gp, 'internal.autopilot.interval', (5 * 60 * 1000));
+      logger.info(`Autopilot for "${gp.internal.gameId}" ACTIVE with ${gp.autopilotInterval / 1000}s interval`);
+      startTimer(gp, _.random(gp.autopilotInterval / 2, gp.autopilotInterval));
+      autoPilotGames.push(gp);
+    })
+  })
+}
 
 module.exports = {
   /**
    * Initialize (always, autopilot is only started when configured)
    * @param options
    */
-  init: function (options) {
+  init              : function (options) {
     // This is the over all settings: Release version of Ferropoly does not have an autopilot at all
     if (!options.autopilot) {
       logger.info('autopilot NOT CONFIGURED and therefore not active');
@@ -251,20 +281,7 @@ module.exports = {
     settings = options.autopilot;
 
     logger.info('autopilot ACTIVE');
-    gameplays.getAutopilotGameplays((err, gps) => {
-      if (err) {
-        return logger.error(err);
-      }
-      if (!gps || gps.length === 0) {
-        return logger.info('autopilot INACTIVE as there are no gameplays configured for it');
-      }
-      picBucket = require('./picBucket')();
-      gps.forEach(gp => {
-        // Just a shortcut
-        gp.autopilotInterval = _.get(gp, 'internal.autopilot.interval', (5 * 60 * 1000));
-        logger.info(`Autopilot for "${gp.internal.gameId}" ACTIVE with ${gp.autopilotInterval / 1000}s interval`);
-        startTimer(gp, _.random(gp.autopilotInterval / 2, gp.autopilotInterval));
-      })
-    })
-  }
+    refreshActiveGames();
+  },
+  refreshActiveGames: refreshActiveGames
 };
