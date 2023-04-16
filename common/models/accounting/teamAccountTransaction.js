@@ -46,9 +46,8 @@ const TeamAccountTransaction = mongoose.model('TeamAccountTransactions', teamAcc
 /**
  * Book the transaction
  * @param transaction
- * @param callback
  */
-async function book(transaction, callback) {
+async function book(transaction) {
 
   if (transaction.transaction.parts) {
     transaction.transaction.parts = _.sortBy(transaction.transaction.parts, 'propertyName');
@@ -74,7 +73,6 @@ async function bookTransfer(debitor, creditor) {
  * @param teamId, if undefined, then all entries of all teams are returned
  * @param tsStart moment() to start, if undefined all. NOT INCLUDING the entry with exactly this timestamp.
  * @param tsEnd   moment() to end, if undefined now()
- * @param callback
  * @returns {*}
  */
 async function getEntries(gameId, teamId, tsStart, tsEnd) {
@@ -114,9 +112,8 @@ async function getEntries(gameId, teamId, tsStart, tsEnd) {
 /**
  * Dumps all data for a gameplay (when deleting the game data)
  * @param gameId
- * @param callback
  */
-async function dumpAccounts(gameId, callback) {
+async function dumpAccounts(gameId) {
 
   if (!gameId) {
     throw new Error('No gameId supplied');
@@ -131,9 +128,8 @@ async function dumpAccounts(gameId, callback) {
 /**
  * Returns the sum of all accounts of a game
  * @param gameId
- * @param callback
  */
-async function getRankingList(gameId, callback) {
+async function getRankingList(gameId) {
 
   return await TeamAccountTransaction
     .aggregate([
@@ -149,7 +145,6 @@ async function getRankingList(gameId, callback) {
       }
     ])
     .exec();
-
 }
 
 
@@ -157,7 +152,6 @@ async function getRankingList(gameId, callback) {
  * Get the balance of a team
  * @param gameId
  * @param teamId
- * @param callback
  */
 async function getBalance(gameId, teamId) {
   let retVal = {};

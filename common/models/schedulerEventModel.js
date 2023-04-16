@@ -73,21 +73,18 @@ async function dumpEvents(gameId) {
 
 /**
  * Gets the events of the next few hours
- * @param callback
  */
 async function getUpcomingEvents() {
 
   let untilTime = moment().add(4, 'h');
 
-  let res = await scheduleEventModel
+  return await scheduleEventModel
     .find()
     .where('handled').equals(false)
     .where('timestamp').lte(untilTime.toDate())
     .sort('timestamp')
     .lean()
     .exec();
-
-  return res;
 }
 
 /**
