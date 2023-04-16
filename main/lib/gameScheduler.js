@@ -54,11 +54,7 @@ util.inherits(Scheduler, EventEmitter);
 Scheduler.prototype.handleEvent = function (channel, event) {
   let self = this;
   logger.info('Handling event ' + event._id + ' for ' + channel);
-  eventRepo.requestEventSave(event, self.settings.server.serverId, function (err, ev) {
-    if (err) {
-      logger.info('Error while handling event: ' + event._id + ' message: ' + err.message);
-      return;
-    }
+  eventRepo.requestEventSave(event, self.settings.server.serverId).then(ev => {
     if (!ev) {
       logger.info('Event already handled by other instance: ' + event._id + ' for ' + channel);
       return;
@@ -68,6 +64,8 @@ Scheduler.prototype.handleEvent = function (channel, event) {
     // event won't be marked as solved!
     ev.callback = self.handleEventCallback;
     self.emit(channel, ev);
+  }).catch(err => {
+    logger.info('Error while handling event: ' + event._id + ' message: ' + err.message);
   });
 };
 
@@ -82,12 +80,10 @@ Scheduler.prototype.handleEventCallback = function (err, event) {
     logger.info('Error in event handler callback', err);
     return;
   }
-  eventRepo.saveAfterHandling(event, function (err) {
-    if (err) {
-      logger.error('Error while saving handled event', err);
-      return;
-    }
+  eventRepo.saveAfterHandling(event).then(()=> {
     logger.info('Event handling finished');
+  }).catch(err => {
+    logger.error('Error while saving handled event', err);
   });
 };
 
@@ -99,11 +95,7 @@ Scheduler.prototype.update = function (callback) {
   logger.info('Scheduler update');
   let self = this;
   let i;
-  eventRepo.getUpcomingEvents(function (err, events) {
-    if (err) {
-      return callback(err);
-    }
-
+  eventRepo.getUpcomingEvents().then(events => {
     logger.info('Events read: ' + events.length);
 
     // Cancel all existing jobs
@@ -127,8 +119,7 @@ Scheduler.prototype.update = function (callback) {
         if (moment(event.timestamp) < now) {
           logger.info('Emit an old event:' + event._id);
           self.handleEvent(event.type, event);
-        }
-        else {
+        } else {
           logger.info('Push event in joblist:' + event._id);
           let scheduledTs = moment(event.timestamp).add({seconds: self.settings.scheduler.delay});
           self.jobs.push(schedule.scheduleJob(scheduledTs.toDate(), handlerFunction.bind(null, event)));
@@ -151,9 +142,7 @@ Scheduler.prototype.update = function (callback) {
         }
       });
     });
-
-    callback(err);
-  });
+  }).catch(callback);
 };
 
 /**
@@ -162,9 +151,9 @@ Scheduler.prototype.update = function (callback) {
  * @param callback
  */
 Scheduler.prototype.requestEventSave = function (event, callback) {
-  eventRepo.requestEventSave(event, this.settings.serverId, function (err, ev) {
-    return callback(err, ev);
-  });
+  eventRepo.requestEventSave(event, this.settings.serverId).then(ev => {
+    callback(null, ev);
+  }).catch(callback);
 };
 
 /**
@@ -173,9 +162,9 @@ Scheduler.prototype.requestEventSave = function (event, callback) {
  * @param callback
  */
 Scheduler.prototype.markEventHandled = function (event, callback) {
-  eventRepo.saveAfterHandling(event, function (err, ev) {
-    return callback(err, ev);
-  });
+  eventRepo.saveAfterHandling(event).then(ev => {
+    callback (null, ev);
+  }).catch(callback);
 };
 /*
  What needs to be done:
@@ -186,4 +175,4 @@ Scheduler.prototype.markEventHandled = function (event, callback) {
  Design it as event emitter or do we all here?
  */
 const gameScheduler = new Scheduler(settings);
-module.exports    = gameScheduler;
+module.exports      = gameScheduler;

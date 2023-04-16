@@ -49,19 +49,11 @@ const TeamAccountTransaction = mongoose.model('TeamAccountTransactions', teamAcc
  * @param callback
  */
 async function book(transaction, callback) {
-  let result;
-  let err;
-  try {
-    if (transaction.transaction.parts) {
-      transaction.transaction.parts = _.sortBy(transaction.transaction.parts, 'propertyName');
-    }
-    result = await transaction.save();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, result);
+
+  if (transaction.transaction.parts) {
+    transaction.transaction.parts = _.sortBy(transaction.transaction.parts, 'propertyName');
   }
+  return await transaction.save();
 }
 
 
@@ -69,19 +61,10 @@ async function book(transaction, callback) {
  * Book two transactions: the debitor and creditor bookings
  * @param debitor
  * @param creditor
- * @param callback
  */
-async function bookTransfer(debitor, creditor, callback) {
-  let err;
-  try {
-    await debitor.save();
-    await creditor.save();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err);
-  }
+async function bookTransfer(debitor, creditor) {
+  await debitor.save();
+  await creditor.save();
 }
 
 
@@ -94,44 +77,37 @@ async function bookTransfer(debitor, creditor, callback) {
  * @param callback
  * @returns {*}
  */
-async function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
-  let data;
-  let err;
-  try {
-    if (!gameId) {
-      return callback(new Error('parameter error, missing gameId'));
-    }
-    if (!tsStart) {
-      tsStart = moment('2015-01-01');
-    }
-    if (!tsEnd) {
-      tsEnd = moment();
-    }
+async function getEntries(gameId, teamId, tsStart, tsEnd) {
 
-    if (teamId) {
-      // Only of one team
-      data = await TeamAccountTransaction
-        .find({gameId: gameId})
-        .where('teamId').equals(teamId)
-        .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
-        .sort('timestamp')
-        .lean()
-        .exec();
-    } else {
-      // all teams
-      data = await TeamAccountTransaction
-        .find({gameId: gameId})
-        .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
-        .sort('timestamp')
-        .lean()
-        .exec()
-    }
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, data);
+  if (!gameId) {
+    throw new Error('parameter error, missing gameId');
   }
+  if (!tsStart) {
+    tsStart = moment('2015-01-01');
+  }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
+
+  if (teamId) {
+    // Only of one team
+    data = await TeamAccountTransaction
+      .find({gameId: gameId})
+      .where('teamId').equals(teamId)
+      .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec();
+  } else {
+    // all teams
+    data = await TeamAccountTransaction
+      .find({gameId: gameId})
+      .where('timestamp').gt(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec()
+  }
+  return data;
 }
 
 
@@ -141,22 +117,14 @@ async function getEntries(gameId, teamId, tsStart, tsEnd, callback) {
  * @param callback
  */
 async function dumpAccounts(gameId, callback) {
-  let result;
-  let err;
-  try {
-    if (!gameId) {
-      return callback(new Error('No gameId supplied'));
-    }
-    logger.info('Removing all account information for ' + gameId);
-    result = await TeamAccountTransaction
-      .deleteMany({gameId: gameId})
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, result);
+
+  if (!gameId) {
+    throw new Error('No gameId supplied');
   }
+  logger.info('Removing all account information for ' + gameId);
+  return await TeamAccountTransaction
+    .deleteMany({gameId: gameId})
+
 }
 
 
@@ -166,29 +134,22 @@ async function dumpAccounts(gameId, callback) {
  * @param callback
  */
 async function getRankingList(gameId, callback) {
-  let result;
-  let err;
-  try {
-    result = await TeamAccountTransaction
-      .aggregate([
-        {
-          $match: {
-            gameId: gameId,
-          }
-        }, {
-          $group: {
-            _id  : '$teamId',
-            asset: {$sum: "$transaction.amount"}
-          }
+
+  return await TeamAccountTransaction
+    .aggregate([
+      {
+        $match: {
+          gameId: gameId,
         }
-      ])
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, result);
-  }
+      }, {
+        $group: {
+          _id  : '$teamId',
+          asset: {$sum: "$transaction.amount"}
+        }
+      }
+    ])
+    .exec();
+
 }
 
 
@@ -198,44 +159,37 @@ async function getRankingList(gameId, callback) {
  * @param teamId
  * @param callback
  */
-async function getBalance(gameId, teamId, callback) {
+async function getBalance(gameId, teamId) {
   let retVal = {};
-  let err;
-  try {
-    const data = await TeamAccountTransaction
-      .aggregate([
-        {
-          $match: {
-            gameId: gameId,
-            teamId: teamId
-          }
-        }, {
-          $group: {
-            _id  : 'balance',
-            asset: {$sum: "$transaction.amount"}
-          }
+  const data = await TeamAccountTransaction
+    .aggregate([
+      {
+        $match: {
+          gameId: gameId,
+          teamId: teamId
         }
-      ])
-      .exec();
+      }, {
+        $group: {
+          _id  : 'balance',
+          asset: {$sum: "$transaction.amount"}
+        }
+      }
+    ])
+    .exec();
 
-    if (!data || data.length === 0) {
-      return callback(null, {asset: 0, count: 0});
-    }
-    retVal.asset = data[0].asset;
-
-    retVal.count = await TeamAccountTransaction
-      .countDocuments({
-        gameId: gameId,
-        teamId: teamId
-      })
-      .exec();
-
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, retVal);
+  if (!data || data.length === 0) {
+    return ({asset: 0, count: 0});
   }
+  retVal.asset = data[0].asset;
+
+  retVal.count = await TeamAccountTransaction
+    .countDocuments({
+      gameId: gameId,
+      teamId: teamId
+    })
+    .exec();
+
+  return retVal;
 }
 
 

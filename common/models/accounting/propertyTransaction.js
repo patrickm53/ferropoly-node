@@ -36,19 +36,9 @@ const PropertyAccountTransaction = mongoose.model('PropertyTransactions', proper
 /**
  * Book the transaction
  * @param transaction
- * @param callback
  */
-async function book(transaction, callback) {
-  let result;
-  let err;
-  try {
-    result = await transaction.save();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, result);
-  }
+async function book(transaction,) {
+  return await transaction.save();
 }
 
 
@@ -58,22 +48,10 @@ async function book(transaction, callback) {
  * @param callback
  */
 async function dumpAccounts(gameId, callback) {
-  let result;
-  let err;
-  try {
-    if (!gameId) {
-      return callback(new Error('No gameId supplied'));
-    }
-    logger.info('Removing all account information for ' + gameId);
-    result = await PropertyAccountTransaction
-      .deleteMany({gameId: gameId})
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, result);
-  }
+  logger.info('Removing all account information for ' + gameId);
+  return await PropertyAccountTransaction
+    .deleteMany({gameId: gameId})
+    .exec();
 }
 
 
@@ -83,47 +61,39 @@ async function dumpAccounts(gameId, callback) {
  * @param propertyId
  * @param tsStart moment() to start, if undefined all
  * @param tsEnd   moment() to end, if undefined now()
- * @param callback
  * @returns {*}
  */
-async function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
-  let data;
-  let err;
-  try {
-    if (!gameId || !propertyId) {
-      return callback(new Error('parameter error'));
-    }
+async function getEntries(gameId, propertyId, tsStart, tsEnd) {
 
-    if (!tsStart) {
-      tsStart = moment('2015-01-01');
-    }
-    if (!tsEnd) {
-      tsEnd = moment();
-    }
-    if (!propertyId) {
-      // Get all
-      data = await PropertyAccountTransaction
-        .find({gameId: gameId})
-        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-        .sort('timestamp')
-        .lean()
-        .exec();
-    } else {
-      // get only of the provided property
-      data = await PropertyAccountTransaction
-        .find({gameId: gameId})
-        .where('propertyId').equals(propertyId)
-        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-        .sort('timestamp')
-        .lean()
-        .exec();
-    }
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, data);
+  if (!gameId || !propertyId) {
+    throw new Error('parameter error');
   }
+
+  if (!tsStart) {
+    tsStart = moment('2015-01-01');
+  }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
+  if (!propertyId) {
+    // Get all
+    data = await PropertyAccountTransaction
+      .find({gameId: gameId})
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec();
+  } else {
+    // get only of the provided property
+    data = await PropertyAccountTransaction
+      .find({gameId: gameId})
+      .where('propertyId').equals(propertyId)
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec();
+  }
+  return data;
 }
 
 /**
@@ -132,37 +102,30 @@ async function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
  * @param propertyId optional
  * @param callback
  */
-async function getSummary(gameId, propertyId, callback) {
-  let data;
-  let err;
-  try {
-    if (_.isFunction(propertyId)) {
-      callback   = propertyId;
-      propertyId = undefined;
-    }
+async function getSummary(gameId, propertyId) {
 
-    let match       = {};
-    match['gameId'] = gameId;
-    if (propertyId) {
-      match['propertyId'] = propertyId;
-    }
-
-    data = await PropertyAccountTransaction
-      .aggregate([{
-        $match: match
-      }, {
-        $group: {
-          _id    : '$propertyId',
-          balance: {$sum: "$transaction.amount"}
-        }
-      }])
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, data);
+  if (_.isFunction(propertyId)) {
+    propertyId = undefined;
   }
+
+  let match       = {};
+  match['gameId'] = gameId;
+  if (propertyId) {
+    match['propertyId'] = propertyId;
+  }
+
+  data = await PropertyAccountTransaction
+    .aggregate([{
+      $match: match
+    }, {
+      $group: {
+        _id    : '$propertyId',
+        balance: {$sum: "$transaction.amount"}
+      }
+    }])
+    .exec();
+
+  return data;
 }
 
 module.exports = {

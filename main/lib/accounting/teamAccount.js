@@ -30,13 +30,13 @@ function payInterest(teamId, gameId, amount, callback) {
   entry.transaction.amount = amount;
   entry.transaction.origin = {category: 'bank'};
   entry.transaction.info   = 'Startgeld';
-  teamAccountTransaction.book(entry, function (err) {
-    callback(err);
+  teamAccountTransaction.book(entry).then(() => {
+    callback();
     if (ferroSocket) {
       ferroSocket.emitToAdmins(gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: entry});
       ferroSocket.emitToTeam(gameId, teamId, 'checkinStore', teamAccountActions.addTransaction(entry));
     }
-  });
+  }).catch(callback);
 }
 
 /**
@@ -72,19 +72,18 @@ function chargeToBankOrChancellery(options, callback) {
   entry.user               = options.user;
   if (_.isString(options.info)) {
     entry.transaction.info = options.info;
-  }
-  else if (_.isObject(options.info)) {
+  } else if (_.isObject(options.info)) {
     entry.transaction.info  = options.info.info;
     entry.transaction.parts = options.info.parts;
   }
 
-  teamAccountTransaction.book(entry, function (err) {
+  teamAccountTransaction.book(entry).then(() => {
     if (ferroSocket) {
       ferroSocket.emitToAdmins(options.gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: entry});
       ferroSocket.emitToTeam(options.gameId, options.teamId, 'checkinStore', teamAccountActions.addTransaction(entry));
     }
-    callback(err, {amount: chargedAmount});
-  });
+    callback(null, {amount: chargedAmount});
+  }).catch(callback);
 }
 
 /**
@@ -143,21 +142,19 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
     entry.transaction.origin = {category: category};
     if (_.isString(info)) {
       entry.transaction.info = info;
-    }
-    else if (_.isObject(info)) {
+    } else if (_.isObject(info)) {
       entry.transaction.info  = info.info;
       entry.transaction.parts = info.parts;
     }
 
-    teamAccountTransaction.book(entry, function (err) {
+    teamAccountTransaction.book(entry).then(() => {
       if (ferroSocket) {
         ferroSocket.emitToAdmins(gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: entry});
         ferroSocket.emitToTeam(gameId, teamId, 'checkinStore', teamAccountActions.addTransaction(entry));
       }
-      callback(err);
-    });
-  }
-  catch (e) {
+      callback();
+    }).catch(callback);
+  } catch (e) {
     logger.error(e);
     callback(e);
   }
@@ -228,10 +225,7 @@ function chargeToAnotherTeam(options, callback) {
   receivingEntry.transaction.origin = {uuid: options.debitorTeamId, category: 'team'};
   receivingEntry.transaction.info   = options.info;
 
-  teamAccountTransaction.bookTransfer(chargingEntry, receivingEntry, function (err) {
-    if (err) {
-      return callback(err);
-    }
+  teamAccountTransaction.bookTransfer(chargingEntry, receivingEntry).then(() => {
     if (ferroSocket) {
       ferroSocket.emitToAdmins(options.gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: chargingEntry});
       ferroSocket.emitToAdmins(options.gameId, 'admin-teamAccount', {cmd: 'onTransaction', data: receivingEntry});
@@ -239,7 +233,7 @@ function chargeToAnotherTeam(options, callback) {
       ferroSocket.emitToTeam(options.gameId, receivingEntry.teamId, 'checkinStore', teamAccountActions.addTransaction(receivingEntry));
     }
     callback(null, {amount: options.amount});
-  });
+  }).catch(callback);
 }
 
 /**
@@ -249,12 +243,9 @@ function chargeToAnotherTeam(options, callback) {
  * @param callback
  */
 function getBalance(gameId, teamId, callback) {
-  teamAccountTransaction.getBalance(gameId, teamId, function (err, value) {
-    if (err) {
-      return callback(err);
-    }
-    callback(err, {asset: value.asset, count: value.count});
-  });
+  teamAccountTransaction.getBalance(gameId, teamId).then(value => {
+    callback(null, {asset: value.asset, count: value.count});
+  }).catch(callback);
 }
 
 /**
@@ -275,8 +266,7 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
       // Do not book here! The teamAccount does not have a connection to the chancellery, it's the
       // chancellerys job to book, we just make the calculation here.
       callback(null, {amount: interest});
-    }
-    else {
+    } else {
       callback();
     }
   });
@@ -288,10 +278,7 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
  * @param callback
  */
 function getRankingList(gameId, callback) {
-  teamAccountTransaction.getRankingList(gameId, function (err, data) {
-    if (err) {
-      return callback(err);
-    }
+  teamAccountTransaction.getRankingList(gameId).then(data => {
     let sorted = _.sortBy(_.values(data), function (n) {
       return n.asset * (-1);
     });
@@ -300,13 +287,12 @@ function getRankingList(gameId, callback) {
       if (sorted[i - 1] && (sorted[i - 1].asset === sorted[i].asset)) {
         // Same asset, same rank
         sorted[i].rank = sorted[i - 1].rank;
-      }
-      else {
+      } else {
         sorted[i].rank = i + 1;
       }
     }
     callback(null, sorted);
-  });
+  }).catch(callback);
 }
 
 /**
@@ -329,8 +315,7 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
     callback = p1;
     tsStart  = undefined;
     tsEnd    = moment();
-  }
-  else if (_.isFunction(p2)) {
+  } else if (_.isFunction(p2)) {
     callback = p2;
     tsStart  = p2;
     tsEnd    = moment();
@@ -339,9 +324,9 @@ function getAccountStatement(gameId, teamId, p1, p2, p3) {
     tsEnd = moment();
   }
 
-  teamAccountTransaction.getEntries(gameId, teamId, tsStart, tsEnd, function (err, data) {
-    callback(err, data);
-  });
+  teamAccountTransaction.getEntries(gameId, teamId, tsStart, tsEnd).then(data => {
+    callback(null, data);
+  }).catch(callback);
 }
 
 

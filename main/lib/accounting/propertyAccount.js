@@ -65,11 +65,7 @@ function buyProperty(gameplay, property, team, callback) {
       info  : 'Kauf'
     };
 
-    propertyTransaction.book(pt, function (err) {
-      if (err) {
-        logger.error(err);
-      }
-
+    propertyTransaction.book(pt).then(() => {
       if (ferroSocket) {
         ferroSocket.emitToAdmins(gameplay.internal.gameId, 'admin-propertyAccount', {
           cmd        : 'propertyBought',
@@ -79,8 +75,8 @@ function buyProperty(gameplay, property, team, callback) {
 
         ferroSocket.emitToTeam(gameplay.internal.gameId, team.uuid, 'checkinStore', propertyActions.updateProperty(property));
       }
-      callback(err, retVal);
-    });
+      callback(null, retVal);
+    }).catch(callback);
   });
 }
 
@@ -123,13 +119,9 @@ function chargeRent(gp, property, teamId, callback) {
         info  : 'Miete'
       };
 
-      propertyTransaction.book(pt, function (err) {
-        if (err) {
-          logger.error(err);
-          return callback(err);
-        }
+      propertyTransaction.book(pt).then(() => {
         return callback(null, {property: property, owner: property.gamedata.owner, amount: info.amount});
-      });
+      }).catch(callback);
     });
   });
 }
@@ -169,15 +161,13 @@ function resetProperty(gameId, property, reason, callback) {
         info  : 'Manuell zurückgesetzt: ' + reason
       };
 
-      propertyTransaction.book(pt, function (err) {
-        if (err) {
-          logger.error(err);
-        }
-        callback(err);
-      });
+      propertyTransaction.book(pt).then(() => {
+        callback();
+      }).catch(callback);
     });
   });
 }
+
 /**
  * Buy a building for a property
  * @param gameplay
@@ -224,10 +214,7 @@ function buyBuilding(gameplay, property, team, callback) {
       info  : 'Hausbau'
     };
 
-    propertyTransaction.book(pt, function (err) {
-      if (err) {
-        logger.error(err);
-      }
+    propertyTransaction.book(pt).then(() => {
       if (ferroSocket) {
         ferroSocket.emitToAdmins(gameplay.internal.gameId, 'admin-propertyAccount', {
           cmd        : 'buildingBuilt',
@@ -237,8 +224,8 @@ function buyBuilding(gameplay, property, team, callback) {
 
         ferroSocket.emitToTeam(gameplay.internal.gameId, team.uuid, 'checkinStore', propertyActions.updateProperty(property));
       }
-      callback(err, retVal);
-    });
+      callback(null, retVal);
+    }).catch(callback);
   });
 }
 
@@ -272,7 +259,9 @@ function payInterest(gameplay, register, callback) {
         info  : 'Zinsen ' + prop.propertyName
       };
 
-      propertyTransaction.book(pt, cb);
+      propertyTransaction.book(pt).then(() => {
+        cb();
+      }).catch(cb);
     },
     callback
   );
@@ -335,8 +324,7 @@ function getAccountStatement(gameId, propertyId, p1, p2, p3) {
     callback = p1;
     tsStart  = undefined;
     tsEnd    = moment();
-  }
-  else if (_.isFunction(p2)) {
+  } else if (_.isFunction(p2)) {
     callback = p2;
     tsStart  = p2;
     tsEnd    = moment();
@@ -345,9 +333,9 @@ function getAccountStatement(gameId, propertyId, p1, p2, p3) {
     tsEnd = moment();
   }
 
-  propertyTransaction.getEntries(gameId, propertyId, tsStart, tsEnd, function (err, data) {
-    callback(err, data);
-  });
+  propertyTransaction.getEntries(gameId, propertyId, tsStart, tsEnd).then(data => {
+    callback(null, data);
+  }).catch(callback);
 }
 
 /**
@@ -365,17 +353,14 @@ function getBalance(gameId, propertyId, p1, p2) {
     ts       = moment();
   }
 
-  propertyTransaction.getEntries(gameId, propertyId, undefined, ts, function (err, data) {
-    if (err) {
-      return callback(err);
-    }
+  propertyTransaction.getEntries(gameId, propertyId, undefined, ts).then(data => {
     let saldo = 0;
     let i;
     for (i = 0; i < data.length; i++) {
       saldo += data[i].transaction.amount;
     }
-    callback(err, {balance: saldo, entries: i});
-  });
+    callback(null, {balance: saldo, entries: i});
+  }).catch(callback);
 }
 
 /**
@@ -458,7 +443,9 @@ function getBuildingPrice(property) {
  * @param callback
  */
 function getPropertyProfitability(gameId, propertyId, callback) {
-  propertyTransaction.getSummary(gameId, propertyId, callback);
+  propertyTransaction.getSummary(gameId, propertyId).then(data => {
+    callback(null, data);
+  }).catch(callback);
 }
 
 /**

@@ -17,19 +17,19 @@ const gameLogModel                = require('../../common/models/gameLogModel');
 const pricelist                   = require('../../common/lib/pricelist');
 const teamModel                   = require('../../common/models/teamModel');
 const errorHandler                = require('../lib/errorHandler');
-const logger                  = require('../../common/lib/logger').getLogger('routes:summary');
-const summaryMailer           = require('../lib/summaryMailer');
-const async                   = require('async');
-const moment                  = require('moment');
-const _                       = require('lodash');
-const gameCache               = require('../lib/gameCache');
-const path                    = require('path');
-const gamecache               = require('../lib/gameCache');
-const propWrap                = require('../lib/propertyWrapper');
-const teamAccount             = require('../lib/accounting/teamAccount');
-const collectAccountStatement = require('../lib/accounting/collectAccountStatement');
-const travelLog               = require('../../common/models/travelLogModel');
-const chancellery             = require('../lib/accounting/chancelleryAccount');
+const logger                      = require('../../common/lib/logger').getLogger('routes:summary');
+const summaryMailer               = require('../lib/summaryMailer');
+const async                       = require('async');
+const moment                      = require('moment');
+const _                           = require('lodash');
+const gameCache                   = require('../lib/gameCache');
+const path                        = require('path');
+const gamecache                   = require('../lib/gameCache');
+const propWrap                    = require('../lib/propertyWrapper');
+const teamAccount                 = require('../lib/accounting/teamAccount');
+const collectAccountStatement     = require('../lib/accounting/collectAccountStatement');
+const travelLog                   = require('../../common/models/travelLogModel');
+const chancellery                 = require('../lib/accounting/chancelleryAccount');
 
 let ngFile = '/js/summaryctrl.js';
 if (settings.minifiedjs) {
@@ -136,9 +136,13 @@ router.get('/:gameId/static', function (req, res) {
 
 
 /* GET home page. */
-router.get('/old/:gameId', function (req, res) {
+router.get('/old/:gameId', async function (req, res) {
   let gameId = req.params.gameId;
   let info   = {};
+
+  info.teamTransactions = await teamAccountTransactionModel.getEntries(gameId, null, null, null);
+  info.rankingList      = await teamAccountTransactionModel.getRankingList(gameId);
+  info.chancellery      = await chancelleryTransactionModel.getEntries(gameId, null, null)
 
   async.waterfall(
     [
@@ -168,22 +172,10 @@ router.get('/old/:gameId', function (req, res) {
         });
       },
       function (cb) {
-        chancelleryTransactionModel.getEntries(gameId, null, null, cb);
-      },
-      function (chancellery, cb) {
-        info.chancellery = chancellery;
-        teamAccountTransactionModel.getEntries(gameId, null, null, null, cb);
-      },
-      function (teamTransactions, cb) {
-        info.teamTransactions = teamTransactions;
         travelLogModel.getLogEntries(gameId, null, null, null, cb);
       },
       function (log, cb) {
         info.travelLog = log;
-        teamAccountTransactionModel.getRankingList(gameId, cb);
-      },
-      function (rankingList, cb) {
-        info.rankingList = rankingList;
         propertyModel.getPropertiesForGameplay(gameId, {lean: true}, cb);
       },
       function (properties, cb) {

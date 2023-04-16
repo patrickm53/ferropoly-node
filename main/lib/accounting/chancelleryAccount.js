@@ -40,7 +40,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
       return callback(err);
     }
 
-    chancelleryTransaction.getBalance(gameplay.internal.gameId, function (err, info) {
+    chancelleryTransaction.getBalance(gameplay.internal.gameId).then(info => {
       if (!err) {
         if (info.balance > gameplay.gameParams.chancellery.maxJackpotSize) {
           logger.info('Jackpot for ' + gameplay.internal.gameId + ' is to large, increased chance for winning!');
@@ -64,7 +64,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         if (err) {
           return callback(err);
         }
-        var entry         = new chancelleryTransaction.Model();
+        let entry         = new chancelleryTransaction.Model();
         entry.gameId      = gameplay.internal.gameId;
         entry.transaction = {
           origin: {
@@ -74,9 +74,12 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
           info  : info.infoText
         };
 
-        chancelleryTransaction.book(entry, function (err) {
-          return bookCallback(err);
-        });
+        chancelleryTransaction
+          .book(entry)
+          .then(() => {
+            bookCallback();
+          })
+          .catch(bookCallback);
       });
     } else {
       return teamAccount.receiveFromBank(team.uuid, gameplay.internal.gameId, info.amount, info.infoText, function (err) {
@@ -104,9 +107,11 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
         info  : info.infoText
       };
 
-      chancelleryTransaction.book(entry, function (err) {
-        return bookCallback(err);
-      });
+      chancelleryTransaction
+        .book(entry)
+        .then(() => {
+          bookCallback();
+        }).catch(bookCallback);
     });
   }
 }
@@ -206,15 +211,12 @@ function payToChancellery(gameplay, team, amount, text, callback) {
  * @param callback callback
  */
 function getBalance(gameId, callback) {
-  chancelleryTransaction.getBalance(gameId, function (err, info) {
-    if (err) {
-      return callback(err);
-    }
+  chancelleryTransaction.getBalance(gameId).then(info => {
     if (!info || !info.balance) {
       return callback(null, {balance: 0});
     }
-    callback(err, {balance: info.balance});
-  });
+    callback(null, {balance: info.balance});
+  }).catch(callback);
 }
 
 /**
@@ -226,12 +228,9 @@ function getAccountStatement(gameId, callback) {
   if (!gameId) {
     return callback(new Error('no gameId supplied'));
   }
-  chancelleryTransaction.getEntries(gameId, undefined, moment(), function (err, data) {
-    if (err) {
-      return callback(err);
-    }
-    callback(err, data);
-  });
+  chancelleryTransaction.getEntries(gameId, undefined, moment()).then(data => {
+    callback(null, data);
+  }).catch(callback);
 }
 
 

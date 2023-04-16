@@ -107,7 +107,7 @@ class PicBucket extends EventEmitter {
    * @param callback
    */
   confirmUpload(id, options, callback) {
-    let self = this;
+    let self                   = this;
     const doGeolocationApiCall = _.get(options, 'doGeolocationApiCall', true);
     picBucketModel.Model.find({_id: id}, (err, docs) => {
       if (err) {
@@ -169,7 +169,7 @@ class PicBucket extends EventEmitter {
       filter.uploaded = uploaded;
     }
 
-    picBucketModel.Model.find(filter, (err, docs) => {
+    picBucketModel.findPicsByFilter(filter, (err, docs) => {
       if (err) {
         return callback(err);
       }
@@ -188,7 +188,7 @@ class PicBucket extends EventEmitter {
     if (!gameId) {
       return callback(new Error('No gameId supplied'));
     }
-    picBucketModel.Model.deleteMany({gameId: gameId}, callback)
+    picBucketModel.deletePicBucket(gameId, callback);
   }
 
   /**

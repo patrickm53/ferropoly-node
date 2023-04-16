@@ -5,7 +5,7 @@
  */
 
 const eventModel = require('../models/schedulerEventModel');
-const moment = require('moment');
+const moment     = require('moment');
 
 /**
  * Create all events for a gameplay (during finalization) and insert them in the DB
@@ -53,9 +53,9 @@ function createEvents(gameplay, callback) {
   );
   events.push(summary);
 
-  eventModel.saveEvents(events, function (err) {
-    callback(err);
-  });
+  eventModel.saveEvents(events).then(() => {
+    callback();
+  }).catch(callback);
 }
 
 module.exports = {
