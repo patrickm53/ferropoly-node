@@ -99,7 +99,6 @@ async function getEntries(gameId, propertyId, tsStart, tsEnd) {
  * Returns the sum of all account transactions sorted per property
  * @param gameId
  * @param propertyId optional
- * @param callback
  */
 async function getSummary(gameId, propertyId) {
 

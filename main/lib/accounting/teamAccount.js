@@ -252,7 +252,7 @@ function getBalance(gameId, teamId, callback) {
  * Handles a negative balance at the end of a round: pay an interest.
  * @param gameId
  * @param teamId
- * @param rate : the rate of interest, a percentage between 0 and 100
+ * @param rate  rate of interest, a percentage between 0 and 100
  * @param callback
  */
 function negativeBalanceHandling(gameId, teamId, rate, callback) {
