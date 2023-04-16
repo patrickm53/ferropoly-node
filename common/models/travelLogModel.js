@@ -4,10 +4,10 @@
  */
 
 
-const mongoose        = require('mongoose');
-const logger          = require('../lib/logger').getLogger('travelLogModel');
-const moment          = require('moment');
-const _               = require('lodash');
+const mongoose      = require('mongoose');
+const logger        = require('../lib/logger').getLogger('travelLogModel');
+const moment        = require('moment');
+const _             = require('lodash');
 /**
  * The mongoose schema for an user
  */
@@ -39,19 +39,27 @@ let TravelLog = mongoose.model('TravelLog', travelLogSchema);
  * @param callback
  * @returns {*}
  */
-let addEntry = function (gameId, teamId, propertyId, callback) {
+let addEntry = async function (gameId, teamId, propertyId, callback) {
   if (!gameId || !teamId || !propertyId) {
     return callback(new Error('all params in addEntry must be set'));
   }
   if (!_.isString(gameId) || !_.isString(teamId) || !_.isString(propertyId)) {
     return callback(new Error('all params in createEntry must be strings'));
   }
-  let logEntry        = new TravelLog();
-  logEntry.gameId     = gameId;
-  logEntry.teamId     = teamId;
-  logEntry.propertyId = propertyId;
-  logEntry._id        = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
-  logEntry.save(callback);
+  let res, err;
+  try {
+    let logEntry        = new TravelLog();
+    logEntry.gameId     = gameId;
+    logEntry.teamId     = teamId;
+    logEntry.propertyId = propertyId;
+    logEntry._id        = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
+    res                 = await logEntry.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
 };
 
 /**
@@ -62,26 +70,34 @@ let addEntry = function (gameId, teamId, propertyId, callback) {
  * @param callback
  * @returns {*}
  */
-let addPropertyEntry = function (gameId, teamId, property, callback) {
+async function addPropertyEntry(gameId, teamId, property, callback) {
   if (!gameId || !teamId || !property) {
     return callback(new Error('all params in addEntry must be set'));
   }
   if (!_.isString(gameId) || !_.isString(teamId)) {
     return callback(new Error('teamId and gameId params in createEntry must be strings'));
   }
-  let logEntry        = new TravelLog();
-  logEntry.gameId     = gameId;
-  logEntry.teamId     = teamId;
-  logEntry.propertyId = property.uuid;
-  logEntry.position   = {
-    lat     : property.location.position.lat,
-    lng     : property.location.position.lng,
-    accuracy: 200
-  };
-  logEntry._id        = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
-  logEntry.save(callback);
+  let err, res;
+  try {
+    let logEntry        = new TravelLog();
+    logEntry.gameId     = gameId;
+    logEntry.teamId     = teamId;
+    logEntry.propertyId = property.uuid;
+    logEntry.position   = {
+      lat     : property.location.position.lat,
+      lng     : property.location.position.lng,
+      accuracy: 200
+    };
+    logEntry._id        = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
+    res                 = await logEntry.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
 }
-  ;
+
 
 /**
  * Adds an entry by its position
@@ -92,31 +108,47 @@ let addPropertyEntry = function (gameId, teamId, property, callback) {
  * @param callback
  * @returns {*}
  */
-let addPositionEntry = function (gameId, teamId, user, position, callback) {
+async function addPositionEntry(gameId, teamId, user, position, callback) {
   if (!gameId || !teamId || !user || !position) {
     return callback(new Error('all params in addEntry must be set'));
   }
   if (!_.isString(gameId) || !_.isString(teamId)) {
     return callback(new Error('teamId and gameId params in createEntry must be strings'));
   }
-  let logEntry      = new TravelLog();
-  logEntry.gameId   = gameId;
-  logEntry.teamId   = teamId;
-  logEntry.position = position;
-  logEntry.user     = user;
-  logEntry._id      = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
-  logEntry.save(callback);
-};
+  let err, res;
+  try {
+    let logEntry      = new TravelLog();
+    logEntry.gameId   = gameId;
+    logEntry.teamId   = teamId;
+    logEntry.position = position;
+    logEntry.user     = user;
+    logEntry._id      = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
+    res               = await logEntry.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
+}
 
 /**
  * Deletes all entries for a gameplay
  * @param gameId
  * @param callback
  */
-let deleteAllEntries = function (gameId, callback) {
+async function deleteAllEntries(gameId, callback) {
   logger.info('Removing all entries in the log');
-  TravelLog.deleteMany({gameId: gameId}, callback);
-};
+  let err;
+  try {
+    await TravelLog.deleteMany({gameId: gameId});
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err);
+  }
+}
 
 
 /**
@@ -128,7 +160,7 @@ let deleteAllEntries = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-let getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
+let getLogEntries = async function (gameId, teamId, tsStart, tsEnd, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -138,22 +170,31 @@ let getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
   if (!tsEnd) {
     tsEnd = moment();
   }
-  if (teamId) {
-    TravelLog.find({gameId: gameId})
-      .where('teamId').equals(teamId)
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-      .sort('timestamp')
-      .lean()
-      .exec(callback);
+  let err, res;
+  try {
+    if (teamId) {
+      res = await TravelLog
+        .find({gameId: gameId})
+        .where('teamId').equals(teamId)
+        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+        .sort('timestamp')
+        .lean()
+        .exec();
+    } else {
+      res = await TravelLog
+        .find({gameId: gameId})
+        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+        .sort('timestamp')
+        .lean()
+        .exec();
+    }
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
   }
-  else {
-    TravelLog.find({gameId: gameId})
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-      .sort('timestamp')
-      .lean()
-      .exec(callback);
-  }
-};
+}
 
 /**
  * Just a convenicence function

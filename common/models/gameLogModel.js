@@ -46,59 +46,81 @@ let GameLog = mongoose.model('GameLog', gameLogSchema);
 /**
  * Creates a new log entry and saves it
  * @param p1 was gameId
- * @param p2 was title
- * @param p3 was category
+ * @param p2 was category
+ * @param p3 was title
  * @param p4 was options
  * @param p5 was callback
  * @returns {*}
  */
-    //let addEntry = function (gameId, category, title, options, callback) {
-const addEntry = function (p1, p2, p3, p4, p5) {
-      let gameId    = p1;
-      let category  = p2;
-      let title     = p3;
-      let saveTitle = ''; // title without additional infos about locations, "game save"
-      let options   = p4;
-      let callback  = p5;
+//let addEntry = function (gameId, category, title, options, callback) {
+async function addEntry(p1, p2, p3, p4, p5) {
+  let result;
+  let err;
+  let callback;
+  try {
+    let gameId    = p1;
+    let category  = p2;
+    let title     = p3;
+    let saveTitle = ''; // title without additional infos about locations, "game save"
+    let options   = p4;
+    callback      = p5;
 
-      if (_.isFunction(p2) && _.isObject((p1))) {
-        // New API with object as param 1 and callback as param 2
-        gameId    = _.get(p1, 'gameId', null);
-        category  = _.get(p1, 'category', CAT_GENERAL);
-        saveTitle = _.get(p1, 'saveTitle', '');
-        title     = _.get(p1, 'title', saveTitle);
-        options   = _.get(p1, 'options', {});
-        callback  = p2;
-      }
+    if (_.isFunction(p2) && _.isObject((p1))) {
+      // New API with object as param 1 and callback as param 2
+      gameId    = _.get(p1, 'gameId', null);
+      category  = _.get(p1, 'category', CAT_GENERAL);
+      saveTitle = _.get(p1, 'saveTitle', '');
+      title     = _.get(p1, 'title', saveTitle);
+      options   = _.get(p1, 'options', {});
+      callback  = p2;
+    }
 
-      if (!gameId) {
-        return callback(new Error('gameId in addEntry must be set'));
-      }
+    if (!gameId) {
+      err = new Error('gameId in addEntry must be set');
+      return;
+    }
 
-      if (!_.isString(gameId) || !_.isString(title)) {
-        return callback(new Error('all params in createEntry must be strings'));
-      }
-      let logEntry       = new GameLog();
-      logEntry.gameId    = gameId;
-      logEntry.title     = title;
-      logEntry.saveTitle = saveTitle;
-      logEntry.message   = _.get(options, 'message', '');
-      logEntry.category  = category
-      logEntry.teamId    = _.get(options, 'teamId', undefined);
-      logEntry.files     = []; // Not used yet
-      logEntry._id       = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
-      logEntry.save(callback);
-    };
+    if (!_.isString(gameId) || !_.isString(title)) {
+      err = new Error('all params in createEntry must be strings');
+      return;
+    }
+
+    let logEntry       = new GameLog();
+    logEntry.gameId    = gameId;
+    logEntry.title     = title;
+    logEntry.saveTitle = saveTitle;
+    logEntry.message   = _.get(options, 'message', '');
+    logEntry.category  = category
+    logEntry.teamId    = _.get(options, 'teamId', undefined);
+    logEntry.files     = []; // Not used yet
+    logEntry._id       = gameId + '-' + moment().format('YYMMDD-hhmmss:SSS') + '-' + _.random(100000, 999999);
+    result             = await logEntry.save();
+
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, result);
+  }
+}
 
 /**
  * Deletes all entries for a gameplay
  * @param gameId
  * @param callback
  */
-const deleteAllEntries = function (gameId, callback) {
-  logger.info('Removing all entries in the game log');
-  GameLog.deleteMany({gameId: gameId}, callback);
-};
+async function deleteAllEntries(gameId, callback) {
+  try {
+    logger.info('Removing all entries in the game log');
+    const res = await GameLog
+      .deleteMany({gameId: gameId})
+      .exec();
+    callback(null, res);
+  } catch (ex) {
+    logger.error(ex);
+    callback(ex);
+  }
+}
 
 
 /**
@@ -110,31 +132,41 @@ const deleteAllEntries = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-const getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
-  if (!gameId) {
-    return callback(new Error('No gameId supplied'));
+async function getLogEntries(gameId, teamId, tsStart, tsEnd, callback) {
+  try {
+    if (!gameId) {
+      return callback(new Error('No gameId supplied'));
+    }
+    if (!tsStart) {
+      tsStart = moment('2015-01-01');
+    }
+    if (!tsEnd) {
+      tsEnd = moment();
+    }
+    if (teamId) {
+      const res = await GameLog
+        .find({gameId: gameId})
+        .where('teamId').equals(teamId)
+        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+        .sort('timestamp')
+        .lean()
+        .exec();
+      return callback(null, res);
+    } else {
+      const res = await GameLog
+        .find({gameId: gameId})
+        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+        .sort('timestamp')
+        .lean()
+        .exec();
+      return callback(null, res);
+    }
+  } catch (ex) {
+    logger.error(ex);
+    callback(ex);
   }
-  if (!tsStart) {
-    tsStart = moment('2015-01-01');
-  }
-  if (!tsEnd) {
-    tsEnd = moment();
-  }
-  if (teamId) {
-    GameLog.find({gameId: gameId})
-      .where('teamId').equals(teamId)
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-      .sort('timestamp')
-      .lean()
-      .exec(callback);
-  } else {
-    GameLog.find({gameId: gameId})
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-      .sort('timestamp')
-      .lean()
-      .exec(callback);
-  }
-};
+}
+
 
 /**
  * Just a convenicence function
@@ -142,9 +174,10 @@ const getLogEntries = function (gameId, teamId, tsStart, tsEnd, callback) {
  * @param teamId
  * @param callback
  */
-const getAllLogEntries = function (gameId, teamId, callback) {
+function getAllLogEntries(gameId, teamId, callback) {
   getLogEntries(gameId, teamId, undefined, undefined, callback);
-};
+}
+
 
 module.exports = {
   Model           : GameLog,

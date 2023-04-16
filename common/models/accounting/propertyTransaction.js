@@ -5,15 +5,15 @@
  */
 
 
-var mongoose = require('mongoose');
-var moment   = require('moment');
-var logger   = require('../../lib/logger').getLogger('propertyTransaction');
-var _        = require('lodash');
+const mongoose = require('mongoose');
+const moment   = require('moment');
+const logger   = require('../../lib/logger').getLogger('propertyTransaction');
+const _        = require('lodash');
 
 /**
  * The mongoose schema for a team account
  */
-var propertyAccountTransactionSchema = mongoose.Schema({
+const propertyAccountTransactionSchema = mongoose.Schema({
   gameId    : String, // Game the transaction belongs to
   timestamp : {type: Date, default: Date.now}, // Timestamp of the transaction
   propertyId: String, // This is the uuid of the property the account belongs to
@@ -31,17 +31,24 @@ var propertyAccountTransactionSchema = mongoose.Schema({
 /**
  * The Gameplay model
  */
-var PropertyAccountTransaction = mongoose.model('PropertyTransactions', propertyAccountTransactionSchema);
+const PropertyAccountTransaction = mongoose.model('PropertyTransactions', propertyAccountTransactionSchema);
 
 /**
  * Book the transaction
  * @param transaction
  * @param callback
  */
-function book(transaction, callback) {
-  transaction.save(function (err) {
-    callback(err);
-  });
+async function book(transaction, callback) {
+  let result;
+  let err;
+  try {
+    result = await transaction.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, result);
+  }
 }
 
 
@@ -50,12 +57,23 @@ function book(transaction, callback) {
  * @param gameId
  * @param callback
  */
-function dumpAccounts(gameId, callback) {
-  if (!gameId) {
-    return callback(new Error('No gameId supplied'));
+async function dumpAccounts(gameId, callback) {
+  let result;
+  let err;
+  try {
+    if (!gameId) {
+      return callback(new Error('No gameId supplied'));
+    }
+    logger.info('Removing all account information for ' + gameId);
+    result = await PropertyAccountTransaction
+      .deleteMany({gameId: gameId})
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, result);
   }
-  logger.info('Removing all account information for ' + gameId);
-  PropertyAccountTransaction.deleteMany({gameId: gameId}, callback)
 }
 
 
@@ -68,40 +86,45 @@ function dumpAccounts(gameId, callback) {
  * @param callback
  * @returns {*}
  */
-function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
-  if (!gameId || !propertyId) {
-    return callback(new Error('parameter error'));
-  }
+async function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
+  let data;
+  let err;
+  try {
+    if (!gameId || !propertyId) {
+      return callback(new Error('parameter error'));
+    }
 
-  if (!tsStart) {
-    tsStart = moment('2015-01-01');
-  }
-  if (!tsEnd) {
-    tsEnd = moment();
-  }
-  if (!propertyId) {
-    // Get all
-    PropertyAccountTransaction.find({gameId: gameId})
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-      .sort('timestamp')
-      .lean()
-      .exec(function (err, data) {
-        callback(err, data);
-      });
-  }
-  else {
-    // get only of the provided property
-    PropertyAccountTransaction.find({gameId: gameId})
-      .where('propertyId').equals(propertyId)
-      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-      .sort('timestamp')
-      .lean()
-      .exec(function (err, data) {
-        callback(err, data);
-      });
+    if (!tsStart) {
+      tsStart = moment('2015-01-01');
+    }
+    if (!tsEnd) {
+      tsEnd = moment();
+    }
+    if (!propertyId) {
+      // Get all
+      data = await PropertyAccountTransaction
+        .find({gameId: gameId})
+        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+        .sort('timestamp')
+        .lean()
+        .exec();
+    } else {
+      // get only of the provided property
+      data = await PropertyAccountTransaction
+        .find({gameId: gameId})
+        .where('propertyId').equals(propertyId)
+        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+        .sort('timestamp')
+        .lean()
+        .exec();
+    }
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, data);
   }
 }
-
 
 /**
  * Returns the sum of all account transactions sorted per property
@@ -109,26 +132,37 @@ function getEntries(gameId, propertyId, tsStart, tsEnd, callback) {
  * @param propertyId optional
  * @param callback
  */
-function getSummary(gameId, propertyId, callback) {
-  if (_.isFunction(propertyId)) {
-    callback = propertyId;
-    propertyId = undefined;
-  }
-
-  var match = {};
-  match['gameId'] = gameId;
-  if (propertyId) {
-    match['propertyId'] = propertyId;
-  }
-
-  PropertyAccountTransaction.aggregate([{
-    $match: match
-  }, {
-    $group: {
-      _id    : '$propertyId',
-      balance: {$sum: "$transaction.amount"}
+async function getSummary(gameId, propertyId, callback) {
+  let data;
+  let err;
+  try {
+    if (_.isFunction(propertyId)) {
+      callback   = propertyId;
+      propertyId = undefined;
     }
-  }], callback);
+
+    let match       = {};
+    match['gameId'] = gameId;
+    if (propertyId) {
+      match['propertyId'] = propertyId;
+    }
+
+    data = await PropertyAccountTransaction
+      .aggregate([{
+        $match: match
+      }, {
+        $group: {
+          _id    : '$propertyId',
+          balance: {$sum: "$transaction.amount"}
+        }
+      }])
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, data);
+  }
 }
 
 module.exports = {

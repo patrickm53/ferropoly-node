@@ -12,7 +12,7 @@ const userModel  = require('./userModel');
 /**
  * The mongoose schema for a property
  */
-let teamSchema = mongoose.Schema({
+const teamSchema = mongoose.Schema({
   _id   : {type: String},
   gameId: String, // Gameplay this team plays with
   uuid  : {type: String, index: {unique: true}},     // UUID of this team (index)
@@ -38,101 +38,92 @@ let teamSchema = mongoose.Schema({
 /**
  * The Property model
  */
-let Team = mongoose.model('Team', teamSchema);
+const Team = mongoose.model('Team', teamSchema);
 
 /**
- * Create a new team
+ * Creates a new team
  * @param newTeam
  * @param gameId
- * @param callback
+ * @return {Promise<*>}
  */
-let createTeam = function (newTeam, gameId, callback) {
+async function createTeam(newTeam, gameId) {
   let team    = new Team();
   team.uuid   = uuid();
   team.gameId = gameId;
   team.data   = newTeam.data;
   team._id    = gameId + '-' + team.uuid;
-  team.save(function (err, savedTeam) {
-    callback(err, savedTeam);
-  });
-};
+  logger.info(`Created team ${team.uuid} for ${gameId}`);
+  return await team.save();
+}
 
 /**
- * Update a Team
+ * Updates a team
  * @param team
- * @param callback
+ * @return {Promise<*|undefined|void>}
  */
-let updateTeam = function (team, callback) {
-  Team.find({uuid: team.uuid}, function (err, docs) {
-    if (err) {
-      return callback(err);
+async function updateTeam(team) {
+  let res
+
+  logger.info(`Updating team ${team.uuid} for ${team.gameId}`);
+  let doc = await Team
+    .findOne({uuid: team.uuid})
+    .exec();
+
+  if (!doc) {
+    // Team not available yet, create it
+    if (!team.gameId) {
+      throw new Error('no game id');
     }
-    if (!docs || docs.length === 0) {
-      // Team not available yet, create it
-      if (!team.gameId) {
-        return callback(new Error('no game id'));
+    return createTeam(team, team.gameId, function (err, newTeam) {
+      if (err) {
+        throw new Error('can not create new team: ' + err.message);
+      } else {
+        res = newTeam;
       }
-      return createTeam(team, team.gameId, function (err, newTeam) {
+    });
+  } else {
+    if (!team.data.teamLeader.hasLogin) {
+      logger.info(`Team leader ${team.data.teamLeader.name} has no login for team ${team.uuid} for ${team.gameId}`);
+      // Check for Login
+      return await userModel.getUserByMailAddress(team.data.teamLeader.email, async (err, user) => {
+        logger.info(`User found`, user);
         if (err) {
-          return callback(new Error('can not create new team: ' + err.message));
+          // Not critical!!! ES-Lint requires this if, nothing to do.
         }
-        return callback(null, newTeam);
+        if (user) {
+          // When the team-leader has a login, set to true. This never becomes false as logins can not be deleted
+          team.data.teamLeader.hasLogin = true;
+        }
+        doc.data = team.data;
+        return await doc.save();
       });
     } else {
-      if (!team.data.teamLeader.hasLogin) {
-        // Check for Login
-        userModel.getUserByMailAddress(team.data.teamLeader.email, (err, user) => {
-          if (err) {
-            // Not critical!!! ES-Lint requires this if, nothing to do.
-          }
-          if (user) {
-            // When the teamleader has a login, set to true. This never becomes false as logins can not be deleted
-            team.data.teamLeader.hasLogin = true;
-          }
-          docs[0].data = team.data;
-          docs[0].save(function (err, team) {
-            callback(err, team);
-          });
-        });
-      } else {
-        // Team leader has a login, just save
-        docs[0].data = team.data;
-        docs[0].save(function (err, team) {
-          callback(err, team);
-        });
-      }
+      // Team leader has a login, just save
+      doc.data = team.data;
+      return await doc.save()
     }
-  });
-};
+  }
+}
 
 /**
- * Delete a team
+ * Deletes one team
  * @param teamId
- * @param callback
+ * @return {Promise<>}
  */
-let deleteTeam = function (teamId, callback) {
-  Team.find({uuid: teamId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (!docs || docs.length !== 1) {
-      return callback(new Error('not found'));
-    }
-    docs[0].delete(function (err) {
-      return callback(err);
-    });
-  });
-};
+async function deleteTeam(teamId) {
+  return await Team
+    .deleteOne({uuid: teamId})
+    .exec();
+}
 
 /**
- * Delete all teams
+ * Deletes all teams
  * @param gameId
- * @param callback
+ * @return {Promise<>}
  */
-let deleteAllTeams = function (gameId, callback) {
-  logger.info('Removing all teams for ' + gameId);
-  Team.deleteMany({gameId: gameId}, callback);
-};
+async function deleteAllTeams(gameId) {
+  return await Team.deleteMany({gameId: gameId}).exec();
+}
 
 /**
  * Get all teams for a game
@@ -140,17 +131,25 @@ let deleteAllTeams = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-let getTeams = function (gameId, callback) {
+async function getTeams(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  return Team.find({gameId: gameId}).lean().exec(function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    return callback(null, docs);
-  });
-};
+
+  let err, docs;
+  try {
+    docs = await Team
+      .find({gameId: gameId})
+      .lean()
+      .exec();
+  } catch
+    (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
+}
 
 /**
  * Get a specific team
@@ -159,22 +158,23 @@ let getTeams = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-let getTeam = function (gameId, teamId, callback) {
-  Team.find({
-      'uuid'  : teamId,
-      'gameId': gameId
-    },
-    function (err, docs) {
-      if (err) {
-        return callback(err);
-      }
-      if (docs.length === 0) {
-        return callback(null, null);
-      }
-      callback(null, docs[0]);
-    }
-  );
-};
+async function getTeam(gameId, teamId, callback) {
+  let doc, err;
+  try {
+    doc = await Team
+      .findOne({
+        'uuid'  : teamId,
+        'gameId': gameId
+      })
+      .exec();
+  } catch
+    (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
+}
 
 /**
  * Count the teams of a given game
@@ -182,11 +182,23 @@ let getTeam = function (gameId, teamId, callback) {
  * @param callback
  * @returns {*}
  */
-function countTeams(gameId, callback) {
+async function countTeams(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Team.countDocuments({gameId: gameId}, callback);
+
+  let err, info;
+  try {
+    info = await Team
+      .countDocuments({gameId: gameId})
+      .exec();
+  } catch
+    (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, info);
+  }
 }
 
 /**
@@ -194,8 +206,8 @@ function countTeams(gameId, callback) {
  * @param gameId
  * @param callback
  */
-let getTeamsAsObject = function (gameId, callback) {
-  getTeams(gameId, function (err, data) {
+function getTeamsAsObject(gameId, callback) {
+  getTeams(gameId, (err, data) => {
     if (err) {
       return callback(err);
     }
@@ -206,30 +218,34 @@ let getTeamsAsObject = function (gameId, callback) {
     }
     callback(null, teams);
   });
-};
+}
 
 /**
  * Returns all teams where I am assigned as team leader or member
  * @param email
  * @param callback
  */
-function getMyTeams(email, callback) {
-  Team.find({
-      $or: [
-        {'data.teamLeader.email': email},
-        {'data.members': email}
-      ]
-    },
-    function (err, docs) {
-      if (err) {
-        return callback(err);
-      }
-      if (docs.length === 0) {
-        return callback(null, null);
-      }
-      callback(null, docs);
+async function getMyTeams(email, callback) {
+  let docs, err;
+  try {
+    docs = await Team
+      .find({
+        $or: [
+          {'data.teamLeader.email': email},
+          {'data.members': email}
+        ]
+      })
+      .exec();
+
+    if (docs.length === 0) {
+      docs = null;
     }
-  );
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
 }
 
 /**
@@ -238,21 +254,21 @@ function getMyTeams(email, callback) {
  * @param email
  * @param callback
  */
-function getMyTeam(gameId, email, callback) {
-  Team.find({
-      'data.teamLeader.email': email,
-      'gameId'               : gameId
-    },
-    function (err, docs) {
-      if (err) {
-        return callback(err);
-      }
-      if (docs.length === 0) {
-        return callback(null, null);
-      }
-      callback(null, docs[0]);
-    }
-  );
+async function getMyTeam(gameId, email, callback) {
+  let doc, err;
+  try {
+    doc = await Team
+      .findOne({
+        'data.teamLeader.email': email,
+        'gameId'               : gameId
+      })
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
 }
 
 module.exports = {

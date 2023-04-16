@@ -7,11 +7,11 @@
  * Created by kc on 02.01.15.
  */
 
-const mongoose       = require('mongoose');
-const logger         = require('../lib/logger').getLogger('locationModel');
-const mapinfo        = require('../lib/maps.json');
-const _              = require('lodash');
-const async          = require('async');
+const mongoose = require('mongoose');
+const logger   = require('../lib/logger').getLogger('locationModel');
+const mapinfo  = require('../lib/maps.json');
+const _        = require('lodash');
+
 /**
  * The mongoose schema for a location
  */
@@ -42,32 +42,43 @@ const Location = mongoose.model('Location', locationSchema);
  * Returns all locations in ferropoly style, LEAN
  * @param callback
  */
-function getAllLocationsLean(callback) {
-  Location.find({}).lean().exec(function (err, docs) {
-    if (err) {
-      logger.error('Location.find failed: ', err);
-      return callback(err);
-    }
-    let locations = [];
+async function getAllLocationsLean(callback) {
+  let err, locations;
+  try {
+    const docs = await Location
+      .find({})
+      .lean()
+      .exec()
+
+    locations = [];
     for (let i = 0; i < docs.length; i++) {
       locations.push(convertModelDataToObject(docs[i]));
     }
-    return callback(null, locations);
-  });
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, locations);
+  }
 }
+
 
 /**
  * Returns all locations in ferropoly style, COMPLETE OBJECTS
  * @param callback
  */
-function getAllLocations(callback) {
-  Location.find({}).exec(function (err, docs) {
-    if (err) {
-      logger.error('Location.find failed: ', err);
-      return callback(err);
-    }
-    return callback(null, docs);
-  });
+async function getAllLocations(callback) {
+  let docs, err;
+  try {
+    docs = await Location
+      .find({})
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
 }
 
 
@@ -76,26 +87,24 @@ function getAllLocations(callback) {
  * @param map : map ('zvv', 'sbb' or 'ostwind')
  * @param callback
  */
-function getAllLocationsForMap(map, callback) {
-  // This creates a query in this format: {'maps.zvv': true}
-  let index    = 'maps.' + map;
-  let query    = {};
-  query[index] = true;
+async function getAllLocationsForMap(map, callback) {
+  let docs, err;
+  try {
+    // This creates a query in this format: {'maps.zvv': true}
+    let index    = 'maps.' + map;
+    let query    = {};
+    query[index] = true;
 
-  Location.find(query).lean().exec(function (err, docs) {
-    if (err) {
-      logger.error('LocationFind failed', err);
-      return callback(err);
-    }
-    let locations = [];
-    for (let i = 0;
-         i < docs.length;
-         i++
-    ) {
-      locations.push(docs[i]);
-    }
-    return callback(null, locations);
-  });
+    docs = await Location
+      .find(query)
+      .lean()
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
 }
 
 /**
@@ -103,50 +112,55 @@ function getAllLocationsForMap(map, callback) {
  * @param uuid
  * @param callback
  */
-function getLocationByUuid(uuid, callback) {
-  Location.find({uuid: uuid}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
+async function getLocationByUuid(uuid, callback) {
+  let doc, err;
+  try {
+    const docs = await Location
+      .find({uuid: uuid})
+      .exec();
+
     if (docs.length === 0) {
       // No location found
-      return callback(null, null);
+      doc = null;
+    } else {
+      doc = docs[0];
     }
-    return callback(null, docs[0]);
-  });
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
 }
 
 /**
  * Count Locations
  * @param callback
  */
-function countLocations(callback) {
-  let retVal = _.clone(mapinfo, true);
+async function countLocations(callback) {
+  let retVal, err;
+  try {
+    retVal = _.clone(mapinfo, true);
 
-  Location.countDocuments({}, function (err, nb) {
-    if (err) {
-      retVal.all = 0;
-    } else {
-      retVal.all = nb;
+    retVal.all = await Location
+      .countDocuments({})
+      .exec();
+
+    for (const m of retVal.maps) {
+      // This creates a query in this format: {'maps.zvv': true}
+      let index    = 'maps.' + m.map;
+      let query    = {};
+      query[index] = true;
+      m.locationNb = await Location
+        .countDocuments(query)
+        .exec();
     }
-
-    async.each(retVal.maps,
-      function (m, cb) {
-        // This creates a query in this format: {'maps.zvv': true}
-        let index    = 'maps.' + m.map;
-        let query    = {};
-        query[index] = true;
-
-        Location.countDocuments(query, function (err, nb) {
-          m.locationNb = nb;
-          cb(err);
-        });
-      },
-      function (err) {
-        callback(err, retVal);
-      }
-    );
-  });
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, retVal);
+  }
 }
 
 /**
@@ -170,10 +184,16 @@ function convertModelDataToObject(data) {
  * @param location
  * @param callback
  */
-function saveLocation(location, callback) {
-  location.save(function (err, savedLocation) {
+async function saveLocation(location, callback) {
+  let savedLocation, err;
+  try {
+    savedLocation = await location.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
     callback(err, savedLocation);
-  })
+  }
 }
 
 module.exports = {

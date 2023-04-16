@@ -9,11 +9,12 @@
  * Created by kc on 22.01.15.
  */
 
-const mongoose = require('mongoose');
-const Moniker  = require('moniker');
-const _        = require('lodash');
-const moment   = require('moment-timezone');
-const logger   = require('../lib/logger').getLogger('gameplayModel');
+const mongoose    = require('mongoose');
+const Moniker     = require('moniker');
+const _           = require('lodash');
+const {DateTime}  = require("luxon");
+const dateTimeLib = require('../lib/dateTimeLib');
+const logger      = require('../lib/logger').getLogger('gameplayModel');
 
 const MOBILE_NONE  = 0;
 const MOBILE_BASIC = 5;
@@ -127,85 +128,109 @@ const Gameplay = mongoose.model('Gameplay', gameplaySchema);
  * @param gpOptions is an object with at least 'map', 'ownerEmail' and 'name'
  * @param callback
  */
-let createGameplay      = function (gpOptions, callback) {
+async function createGameplay(gpOptions, callback) {
+  let errInfo;
   let gp = new Gameplay();
   if (!gpOptions.map || !gpOptions.ownerEmail || !gpOptions.name) {
     return callback(new Error('Missing parameter'));
   }
+  try {
+    gp.internal.map              = gpOptions.map;
+    gp.internal.owner            = gpOptions.ownerId || gpOptions.ownerEmail;
+    gp.internal.isDemo           = gpOptions.isDemo || false;
+    gp.owner.organisatorEmail    = gpOptions.ownerEmail;
+    gp.owner.organisatorName     = gpOptions.organisatorName;
+    gp.scheduling.gameDate       = gpOptions.gameDate;
+    gp.scheduling.gameStart      = gpOptions.gameStart;
+    gp.scheduling.gameEnd        = gpOptions.gameEnd;
+    gp.scheduling.deleteTs       = DateTime.fromJSDate(dateTimeLib.getJsDate(gpOptions.gameDate)).plus({days: 30}).set({
+      hour  : 23,
+      minute: 59
+    }).toJSDate();
+    gp.joining.possibleUntil     = gpOptions.joiningUntilDate || DateTime.fromJSDate(dateTimeLib.getJsDate(gp.scheduling.gameDate)).minus({days: 5}).set({
+      hour  : 20,
+      minute: 0,
+      second: 0
+    }).toJSDate();
+    gp.joining.infotext          = gpOptions.infoText;
+    gp.gamename                  = gpOptions.name;
+    gp.internal.gameId           = gpOptions.gameId || Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
+    gp.joining.url               = _.get(gpOptions, 'mainInstances[0]', 'https://spiel.ferropoly.ch') + '/anmelden/' + gp.internal.gameId;
+    gp.internal.creatingInstance = gpOptions.instance;
+    gp.internal.autopilot        = gpOptions.autopilot;
+    gp.mobile                    = gpOptions.mobile || {level: MOBILE_NONE};
+    gp._id                       = gp.internal.gameId;
 
-  gp.internal.map              = gpOptions.map;
-  gp.internal.owner            = gpOptions.ownerId || gpOptions.ownerEmail;
-  gp.internal.isDemo           = gpOptions.isDemo || false;
-  gp.owner.organisatorEmail    = gpOptions.ownerEmail;
-  gp.owner.organisatorName     = gpOptions.organisatorName;
-  gp.scheduling.gameDate       = gpOptions.gameDate;
-  gp.scheduling.gameStart      = gpOptions.gameStart;
-  gp.scheduling.gameEnd        = gpOptions.gameEnd;
-  gp.scheduling.deleteTs       = moment(gpOptions.gameDate).add(30, 'd').hour(23).minute(59).toDate();
-  gp.joining.possibleUntil     = gpOptions.joiningUntilDate || moment(gp.scheduling.gameDate).subtract(5, 'days').set('hour', 20).set('minute', 0).set('second', 0).toDate();
-  gp.joining.infotext          = gpOptions.infoText;
-  gp.gamename                  = gpOptions.name;
-  gp.internal.gameId           = gpOptions.gameId || Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
-  gp.joining.url               = _.get(gpOptions, 'mainInstances[0]', 'https://spiel.ferropoly.ch') + '/anmelden/' + gp.internal.gameId;
-  gp.internal.creatingInstance = gpOptions.instance;
-  gp.mobile                    = gpOptions.mobile || {level: MOBILE_NONE};
-  gp._id                       = gp.internal.gameId;
+    gp.gameParams                  = _.assign(gp.gameParams, gpOptions.gameParams);
+    gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
 
-  gp.gameParams                  = _.assign(gp.gameParams, gpOptions.gameParams);
-  gp.gameParams.interestInterval = gpOptions.interestInterval || gp.gameParams.interestInterval;
-
-  checkIfGameIdExists(gp.internal.gameId, function (err, isExisting) {
-    if (err) {
-      return callback(err);
-    }
-    if (isExisting) {
-      // generate new gameID
-      gpOptions.gameId = Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
-      return createGameplay(gpOptions, callback);
-    } else {
-      gp.save(function (err, savedGp) {
-        if (err) {
-          return callback(err);
+    await checkIfGameIdExists(gp.internal.gameId, async (err, isExisting) => {
+      let result;
+      try {
+        if (isExisting) {
+          // generate new gameID
+          gpOptions.gameId = Moniker.generator([Moniker.adjective, Moniker.noun]).choose();
+          return createGameplay(gpOptions, callback);
+        } else {
+          result = await gp.save();
+          console.log(result);
         }
-        return callback(null, savedGp);
-      });
-    }
-  });
-};
+      } catch (ex) {
+        logger.error(ex);
+        errInfo = ex;
+      } finally {
+        callback(errInfo, result);
+      }
+    });
+  } catch (ex) {
+    logger.error(ex);
+    return callback(ex);
+  }
+}
+
 /**
  * Get all gameplays associated for a user
  * @param email is an object with either id or email or both
  * @param callback
  */
-let getGameplaysForUser = function (email, callback) {
-  Gameplay.find({
-    $or: [
-      {'internal.owner': email},
-      {'admins.logins': email}]
-  }, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs);
-  });
-};
+async function getGameplaysForUser(email, callback) {
+  let err, docs;
+  try {
+    docs = await Gameplay
+      .find({
+        $or: [
+          {'internal.owner': email},
+          {'admins.logins': email}]
+      })
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
+}
 
 /**
  * Checks if a game with a gameId exists.
  * @param gameId
  * @param callback
  */
-let checkIfGameIdExists = function (gameId, callback) {
-  Gameplay.countDocuments({'internal.gameId': gameId}, function (err, nb) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, nb > 0);
-  });
-};
+async function checkIfGameIdExists(gameId, callback) {
+  let err;
+  let res = false;
+  try {
+    let nb = await Gameplay
+      .countDocuments({'internal.gameId': gameId})
+      .exec();
+    res    = nb > 0;
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
+}
 
 /**
  * Creates a new GameID which is not used already (tested)
@@ -223,6 +248,7 @@ function createNewGameId(callback) {
       return createNewGameId(callback);
     }
     callback(null, gameId);
+  }).then(() => {
   });
 }
 
@@ -231,27 +257,35 @@ function createNewGameId(callback) {
  * @param ownerId
  * @param callback
  */
-let countGameplaysForUser = function (ownerId, callback) {
-  Gameplay.countDocuments({'internal.owner': ownerId}, function (err, nb) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, nb);
-  });
-};
+async function countGameplaysForUser(ownerId, callback) {
+  let err, nb;
+  try {
+    nb = await Gameplay
+      .countDocuments({'internal.owner': ownerId})
+      .exec()
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, nb);
+  }
+}
 
 /**
  * Counts all gameplays for all users
  * @param callback
  */
-let countGameplays = function (callback) {
-  Gameplay.countDocuments({}, function (err, nb) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, nb);
-  });
-};
+async function countGameplays(callback) {
+  let err, nb;
+  try {
+    nb = await Gameplay.countDocuments({}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, nb);
+  }
+}
 
 /**
  * Returns exactly one (or none, if not existing) gameplay with the params supplied
@@ -259,37 +293,50 @@ let countGameplays = function (callback) {
  * @param ownerId which is the email address of the person getting the data
  * @param callback
  */
-let getGameplay = function (gameId, ownerId, callback) {
-  let params = {$or: [{'internal.owner': ownerId}, {'admins.logins': ownerId}], 'internal.gameId': gameId};
-  //  var params = {'internal.owner': ownerId, 'internal.gameId': gameId};
-  if (ownerId === null) {
-    params = {'internal.gameId': gameId};
-  } else if (ownerId === undefined) {
-    return callback(new Error('undefined is not a valid value for ownerId'));
-  }
-  Gameplay.find(params, function (err, docs) {
-    if (err) {
-      return callback(err);
+async function getGameplay(gameId, ownerId, callback) {
+  let err, doc;
+  try {
+    let params = {$or: [{'internal.owner': ownerId}, {'admins.logins': ownerId}], 'internal.gameId': gameId};
+    //  var params = {'internal.owner': ownerId, 'internal.gameId': gameId};
+    if (ownerId === null) {
+      params = {'internal.gameId': gameId};
+    } else if (ownerId === undefined) {
+      return callback(new Error('undefined is not a valid value for ownerId'));
     }
+    const docs = await Gameplay
+      .find(params)
+      .exec();
     if (docs.length === 0) {
-      return callback(new Error('This gameplay does not exist for this user:' + gameId + ' @ ' + ownerId));
+      err = new Error('This gameplay does not exist for this user:' + gameId + ' @ ' + ownerId);
+    } else {
+      doc = docs[0];
     }
-    callback(null, docs[0]);
-  });
-};
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
+}
 
 /**
  * Returns all gameplays of all users. Of course only needed in the admin app
  * @param callback
  */
-let getAllGameplays = function (callback) {
-  Gameplay.find({}).lean().exec(function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, docs);
-  });
-};
+async function getAllGameplays(callback) {
+  let err, docs;
+  try {
+    docs = await Gameplay
+      .find({})
+      .lean()
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs)
+  }
+}
 
 /**
  * Remove a gameplay for ever (delete from DB)
@@ -297,15 +344,42 @@ let getAllGameplays = function (callback) {
  * @param callback
  * @returns {*}
  */
-let removeGameplay = function (gp, callback) {
+async function removeGameplay(gp, callback) {
+  let err;
   if (!gp || !gp.internal || !gp.internal.gameId) {
     return callback(new Error('Invalid gameplay'));
   }
   logger.info('Removing gameplay ' + gp.internal.gameId + ' (' + gp.gamename + ')');
-  Gameplay.deleteMany({'internal.gameId': gp.internal.gameId}, function (err) {
+  try {
+    await Gameplay
+      .deleteOne({'internal.gameId': gp.internal.gameId}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
     callback(err);
-  });
-};
+  }
+}
+
+/**
+ * Deletes all gameplays for a user, this is for internal and testing purposes only
+ * @param email
+ * @param callback
+ * @returns {*}
+ */
+async function removeGameplaysForUser(email, callback) {
+  let err;
+  try {
+    logger.info(`Removing Gameplays for ${email}`);
+    await Gameplay
+      .deleteMany({'owner.organisatorEmail': email}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err);
+  }
+}
 
 /**
  * Finalize the time: add date and time together
@@ -315,15 +389,12 @@ let removeGameplay = function (gp, callback) {
  */
 function finalizeTime(date, time) {
   try {
-    let e      = time.split(':');
-    let hour   = e[0];
-    let minute = e[1];
-
-    let newDate = moment.tz(date.getTime(), 'Europe/Zurich');
-    newDate.minute(minute);
-    newDate.hour(hour);
-    newDate.second(0);
-    return newDate.toDate();
+    let e       = time.split(':');
+    let hour    = parseInt(e[0]);
+    let minute  = parseInt(e[1]);
+    let newDate = DateTime.fromJSDate(date);
+    newDate     = newDate.set({minute: minute, hour: hour, second: 0});
+    return newDate.toUTC().toJSDate();
   } catch (e) {
     logger.info('ERROR in finalizeTime: ' + e);
     return new Date();
@@ -336,8 +407,8 @@ function finalizeTime(date, time) {
  * @param ownerId
  * @param callback
  */
-let finalize = function (gameId, ownerId, callback) {
-  getGameplay(gameId, ownerId, function (err, gp) {
+async function finalize(gameId, ownerId, callback) {
+  await getGameplay(gameId, ownerId, async function (err, gp) {
     if (err) {
       callback(err);
     }
@@ -354,51 +425,64 @@ let finalize = function (gameId, ownerId, callback) {
     if (gp.internal.priceListPendingChanges) {
       return callback(new Error('Pricelist params changed, list not up to date!'));
     }
-    gp.internal.finalized     = true;
-    gp.scheduling.gameStartTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameStart);
-    gp.scheduling.gameEndTs   = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameEnd);
+    let errInfo, gpSaved;
+    try {
+      gp.internal.finalized     = true;
+      gp.scheduling.gameStartTs = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameStart);
+      gp.scheduling.gameEndTs   = finalizeTime(gp.scheduling.gameDate, gp.scheduling.gameEnd);
 
-    gp.save(function (err, gpSaved) {
-      if (err) {
-        return callback(err);
-      }
+      gpSaved = await gp.save();
+
       logger.info('Gameplay finalized: ' + gpSaved.internal.gameId);
-      callback(null, gpSaved);
-    });
+    } catch (ex) {
+      logger.error(ex);
+      errInfo = ex;
+    } finally {
+      callback(errInfo, gpSaved);
+    }
   });
-};
+}
 
 /**
  * Checks if a gameplay is finalized, caches the POSITIVE results
  * @param gameId
  * @param callback
  */
-let isFinalized           = function (gameId, callback) {
+async function isFinalized(gameId, callback) {
   if (finalizedGameplays[gameId]) {
     // return cached value
     logger.info('return cached value');
-    return true;
+    return callback(null, true);
   }
-  Gameplay.find({'internal.gameId': gameId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
+  let err, res;
+  try {
+    const docs = await Gameplay.find({'internal.gameId': gameId});
     if (docs.length === 0) {
-      return callback(new Error('game not found: ' + gameId));
+      err = new Error('game not found: ' + gameId);
+    } else {
+      if (docs[0].internal.finalized) {
+        finalizedGameplays[docs[0].internal.gameId] = true;
+      }
+      res = docs[0].internal.finalized;
     }
-    if (docs[0].internal.finalized) {
-      finalizedGameplays[docs[0].internal.gameId] = true;
-    }
-    callback(null, docs[0].internal.finalized);
-  });
-};
+
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
+}
+
+
 /**
  * Updates a gameplay with partial data. GameId and Owner must be supplied
  * @param gp
  * @param callback
  */
-let updateGameplayPartial = function (gp, callback) {
-  getGameplay(gp.internal.gameId, gp.internal.owner, function (err, loadedGp) {
+async function updateGameplayPartial(gp, callback) {
+
+  getGameplay(gp.internal.gameId, gp.internal.owner, async function (err, loadedGp) {
     if (err) {
       logger.info('Error while loading gameplay: ' + err.message);
       return callback(err);
@@ -412,24 +496,28 @@ let updateGameplayPartial = function (gp, callback) {
       // We can't save it, it is finalized!
       return callback(new Error('already finalized'));
     }
-
     _.set(loadedGp, 'log.lastEdited', new Date());
 
-    loadedGp.save(function (err, gpSaved, nbAffected) {
-      if (err) {
-        return callback(err);
-      }
-      logger.info('Gameplay update: ' + gpSaved.internal.gameId + ' #' + nbAffected);
-      callback(null, gpSaved);
-    });
+    let errInfo, gpSaved;
+    try {
+      gpSaved = await loadedGp.save();
+      logger.info('Gameplay update: ' + gpSaved.internal.gameId);
+    } catch (ex) {
+      logger.error(ex);
+      errInfo = ex;
+    } finally {
+      callback(errInfo, gpSaved)
+    }
   });
-};
+}
+
 /**
  * Updates a gameplay
  * @param gp
  * @param callback
  */
-let updateGameplay        = function (gp, callback) {
+async function updateGameplay(gp, callback) {
+
   gp.log.lastEdited = new Date();
 
   if (!gp.save) {
@@ -463,14 +551,18 @@ let updateGameplay        = function (gp, callback) {
     // We can't save it, it is finalized!
     return callback(new Error('already finalized'));
   }
-  gp.save(function (err, gpSaved, nbAffected) {
-    if (err) {
-      return callback(err);
-    }
-    logger.info('Gameplay update: ' + gpSaved.internal.gameId + ' #' + nbAffected);
-    callback(null, gpSaved);
-  });
-};
+
+  let gpSaved, errInfo;
+  try {
+    gpSaved = await gp.save();
+    logger.info('Gameplay update: ' + gpSaved.internal.gameId);
+  } catch (ex) {
+    logger.error(ex);
+    errInfo = ex;
+  } finally {
+    callback(errInfo, gpSaved);
+  }
+}
 
 /**
  * Sets the admins of a gameplay. This has to work even when the gameplay was finalized before, that's why it is a
@@ -480,17 +572,26 @@ let updateGameplay        = function (gp, callback) {
  * @param logins is an array with the entries to write
  * @param callback
  */
-let setAdmins = function (gameId, ownerId, logins, callback) {
-  getGameplay(gameId, ownerId, function (err, gameplay) {
+async function setAdmins(gameId, ownerId, logins, callback) {
+  await getGameplay(gameId, ownerId, async function (err, gameplay) {
     if (err) {
       return callback(err);
     }
     gameplay.log.lastEdited = new Date();
     gameplay.admins         = gameplay.admins || {};
     gameplay.admins.logins  = logins || [];
-    gameplay.save(callback);
+
+    let doc, errInfo;
+    try {
+      doc = await gameplay.save();
+    } catch (ex) {
+      logger.error(ex);
+      errInfo = ex;
+    } finally {
+      callback(errInfo, doc);
+    }
   });
-};
+}
 
 /**
  * Sets the flag priceListPendingChanges to true: the price list can not be finalized without
@@ -499,19 +600,29 @@ let setAdmins = function (gameId, ownerId, logins, callback) {
  * @param ownerId
  * @param callback
  */
-let invalidatePricelist = function (gameId, ownerId, callback) {
-  getGameplay(gameId, ownerId, function (err, gameplay) {
+async function invalidatePricelist(gameId, ownerId, callback) {
+  await getGameplay(gameId, ownerId, async function (err, gameplay) {
     if (err) {
       return callback(err);
     }
     if (!gameplay.internal.priceListPendingChanges) {
       // Save only if the value was false before
       gameplay.internal.priceListPendingChanges = true;
-      return gameplay.save(callback);
+
+      let errInfo, doc;
+      try {
+        doc = await gameplay.save();
+      } catch (ex) {
+        logger.error(ex);
+        errInfo = doc;
+      } finally {
+        callback(errInfo, doc);
+      }
+      return;
     }
     callback();
   });
-};
+}
 
 /**
  * Just updates the gamplay 'last saved' field
@@ -520,14 +631,17 @@ let invalidatePricelist = function (gameId, ownerId, callback) {
  * @param callback
  * @returns {*}
  */
-let updateGameplayLastChangedField = function (ownerId, gameId, callback) {
+async function updateGameplayLastChangedField(ownerId, gameId, callback) {
   if (!gameId || !ownerId) {
     return callback(new Error('no gameplay name or email supplied'));
   }
-  Gameplay.find({'internal.owner': ownerId, 'internal.gameId': gameId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
+
+  let doc, err;
+  try {
+    const docs = await Gameplay
+      .find({'internal.owner': ownerId, 'internal.gameId': gameId})
+      .exec();
+
     if (docs.length === 0) {
       return callback();
     }
@@ -537,11 +651,14 @@ let updateGameplayLastChangedField = function (ownerId, gameId, callback) {
       return callback(new Error('already finalized'));
     }
     gp.log.lastEdited = new Date();
-    gp.save(function (err) {
-      return callback(err);
-    });
-  });
-};
+    doc               = await gp.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
+}
 
 /**
  * Update the rules of a gameplay
@@ -550,16 +667,17 @@ let updateGameplayLastChangedField = function (ownerId, gameId, callback) {
  * @param info
  * @param callback
  */
-function updateRules(gameId, ownerId, info, callback) {
+async function updateRules(gameId, ownerId, info, callback) {
+  let err;
   if (!gameId || !ownerId) {
     return callback(new Error('no gameplay name or email supplied'));
   }
-  Gameplay.find({'internal.owner': ownerId, 'internal.gameId': gameId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
+  try {
+    const docs = await Gameplay.find({'internal.owner': ownerId, 'internal.gameId': gameId}).exec();
+
     if (docs.length === 0) {
-      return callback(new Error(`Gameplay ${gameId} not found for user ${ownerId}`));
+      err = new Error(`Gameplay ${gameId} not found for user ${ownerId}`);
+      return;
     }
     let gp = docs[0];
 
@@ -577,10 +695,13 @@ function updateRules(gameId, ownerId, info, callback) {
       gp.rules.text = info.text;
       gp.rules.changelog.push({ts: new Date(), version: gp.rules.version, changes: info.changes});
     }
-    gp.save(function (err) {
-      return callback(err);
-    });
-  });
+    await gp.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err);
+  }
 }
 
 /**
@@ -588,7 +709,8 @@ function updateRules(gameId, ownerId, info, callback) {
  * @param gameplay
  * @param callback
  */
-let saveNewPriceListRevision = function (gameplay, callback) {
+async function saveNewPriceListRevision(gameplay, callback) {
+
   if (gameplay.internal.finalized) {
     // We can't save it, it is finalized!
     return callback(new Error('already finalized'));
@@ -601,17 +723,41 @@ let saveNewPriceListRevision = function (gameplay, callback) {
   } else {
     gameplay.log.priceListVersion++;
   }
-  gameplay.save(function (err) {
-    callback(err);
-  });
-};
+  let updatedGp, err;
+  try {
+    updatedGp = await gameplay.save();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, updatedGp);
+  }
+
+}
 
 /**
- * Returns all active autoilot games
+ * Returns all active autoilot games, only the ones today, only demo
  * @param callback
  */
-let getAutopilotGameplays = function (callback) {
-  Gameplay.find({'internal.isDemo': true, 'internal.autopilot.active': true}).lean().exec(callback);
+async function getAutopilotGameplays(callback) {
+  let err, gps;
+  try {
+    let today = DateTime.now().toISODate()
+    gps       = await Gameplay
+      .find({
+        'internal.isDemo': true, 'internal.autopilot.active': true, 'scheduling.gameDate': {
+          $gte: today, $lte: today
+        }
+      })
+      .lean()
+      .exec();
+
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, gps);
+  }
 }
 
 /**
@@ -625,6 +771,7 @@ module.exports = {
   createNewGameId               : createNewGameId,
   getGameplaysForUser           : getGameplaysForUser,
   removeGameplay                : removeGameplay,
+  removeGameplaysForUser        : removeGameplaysForUser,
   updateGameplay                : updateGameplay,
   setAdmins                     : setAdmins,
   getGameplay                   : getGameplay,

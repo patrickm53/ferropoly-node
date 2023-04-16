@@ -6,8 +6,6 @@
  * Created by kc on 20.06.15.
  */
 
-
-const _             = require('lodash');
 const nodemailer    = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const logger        = require('./logger').getLogger('common:lib:mailer');

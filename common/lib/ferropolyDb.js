@@ -75,10 +75,20 @@ module.exports = {
   close: function (callback) {
     logger.info('Disconnecting MongoDb');
     if (mongooseThis) {
-      mongoose.disconnect(function (err) {
+      try {
+        mongoose
+          .disconnect()
+          .then(()=> {
+            callback(null);
+          })
+      }
+      catch(ex) {
+        logger.error(ex);
+        callback(ex);
+      }
+      finally {
         db = undefined;
-        callback(err);
-      });
+      }
     }
   }
 };

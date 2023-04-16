@@ -9,7 +9,6 @@
 const mongoose       = require('mongoose');
 const logger         = require('../lib/logger').getLogger('propertyModel');
 const _              = require('lodash');
-const async          = require('async');
 const {v4: uuid}     = require('uuid');
 /**
  * The mongoose schema for a property
@@ -64,28 +63,38 @@ const createPropertyId = function (gameId, location) {
  * @param location
  * @param callback
  */
-const createPropertyFromLocation = function (gameId, location, callback) {
+function createPropertyFromLocation(gameId, location, callback) {
   let newProperty      = new Property();
   newProperty.location = location;
   newProperty._id      = createPropertyId(gameId, location);
   return updateProperty(gameId, newProperty, callback);
-};
+}
 
 /**
  * Updates the given properties which must be properties objects
  * @param properties
  * @param callback
  */
-const updateProperties = function (properties, callback) {
+async function updateProperties(properties, callback) {
+
   for (let i = 0; i < properties.length; i++) {
     if (!(properties[i] instanceof Property)) {
       return callback(new Error('not real properties'));
     }
   }
-  async.each(properties, (p, cb) => {
-    p.save(cb);
-  }, callback);
-};
+
+  let err;
+  try {
+    for (const p of properties) {
+      await p.save();
+    }
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err);
+  }
+}
 
 /**
  * Updates a property only using some data supplied. Internal usage only
@@ -93,15 +102,26 @@ const updateProperties = function (properties, callback) {
  * @param property
  * @param callback
  */
-const updatePropertyPartial = function (gameId, property, callback) {
-  getPropertyById(gameId, property.uuid, (err, loadedProperty) => {
+function updatePropertyPartial(gameId, property, callback) {
+
+  getPropertyById(gameId, property.uuid, async (err, loadedProperty) => {
     if (err) {
       return callback(err);
     }
     _.merge(loadedProperty, property);
-    loadedProperty.save(callback);
+
+    let res, errInfo;
+    try {
+      res = await loadedProperty.save();
+    } catch (ex) {
+      logger.error(ex);
+      errInfo = ex;
+    } finally {
+      callback(errInfo, res);
+    }
   });
-};
+
+}
 
 /**
  * Updates a property, if not existing, creates a new one
@@ -109,7 +129,7 @@ const updatePropertyPartial = function (gameId, property, callback) {
  * @param property
  * @param callback
  */
-const updateProperty = function (gameId, property, callback) {
+async function updateProperty(gameId, property, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
@@ -117,7 +137,6 @@ const updateProperty = function (gameId, property, callback) {
     // this one is pretty useless!
     return callback(new Error('No location added, can not save property'));
   }
-
   if (!(property instanceof Property)) {
     /* In the original version, we created here a new property object.
        This could have been important for the admin, but this was not
@@ -135,7 +154,7 @@ const updateProperty = function (gameId, property, callback) {
       property.uuid = uuid();
     }
     // load the existing one (if there is one) and update it
-    return getPropertyByLocationId(gameId, property.location.uuid, function (err, foundProperty) {
+    return getPropertyByLocationId(gameId, property.location.uuid, async function (err, foundProperty) {
       if (err) {
         return callback(err);
       }
@@ -148,20 +167,34 @@ const updateProperty = function (gameId, property, callback) {
         prop.gamedata  = property.gamedata;
         prop.pricelist = property.pricelist;
         prop._id       = createPropertyId(gameId, property.location);
-        return prop.save(function (err, savedProp) {
-          return callback(err, savedProp);
-        });
+
+        let savedProp, errInfo;
+        try {
+          savedProp = await prop.save();
+        } catch (ex) {
+          logger.error(ex);
+          errInfo = ex;
+        } finally {
+          callback(errInfo, savedProp)
+        }
       } else {
         // we found the property and do not touch gameId and location data
         foundProperty.gamedata  = property.gamedata;
         foundProperty.pricelist = property.pricelist;
-        return foundProperty.save(function (err, savedProp) {
-          return callback(err, savedProp);
-        });
+
+        let savedProp, errInfo;
+        try {
+          savedProp = await foundProperty.save();
+        } catch (ex) {
+          logger.error(ex);
+          errInfo = ex;
+        } finally {
+          callback(errInfo, savedProp)
+        }
       }
     });
   }
-};
+}
 
 /**
  * Updates the position in the pricelist for a single position
@@ -171,26 +204,30 @@ const updateProperty = function (gameId, property, callback) {
  * @param callback
  * @returns {*}
  */
-const updatePositionInPriceList = function (gameId, propertyId, position, callback) {
+async function updatePositionInPriceList(gameId, propertyId, position, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Property.find({gameId: gameId, uuid: propertyId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
+  let savedProperty, err;
+  try {
+    const docs = await Property
+      .findOne({gameId: gameId, uuid: propertyId})
+      .exec();
+    if (!docs) {
       logger.info('Did not find location with uuid ' + propertyId);
       return callback(new Error('location not available'));
     }
-    docs[0].pricelist.positionInPriceRange = position;
-    docs[0].save(function (err, savedProperty) {
-      logger.info(savedProperty.location.name + ' updated' + ` v: ${savedProperty.pricelist.positionInPriceRange}`);
+    docs.pricelist.positionInPriceRange = position;
 
-      callback(err, savedProperty);
-    });
-  });
-};
+    savedProperty = await docs.save();
+    logger.info(savedProperty.location.name + ' updated' + ` v: ${savedProperty.pricelist.positionInPriceRange}`);
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, savedProperty);
+  }
+}
 
 /**
  * Get a property by its location ID
@@ -199,20 +236,23 @@ const updatePositionInPriceList = function (gameId, propertyId, position, callba
  * @param callback
  * @returns {*}
  */
-const getPropertyByLocationId = function (gameId, locationId, callback) {
+async function getPropertyByLocationId(gameId, locationId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Property.find({gameId: gameId, 'location.uuid': locationId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs[0]);
-  });
-};
+
+  let docs, err;
+  try {
+    docs = await Property
+      .findOne({gameId: gameId, 'location.uuid': locationId})
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
+}
 
 
 /**
@@ -222,20 +262,22 @@ const getPropertyByLocationId = function (gameId, locationId, callback) {
  * @param callback
  * @returns {*}
  */
-const getPropertyById = function (gameId, propertyId, callback) {
+async function getPropertyById(gameId, propertyId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Property.find({gameId: gameId, 'uuid': propertyId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs[0]);
-  });
-};
+  let err, docs;
+  try {
+    docs = await Property
+      .findOne({gameId: gameId, 'uuid': propertyId})
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
+}
 
 /**
  * Get all properties for a gameplay
@@ -248,33 +290,38 @@ const getPropertyById = function (gameId, propertyId, callback) {
  * @param callback
  * @returns {Query}
  */
-const getPropertiesForGameplay = function (gameId, options, callback) {
+async function getPropertiesForGameplay(gameId, options, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
 
-  if (options && options.lean) {
-    return Property.find()
-      .where('gameId').equals(gameId)
-      .lean()
-      .exec(function (err, docs) {
-        return callback(err, docs);
-      });
-  } else if (options && options.propertyGroup) {
-    return Property.find()
-      .where('gameId').equals(gameId)
-      .where('pricelist.propertyGroup').equals(options.propertyGroup)
-      .exec(function (err, docs) {
-        return callback(err, docs);
-      });
-  } else {
-    return Property.find()
-      .where('gameId').equals(gameId)
-      .exec(function (err, docs) {
-        return callback(err, docs);
-      });
+  let docs, err;
+  try {
+    if (options && options.lean) {
+      docs = await Property
+        .find()
+        .where('gameId').equals(gameId)
+        .lean()
+        .exec();
+    } else if (options && options.propertyGroup) {
+      docs = await Property
+        .find()
+        .where('gameId').equals(gameId)
+        .where('pricelist.propertyGroup').equals(options.propertyGroup)
+        .exec();
+    } else {
+      docs = await Property
+        .find()
+        .where('gameId').equals(gameId)
+        .exec();
+    }
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
   }
-};
+}
 
 /**
  * Get the poperties for a team
@@ -283,17 +330,25 @@ const getPropertiesForGameplay = function (gameId, options, callback) {
  * @param callback
  * @returns {*}
  */
-const getPropertiesForTeam = function (gameId, teamId, callback) {
+async function getPropertiesForTeam(gameId, teamId, callback) {
   if (!gameId || !teamId) {
     return callback(new Error('Parameter error'));
   }
-  Property.find()
-    .where('gamedata.owner').equals(teamId)
-    .where('gameId').equals(gameId)
-    .exec(function (err, data) {
-      callback(err, data);
-    });
-};
+
+  let data, err;
+  try {
+    data = await Property
+      .find()
+      .where('gamedata.owner').equals(teamId)
+      .where('gameId').equals(gameId)
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, data);
+  }
+}
 
 /**
  * Get the propertyIds for a team. Reduces the amount of data transferred
@@ -302,18 +357,25 @@ const getPropertiesForTeam = function (gameId, teamId, callback) {
  * @param callback
  * @returns {*}
  */
-const getPropertiesIdsForTeam = function (gameId, teamId, callback) {
+async function getPropertiesIdsForTeam(gameId, teamId, callback) {
   if (!gameId || !teamId) {
     return callback(new Error('Parameter error'));
   }
-  Property.find()
-    .where('gamedata.owner').equals(teamId)
-    .where('gameId').equals(gameId)
-    .select('uuid')
-    .exec(function (err, data) {
-      callback(err, data);
-    });
-};
+  let err, data;
+  try {
+    data = await Property
+      .find()
+      .where('gamedata.owner').equals(teamId)
+      .where('gameId').equals(gameId)
+      .select('uuid')
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, data);
+  }
+}
 
 /**
  * Removes one property from the gameplay (deletes them in the DB)
@@ -321,13 +383,24 @@ const getPropertiesIdsForTeam = function (gameId, teamId, callback) {
  * @param locationId
  * @param callback
  */
-const removePropertyFromGameplay = function (gameId, locationId, callback) {
+async function removePropertyFromGameplay(gameId, locationId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  logger.info('Removing one property for ' + gameId);
-  Property.deleteMany({gameId: gameId, 'location.uuid': locationId}, callback);
-};
+
+  let res, err;
+  try {
+    logger.info('Removing one property for ' + gameId);
+    res = await Property
+      .deleteOne({gameId: gameId, 'location.uuid': locationId})
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
+}
 
 /**
  * Finalizes a game: removes all properties not assigned to the pricelist
@@ -335,29 +408,50 @@ const removePropertyFromGameplay = function (gameId, locationId, callback) {
  * @param callback
  * @returns {*}
  */
-const finalizeProperties              = function (gameId, callback) {
+async function finalizeProperties(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
 
-  Property.deleteMany({
-      gameId                : gameId,
-      'pricelist.priceRange': -1
-    },
-    callback);
-};
+  let err, res;
+  try {
+    res = await Property
+      .deleteMany({
+        gameId                : gameId,
+        'pricelist.priceRange': -1
+      })
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
+}
+
 /**
  * Removes ALL properties from the gameplay
  * @param gameId
  * @param callback
  */
-const removeAllPropertiesFromGameplay = function (gameId, callback) {
+async function removeAllPropertiesFromGameplay(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
   logger.info('Removing all properties for ' + gameId);
-  Property.deleteMany({gameId: gameId}, callback);
-};
+
+  let err, res;
+  try {
+    res = await Property
+      .deleteMany({gameId: gameId})
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
+}
 
 /**
  * Allows building for all properties in the gameplay
@@ -365,28 +459,35 @@ const removeAllPropertiesFromGameplay = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-const allowBuilding = function (gameId, callback) {
+async function allowBuilding(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Property.updateMany(
-    {
-      gameId          : gameId,
-      'gamedata.owner': {
-        '$exists': true,   // must exist
-        '$ne'    : ''      // not equal empty
-      }
-    },
-    {
-      'gamedata.buildingEnabled': true
-    },
-    {
-      //  'multi': true // DOES NOT WORK WITH updateMany!
-    },
-    function (err, numAffected) {
-      callback(err, _.get(numAffected, 'nModified', 0));
-    });
-};
+
+  let res, err;
+  try {
+    const numAffected = await Property
+      .updateMany(
+        {
+          gameId          : gameId,
+          'gamedata.owner': {
+            '$exists': true,   // must exist
+            '$ne'    : ''      // not equal empty
+          }
+        },
+        {
+          'gamedata.buildingEnabled': true
+        })
+      .exec();
+
+    res = _.get(numAffected, 'nModified', 0);
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
+}
 
 /**
  * Count the properties of a given game
@@ -394,11 +495,22 @@ const allowBuilding = function (gameId, callback) {
  * @param callback
  * @returns {*}
  */
-function countProperties(gameId, callback) {
+async function countProperties(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  Property.countDocuments({gameId: gameId}, callback);
+
+  let err, res;
+  try {
+    res = await Property
+      .countDocuments({gameId: gameId})
+      .exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
 }
 
 /**

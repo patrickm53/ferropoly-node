@@ -20,7 +20,7 @@ const accountLog = require('./accountLogModel');
 /**
  * The mongoose schema for an user
  */
-let userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
   _id         : {type: String},
   id          : String,
   personalData: {
@@ -117,10 +117,16 @@ function createPasswordHash(salt, password) {
  * @param emailAddress
  * @param callback
  */
-function removeUser(emailAddress, callback) {
-  User.delete({'personalData.email': emailAddress}, function (err) {
-    callback(err);
-  });
+async function removeUser(emailAddress, callback) {
+  let res, err;
+  try {
+    res = await User.deleteOne({'personalData.email': emailAddress}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, res);
+  }
 }
 
 /**
@@ -129,15 +135,13 @@ function removeUser(emailAddress, callback) {
  * @param password
  * @param callback
  */
-function updateUser(user, password, callback) {
-  User.find({_id: user._id}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
+async function updateUser(user, password, callback) {
+  try {
+    let doc = await User.findOne({_id: user._id}).exec();
 
-    if (docs.length === 0) {
+    if (!doc) {
       // New User OR invalid created user
-      return getUserByMailAddress(user.personalData.email, function (err, foundUser) {
+      return getUserByMailAddress(user.personalData.email, async function (err, foundUser) {
         if (err) {
           return callback(err);
         }
@@ -152,30 +156,25 @@ function updateUser(user, password, callback) {
         user.info.registrationDate = new Date();
         user._id                   = user.personalData.email;
         accountLog.addNewUserEntry(user.personalData.email, 'Email-Adresse');
-        return user.save(function (err, savedUser) {
-          if (err) {
-            return callback(err);
-          }
-          return callback(null, savedUser);
-        });
+        savedUser = await user.save();
+        return callback(null, savedUser);
       });
 
     } else {
-      let editedUser = docs[0];
+      let editedUser = doc;
       copyUser(user, editedUser);
       // Update User
       logger.info('Update user:' + user.personalData.email);
       if (password) {
         generatePasswordHash(editedUser, password);
       }
-      return editedUser.save(function (err, savedUser) {
-        if (err) {
-          return callback(err);
-        }
-        return callback(null, savedUser);
-      });
+      let savedUser = await editedUser.save();
+      return callback(null, savedUser);
     }
-  });
+  } catch (ex) {
+    logger.error(ex);
+    callback(ex);
+  }
 }
 
 /**
@@ -183,35 +182,35 @@ function updateUser(user, password, callback) {
  * @param emailAddress
  * @param callback
  */
-function getUserByMailAddress(emailAddress, callback) {
-  User.find({'personalData.email': emailAddress}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
+async function getUserByMailAddress(emailAddress, callback) {
+  try {
+    const foundUser = await User
+      .findOne({'personalData.email': emailAddress})
+      .exec();
+
+    if (!foundUser) {
       return callback();
     }
 
     // Verify if this user already has an ID or not. If not, upgrade to new model
-    let foundUser = docs[0];
     if (!_.isString(foundUser._id) || foundUser._id !== foundUser.personalData.email) {
       const id      = foundUser._id;
       const newUser = new User();
       copyUser(foundUser, newUser);
       newUser._id = emailAddress;
-      newUser.save(function (err) {
-        if (err) {
-          return callback(err);
-        }
-        User.findByIdAndRemove(id, function (err) {
-          logger.info('Updated user with email ' + newUser.personalData.email);
-          callback(err, newUser);
-        });
-      });
+      await newUser.save();
+      await User
+        .findByIdAndRemove(id)
+        .exec();
+      logger.info('Updated user with email ' + newUser.personalData.email);
+      callback(null, newUser);
     } else {
       callback(null, foundUser);
     }
-  });
+  } catch (ex) {
+    logger.error(ex);
+    callback(ex);
+  }
 }
 
 /**
@@ -219,16 +218,16 @@ function getUserByMailAddress(emailAddress, callback) {
  * @param id
  * @param callback, providing the complete user information when found
  */
-function getUser(id, callback) {
-  User.find({'_id': id}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs[0]);
-  });
+async function getUser(id, callback) {
+  let doc, err;
+  try {
+    doc = await User.findOne({'_id': id}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
 }
 
 
@@ -237,16 +236,16 @@ function getUser(id, callback) {
  * @param profileId
  * @param callback
  */
-function getGoogleUser(profileId, callback) {
-  User.find({'login.googleProfileId': profileId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs[0]);
-  });
+async function getGoogleUser(profileId, callback) {
+  let err, doc;
+  try {
+    doc = await User.findOne({'login.googleProfileId': profileId}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
 }
 
 /**
@@ -254,45 +253,48 @@ function getGoogleUser(profileId, callback) {
  * @param profileId
  * @param callback
  */
-function getMicrosoftUser(profileId, callback) {
-  User.find({'login.microsoftProfileId': profileId}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs[0]);
-  });
+async function getMicrosoftUser(profileId, callback) {
+  let err, doc;
+  try {
+    doc = await User.findOne({'login.microsoftProfileId': profileId}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, doc);
+  }
 }
 
 /**
  * Gets all users
  * @param callback
  */
-function getAllUsers(callback) {
-  User.find({}, function (err, docs) {
-    if (err) {
-      return callback(err);
-    }
-    if (docs.length === 0) {
-      return callback();
-    }
-    callback(null, docs);
-  });
+async function getAllUsers(callback) {
+  let docs, err;
+  try {
+    docs = await User.find({}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, docs);
+  }
 }
 
 /**
  * Counts all users
  * @param callback
  */
-function countUsers(callback) {
-  User.countDocuments({}, function (err, nb) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, nb);
-  });
+async function countUsers(callback) {
+  let err, nb;
+  try {
+    nb = await User.countDocuments({}).exec();
+  } catch (ex) {
+    logger.error(ex);
+    err = ex;
+  } finally {
+    callback(err, nb);
+  }
 }
 
 
@@ -303,107 +305,102 @@ function countUsers(callback) {
  * @returns {*}
  */
 function findOrCreateGoogleUser(profile, callback) {
-  logger.info('findOrCreateGoogleUser', profile);
-  if (!_.isObject(profile) || !_.isString(profile.id)) {
-    return callback(new Error('invalid profile supplied'));
-  }
-
-
-  if (profile.provider !== 'google') {
-    logger.info('This is not a google account: ' + profile.provider);
-    callback(new Error('not a google account: ' + profile.provider));
-  }
-
-  // Try to get the user
-  getGoogleUser(profile.id, function (err, user) {
-    if (err) {
-      return callback(err);
+  try {
+    logger.info('findOrCreateGoogleUser', profile);
+    if (!_.isObject(profile) || !_.isString(profile.id)) {
+      return callback(new Error('invalid profile supplied'));
     }
-    if (!user) {
-      // The user is not here, try to find him with the email-address
-      let emailAddress = '';
-      if (_.isArray(profile.emails)) {
-        emailAddress = profile.emails[0].value;
-      } else if (_.isString(profile.email)) {
-        emailAddress = profile.email;
-      } else {
-        emailAddress = 'error';
-        logger.error('unable to set google email address', profile);
-      }
-      // Avatar: different options
-      let avatar = '';
-      if (_.isArray(profile.photos)) {
-        avatar = profile.photos[0].value;
-      } else if (_.isString(profile.picture)) {
-        avatar = profile.picture;
-      } else {
-        avatar = undefined;
-        logger.info('unable to set google avatar', profile);
-      }
-      logger.info(`Google login with email Address ${emailAddress}`, profile);
 
-      function saveNewGoogleUser() {
-        let newUser                   = new User();
-        newUser._id                   = emailAddress || profile.id;
-        newUser.login.googleProfileId = profile.id;
-        newUser.info.google           = profile;
-        newUser.info.registrationDate = new Date();
-        newUser.login.verifiedEmail   = true; // Google does not need verification
-        newUser.personalData.forename = profile.name.givenName;
-        newUser.personalData.surname  = profile.name.familyName;
-        newUser.personalData.email    = emailAddress;
-        newUser.personalData.avatar   = avatar;
-        accountLog.addNewUserEntry(newUser._id, 'Google');
-        newUser.save(function (err, savedUser) {
-          if (err) {
-            return callback(err);
-          }
+    if (profile.provider !== 'google') {
+      logger.info('This is not a google account: ' + profile.provider);
+      callback(new Error('not a google account: ' + profile.provider));
+    }
+
+    // Try to get the user
+    getGoogleUser(profile.id, function (err, user) {
+      if (err) {
+        return callback(err);
+      }
+      if (!user) {
+        // The user is not here, try to find him with the email-address
+        let emailAddress = '';
+        if (_.isArray(profile.emails)) {
+          emailAddress = profile.emails[0].value;
+        } else if (_.isString(profile.email)) {
+          emailAddress = profile.email;
+        } else {
+          emailAddress = 'error';
+          logger.error('unable to set google email address', profile);
+        }
+        // Avatar: different options
+        let avatar = '';
+        if (_.isArray(profile.photos)) {
+          avatar = profile.photos[0].value;
+        } else if (_.isString(profile.picture)) {
+          avatar = profile.picture;
+        } else {
+          avatar = undefined;
+          logger.info('unable to set google avatar', profile);
+        }
+        logger.info(`Google login with email Address ${emailAddress}`, profile);
+
+        async function saveNewGoogleUser() {
+          let newUser                   = new User();
+          newUser._id                   = emailAddress || profile.id;
+          newUser.login.googleProfileId = profile.id;
+          newUser.info.google           = profile;
+          newUser.info.registrationDate = new Date();
+          newUser.login.verifiedEmail   = true; // Google does not need verification
+          newUser.personalData.forename = profile.name.givenName;
+          newUser.personalData.surname  = profile.name.familyName;
+          newUser.personalData.email    = emailAddress;
+          newUser.personalData.avatar   = avatar;
+          accountLog.addNewUserEntry(newUser._id, 'Google');
+          let savedUser = await newUser.save();
           logger.info('Created google user', savedUser);
           // Recursive call, now we'll find this user
           return findOrCreateGoogleUser(profile, callback);
-        });
-      }
+        }
 
-      if (emailAddress) {
-        getUserByMailAddress(emailAddress, function (err, user) {
-          if (err) {
-            return callback(err);
-          }
-          if (user) {
-            // Ok, we know this user. Update profile for google access
-            user.info.google           = profile;
-            user.info.registrationDate = new Date();
-            user.login.verifiedEmail   = true; // Google does not need verification
-            user.personalData.forename = profile.name.givenName;
-            user.personalData.surname  = profile.name.familyName;
-            user.login.googleProfileId = profile.id;
-            user.personalData.avatar   = avatar;
-            accountLog.addNewUserEntry(emailAddress, 'Google');
-            user.save(function (err) {
-              if (err) {
-                return callback(err);
-              }
+        if (emailAddress) {
+          getUserByMailAddress(emailAddress, async function (err, user) {
+            if (err) {
+              return callback(err);
+            }
+            if (user) {
+              // Ok, we know this user. Update profile for google access
+              user.info.google           = profile;
+              user.info.registrationDate = new Date();
+              user.login.verifiedEmail   = true; // Google does not need verification
+              user.personalData.forename = profile.name.givenName;
+              user.personalData.surname  = profile.name.familyName;
+              user.login.googleProfileId = profile.id;
+              user.personalData.avatar   = avatar;
+              accountLog.addNewUserEntry(emailAddress, 'Google');
+              await user.save();
               logger.info('Upgraded user ' + emailAddress + ' for google access');
               // Recursive call, now we'll find this user
               return findOrCreateGoogleUser(profile, callback);
-            });
-            return;
-          }
+            }
 
-          // We do not know this user. Add him/her to the list.
-          saveNewGoogleUser();
-        });
-        return;
+            // We do not know this user. Add him/her to the list.
+            saveNewGoogleUser();
+          });
+          return;
+        }
+        // No email address (somehow an annonymous google user). Add as new User
+        return saveNewGoogleUser();
       }
-      // No email address (somehow an annonymous google user). Add as new User
-      return saveNewGoogleUser();
-    }
 
-    // User found, update
-    user.info.google         = profile;
-    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-    updateUser(user, null, callback);
-  });
+      // User found, update
+      user.info.google         = profile;
+      user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+      updateUser(user, null, callback);
+    });
+  } catch (ex) {
+    logger.error(ex);
+    callback(ex);
+  }
 }
 
 
@@ -414,106 +411,111 @@ function findOrCreateGoogleUser(profile, callback) {
  * @returns {*}
  */
 function findOrCreateMicrosoftUser(profile, callback) {
-  logger.info('findOrCreateMicrosoftUser', profile);
-  if (!_.isObject(profile) || !_.isString(profile.id)) {
-    return callback(new Error('invalid profile supplied'));
-  }
-
-  if (profile.provider !== 'microsoft') {
-    logger.info('This is not a microsoft account: ' + profile.provider);
-    callback(new Error('not a microsoft account: ' + profile.provider));
-  }
-
-  // Try to get the user
-  getMicrosoftUser(profile.id, function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      // The user is not here, try to find him with the email-address
-      let emailAddress = '';
-      if (_.isArray(profile.emails)) {
-        emailAddress = profile.emails[0].value;
-      } else if (_.isString(profile.email)) {
-        emailAddress = profile.email;
-      } else {
-        emailAddress = 'error';
-        logger.error('unable to set microsoft email address', profile);
-      }
-      // Avatar: different options
-      let avatar = '';
-      if (_.isArray(profile.photos)) {
-        avatar = profile.photos[0].value;
-      } else if (_.isString(profile.picture)) {
-        avatar = profile.picture;
-      } else {
-        avatar = undefined;
-        logger.info('unable to set Microsoft avatar');
-      }
-      logger.info(`Microsoft login with email Address ${emailAddress}`, profile);
-
-      function saveNewMicrosoftUser() {
-        let newUser                      = new User();
-        newUser._id                      = emailAddress || profile.id;
-        newUser.login.microsoftProfileId = profile.id;
-        newUser.info.microsoft           = profile;
-        newUser.info.registrationDate    = new Date();
-        newUser.login.verifiedEmail      = true; // MS does not need verification
-        newUser.personalData.forename    = profile.name.givenName;
-        newUser.personalData.surname     = profile.name.familyName;
-        newUser.personalData.email       = emailAddress;
-        newUser.personalData.avatar      = avatar;
-        accountLog.addNewUserEntry(newUser._id, 'Microsoft');
-        newUser.save(function (err, savedUser) {
-          if (err) {
-            return callback(err);
-          }
-          logger.info('Created microsoft user', savedUser);
-          // Recursive call, now we'll find this user
-          return findOrCreateMicrosoftUser(profile, callback);
-        });
-      }
-
-      if (emailAddress) {
-        getUserByMailAddress(emailAddress, function (err, user) {
-          if (err) {
-            return callback(err);
-          }
-          if (user) {
-            // Ok, we know this user. Update profile for microsoft access
-            user.info.microsoft           = profile;
-            user.info.registrationDate    = new Date();
-            user.login.verifiedEmail      = true; // MS does not need verification
-            user.personalData.forename    = profile.name.givenName;
-            user.personalData.surname     = profile.name.familyName;
-            user.login.microsoftProfileId = profile.id;
-            user.personalData.avatar      = avatar;
-            accountLog.addNewUserEntry(emailAddress, 'Microsoft');
-            user.save(function (err) {
-              if (err) {
-                return callback(err);
-              }
-              logger.info('Upgraded user ' + emailAddress + ' for microsoft access');
-              // Recursive call, now we'll find this user
-              return findOrCreateMicrosoftUser(profile, callback);
-            });
-            return;
-          }
-
-          // We do not know this user. Add him/her to the list.
-          saveNewMicrosoftUser();
-        });
-        return;
-      }
-      // No email address (somehow an annonymous google user). Add as new User
-      return saveNewMicrosoftUser();
+  try {
+    logger.info('findOrCreateMicrosoftUser', profile);
+    if (!_.isObject(profile) || !_.isString(profile.id)) {
+      return callback(new Error('invalid profile supplied'));
     }
 
-    // User found, update
-    user.info.microsoft      = profile;
-    user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
-    updateUser(user, null, callback);
-  });
+    if (profile.provider !== 'microsoft') {
+      logger.info('This is not a microsoft account: ' + profile.provider);
+      callback(new Error('not a microsoft account: ' + profile.provider));
+    }
+
+    // Try to get the user
+    getMicrosoftUser(profile.id, function (err, user) {
+      if (err) {
+        return callback(err);
+      }
+      if (!user) {
+        // The user is not here, try to find him with the email-address
+        let emailAddress = '';
+        if (_.isArray(profile.emails)) {
+          emailAddress = profile.emails[0].value;
+        } else if (_.isString(profile.email)) {
+          emailAddress = profile.email;
+        } else {
+          emailAddress = 'error';
+          logger.error('unable to set microsoft email address', profile);
+        }
+        // Avatar: different options
+        let avatar = '';
+        if (_.isArray(profile.photos)) {
+          avatar = profile.photos[0].value;
+        } else if (_.isString(profile.picture)) {
+          avatar = profile.picture;
+        } else {
+          avatar = undefined;
+          logger.info('unable to set Microsoft avatar');
+        }
+        logger.info(`Microsoft login with email Address ${emailAddress}`, profile);
+
+        function saveNewMicrosoftUser() {
+          let newUser                      = new User();
+          newUser._id                      = emailAddress || profile.id;
+          newUser.login.microsoftProfileId = profile.id;
+          newUser.info.microsoft           = profile;
+          newUser.info.registrationDate    = new Date();
+          newUser.login.verifiedEmail      = true; // MS does not need verification
+          newUser.personalData.forename    = profile.name.givenName;
+          newUser.personalData.surname     = profile.name.familyName;
+          newUser.personalData.email       = emailAddress;
+          newUser.personalData.avatar      = avatar;
+          accountLog.addNewUserEntry(newUser._id, 'Microsoft');
+          newUser.save(function (err, savedUser) {
+            if (err) {
+              return callback(err);
+            }
+            logger.info('Created microsoft user', savedUser);
+            // Recursive call, now we'll find this user
+            return findOrCreateMicrosoftUser(profile, callback);
+          });
+        }
+
+        if (emailAddress) {
+          getUserByMailAddress(emailAddress, function (err, user) {
+            if (err) {
+              return callback(err);
+            }
+            if (user) {
+              // Ok, we know this user. Update profile for microsoft access
+              user.info.microsoft           = profile;
+              user.info.registrationDate    = new Date();
+              user.login.verifiedEmail      = true; // MS does not need verification
+              user.personalData.forename    = profile.name.givenName;
+              user.personalData.surname     = profile.name.familyName;
+              user.login.microsoftProfileId = profile.id;
+              user.personalData.avatar      = avatar;
+              accountLog.addNewUserEntry(emailAddress, 'Microsoft');
+              user.save(function (err) {
+                if (err) {
+                  return callback(err);
+                }
+                logger.info('Upgraded user ' + emailAddress + ' for microsoft access');
+                // Recursive call, now we'll find this user
+                return findOrCreateMicrosoftUser(profile, callback);
+              });
+              return;
+            }
+
+            // We do not know this user. Add him/her to the list.
+            saveNewMicrosoftUser();
+          });
+          return;
+        }
+        // No email address (somehow an annonymous google user). Add as new User
+        return saveNewMicrosoftUser();
+      }
+
+      // User found, update
+      user.info.microsoft      = profile;
+      user.personalData.avatar = _.isArray(profile.photos) ? profile.photos[0].value : undefined;
+      updateUser(user, null, callback);
+    });
+  } catch (ex) {
+    logger.error(ex);
+    callback(ex);
+  }
 }
 
 
