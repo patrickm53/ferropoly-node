@@ -106,7 +106,7 @@ describe('PicBucket operation', () => {
 
   it('will delete all files again', done => {
     picBucket.deleteAllPics(gameId, err => {
-      expect(err).to.be(null);
+      expect(err).to.be(undefined);
       picBucket.list(gameId, {}, (err, docs) => {
         expect(err).to.be(null);
         expect(docs.length).to.be(0);

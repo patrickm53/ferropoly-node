@@ -37,106 +37,61 @@ const Model = mongoose.model('PicBucket', picBucketSchema);
  * Deletes the pic bucket data for a gameplay. Only the data in the DB, the pictures
  * in the google cloud are removed automatically by a cloud setting
  * @param gameId
- * @param callback
  * @returns {Promise<*>}
  */
-async function deletePicBucket(gameId, callback) {
-  let res, err;
-  try {
-    if (!gameId) {
-      return callback(new Error('No gameId supplied'));
-    }
-    logger.info('Deleting Pic Bucket for ' + gameId);
-    res = await Model
-      .deleteMany({gameId: gameId})
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, res);
+async function deletePicBucket(gameId) {
+  if (!gameId) {
+    throw new Error('No gameId supplied');
   }
+  logger.info('Deleting Pic Bucket for ' + gameId);
+  return await Model
+    .deleteMany({gameId: gameId})
+    .exec();
 }
+
 
 /**
  * Making the saving with callback again
  * @param pic
- * @param callback
  * @returns {Promise<void>}
  */
-async function save(pic, callback) {
-  let res, err;
-  try {
-    res = await pic.save();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, res);
-  }
+async function save(pic) {
+  await pic.save();
 }
 
 
 /**
  * Finds an entry by its id
  * @param id
- * @param callback
  * @returns {Promise<void>}
  */
-async function findPicById(id, callback) {
-  let res, err;
-  try {
-    res = Model
-      .find({_id: id})
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, res);
-  }
+async function findPicById(id,) {
+  return await Model
+    .findOne({_id: id})
+    .exec();
 }
 
 /**
  * Finds an entry by a filter
  * @param filter
- * @param callback
  * @returns {Promise<void>}
  */
-async function findPicsByFilter(filter, callback) {
-  let res, err;
-  try {
-    res = Model
-      .find(filter)
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, res);
-  }
+async function findPicsByFilter(filter) {
+  return await Model
+    .find(filter)
+    .exec();
 }
 
 /**
  * Assigns a property to an entry
  * @param id
  * @param propertyId
- * @param callback
  * @returns {Promise<void>}
  */
-async function assignProperty(id, propertyId, callback) {
-  let res, err;
-  try {
-    res = Model
-      .findOneAndUpdate({_id: id}, {propertyId: propertyId})
-      .exec();
-    callback(null, res);
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, res);
-  }
+async function assignProperty(id, propertyId) {
+  return await Model
+    .findOneAndUpdate({_id: id}, {propertyId: propertyId})
+    .exec();
 }
 
 module.exports = {

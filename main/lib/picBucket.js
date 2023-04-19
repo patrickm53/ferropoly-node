@@ -82,12 +82,15 @@ class PicBucket extends EventEmitter {
                    accuracy: Number(_.get(options, 'position.accuracy', '10000')),
                  };
                  pic._id              = `${gameId}-${fileBase}`;
-                 pic.save(err => {
-                   if (err) {
-                     return callback(err);
-                   }
-                   return callback(null, {uploadUrl: imageUrl[0], thumbnailUrl: thumbUrl[0], id: pic._id});
-                 });
+                 picBucketModel.save(pic)
+                               .then(() => {
+                                 return callback(null, {
+                                   uploadUrl   : imageUrl[0],
+                                   thumbnailUrl: thumbUrl[0],
+                                   id          : pic._id
+                                 });
+                               })
+                               .catch(callback);
                }).catch(err => {
             logger.error(err);
             return callback(err);
@@ -109,11 +112,10 @@ class PicBucket extends EventEmitter {
   confirmUpload(id, options, callback) {
     let self                   = this;
     const doGeolocationApiCall = _.get(options, 'doGeolocationApiCall', true);
-    picBucketModel.Model.find({_id: id}, (err, docs) => {
-      if (err) {
-        return callback(err);
+    picBucketModel.findPicById({_id: id}).then(entry => {
+      if (!entry) {
+        return logger.info(`Pic with ${id} not found!`);
       }
-      let entry      = docs[0];
       entry.uploaded = true;
       if (options.position) {
         if (entry.position.accuracy > Number(_.get(options, 'position.accuracy', '10000'))) {
@@ -139,13 +141,18 @@ class PicBucket extends EventEmitter {
              })
              .finally(() => {
                self.emit('new', entry);
-               return entry.save(callback);
+               picBucketModel.save(entry)
+                             .then(callback())
+                             .catch(callback);
              })
       } else {
         self.emit('new', entry);
-        entry.save(callback);
+        picBucketModel.save(entry)
+                      .then(callback())
+                      .catch(callback);
       }
     })
+                  .catch(callback);
   }
 
   /**
@@ -169,12 +176,11 @@ class PicBucket extends EventEmitter {
       filter.uploaded = uploaded;
     }
 
-    picBucketModel.findPicsByFilter(filter, (err, docs) => {
-      if (err) {
-        return callback(err);
-      }
-      return callback(null, docs);
-    });
+    picBucketModel.findPicsByFilter(filter)
+                  .then(docs => {
+                    return callback(null, docs);
+                  })
+                  .catch(callback);
   }
 
   /**
@@ -188,7 +194,10 @@ class PicBucket extends EventEmitter {
     if (!gameId) {
       return callback(new Error('No gameId supplied'));
     }
-    picBucketModel.deletePicBucket(gameId, callback);
+    picBucketModel.deletePicBucket(gameId)
+                  .then(() => {
+                    callback()
+                  }).catch(callback);
   }
 
   /**
@@ -210,10 +219,12 @@ class PicBucket extends EventEmitter {
 
 
   assignProperty(id, propertyId, callback) {
-    picBucketModel.Model.findOneAndUpdate({_id: id}, {propertyId: propertyId}, callback)
+    picBucketModel.Model.findOneAndUpdate({_id: id}, {propertyId: propertyId})
+                  .then(() => {
+                    return callback();
+                  })
+                  .catch(callback);
   }
-
-
 }
 
 
