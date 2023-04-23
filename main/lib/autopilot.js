@@ -107,12 +107,12 @@ function createPicBucket(options, callback) {
     accuracy: _.random(20, 800)
   };
   pic._id              = `${gameId}-${seed}`;
-  pic.save(err => {
-    if (err) {
-      return callback(err);
-    }
-    picBucket.confirmUpload(pic._id, {doGeolocationApiCall: false}, callback);
-  });
+  picBucketModel
+    .save(pic)
+    .then(() => {
+      picBucket.confirmUpload(pic._id, {doGeolocationApiCall: false}, callback);
+    })
+    .catch(callback)
 }
 
 /**
@@ -245,22 +245,23 @@ function refreshActiveGames() {
   });
   autoPilotGames = [];
 
-  gameplays.getAutopilotGameplays((err, gps) => {
-    if (err) {
-      return logger.error(err);
-    }
-    if (!gps || gps.length === 0) {
-      return logger.info('autopilot INACTIVE as there are no gameplays configured for it');
-    }
-    picBucket = require('./picBucket')();
-    gps.forEach(gp => {
-      // Just a shortcut
-      gp.autopilotInterval = _.get(gp, 'internal.autopilot.interval', (5 * 60 * 1000));
-      logger.info(`Autopilot for "${gp.internal.gameId}" ACTIVE with ${gp.autopilotInterval / 1000}s interval`);
-      startTimer(gp, _.random(gp.autopilotInterval / 2, gp.autopilotInterval));
-      autoPilotGames.push(gp);
-    })
-  })
+  gameplays.getAutopilotGameplays()
+           .then(gps => {
+             if (!gps || gps.length === 0) {
+               return logger.info('autopilot INACTIVE as there are no gameplays configured for it', gps);
+             }
+             picBucket = require('./picBucket')();
+             gps.forEach(gp => {
+               // Just a shortcut
+               gp.autopilotInterval = _.get(gp, 'internal.autopilot.interval', (5 * 60 * 1000));
+               logger.info(`Autopilot for "${gp.internal.gameId}" ACTIVE with ${gp.autopilotInterval / 1000}s interval`);
+               startTimer(gp, _.random(gp.autopilotInterval / 2, gp.autopilotInterval));
+               autoPilotGames.push(gp);
+             })
+           })
+           .catch(err => {
+             logger.error(err);
+           })
 }
 
 module.exports = {

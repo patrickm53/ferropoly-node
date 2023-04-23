@@ -341,24 +341,17 @@ async function getAllGameplays(callback) {
 /**
  * Remove a gameplay for ever (delete from DB)
  * @param gp gameplay object to remove
- * @param callback
  * @returns {*}
  */
-async function removeGameplay(gp, callback) {
-  let err;
+async function removeGameplay(gp) {
+
   if (!gp || !gp.internal || !gp.internal.gameId) {
-    return callback(new Error('Invalid gameplay'));
+    throw new Error('Invalid gameplay');
   }
   logger.info('Removing gameplay ' + gp.internal.gameId + ' (' + gp.gamename + ')');
-  try {
-    await Gameplay
-      .deleteOne({'internal.gameId': gp.internal.gameId}).exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err);
-  }
+  return await Gameplay
+    .deleteOne({'internal.gameId': gp.internal.gameId}).exec();
+
 }
 
 /**
@@ -737,28 +730,20 @@ async function saveNewPriceListRevision(gameplay, callback) {
 
 /**
  * Returns all active autoilot games, only the ones today, only demo
- * @param callback
  */
-async function getAutopilotGameplays(callback) {
-  let err, gps;
-  try {
-    let today = DateTime.now().toISODate()
-    gps       = await Gameplay
-      .find({
-        'internal.isDemo': true, 'internal.autopilot.active': true, 'scheduling.gameDate': {
-          $gte: today, $lte: today
-        }
-      })
-      .lean()
-      .exec();
-
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, gps);
-  }
+async function getAutopilotGameplays() {
+  let yesterday = DateTime.now().minus({days: 1}).toJSDate();
+  let tomorrow  = DateTime.now().plus({days: 1}).toJSDate();
+  return await Gameplay
+    .find({
+      'internal.isDemo'          : true,
+      'internal.autopilot.active': true,
+      'scheduling.gameDate'      : {$gt: yesterday, $lt: tomorrow}
+    })
+    .lean()
+    .exec();
 }
+
 
 /**
  * Exports of this module
