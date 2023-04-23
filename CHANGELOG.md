@@ -2,7 +2,7 @@
 
 * Pic Bucket neu: Upload von Bilder während dem Spiel durch Teams
 * Dependency Updates
-* Sync mit Editor: Hintergrundbilder mit neuer Route
+* Sync mit Editor: Hintergrundbilder mit neuer Route, ebenso Header
 * Komplette Überarbeitung Autopilot
 * Potentielles Problem API behoben: session.passport wurde bei User Prüfung vorausgesetzt, ist jedoch nicht in 
   jedem Fall vorhanden (z.B. bei Exploration API mit 3rd party tools). In seltenen Fällen konnte dies dazu führen,
