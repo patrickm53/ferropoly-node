@@ -71,7 +71,7 @@ export default {
         'panel-overview'   : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/overview',
         'panel-call'       : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/call',
         'panel-map'        : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/map',
-        'panel-pictures'   : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-1/reception/picutres',
+        'panel-pictures'   : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/pictures',
         'panel-statistic'  : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/statistic',
         'panel-accounting' : 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/accounting',
         'panel-chancellery': 'https://www.ferropoly.ch/hilfe/ferropoly-spiel/3-0/reception/chancellery',
