@@ -125,38 +125,45 @@ async function deleteAllEntries(gameId) {
  * @param callback
  * @returns {*}
  */
-async function getLogEntries(gameId, teamId, tsStart, tsEnd, callback) {
-  try {
-    if (!gameId) {
-      return callback(new Error('No gameId supplied'));
-    }
-    if (!tsStart) {
-      tsStart = moment('2015-01-01');
-    }
-    if (!tsEnd) {
-      tsEnd = moment();
-    }
-    if (teamId) {
-      const res = await GameLog
-        .find({gameId: gameId})
-        .where('teamId').equals(teamId)
-        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-        .sort('timestamp')
-        .lean()
-        .exec();
-      return callback(null, res);
-    } else {
-      const res = await GameLog
-        .find({gameId: gameId})
-        .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
-        .sort('timestamp')
-        .lean()
-        .exec();
-      return callback(null, res);
-    }
-  } catch (ex) {
-    logger.error(ex);
-    callback(ex);
+function getLogEntries(gameId, teamId, tsStart, tsEnd, callback) {
+
+  if (!gameId) {
+    return callback(new Error('No gameId supplied'));
+  }
+  if (!tsStart) {
+    tsStart = moment('2015-01-01');
+  }
+  if (!tsEnd) {
+    tsEnd = moment();
+  }
+  if (teamId) {
+    GameLog
+      .find({gameId: gameId})
+      .where('teamId').equals(teamId)
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec()
+      .then(res => {
+        return callback(null, res);
+      })
+      .catch(err => {
+        return callback(err);
+      })
+    return callback(null, res);
+  } else {
+    GameLog
+      .find({gameId: gameId})
+      .where('timestamp').gte(tsStart.toDate()).lte(tsEnd.toDate())
+      .sort('timestamp')
+      .lean()
+      .exec()
+      .then(res => {
+        return callback(null, res);
+      })
+      .catch(err => {
+        return callback(err);
+      })
   }
 }
 

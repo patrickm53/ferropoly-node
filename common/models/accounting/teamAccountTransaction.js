@@ -70,7 +70,7 @@ async function bookTransfer(debitor, creditor) {
 /***
  * Get the entries of the account
  * @param gameId
- * @param teamId, if undefined, then all entries of all teams are returned
+ * @param teamId , if undefined, then all entries of all teams are returned
  * @param tsStart moment() to start, if undefined all. NOT INCLUDING the entry with exactly this timestamp.
  * @param tsEnd   moment() to end, if undefined now()
  * @returns {*}
@@ -119,9 +119,8 @@ async function dumpAccounts(gameId) {
     throw new Error('No gameId supplied');
   }
   logger.info('Removing all account information for ' + gameId);
-  return await TeamAccountTransaction
+  await TeamAccountTransaction
     .deleteMany({gameId: gameId})
-
 }
 
 

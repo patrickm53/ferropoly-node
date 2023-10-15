@@ -11,6 +11,10 @@ languages).
     * [Bugtracking](https://bitbucket.org/christian_kuster/ferropoly_main/issues?status=new&status=open) (public), report found bugs here
   * [Atlassian Jira](https://christian-kuster.atlassian.net/jira/software/projects/FERS/boards/2) for mid and longterm planning (Login required)
   
+## Testing
+For the test management I use a sponsored licence of [Testiny](https://www.testiny.io/).
+
+![Testify](./common/badge-tested-with-testiny@2x.png)
 
 ## Environment Variables 
 

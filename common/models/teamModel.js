@@ -62,7 +62,6 @@ async function createTeam(newTeam, gameId) {
  * @return {Promise<*|undefined|void>}
  */
 async function updateTeam(team) {
-  let res
 
   logger.info(`Updating team ${team.uuid} for ${team.gameId}`);
   let doc = await Team
@@ -74,29 +73,19 @@ async function updateTeam(team) {
     if (!team.gameId) {
       throw new Error('no game id');
     }
-    return createTeam(team, team.gameId, function (err, newTeam) {
-      if (err) {
-        throw new Error('can not create new team: ' + err.message);
-      } else {
-        res = newTeam;
-      }
-    });
+    return await createTeam(team, team.gameId);
   } else {
     if (!team.data.teamLeader.hasLogin) {
       logger.info(`Team leader ${team.data.teamLeader.name} has no login for team ${team.uuid} for ${team.gameId}`);
       // Check for Login
-      return await userModel.getUserByMailAddress(team.data.teamLeader.email, async (err, user) => {
+      let user = await userModel.getUserByMailAddressB(team.data.teamLeader.email);
         logger.info(`User found`, user);
-        if (err) {
-          // Not critical!!! ES-Lint requires this if, nothing to do.
-        }
         if (user) {
           // When the team-leader has a login, set to true. This never becomes false as logins can not be deleted
           team.data.teamLeader.hasLogin = true;
         }
         doc.data = team.data;
         return await doc.save();
-      });
     } else {
       // Team leader has a login, just save
       doc.data = team.data;

@@ -182,41 +182,56 @@ async function updateUser(user, password, callback) {
  * @param emailAddress
  * @param callback
  */
-async function getUserByMailAddress(emailAddress, callback) {
-  try {
-    const foundUser = await User
-      .findOne({'personalData.email': emailAddress})
-      .exec();
+function getUserByMailAddress(emailAddress, callback) {
 
-    if (!foundUser) {
-      return callback();
-    }
+  User
+    .findOne({'personalData.email': emailAddress})
+    .exec()
+    .then(foundUser => {
+      if (!foundUser) {
+        return callback();
+      }
 
-    // Verify if this user already has an ID or not. If not, upgrade to new model
-    if (!_.isString(foundUser._id) || foundUser._id !== foundUser.personalData.email) {
-      const id      = foundUser._id;
-      const newUser = new User();
-      copyUser(foundUser, newUser);
-      newUser._id = emailAddress;
-      await newUser.save();
-      await User
-        .findByIdAndRemove(id)
-        .exec();
-      logger.info('Updated user with email ' + newUser.personalData.email);
-      callback(null, newUser);
-    } else {
-      callback(null, foundUser);
-    }
-  } catch (ex) {
-    logger.error(ex);
-    callback(ex);
-  }
+      // Verify if this user already has an ID or not. If not, upgrade to new model
+      if (!_.isString(foundUser._id) || foundUser._id !== foundUser.personalData.email) {
+        const id      = foundUser._id;
+        const newUser = new User();
+        copyUser(foundUser, newUser);
+        newUser._id = emailAddress;
+        newUser.save()
+               .then(() => {
+                 User
+                   .findByIdAndRemove(id)
+                   .exec()
+                   .then(() => {
+                     logger.info('Updated user with email ' + newUser.personalData.email);
+                     callback(null, newUser);
+                   })
+                   .catch(callback);
+               })
+               .catch(callback);
+      } else {
+        callback(null, foundUser);
+      }
+    })
+    .catch(callback);
+}
+
+async function getUserByMailAddressB(emailAddress) {
+  return new Promise(resolve => {
+    getUserByMailAddress(emailAddress, (err, user) => {
+      if (err) {
+        throw new Error(err);
+      }
+      resolve(user);
+    });
+  });
 }
 
 /**
  * Get a user by its ID
  * @param id
- * @param callback, providing the complete user information when found
+ * @param callback , providing the complete user information when found
  */
 async function getUser(id, callback) {
   let doc, err;
@@ -450,7 +465,7 @@ function findOrCreateMicrosoftUser(profile, callback) {
         }
         logger.info(`Microsoft login with email Address ${emailAddress}`, profile);
 
-        function saveNewMicrosoftUser() {
+        async function saveNewMicrosoftUser() {
           let newUser                      = new User();
           newUser._id                      = emailAddress || profile.id;
           newUser.login.microsoftProfileId = profile.id;
@@ -462,18 +477,14 @@ function findOrCreateMicrosoftUser(profile, callback) {
           newUser.personalData.email       = emailAddress;
           newUser.personalData.avatar      = avatar;
           accountLog.addNewUserEntry(newUser._id, 'Microsoft');
-          newUser.save(function (err, savedUser) {
-            if (err) {
-              return callback(err);
-            }
-            logger.info('Created microsoft user', savedUser);
-            // Recursive call, now we'll find this user
-            return findOrCreateMicrosoftUser(profile, callback);
-          });
+          let savedUser = await newUser.save();
+          logger.info('Created microsoft user', savedUser);
+          // Recursive call, now we'll find this user
+          return findOrCreateMicrosoftUser(profile, callback);
         }
 
         if (emailAddress) {
-          getUserByMailAddress(emailAddress, function (err, user) {
+          getUserByMailAddress(emailAddress, async function (err, user) {
             if (err) {
               return callback(err);
             }
@@ -487,15 +498,10 @@ function findOrCreateMicrosoftUser(profile, callback) {
               user.login.microsoftProfileId = profile.id;
               user.personalData.avatar      = avatar;
               accountLog.addNewUserEntry(emailAddress, 'Microsoft');
-              user.save(function (err) {
-                if (err) {
-                  return callback(err);
-                }
-                logger.info('Upgraded user ' + emailAddress + ' for microsoft access');
-                // Recursive call, now we'll find this user
-                return findOrCreateMicrosoftUser(profile, callback);
-              });
-              return;
+              await user.save();
+              logger.info('Upgraded user ' + emailAddress + ' for google access');
+              // Recursive call, now we'll find this user
+              return findOrCreateMicrosoftUser(profile, callback);
             }
 
             // We do not know this user. Add him/her to the list.
@@ -526,6 +532,7 @@ module.exports = {
   generatePasswordHash     : generatePasswordHash,
   verifyPassword           : verifyPassword,
   getUserByMailAddress     : getUserByMailAddress,
+  getUserByMailAddressB    : getUserByMailAddressB,
   removeUser               : removeUser,
   getAllUsers              : getAllUsers,
   getUser                  : getUser,

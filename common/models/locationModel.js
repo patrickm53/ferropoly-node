@@ -42,24 +42,22 @@ const Location = mongoose.model('Location', locationSchema);
  * Returns all locations in ferropoly style, LEAN
  * @param callback
  */
-async function getAllLocationsLean(callback) {
-  let err, locations;
-  try {
-    const docs = await Location
-      .find({})
-      .lean()
-      .exec()
+function getAllLocationsLean(callback) {
 
-    locations = [];
-    for (let i = 0; i < docs.length; i++) {
-      locations.push(convertModelDataToObject(docs[i]));
-    }
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, locations);
-  }
+  Location
+    .find({})
+    .lean()
+    .exec()
+    .then(docs => {
+      let locations = [];
+      for (let i = 0; i < docs.length; i++) {
+        locations.push(convertModelDataToObject(docs[i]));
+      }
+      return callback(null, locations);
+    })
+    .catch(err => {
+      return callback(err);
+    })
 }
 
 
@@ -67,18 +65,16 @@ async function getAllLocationsLean(callback) {
  * Returns all locations in ferropoly style, COMPLETE OBJECTS
  * @param callback
  */
-async function getAllLocations(callback) {
-  let docs, err;
-  try {
-    docs = await Location
-      .find({})
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, docs);
-  }
+function getAllLocations(callback) {
+  Location
+    .find({})
+    .exec()
+    .then(docs => {
+      return callback(null, docs);
+    })
+    .catch(err => {
+      return callback(err);
+    });
 }
 
 
@@ -87,24 +83,22 @@ async function getAllLocations(callback) {
  * @param map : map ('zvv', 'sbb' or 'ostwind')
  * @param callback
  */
-async function getAllLocationsForMap(map, callback) {
-  let docs, err;
-  try {
-    // This creates a query in this format: {'maps.zvv': true}
-    let index    = 'maps.' + map;
-    let query    = {};
-    query[index] = true;
+function getAllLocationsForMap(map, callback) {
+  // This creates a query in this format: {'maps.zvv': true}
+  let index    = 'maps.' + map;
+  let query    = {};
+  query[index] = true;
 
-    docs = await Location
-      .find(query)
-      .lean()
-      .exec();
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, docs);
-  }
+  Location
+    .find(query)
+    .lean()
+    .exec()
+    .then(docs => {
+      return callback(null, docs);
+    })
+    .catch(err => {
+      return callback(err);
+    })
 }
 
 /**
@@ -112,25 +106,20 @@ async function getAllLocationsForMap(map, callback) {
  * @param uuid
  * @param callback
  */
-async function getLocationByUuid(uuid, callback) {
-  let doc, err;
-  try {
-    const docs = await Location
+function getLocationByUuid(uuid, callback) {
+    Location
       .find({uuid: uuid})
-      .exec();
-
-    if (docs.length === 0) {
-      // No location found
-      doc = null;
-    } else {
-      doc = docs[0];
-    }
-  } catch (ex) {
-    logger.error(ex);
-    err = ex;
-  } finally {
-    callback(err, doc);
-  }
+      .exec()
+      .then(docs=> {
+        if (docs.length === 0) {
+          // No location found
+          return callback(null, null);
+        }
+        return callback(null, docs[0]);
+      })
+      .catch(err=> {
+        return callback(err);
+      })
 }
 
 /**
