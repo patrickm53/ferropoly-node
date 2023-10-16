@@ -1,5 +1,9 @@
 # Changelog Ferropoly Spiel
 
+# v3.3.1 16.10.23
+* Bugfixes
+* Dependency Updates
+
 # v3.3.0 1.7.23
 * Pic Bucket neu: Upload von Bilder während dem Spiel durch Teams
 * Dependency Updates
