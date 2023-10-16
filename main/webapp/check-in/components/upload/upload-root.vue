@@ -190,10 +190,10 @@ export default {
         canvas.toBlob(callback, 'image/jpeg', 0.8)
       };
 
-      image.onerror = function (args) {
+   /*   image.onerror = function (args) {
         alert('There was an error processing your file!');
         console.error('Processing error', args);
-      };
+      };*/
     },
     /**
      * User wants to upload a file
