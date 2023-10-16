@@ -139,6 +139,8 @@ export default {
       const maxWidth  = thumbnail ? 360 : 1400;
       const maxHeight = thumbnail ? 240 : 1400;
 
+      console.log('processFile', dataURL, _options);
+
       let image = new Image();
       image.src = dataURL;
 
@@ -146,6 +148,8 @@ export default {
         let width        = image.width;
         let height       = image.height;
         let shouldResize = (width > maxWidth) || (height > maxHeight);
+
+        console.log('processFile.onload, shouldResize', shouldResize);
 
         if (!shouldResize) {
           self.sendFile(dataURL);
@@ -166,8 +170,6 @@ export default {
         }
 
         let canvas = document.createElement('canvas');
-
-
         let context = canvas.getContext('2d');
 
         if (thumbnail) {
@@ -201,8 +203,11 @@ export default {
       console.log('having a file', this.file);
       let reader       = new FileReader();
       reader.onloadend = function () {
+        console.log('Going to process pic...');
         self.processFile(reader.result, {}, large => {
+          console.log('Going to process thumbnail...');
           self.processFile(reader.result, {thumbnail: true}, thumb => {
+            console.log('Going to send pic and thumbnail...');
             self.sendFile(large, thumb);
           })
         });
