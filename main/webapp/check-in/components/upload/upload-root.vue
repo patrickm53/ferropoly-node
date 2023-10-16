@@ -145,11 +145,10 @@ export default {
       image.src = dataURL;
 
       image.onload = function () {
+        console.log('image.onload');
         let width        = image.width;
         let height       = image.height;
         let shouldResize = (width > maxWidth) || (height > maxHeight);
-
-        console.log('processFile.onload, shouldResize', shouldResize);
 
         if (!shouldResize) {
           self.sendFile(dataURL);
@@ -191,8 +190,9 @@ export default {
         canvas.toBlob(callback, 'image/jpeg', 0.8)
       };
 
-      image.onerror = function () {
+      image.onerror = function (args) {
         alert('There was an error processing your file!');
+        console.error('Processing error', args);
       };
     },
     /**
