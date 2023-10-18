@@ -131,23 +131,26 @@ router.post('/:gameId', (req, res) => {
           if (!team) {
             // New team
             logger.info(`New Team for ${req.params.gameId}: ${req.body.teamName}`);
-            teams.createTeam(setTeamData({
-              data: {
-                confirmed       : false,
-                registrationDate: new Date()
-              }
-            }), req.params.gameId, (err, newTeam) => {
-              if (err) {
-                return res.status(500).send(err.message);
-              }
-              logger.info(`Saved Team for ${req.params.gameId}: ${req.body.teamName} / ${newTeam.uuid}`);
-              sendInfoMail(gameData.gameplay, newTeam, {newTeam: true}, err => {
-                if (err) {
-                  logger.error(err);
+
+            teams
+              .createTeam(setTeamData({
+                data: {
+                  confirmed       : false,
+                  registrationDate: new Date()
                 }
-                res.status(200).send(newTeam);
+              }), req.params.gameId)
+              .then(newTeam => {
+                logger.info(`Saved Team for ${req.params.gameId}: ${req.body.teamName} / ${newTeam.uuid}`);
+                sendInfoMail(gameData.gameplay, newTeam, {newTeam: true}, err => {
+                  if (err) {
+                    logger.error(err);
+                  }
+                  res.status(200).send(newTeam);
+                });
+              })
+              .catch(err => {
+                return res.status(500).send(err.message);
               });
-            });
             return;
           }
 
