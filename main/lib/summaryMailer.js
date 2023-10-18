@@ -5,6 +5,7 @@
  */
 const logger    = require('../../common/lib/logger').getLogger('summary-mailer');
 const mailer    = require('../../common/lib/mailer');
+const gpModel   = require('../../common/models/gameplayModel');
 const gameCache = require('./gameCache');
 const _         = require('lodash');
 const settings  = require('../settings');
@@ -24,10 +25,13 @@ function SummaryMailer(scheduler) {
 
   if (this.scheduler) {
     /**
-     * This is the 'interest' event launched by the gameScheduler
+     * This is the 'summary' event launched by the gameScheduler
      */
-    this.scheduler.on('summary', function (event) {
+    this.scheduler.on('summary', async function (event) {
       logger.info(`Summary requested for ${event.gameId}`);
+      // could be honestly discussed if it this is the right location here:
+      // make the game public in order the recipients of the mail can see all data.
+      await gpModel.makeGameplayPublic(event.gameId);
       self.sendInfo(event.gameId, err => {
         if (err) {
           return logger.error(err);

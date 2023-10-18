@@ -77,7 +77,7 @@ router.post('/assign/:id', (req, res) => {
 
 
 /**
- * Returns ALL images for a game, for admins only
+ * Returns ALL images for a game, for admins only during the game, afterwards public (done in accessor)
  */
 router.get('/:gameId', (req, res) => {
   const gameId = req.params.gameId;

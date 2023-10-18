@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Making game public when the summary is sent (everybody shall see all pics)
+
 # v3.3.1 16.10.23
 * Bugfixes
 * Dependency Updates

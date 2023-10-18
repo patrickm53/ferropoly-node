@@ -717,6 +717,17 @@ async function getAutopilotGameplays() {
     .exec();
 }
 
+/**
+ * Makes a gameplay public, which is after the game
+ * @param gameId
+ * @return {Promise<void>}
+ */
+async function makeGameplayPublic(gameId) {
+  let gp                     = await Gameplay.findOne({'internal.gameId': gameId}).exec();
+  gp.internal.gameDataPublic = true;
+  await gp.save();
+  return gp;
+}
 
 /**
  * Exports of this module
@@ -745,6 +756,7 @@ module.exports = {
   invalidatePricelist           : invalidatePricelist,
   updateGameplayPartial         : updateGameplayPartial,
   getAutopilotGameplays         : getAutopilotGameplays,
+  makeGameplayPublic            : makeGameplayPublic,
   // Constants
   MOBILE_NONE : MOBILE_NONE,
   MOBILE_BASIC: MOBILE_BASIC,
