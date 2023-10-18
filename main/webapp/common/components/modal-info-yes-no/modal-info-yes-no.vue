@@ -13,7 +13,8 @@
       cancel-title="Nein"
       ok-title="Ja"
       @cancel="deny",
-      @ok="confirm")
+      @ok="confirm",
+      @hidden="onHidden")
       .modal-body
         div(v-html="info")
         div(v-html="message")
@@ -73,6 +74,9 @@ export default {
       if (this.callback) {
         this.callback(true, this.context);
       }
+    },
+    onHidden() {
+      this.$emit('hidden');
     }
   }
 }

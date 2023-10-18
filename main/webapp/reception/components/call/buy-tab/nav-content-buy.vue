@@ -14,7 +14,7 @@
             per-page="40"
             @buy-property="onBuyProperty"
             :disabled="buyingPropertyActive || !enabled")
-          modal-info-yes-no(ref="buyConfirmationDialog" @yes="onBuyPropertyConfirmed" @no="onBuyPropertyDenied")
+          modal-info-yes-no(ref="buyConfirmationDialog" @yes="onBuyPropertyConfirmed" @no="onBuyPropertyDenied" @hidden="onBuyPropertyDialogHidden")
       b-col(sm="6")
         b-row
           b-col(sm="6")
@@ -71,6 +71,7 @@ export default {
   data      : function () {
     return {
       buyingPropertyActive: false,
+      buyingProcessActive : false,
       gamblingActive      : false,
       buildingHousesActive: false
     };
@@ -126,6 +127,7 @@ export default {
     },
     onBuyPropertyConfirmed(p) {
       console.log('BUY CONFIRMED', p);
+      this.buyingProcessActive  = true;
       axios.post(
           `/marketplace/buyProperty/${this.gameId}/${this.teamUuid}/${p.uuid}`,
           {authToken: this.authToken}
@@ -165,12 +167,18 @@ export default {
             });
           })
           .finally(() => {
+            this.buyingProcessActive  = false;
             this.buyingPropertyActive = false;
           })
     },
     onBuyPropertyDenied(p) {
       console.log('Buying property canceled', p);
-      this.buyingPropertyActive = false;
+    },
+    // Prevents blocker when the mouse clicks outside the dialog
+    onBuyPropertyDialogHidden() {
+      if (!this.buyingProcessActive) {
+        this.buyingPropertyActive = false;
+      }
     },
     /**
      * Creates the maximum Size of the control boxes

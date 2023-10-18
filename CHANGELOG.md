@@ -1,6 +1,7 @@
 # Changelog Ferropoly Spiel
 
-* Making game public when the summary is sent (everybody shall see all pics)
+* Bugfix: Reception Dialog, #86
+* Beim Spielschluss werden die Daten öffentlich
 
 # v3.3.1 16.10.23
 * Bugfixes
