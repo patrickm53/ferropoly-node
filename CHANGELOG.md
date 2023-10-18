@@ -1,6 +1,8 @@
 # Changelog Ferropoly Spiel
 
+# v3.3.2 18.10.23
 * Bugfix: Reception Dialog, #86
+* Bugfix: Versand von Emails bei Anmeldung funktioniert wieder
 * Beim Spielschluss werden die Daten öffentlich
 
 # v3.3.1 16.10.23
