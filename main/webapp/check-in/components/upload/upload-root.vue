@@ -8,25 +8,28 @@
 <template lang="pug">
 b-container(fluid)
   h1 Bilder hochladen
-  p Während dem Spiel kannst Du Bilder an die Zentrale senden: um zu belegen, dass ihr an einem Ort seid oder einfach so zum Spass.
-  p Die Bilder sind nach dem Spiel für alle teilnehmenden Teams sichtbar und werden 30 Tage nach dem Spiel automatisch gelöscht.
-  p &nbsp;
-  b-form-file.mx-auto(v-model="file"
-    size="lg"
-    variant="primary"
-    style="width: 100%;"
-    accept="image/jpeg, image/png"
-    :state="Boolean(file)"
-    placeholder="Foto aufnehmen")
-  b-button.mx-auto.mt-3(
-    :disabled="!Boolean(file)"
-    variant="primary"
-    style="width: 100%;"
-    @click="onUpload")
-    div &nbsp;
-    font-awesome-icon(:icon="['fas', 'camera']")
-    span &nbsp; Bild senden
-    div &nbsp;
+  div(v-if="gameIsActive")
+    p Während dem Spiel kannst Du Bilder an die Zentrale senden: um zu belegen, dass ihr an einem Ort seid oder einfach so zum Spass.
+    p Die Bilder sind nach dem Spiel für alle teilnehmenden Teams sichtbar und werden 30 Tage nach dem Spiel automatisch gelöscht.
+    p &nbsp;
+    b-form-file.mx-auto(v-model="file"
+      size="lg"
+      variant="primary"
+      style="width: 100%;"
+      accept="image/jpeg, image/png"
+      :state="Boolean(file)"
+      placeholder="Foto aufnehmen")
+    b-button.mx-auto.mt-3(
+      :disabled="!Boolean(file)"
+      variant="primary"
+      style="width: 100%;"
+      @click="onUpload")
+      div &nbsp;
+      font-awesome-icon(:icon="['fas', 'camera']")
+      span &nbsp; Bild senden
+      div &nbsp;
+  div(v-if="!gameIsActive")
+    p Bilder können nur während dem Spiel hochgeladen werden.
 
 </template>
 
@@ -61,6 +64,11 @@ export default {
       error    : 'api.error',
       pictures : 'picBucketStore.pictures'
     }),
+    gameIsActive: function () {
+      let active = this.$store.getters['gameIsActive'];
+      console.log('Game is running:', active);
+      return active;
+    }
   },
   created   : function () {
   },
@@ -168,7 +176,7 @@ export default {
           newHeight = maxHeight;
         }
 
-        let canvas = document.createElement('canvas');
+        let canvas  = document.createElement('canvas');
         let context = canvas.getContext('2d');
 
         if (thumbnail) {
@@ -190,10 +198,10 @@ export default {
         canvas.toBlob(callback, 'image/jpeg', 0.8)
       };
 
-   /*   image.onerror = function (args) {
-        alert('There was an error processing your file!');
-        console.error('Processing error', args);
-      };*/
+      /*   image.onerror = function (args) {
+           alert('There was an error processing your file!');
+           console.error('Processing error', args);
+         };*/
     },
     /**
      * User wants to upload a file
