@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Bugfix in Mitspieler-Management
+
 # v3.3.2 18.10.23
 * Bugfix: Reception Dialog, #86
 * Bugfix: Versand von Emails bei Anmeldung funktioniert wieder

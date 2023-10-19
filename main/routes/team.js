@@ -115,58 +115,59 @@ router.post('/members/:gameId/:teamId', (req, res) => {
 
       // Add only if not already in team
       if (!_.find(team.data.members, m => {
-        return (m === req.body.newMemberLogin) ;
+        return (m === req.body.newMemberLogin);
       })) {
         team.data.members.push(req.body.newMemberLogin);
       }
 
-      teams.updateTeam(team, (err) => {
-        if (err) {
-          return errorHandler(res, 'Internes Problem .', err, 500);
-        }
-
-        getFullMemberList(req.params.gameId, req.params.teamId, (err, info) => {
-          if (err) {
-            return errorHandler(res, 'Internes Problem .', err, 500);
-          }
-          res.send({members: info});
-        });
-      });
+      teams.updateTeam(team)
+           .then(() => {
+             getFullMemberList(req.params.gameId, req.params.teamId, (err, info) => {
+               if (err) {
+                 return errorHandler(res, 'Internes Problem .', err, 500);
+               }
+               res.send({members: info});
+             });
+           })
+           .catch(err => {
+             return errorHandler(res, 'Internes Problem .', err, 500);
+           });
     });
   });
-});
 
-/**
- * removes a member and get all back in return
- */
-router.delete('/members/:gameId/:teamId', (req, res) => {
-  if (!req.body.authToken) {
-    return res.status(401).send({status: 'error', message: 'Permission denied (1)'});
-  }
-  if (req.body.authToken !== req.session.authToken) {
-    return res.status(401).send({status: 'error', message: 'Permission denied (2)'});
-  }
 
-  teams.getTeam(req.params.gameId, req.params.teamId, (err, team) => {
-    if (err) {
-      return errorHandler(res, 'Internes Problem .', err, 500);
+  /**
+   * removes a member and get all back in return
+   */
+  router.delete('/members/:gameId/:teamId', (req, res) => {
+    if (!req.body.authToken) {
+      return res.status(401).send({status: 'error', message: 'Permission denied (1)'});
     }
-    team.data.members = team.data.members || [];
-    _.remove(team.data.members, (m) => {
-      return m === req.body.memberToDelete;
-    });
+    if (req.body.authToken !== req.session.authToken) {
+      return res.status(401).send({status: 'error', message: 'Permission denied (2)'});
+    }
 
-    teams.updateTeam(team, (err) => {
+    teams.getTeam(req.params.gameId, req.params.teamId, (err, team) => {
       if (err) {
         return errorHandler(res, 'Internes Problem .', err, 500);
       }
-
-      getFullMemberList(req.params.gameId, req.params.teamId, (err, info) => {
-        if (err) {
-          return errorHandler(res, 'Internes Problem .', err, 500);
-        }
-        res.send({members: info});
+      team.data.members = team.data.members || [];
+      _.remove(team.data.members, (m) => {
+        return m === req.body.memberToDelete;
       });
+
+      teams.updateTeam(team)
+           .then(() => {
+             getFullMemberList(req.params.gameId, req.params.teamId, (err, info) => {
+               if (err) {
+                 return errorHandler(res, 'Internes Problem .', err, 500);
+               }
+               res.send({members: info});
+             });
+           })
+           .catch(err => {
+             return errorHandler(res, 'Internes Problem .', err, 500);
+           });
     });
   });
 });
