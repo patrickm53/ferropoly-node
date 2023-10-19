@@ -1,5 +1,6 @@
 # Changelog Ferropoly Spiel
 
+# v3.3.3 19.10.23
 * Bugfix in Mitspieler-Management
 * Bugfix: Upload Bilder in Check-in nur während dem Spiel möglich
 
