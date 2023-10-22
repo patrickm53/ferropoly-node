@@ -1,5 +1,7 @@
 # Changelog Ferropoly Spiel
 
+* Bugfix: Update Gamecache nach löschen Spiel führte nicht zu einer response im HTTP Request
+
 # v3.3.4 22.10.23
 * Bugfix "Zusammenfassung" wurde teilweise erst zu spät auf dem Startbildschirm angezeigt
 * Bugfix vue lists: key fehlte in Bilderliste

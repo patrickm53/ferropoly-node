@@ -142,7 +142,7 @@ Scheduler.prototype.update = function (callback) {
         }
       });
     });
-  }).catch(callback);
+  }).finally(callback);
 };
 
 /**
