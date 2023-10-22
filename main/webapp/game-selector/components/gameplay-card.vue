@@ -2,33 +2,33 @@
   A single card with infos about a game
 -->
 <template lang="pug">
-  div
-    ferro-card(:title="getGpProperty('gamename')")
-      b-row
-        b-col Spieldatum
-        b-col {{getGpProperty('scheduling.gameDate') | formatDate}}
-      b-row
-        b-col Start
-        b-col {{getGpProperty('scheduling.gameStart')}}
-      b-row
-        b-col Ende
-        b-col {{getGpProperty('scheduling.gameEnd')}}
-      b-row
-        b-col Karte
-        b-col {{getMapName()}}
-      b-row
-        b-col Löschdatum
-        b-col {{getGpProperty('scheduling.deleteTs') | formatDate}}
-      b-row
-        b-col.id Id: {{getGpProperty('internal.gameId')}}
-      b-row(v-if="!getGpProperty('internal.finalized')")
-        b-alert(variant="warning" show) Das Spiel wurde im Editor noch nicht finalisiert und kann deshalb nicht gespielt werden!
-      b-row
-        b-col
-          b-button.btn-gameplay(size="sm" variant="primary" v-if="gameRunning" :href="url.play") Spielen
-          b-button.btn-gameplay(size="sm" v-if="gameOver" :href="url.play") Spiel ansehen
-          b-button.btn-gameplay(size="sm" v-if="getGpProperty('internal.finalized')" :href="url.viewPricelist") Preisliste
-          b-button.btn-gameplay(size="sm" variant="info" v-if="gameOver" :href="url.summary") Zusammenfassung
+div
+  ferro-card(:title="getGpProperty('gamename')")
+    b-row
+      b-col Spieldatum
+      b-col {{getGpProperty('scheduling.gameDate') | formatDate}}
+    b-row
+      b-col Start
+      b-col {{getGpProperty('scheduling.gameStart')}}
+    b-row
+      b-col Ende
+      b-col {{getGpProperty('scheduling.gameEnd')}}
+    b-row
+      b-col Karte
+      b-col {{getMapName()}}
+    b-row
+      b-col Löschdatum
+      b-col {{getGpProperty('scheduling.deleteTs') | formatDate}}
+    b-row
+      b-col.id Id: {{getGpProperty('internal.gameId')}}
+    b-row(v-if="!getGpProperty('internal.finalized')")
+      b-alert(variant="warning" show) Das Spiel wurde im Editor noch nicht finalisiert und kann deshalb nicht gespielt werden!
+    b-row
+      b-col
+        b-button.btn-gameplay(size="sm" variant="primary" v-if="gameRunning" :href="url.play") Spielen
+        b-button.btn-gameplay(size="sm" v-if="gameOver" :href="url.play") Spiel ansehen
+        b-button.btn-gameplay(size="sm" v-if="getGpProperty('internal.finalized')" :href="url.viewPricelist") Preisliste
+        b-button.btn-gameplay(size="sm" variant="info" v-if="gameOver" :href="url.summary") Zusammenfassung
 
 </template>
 
@@ -72,8 +72,8 @@ export default {
      * Is the game already over?
      */
     gameOver() {
-      let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
-      return DateTime.now() > gameDate.plus({days: 1});
+      let endOfGame = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate')).set({hour: 23, minute: 59});
+      return DateTime.now() >= endOfGame;
     }
   },
   methods   : {

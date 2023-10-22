@@ -99,8 +99,8 @@ export default {
      * Is the game already over?
      */
     gameOver() {
-      let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
-      return DateTime.now() > gameDate.plus({days: 1});
+      let endOfGame = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate')).set({hour: 23, minute: 59});
+      return DateTime.now() >= endOfGame;
     },
     /**
      * True if the user is team leader of the game
