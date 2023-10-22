@@ -29,6 +29,8 @@
         b-col {{getGpProperty('scheduling.deleteTs') | formatDate}}
       b-row
         b-col.id Id: {{getGpProperty('internal.gameId')}}
+      b-row(v-if="!getGpProperty('internal.finalized')")
+        b-alert(variant="warning" show) Das Spiel wurde im Editor noch nicht finalisiert und kann deshalb nicht gespielt werden!
       b-row
         b-col
           b-button.btn-gameplay(size="sm" variant="primary" v-if="gameRunning" :href="url.play") Spielen
@@ -92,6 +94,10 @@ export default {
      * Is the game running?
      */
     gameRunning() {
+      if (!this.getGpProperty('internal.finalized')) {
+        // A game can't be running if it is not finalized
+        return false;
+      }
       let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
       return gameDate.hasSame(DateTime.now(), 'day');
     },
@@ -99,6 +105,10 @@ export default {
      * Is the game already over?
      */
     gameOver() {
+      if (!this.getGpProperty('internal.finalized')) {
+        // A game can't be over if it is not finalized
+        return false;
+      }
       let endOfGame = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate')).set({hour: 23, minute: 59});
       return DateTime.now() >= endOfGame;
     },

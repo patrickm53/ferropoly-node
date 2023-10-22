@@ -65,6 +65,10 @@ export default {
      * Is the game running?
      */
     gameRunning() {
+      if (!this.getGpProperty('internal.finalized')) {
+        // A game can't be running if it is not finalized
+        return false;
+      }
       let gameDate = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate'));
       return gameDate.hasSame(DateTime.now(), 'day');
     },
@@ -72,6 +76,10 @@ export default {
      * Is the game already over?
      */
     gameOver() {
+      if (!this.getGpProperty('internal.finalized')) {
+        // A game can't be over if it is not finalized
+        return false;
+      }
       let endOfGame = DateTime.fromJSDate(this.getGpProperty('scheduling.gameDate')).set({hour: 23, minute: 59});
       return DateTime.now() >= endOfGame;
     }
