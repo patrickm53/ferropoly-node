@@ -110,8 +110,11 @@ router.get('/:gameId/static', function (req, res) {
                 if (err) {
                   return res.status(500).send({message: 'Chancellery getAccountStatement error: ' + err.message});
                 }
+                let balance = 0;
                 for (let i = 0; i < chancellery.length; i++) {
                   chancellery[i] = _.omit(chancellery[i], ['_id', '__v', 'gameId']);
+                  balance += _.get(chancellery[i], 'transaction.amount', -1);
+                  chancellery[i].balance = balance;
                 }
 
                 res.send({
