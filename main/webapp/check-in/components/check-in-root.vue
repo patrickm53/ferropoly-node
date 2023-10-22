@@ -23,15 +23,16 @@
     rules-root(v-if="panel==='panel-rules'")
     pricelist-root(v-if="panel==='panel-pricelist'")
     pictures-root(v-if="panel==='panel-pictures'")
-    upload-root(v-if="panel==='panel-upload'")
     div(v-if="gpsWarningMessageActive")
       no-gps-info(v-if="panel==='panel-accounting'")
       no-gps-info(v-if="panel==='panel-property'")
       no-gps-info(v-if="panel==='panel-map'")
+      no-gps-info(v-if="panel==='panel-upload'")
     div(v-if="!gpsWarningMessageActive")
       accounting-root(v-if="panel==='panel-accounting'")
       property-root(v-if="panel==='panel-property'")
       map-root(v-if="panel==='panel-map'")
+      upload-root(v-if="panel==='panel-upload'")
 
 </template>
 
