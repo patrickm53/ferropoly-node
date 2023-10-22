@@ -82,8 +82,8 @@ export default {
       gameId          : 'gameId',
       teamUuid        : 'call.currentTeam.uuid',
       authToken       : 'api.authToken',
-      gamblingMinVal  : 'gameplay.gameParams.chancellery.minLottery',
-      gamblingMaxVal  : 'gameplay.gameParams.chancellery.maxLottery',
+      gamblingMinVal  : 'gameplay.gameParams.chancellery.minGambling',
+      gamblingMaxVal  : 'gameplay.gameParams.chancellery.maxGambling',
       log             : 'call.log'
     }),
     gamblingMin() {

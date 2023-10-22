@@ -1,6 +1,7 @@
 # Changelog Ferropoly Spiel
 
 * Bugfix: Update Gamecache nach löschen Spiel führte nicht zu einer response im HTTP Request
+* Gambling: Limiten für manuelles Gambling aktuell fix im Bereich 1000-50000, muss im Editor konfigurierbar werden
 
 # v3.3.4 22.10.23
 * Bugfix "Zusammenfassung" wurde teilweise erst zu spät auf dem Startbildschirm angezeigt
