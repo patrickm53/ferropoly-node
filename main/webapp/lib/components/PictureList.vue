@@ -7,7 +7,7 @@
 #image-list
   b-container(fluid)
     b-row(align-h="center")
-      b-col(v-for="pic in pictures"  v-if="filterMatch(pic)")
+      b-col(v-for="pic in pictures" :key="pic.thumbnail" v-if="filterMatch(pic)")
         picture-card(:picture-info="pic"
           :extended="extended"
           :admin="admin"

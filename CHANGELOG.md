@@ -1,6 +1,7 @@
 # Changelog Ferropoly Spiel
 
 * Bugfix "Zusammenfassung" wurde teilweise erst zu spät auf dem Startbildschirm angezeigt
+* Bugfix vue lists: key fehlte in Bilderliste
 
 # v3.3.3 19.10.23
 * Bugfix in Mitspieler-Management
