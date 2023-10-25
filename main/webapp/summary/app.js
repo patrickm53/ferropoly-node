@@ -55,7 +55,7 @@ $(document).ready(function () {
       let gameId     = last(elements);
       axios.get(`/summary/${gameId}/static`)
         .then(resp => {
-          this.$store.dispatch({type: 'fetchPictures', gameId});
+          this.$store.dispatch({type: 'fetchPicturesAfterGame', data: resp.data.picBucket});
           this.$store.dispatch({type: 'fetchStaticData', data: resp.data});
           this.$store.dispatch({type: 'saveRankingList', ranking: resp.data.ranking});
           this.$store.dispatch({type: 'saveTeamAccountEntries', accountData: resp.data.accountStatement.accountData});

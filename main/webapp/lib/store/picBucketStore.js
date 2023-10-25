@@ -78,6 +78,20 @@ const picBucket = {
       });
     },
     /**
+     * Fetchs all pictures AFTER a game, which is another route
+     * @param state
+     * @param getters
+     * @param options
+     * @returns {Promise<unknown>}
+     */
+    fetchPicturesAfterGame({state, getters}, options) {
+       const list = options.data;
+       console.log('Got the pictures after the game', list);
+       list.forEach(p => {
+         state.pictures.push(new PictureInfo(p));
+       })
+    },
+    /**
      * Adds a new pic, using socket.io socket.
      * @param state
      * @param options

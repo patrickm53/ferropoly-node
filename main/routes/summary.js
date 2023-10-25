@@ -30,6 +30,7 @@ const teamAccount                 = require('../lib/accounting/teamAccount');
 const collectAccountStatement     = require('../lib/accounting/collectAccountStatement');
 const travelLog                   = require('../../common/models/travelLogModel');
 const chancellery                 = require('../lib/accounting/chancelleryAccount');
+const picBucket                   = require('../lib/picBucket')(settings.picBucket);
 
 let ngFile = '/js/summaryctrl.js';
 if (settings.minifiedjs) {
@@ -112,21 +113,28 @@ router.get('/:gameId/static', function (req, res) {
                 }
                 let balance = 0;
                 for (let i = 0; i < chancellery.length; i++) {
-                  chancellery[i] = _.omit(chancellery[i], ['_id', '__v', 'gameId']);
+                  chancellery[i]         = _.omit(chancellery[i], ['_id', '__v', 'gameId']);
                   balance += _.get(chancellery[i], 'transaction.amount', -1);
                   chancellery[i].balance = balance;
                 }
 
-                res.send({
-                  gameplay     : gp,
-                  teams        : _.values(teams),
-                  currentGameId: gameId,
-                  mapApiKey    : settings.maps.apiKey,
-                  properties   : props,
-                  ranking,
-                  accountStatement,
-                  travelLog,
-                  chancellery
+                picBucket.list(gameId, {}, (err, picBucket) => {
+                  if (err) {
+                    return res.status(500).send({message: err.message});
+                  }
+
+                  res.send({
+                    gameplay     : gp,
+                    teams        : _.values(teams),
+                    currentGameId: gameId,
+                    mapApiKey    : settings.maps.apiKey,
+                    properties   : props,
+                    ranking,
+                    accountStatement,
+                    travelLog,
+                    chancellery,
+                    picBucket
+                  });
                 });
               });
             });
