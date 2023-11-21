@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+# v3.3.7 21.11.23 Release
+* Bugfix: Nur hochgeladene Bilder anzeigen
+
 # v3.3.6 25.10.23 Release
 * Bugfix: Zugriffsrechte auf Bilder nach Spiel auch ohne Login
 
