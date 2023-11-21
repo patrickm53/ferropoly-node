@@ -118,7 +118,7 @@ router.get('/:gameId/static', function (req, res) {
                   chancellery[i].balance = balance;
                 }
 
-                picBucket.list(gameId, {}, (err, picBucket) => {
+                picBucket.list(gameId, {uploaded: true}, (err, picBucket) => {
                   if (err) {
                     return res.status(500).send({message: err.message});
                   }

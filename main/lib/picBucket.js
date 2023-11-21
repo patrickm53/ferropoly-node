@@ -178,6 +178,12 @@ class PicBucket extends EventEmitter {
 
     picBucketModel.findPicsByFilter(filter)
                   .then(docs => {
+                    if (docs) {
+                      logger.info(`Got ${_.get(docs, 'length', -1)} pics`);
+                    }
+                    else {
+                      logger.info('docs is empty!');
+                    }
                     return callback(null, docs);
                   })
                   .catch(callback);

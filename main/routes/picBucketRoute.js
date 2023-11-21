@@ -86,7 +86,7 @@ router.get('/:gameId', (req, res) => {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
-    picBucket.list(gameId, {}, (err, list) => {
+    picBucket.list(gameId, {uploaded: true}, (err, list) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
@@ -107,7 +107,7 @@ router.get('/:gameId/:teamId', (req, res) => {
     if (err) {
       return res.status(403).send({message: 'Access right error: ' + err.message});
     }
-    picBucket.list(gameId, {teamId}, (err, list) => {
+    picBucket.list(gameId, {teamId, uploaded: true}, (err, list) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
