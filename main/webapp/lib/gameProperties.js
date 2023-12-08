@@ -153,8 +153,10 @@ class GameProperties {
   }
 
   /**
-   * Show only free properties on the map
-   * @param map
+   * Shows only the free properties on the map.
+   *
+   * @param {Map} map - The map object where properties will be displayed.
+   * @return {void}
    */
   showOnlyFreePropertiesOnMap(map) {
     this.properties.forEach(p => {
@@ -166,10 +168,13 @@ class GameProperties {
     });
   }
 
+
   /**
-   * Shows only the properties of a team on the map
-   * @param map
-   * @param teamUuid
+   * Shows only the properties of a team on a map.
+   *
+   * @param {google.maps.Map} map - The Google Maps map object.
+   * @param {string} teamUuid - The UUID of the team.
+   * @return {undefined}
    */
   showOnlyPropertiesOfTeamOnMap(map, teamUuid) {
     this.properties.forEach(p => {
@@ -192,8 +197,11 @@ class GameProperties {
     });
   }
 
+
   /**
-   * Hides (deletes) all properties on a map
+   * Hides all properties on the map.
+   *
+   * @returns {void}
    */
   hideAllPropertiesOnMap() {
     this.properties.forEach(p => {
@@ -202,9 +210,10 @@ class GameProperties {
   }
 
   /**
-   * Evaluates the value of all properties belongig to a team
-   * @param teamId
-   * @returns {{max: number, sum: number}}
+   * Evaluates the property value for a given team.
+   *
+   * @param {number} teamId - The ID of the team.
+   * @return {Object} - The evaluation result with the sum and maximum value.
    */
   evaluatePropertyValueForTeam(teamId) {
     let props  = this.getPropertiesOfTeam(teamId);
