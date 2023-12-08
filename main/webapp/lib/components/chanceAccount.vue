@@ -73,6 +73,12 @@ export default {
   created   : function () {
   },
   methods   : {
+    /**
+     * Looks up the team name based on the provided ID.
+     *
+     * @param {number} id - The ID of the team.
+     * @return {string} - The name of the team.
+     */
     teamName(id) {
       return this.$store.getters['teams/idToTeamName'](id);
     }

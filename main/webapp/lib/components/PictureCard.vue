@@ -82,9 +82,20 @@ export default {
     };
   },
   computed  : {
+    /**
+     * Gets the upload date of the picture.
+     *
+     * @returns {string} The formatted upload date in ISO format.
+     */
     uploadDate() {
       return formatTime(this.pictureInfo.timestamp.toISO());
     },
+    /**
+     * Retrieves the name of the location property associated with the picture.
+     * If the property does not exist, an empty string is returned.
+     *
+     * @returns {string} The name of the location property.
+     */
     propertyName() {
       let prop = this.getPropertyById(this.pictureInfo.propertyId);
       if (!prop) {

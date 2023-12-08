@@ -68,6 +68,12 @@ export default {
         element.height(hDoc - offsetElement.top);
       }
     },
+    /**
+     * Handles the click event on a location element.
+     *
+     * @param {Event} e - The click event object.
+     * @return {void}
+     */
     onLocationClick(e) {
       console.log('clicked', e);
       this.$emit('property-selected', e);

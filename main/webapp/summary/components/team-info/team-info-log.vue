@@ -56,6 +56,12 @@ export default {
   created   : function () {
   },
   methods   : {
+    /**
+     * Sets a new Map and initializes it with the provided map object.
+     *
+     * @param {Object} map - The map object to set.
+     * @return {void}
+     */
     onNewMap(map) {
       console.log('new Map!', map);
       this.map      = map;

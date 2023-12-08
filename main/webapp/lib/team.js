@@ -16,6 +16,11 @@ const teamColorsOriginal = [
 ];
 */
 // We're using HEX Values as the apexcharts does not understand all HTML names :-(
+/**
+ * Array of team colors.
+ *
+ * @type {string[]}
+ */
 const teamColors = [
   '#0000FF', '#A52A2A', '#006400', '#FFD700',
   '#FF0000', '#808000', '#CD853F', '#00FFFF',
@@ -68,6 +73,11 @@ function getTeamColor(teamIndex) {
 }
 
 
+/**
+ * Retrieves the team color array.
+ *
+ * @returns {Array} The array containing the team colors.
+ */
 function getTeamColorArray() {
   return teamColors;
 }

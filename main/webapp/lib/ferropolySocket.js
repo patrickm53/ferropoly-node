@@ -151,6 +151,13 @@ class FerropolySocket extends EventEmitter {
     }
   }
 
+  /**
+   * Emits a payload to the game through a specified channel.
+   *
+   * @param {string} channel - The channel to emit the payload to.
+   * @param {*} payload - The data payload to be emitted.
+   * @returns {boolean} - Returns true if the payload was successfully emitted, false otherwise.
+   */
   emitToGame(channel, payload) {
     let self = this;
     if (!self.connected) {

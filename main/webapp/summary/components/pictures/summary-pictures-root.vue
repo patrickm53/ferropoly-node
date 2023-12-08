@@ -41,9 +41,21 @@ export default {
   created   : function () {
   },
   methods   : {
+    /**
+     * Retrieves a property by its ID.
+     *
+     * @param {string} propertyId - The ID of the property to retrieve.
+     * @return {Object} - The property object corresponding to the given ID.
+     */
     getPropertyById(propertyId) {
       return this.$store.getters['propertyRegister/getPropertyById'](propertyId);
     },
+    /**
+     * Retrieves the name of the team with the provided team ID.
+     *
+     * @param {string} teamId - The ID of the team.
+     * @return {string} The name of the team associated with the provided team ID.
+     */
     getTeamNameById(teamId) {
       return this.$store.getters['teams/idToTeamName'](teamId);
     }
