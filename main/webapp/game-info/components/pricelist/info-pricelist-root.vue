@@ -18,13 +18,12 @@ import PricelistList from '../../../common/components/pricelist/pricelist-list.v
 import {mapFields} from 'vuex-map-fields';
 
 export default {
-  name      : 'info-pricelist-root',
+  name      : 'InfoPricelistRoot',
+  components: {PricelistList},
+  model     : {},
   props     : {},
   data      : function () {
     return {};
-  },
-  model     : {},
-  created   : function () {
   },
   computed  : {
     ...mapFields([
@@ -33,10 +32,10 @@ export default {
       'pricelist'
     ]),
   },
+  created   : function () {
+  },
   methods   : {},
-  components: {PricelistList},
-  filters   : {},
-  mixins    : []
+
 }
 </script>
 

@@ -19,7 +19,7 @@ import GameInfoRoot from './components/game-info-root.vue';
 
 Vue.use(VueRouter);
 
-Vue.component('game-info-root', GameInfoRoot);
+Vue.component('GameInfoRoot', GameInfoRoot);
 
 console.log('Webapp initializing');
 
@@ -36,11 +36,11 @@ $(document).ready(function () {
   console.log('DOM ready');
   new Vue({
     el     : '#game-info-app',
+    data   : {},
     created: function () {
       console.log('created');
     },
-    store  : store,
-    data   : {}
+    store  : store
   });
 });
 
