@@ -12,7 +12,7 @@
 const mongoose    = require('mongoose');
 const Moniker     = require('moniker');
 const _           = require('lodash');
-const {DateTime}  = require("luxon");
+const {DateTime}  = require('luxon');
 const dateTimeLib = require('../lib/dateTimeLib');
 const logger      = require('../lib/logger').getLogger('gameplayModel');
 
@@ -263,13 +263,13 @@ function countGameplaysForUser(ownerId, callback) {
  */
 function countGameplays(callback) {
   Gameplay.countDocuments({})
-          .exec()
-          .then(nb => {
-            return callback(null, nb);
-          })
-          .catch(err => {
-            return callback(err);
-          });
+    .exec()
+    .then(nb => {
+      return callback(null, nb);
+    })
+    .catch(err => {
+      return callback(err);
+    });
 }
 
 /**
@@ -314,10 +314,12 @@ async function getAllGameplays(callback) {
       .find({})
       .lean()
       .exec();
-  } catch (ex) {
+  }
+  catch (ex) {
     logger.error(ex);
     err = ex;
-  } finally {
+  }
+  finally {
     callback(err, docs)
   }
 }
@@ -372,7 +374,8 @@ function finalizeTime(date, time) {
     let newDate = DateTime.fromJSDate(date);
     newDate     = newDate.set({minute: minute, hour: hour, second: 0});
     return newDate.toUTC().toJSDate();
-  } catch (e) {
+  }
+  catch (e) {
     logger.info('ERROR in finalizeTime: ' + e);
     return new Date();
   }
@@ -429,19 +432,19 @@ function isFinalized(gameId, callback) {
     return callback(null, true);
   }
   Gameplay.find({'internal.gameId': gameId})
-          .then(docs => {
-            if (docs.length === 0) {
-              return callback(new Error('game not found: ' + gameId));
-            }
+    .then(docs => {
+      if (docs.length === 0) {
+        return callback(new Error('game not found: ' + gameId));
+      }
 
-            if (docs[0].internal.finalized) {
-              finalizedGameplays[docs[0].internal.gameId] = true;
-            }
-            return callback(null, docs[0].internal.finalized);
-          })
-          .catch(err => {
-            return callback(err);
-          });
+      if (docs[0].internal.finalized) {
+        finalizedGameplays[docs[0].internal.gameId] = true;
+      }
+      return callback(null, docs[0].internal.finalized);
+    })
+    .catch(err => {
+      return callback(err);
+    });
 }
 
 
@@ -469,13 +472,13 @@ function updateGameplayPartial(gp, callback) {
     _.set(loadedGp, 'log.lastEdited', new Date());
 
     loadedGp.save()
-            .then(() => {
-              logger.info('Gameplay update: ' + loadedGp.internal.gameId);
-              return callback(null, loadedGp);
-            })
-            .catch(err => {
-              return callback(err);
-            });
+      .then(() => {
+        logger.info('Gameplay update: ' + loadedGp.internal.gameId);
+        return callback(null, loadedGp);
+      })
+      .catch(err => {
+        return callback(err);
+      });
   });
 }
 
@@ -548,14 +551,37 @@ function setAdmins(gameId, ownerId, logins, callback) {
     gameplay.admins.logins  = logins || [];
 
     gameplay.save()
-            .then(doc => {
-              return callback(null, doc);
-            })
-            .catch(err => {
-              return callback(err);
-            });
+      .then(doc => {
+        return callback(null, doc);
+      })
+      .catch(err => {
+        return callback(err);
+      });
   });
 }
+
+/**
+ * Updates registration data for a specific game.
+ *
+ * @param {string} gameId - The unique identifier of the game.
+ * @param {object} data - The updated registration data.
+ * @param {string} [data.joining.possibleUntil='2024-01-01T00:00:00Z'] - The new possible until date for joining the game.
+ * @param {string} [data.joining.infotext=''] - The new information text for joining the game.
+ *
+ * @throws {string} Throws an error if the gameplay with the given gameId is not found.
+ *
+ * @returns {Promise<object>} A promise that resolves to the updated gameplay object.
+ */
+async function updateRegistrationData(gameId, data) {
+  let gp = await Gameplay.findOne({'internal.gameId': gameId});
+  if (!gp) {
+    throw (`Gameplay ${gameId} not found`);
+  }
+  gp.joining.possibleUntil = DateTime.fromISO(_.get(data, 'joining.possibleUntil', '2024-01-01T00:00:00Z'));
+  gp.joining.infotext      = _.get(data, 'joining.infotext', '');
+  return await gp.save();
+}
+
 
 /**
  * Sets the flag priceListPendingChanges to true: the price list can not be finalized without
@@ -636,40 +662,40 @@ function updateRules(gameId, ownerId, info, callback) {
   }
 
   Gameplay.find({'internal.owner': ownerId, 'internal.gameId': gameId})
-          .exec()
-          .then(docs => {
+    .exec()
+    .then(docs => {
 
-            if (docs.length === 0) {
-              err = new Error(`Gameplay ${gameId} not found for user ${ownerId}`);
-              return callback(err);
-            }
-            let gp = docs[0];
+      if (docs.length === 0) {
+        err = new Error(`Gameplay ${gameId} not found for user ${ownerId}`);
+        return callback(err);
+      }
+      let gp = docs[0];
 
-            if (!gp.rules || gp.rules.version < 0) {
-              gp.rules = {
-                version: 0, text: info.text, date: new Date(), changelog: []
-              };
-              gp.rules.changelog.push({
-                ts     : new Date(),
-                version: gp.rules.version,
-                changes: 'Automatisch erstellte Grundversion'
-              });
-            } else {
-              gp.rules.version++;
-              gp.rules.text = info.text;
-              gp.rules.changelog.push({ts: new Date(), version: gp.rules.version, changes: info.changes});
-            }
-            gp.save()
-              .then(() => {
-                return callback();
-              })
-              .catch(err => {
-                return callback(err);
-              });
-          })
-          .catch(err => {
-            return callback(err);
-          });
+      if (!gp.rules || gp.rules.version < 0) {
+        gp.rules = {
+          version: 0, text: info.text, date: new Date(), changelog: []
+        };
+        gp.rules.changelog.push({
+          ts     : new Date(),
+          version: gp.rules.version,
+          changes: 'Automatisch erstellte Grundversion'
+        });
+      } else {
+        gp.rules.version++;
+        gp.rules.text = info.text;
+        gp.rules.changelog.push({ts: new Date(), version: gp.rules.version, changes: info.changes});
+      }
+      gp.save()
+        .then(() => {
+          return callback();
+        })
+        .catch(err => {
+          return callback(err);
+        });
+    })
+    .catch(err => {
+      return callback(err);
+    });
 }
 
 /**
@@ -693,12 +719,12 @@ function saveNewPriceListRevision(gameplay, callback) {
   }
 
   gameplay.save()
-          .then(updatedGp => {
-            return callback(null, updatedGp);
-          })
-          .catch(err => {
-            return callback(err);
-          });
+    .then(updatedGp => {
+      return callback(null, updatedGp);
+    })
+    .catch(err => {
+      return callback(err);
+    });
 }
 
 /**
@@ -757,6 +783,7 @@ module.exports = {
   updateGameplayPartial         : updateGameplayPartial,
   getAutopilotGameplays         : getAutopilotGameplays,
   makeGameplayPublic            : makeGameplayPublic,
+  updateRegistrationData        : updateRegistrationData,
   // Constants
   MOBILE_NONE : MOBILE_NONE,
   MOBILE_BASIC: MOBILE_BASIC,

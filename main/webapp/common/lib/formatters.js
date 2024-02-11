@@ -226,5 +226,5 @@ export {
   booleanYesNo,
   buildingStatus,
   formatTimestampAsAgo,
-  formatPosition
+  formatPosition,
 };

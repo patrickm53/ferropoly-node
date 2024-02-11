@@ -5,19 +5,29 @@
 import $ from 'jquery';
 import axios from 'axios';
 
+
 /**
- * Returns all games of this user  in the callback
- * @param callback
+ * Retrieves the authentication token. Can be used with callback or async.
+ *
+ * @param {function} callback - Callback function to be executed when the token is retrieved. Will be called with two arguments: error and authToken.
+ * @return {Promise<string>} - A Promise that resolves with the authentication token when it is successfully retrieved.
  */
-function getAuthToken(callback) {
-  $.ajax('/authtoken', {dataType: 'json'})
-    .done(function (data) {
-      callback(null, data.authToken);
-    })
-    .fail(function () {
-      callback({message: 'Fehler 401: Du scheinst nicht eingeloggt zu sein, bitte lade die Seite neu.'});
-    });
+async function getAuthToken(callback) {
+  if (callback) {
+    $.ajax('/authtoken', {dataType: 'json'})
+      .done(function (data) {
+        callback(null, data.authToken);
+      })
+      .fail(function () {
+        callback({message: 'Fehler 401: Du scheinst nicht eingeloggt zu sein, bitte lade die Seite neu.'});
+      });
+  }
+  else {
+    let res = await $.ajax('/authtoken', {dataType: 'json'});
+    return res.authToken;
+  }
 }
+
 
 /**
  * Verifies the auth token. I had some quite nasty problems with expired and wrong tokens, hard to debug. This

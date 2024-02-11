@@ -25,19 +25,19 @@ class Property extends EventEmitter {
     this.isVisibleInList = true; // Flag indicating if the property is in the list or not
 
     // The Icons to use
-    this.ICON_EDIT_LOCATION     = '/images/markers/red-dot.png';
-    this.ICON_TRAIN_LOCATION    = '/images/markers/green.png';
-    this.ICON_BUS_LOCATION      = '/images/markers/yellow.png';
-    this.ICON_BOAT_LOCATION     = '/images/markers/blue.png';
-    this.ICON_CABLECAR_LOCATION = '/images/markers/purple.png';
-    this.ICON_OTHER_LOCATION    = '/images/markers/pink.png';
+    this.ICON_EDIT_LOCATION     = '/images/markers/selected.png';
+    this.ICON_TRAIN_LOCATION    = '/images/markers/z-neutral.png';
+    this.ICON_BUS_LOCATION      = '/images/markers/b-neutral.png';
+    this.ICON_BOAT_LOCATION     = '/images/markers/s-neutral.png';
+    this.ICON_CABLECAR_LOCATION = '/images/markers/v-neutral.png';
+    this.ICON_OTHER_LOCATION    = '/images/markers/v-neutral.png';
 
-    this.iconPriceLabels             = ['A.png', 'B.png', 'C.png', 'D.png', 'E.png', 'F.png'];
-    this.ICON_TRAIN_LOCATION_USED    = '/images/markers/letters/green_Marker';
-    this.ICON_BUS_LOCATION_USED      = '/images/markers/letters/yellow_Marker';
-    this.ICON_BOAT_LOCATION_USED     = '/images/markers/letters/blue_Marker';
-    this.ICON_CABLECAR_LOCATION_USED = '/images/markers/letters/purple_Marker';
-    this.ICON_OTHER_LOCATION_USED    = '/images/markers/letters/pink_Marker';
+    this.iconPriceLabels             = ['01.png', '03.png', '04.png', '06.png', '08.png', '10.png'];
+    this.ICON_TRAIN_LOCATION_USED    = '/images/markers/24/z-';
+    this.ICON_BUS_LOCATION_USED      = '/images/markers/24/b-';
+    this.ICON_BOAT_LOCATION_USED     = '/images/markers/24/s-';
+    this.ICON_CABLECAR_LOCATION_USED = '/images/markers/24/v-';
+    this.ICON_OTHER_LOCATION_USED    = '/images/markers/24/v-';
   }
 
   /**
