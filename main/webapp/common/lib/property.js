@@ -32,12 +32,13 @@ class Property extends EventEmitter {
     this.ICON_CABLECAR_LOCATION = '/images/markers/v-neutral.png';
     this.ICON_OTHER_LOCATION    = '/images/markers/v-neutral.png';
 
-    this.iconPriceLabels             = ['01.png', '03.png', '04.png', '06.png', '08.png', '10.png'];
-    this.ICON_TRAIN_LOCATION_USED    = '/images/markers/24/z-';
-    this.ICON_BUS_LOCATION_USED      = '/images/markers/24/b-';
-    this.ICON_BOAT_LOCATION_USED     = '/images/markers/24/s-';
-    this.ICON_CABLECAR_LOCATION_USED = '/images/markers/24/v-';
-    this.ICON_OTHER_LOCATION_USED    = '/images/markers/24/v-';
+    this.iconPriceLabels             = ['01.png', '02.png', '03.png', '04.png', '05.png', '06.png', '07.png', '08.png',
+                                        '09.png', '10.png'];
+    this.ICON_TRAIN_LOCATION_USED    = '/images/markers/32-b/z-';
+    this.ICON_BUS_LOCATION_USED      = '/images/markers/32-b/b-';
+    this.ICON_BOAT_LOCATION_USED     = '/images/markers/32-b/s-';
+    this.ICON_CABLECAR_LOCATION_USED = '/images/markers/32-b/v-';
+    this.ICON_OTHER_LOCATION_USED    = '/images/markers/32-b/v-';
   }
 
   /**

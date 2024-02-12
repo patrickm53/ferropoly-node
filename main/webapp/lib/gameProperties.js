@@ -8,12 +8,28 @@
 import GameProperty from './gameProperty';
 import {assign, filter, find, findIndex, get, set} from 'lodash';
 
+
+const priceTags = [
+  /* 0 = does not exist  */ [],
+  /* 1 = all have different price */ [],
+  /* 2 */ [1, 10],
+  /* 3 */ [1, 5, 10],
+  /* 4 */ [1, 3, 6, 10],
+  /* 5 */ [1, 3, 5, 7, 10],
+  /* 6 */ [1, 3, 5, 7, 9, 10],
+  /* 7 */ [1, 2, 3, 5, 7, 9, 10],
+  /* 8 */ [1, 2, 3, 4, 6, 7, 9, 10],
+  /* 9 */ [1, 2, 3, 4, 6, 7, 8, 9, 10],
+  /* 10 */ [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+]
+
 class GameProperties {
   /**
    * We're expecting an array of gameProperty objects as parameter (or none)
    * @param options
    */
   constructor(options) {
+    console.log('Creating new GameProperties...', options);
     this.properties = get(options, 'properties', []);
     this.gameplay   = get(options, 'gameplay', {
       gameParams: {
@@ -34,6 +50,7 @@ class GameProperties {
     if (!property instanceof GameProperty) {
       prop2push = new GameProperty(property);
     }
+    prop2push.pricelist.priceTag = this.getPriceTag(prop2push);
     this.properties.push(prop2push);
   }
 
@@ -57,7 +74,7 @@ class GameProperties {
    * @returns {number}
    */
   getBoughtPropertiesNb() {
-    let boughtProps =  filter(this.properties, p => {
+    let boughtProps = filter(this.properties, p => {
       return get(p, 'gamedata.owner', undefined) !== undefined;
     });
     return boughtProps.length;
@@ -68,10 +85,10 @@ class GameProperties {
    * @returns {number}
    */
   getNumberOfBuiltHouses() {
-     let nb = 0;
-     this.properties.forEach(p=> {
-       nb += get(p, 'gamedata.buildings', 0);
-     })
+    let nb = 0;
+    this.properties.forEach(p => {
+      nb += get(p, 'gamedata.buildings', 0);
+    })
     return nb;
   }
 
@@ -114,6 +131,42 @@ class GameProperties {
   }
 
   /**
+   * Calculates the price tag for a given property based on the price levels defined in the gameplay parameters.
+   *
+   * @param {object} property - The property for which the price tag is calculated.
+   * @return {number} - The price tag of the property.
+   */
+  getPriceTag(property) {
+    const lowestPrice         = this.gameplay.gameParams.properties.lowestPrice;
+    const highestPrice        = this.gameplay.gameParams.properties.highestPrice;
+    const priceDelta          = highestPrice - lowestPrice;
+    const numberOfPriceLevels = this.gameplay.gameParams.properties.numberOfPriceLevels
+    let step                  = priceDelta / numberOfPriceLevels;
+    let priceTag              = -1;
+
+    if (numberOfPriceLevels > 1 && numberOfPriceLevels < 11) {
+      // When there are between 2 and 10 Price levels, use mapping
+      for (let i = 0; i < numberOfPriceLevels; i++) {
+        let priceLevel = lowestPrice + i * step;
+        if (property.pricelist.price >= priceLevel) {
+          priceTag = priceTags[numberOfPriceLevels][i];
+        }
+      }
+      return priceTag;
+    } else {
+      // The less common situation: more than 10 different price levels. This is only approximately calculation
+      step = priceDelta / 10;
+      for (let i = 0; i < 10; i++) {
+        let priceLevel = lowestPrice + i * step;
+        if (property.pricelist.price >= priceLevel) {
+          priceTag = priceTags[10][i];
+        }
+      }
+      return priceTag;
+    }
+  }
+
+  /**
    * Updates a property in the list
    * @param property is either a Property-Model object or a GameProperty object
    * @returns {GameProperty} the updated object
@@ -124,7 +177,8 @@ class GameProperties {
     if (!property instanceof GameProperty) {
       prop2Update = new GameProperty(property);
     }
-    let i = findIndex(this.properties, {uuid: prop2Update.uuid});
+    prop2Update.pricelist.priceTag = this.getPriceTag(prop2Update);
+    let i                          = findIndex(this.properties, {uuid: prop2Update.uuid});
     if (i > -1) {
       assign(this.properties[i], prop2Update);
       console.log(`updated ${prop2Update.location.name}`);
@@ -193,7 +247,7 @@ class GameProperties {
    */
   showAllPropertiesWithTeamProps(map, options) {
     this.properties.forEach(p => {
-        p.setMap(map, options);
+      p.setMap(map, options);
     });
   }
 

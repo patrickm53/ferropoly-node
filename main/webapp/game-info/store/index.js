@@ -9,6 +9,8 @@ import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
 import $ from 'jquery';
 import PricelistProperty from '../components/lib/pricelistProperty';
+import {GameProperties} from '../../lib/gameProperties';
+import GameProperty from '../../lib/gameProperty';
 
 
 Vue.use(Vuex);
@@ -25,6 +27,7 @@ const store = new Vuex.Store({
       }
     },
     pricelist       : [],
+    properties      : new GameProperties(),
     teams           : [],
     mapOptions: {
       center: {
@@ -53,8 +56,10 @@ const store = new Vuex.Store({
           state.gameplay  = data.gameplay;
           state.pricelist = [];
           state.teams     = data.teams;
+          state.properties = new GameProperties({gameplay: data.gameplay});
           data.pricelist.forEach(p => {
             state.pricelist.push(new PricelistProperty(p));
+            state.properties.pushProperty(new GameProperty(p));
           });
 
         })
@@ -71,8 +76,9 @@ const store = new Vuex.Store({
     updateMarkers({state, commit, rootState}) {
       console.log('Updating markers', state.pricelist.length);
       state.pricelist.forEach(p => {
-        p.setMap(state.map);
+     //   p.setMap(state.map);
       });
+      state.properties.showAllPropertiesOnMap(state.map);
     },
     /**
      * Select a property, bring it to front

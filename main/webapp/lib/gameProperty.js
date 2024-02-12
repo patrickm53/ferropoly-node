@@ -101,7 +101,7 @@ class GameProperty extends Property {
           }
         }
         const idToTeamName = get(options, 'idToTeamName', null);
-        let content = `<h4>${this.location.name}</h4><p>`;
+        let content        = `<h4>${this.location.name}</h4><p>`;
         if (idToTeamName) {
           content += `Besitzer: ${idToTeamName(this.gamedata.owner)}<br>`;
         }
@@ -160,29 +160,52 @@ class GameProperty extends Property {
   setMarkerIcon(selected) {
     if (this.marker) {
 
+      let priceTag = get(this, 'pricelist.priceTag', -1) - 1;
+console.log(priceTag)
       if (selected) {
         this.marker.setIcon(this.ICON_EDIT_LOCATION);
       } else {
         switch (this.location.accessibility) {
           case 'train':
             // this.marker.setIcon(this.ICON_TRAIN_LOCATION);
-            this.marker.setIcon(this.ICON_TRAIN_LOCATION);
+            if (priceTag === -1) {
+              this.marker.setIcon(this.ICON_TRAIN_LOCATION);
+            } else {
+              this.marker.setIcon(this.ICON_TRAIN_LOCATION_USED + this.iconPriceLabels[priceTag]);
+            }
+
             break;
 
           case 'bus':
-            this.marker.setIcon(this.ICON_BUS_LOCATION);
+            if (priceTag === -1) {
+              this.marker.setIcon(this.ICON_BUS_LOCATION);
+            } else {
+              this.marker.setIcon(this.ICON_BUS_LOCATION_USED + this.iconPriceLabels[priceTag]);
+            }
             break;
 
           case 'boat':
-            this.marker.setIcon(this.ICON_BOAT_LOCATION);
+            if (priceTag === -1) {
+              this.marker.setIcon(this.ICON_BOAT_LOCATION);
+            } else {
+              this.marker.setIcon(this.ICON_BOAT_LOCATION_USED + this.iconPriceLabels[priceTag]);
+            }
             break;
 
           case 'cablecar':
-            this.marker.setIcon(this.ICON_CABLECAR_LOCATION);
+            if (priceTag === -1) {
+              this.marker.setIcon(this.ICON_CABLECAR_LOCATION);
+            } else {
+              this.marker.setIcon(this.ICON_CABLECAR_LOCATION_USED + this.iconPriceLabels[priceTag]);
+            }
             break;
 
           default:
-            this.marker.setIcon(this.ICON_OTHER_LOCATION);
+            if (priceTag === -1) {
+              this.marker.setIcon(this.ICON_OTHER_LOCATION);
+            } else {
+              this.marker.setIcon(this.ICON_OTHER_LOCATION_USED + this.iconPriceLabels[priceTag]);
+            }
             break;
         }
       }

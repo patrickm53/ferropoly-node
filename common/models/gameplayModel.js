@@ -596,7 +596,6 @@ function invalidatePricelist(gameId, ownerId, callback) {
       return callback(err);
     }
     if (gameplay.internal.priceListPendingChanges) {
-      console.log('DDDDD TRUE TRUE TRUE')
       return callback();
     }
     if (!gameplay.internal.priceListPendingChanges) {

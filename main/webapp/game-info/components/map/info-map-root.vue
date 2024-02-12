@@ -36,13 +36,13 @@ export default {
   created   : function () {
   },
   computed  : {
-    ...mapFields([
-      'gameplay.internal.finalized',
-      'gameplay.internal.gameId',
-      'pricelist',
-      'mapOptions',
-      'map'
-    ]),
+    ...mapFields({
+      finalized : 'gameplay.internal.finalized',
+      gameId    : 'gameplay.internal.gameId',
+      pricelist : 'properties.properties',
+      mapOptions: 'mapOptions',
+      map       : 'map'
+    }),
   },
   methods   : {
     /**
@@ -61,7 +61,7 @@ export default {
       this.$refs.map.setFocusOnProperty(p);
     },
   },
-  components: { InfoProperties, FerropolyMap},
+  components: {InfoProperties, FerropolyMap},
   filters   : {},
   mixins    : []
 }
