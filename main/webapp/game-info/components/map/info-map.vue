@@ -17,7 +17,9 @@ import FerropolyMap from '../../../common/components/ferropoly-map/ferropoly-map
 import {mapFields} from 'vuex-map-fields';
 
 export default {
-  name      : 'info-map',
+  name      : 'InfoMap',
+  components: {FerropolyMap},
+  model     : {},
   props     : {},
   data      : function () {
     return {
@@ -27,17 +29,17 @@ export default {
       }
     };
   },
-  model     : {},
-  created   : function () {
-  },
   computed  : {
-    ...mapFields([
-      'gameplay.internal.finalized',
-      'gameplay.internal.gameId',
-      'pricelist',
-      'mapSettings.center',
-      'map'
-    ])
+    ...mapFields({
+          finalized: 'gameplay.internal.finalized',
+          gameId   : 'gameplay.internal.gameId',
+          center   : 'mapSettings.center',
+          map      : 'map',
+          bounds   : 'map.bounds',
+        }
+    )
+  },
+  created   : function () {
   },
   methods   : {
     /**
@@ -47,11 +49,9 @@ export default {
       console.log('new Map!', map);
       this.map = map;
       this.$store.dispatch({type: 'updateMarkers'});
+
     },
-  },
-  components: {FerropolyMap},
-  filters   : {},
-  mixins    : []
+  }
 }
 </script>
 

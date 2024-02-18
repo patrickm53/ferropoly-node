@@ -11,32 +11,32 @@ import $ from 'jquery';
 import PricelistProperty from '../components/lib/pricelistProperty';
 import {GameProperties} from '../../lib/gameProperties';
 import GameProperty from '../../lib/gameProperty';
-
+import map from '../../common/store/map'
 
 Vue.use(Vuex);
 
 
 const store = new Vuex.Store({
+  modules  : {map},
   state    : {
     gameplay        : {
       owner     : {},
       scheduling: {},
       internal  : {},
-      rules: {
+      rules     : {
         text: '<em>not yet</em>'
       }
     },
     pricelist       : [],
-    properties      : new GameProperties(),
+    register        : new GameProperties(),
     teams           : [],
-    mapOptions: {
+    mapOptions      : {
       center: {
         lat: 46.6,
         lng: 8.5
       },
       zoom  : 10
     },
-    map             : {},
     selectedProperty: null
   },
   getters  : {getField},
@@ -49,18 +49,20 @@ const store = new Vuex.Store({
      * @param rootState
      * @param options
      */
-    fetchData({state, commit, rootState}, options) {
+    fetchData({state, commit, rootState, dispatch}, options) {
       $.ajax(`/info/data/${options.gameId}`, {dataType: 'json'})
         .done(function (data) {
           console.log(data);
-          state.gameplay  = data.gameplay;
-          state.pricelist = [];
-          state.teams     = data.teams;
-          state.properties = new GameProperties({gameplay: data.gameplay});
+          state.gameplay   = data.gameplay;
+          state.pricelist  = [];
+          state.teams      = data.teams;
+          state.register = new GameProperties({gameplay: data.gameplay});
           data.pricelist.forEach(p => {
             state.pricelist.push(new PricelistProperty(p));
-            state.properties.pushProperty(new GameProperty(p));
+            state.register.pushProperty(new GameProperty(p));
           });
+          // Properties -> Map settings
+          dispatch('setMapBounds', state.register.properties);
 
         })
         .fail(function (err) {
@@ -75,10 +77,7 @@ const store = new Vuex.Store({
      */
     updateMarkers({state, commit, rootState}) {
       console.log('Updating markers', state.pricelist.length);
-      state.pricelist.forEach(p => {
-     //   p.setMap(state.map);
-      });
-      state.properties.showAllPropertiesOnMap(state.map);
+      state.register.showAllPropertiesOnMap(state.map.instance);
     },
     /**
      * Select a property, bring it to front

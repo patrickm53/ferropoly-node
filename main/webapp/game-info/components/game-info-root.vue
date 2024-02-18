@@ -26,7 +26,11 @@ import MenuBar from '../../common/components/menu-bar/menu-bar.vue'
 import {last, split} from 'lodash';
 
 export default {
-  name      : 'game-info-root',
+  name      : 'GameInfoRoot',
+  components: {InfoBasicRoot, InfoMapRoot, InfoPricelistRoot, MenuBar, InfoRulesRoot},
+  filters   : {},
+  mixins    : [],
+  model     : {},
   props     : {},
   data      : function () {
     return {
@@ -44,24 +48,20 @@ export default {
       panel       : 'info',
     };
   },
-  model     : {},
+  computed  : {
+
+  },
   created   : function () {
     const elements = split(window.location.pathname, '/');
     let gameId     = last(elements);
     this.$store.dispatch('fetchData', {gameId});
-  },
-  computed  : {
-
   },
   methods   : {
     onPanelChange(panel) {
       console.log('onPanelChange', panel);
       this.panel = panel;
     },
-  },
-  components: {InfoBasicRoot, InfoMapRoot, InfoPricelistRoot, MenuBar, InfoRulesRoot},
-  filters   : {},
-  mixins    : []
+  }
 }
 </script>
 

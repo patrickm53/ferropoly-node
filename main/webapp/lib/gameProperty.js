@@ -161,7 +161,6 @@ class GameProperty extends Property {
     if (this.marker) {
 
       let priceTag = get(this, 'pricelist.priceTag', -1) - 1;
-console.log(priceTag)
       if (selected) {
         this.marker.setIcon(this.ICON_EDIT_LOCATION);
       } else {

@@ -25,24 +25,27 @@
 import InfoProperties from './info-properties.vue'
 import FerropolyMap from '../../../common/components/ferropoly-map/ferropoly-map.vue'
 import {mapFields} from 'vuex-map-fields';
+import {delay} from 'lodash';
 
 export default {
-  name      : 'info-map-root',
+  name      : 'InfoMapRoot',
+  components: {InfoProperties, FerropolyMap},
+  model     : {},
   props     : {},
   data      : function () {
     return {};
-  },
-  model     : {},
-  created   : function () {
   },
   computed  : {
     ...mapFields({
       finalized : 'gameplay.internal.finalized',
       gameId    : 'gameplay.internal.gameId',
-      pricelist : 'properties.properties',
+      pricelist : 'register.properties',
       mapOptions: 'mapOptions',
-      map       : 'map'
+      map       : 'map',
+      bounds   : 'map.bounds',
     }),
+  },
+  created   : function () {
   },
   methods   : {
     /**
@@ -50,8 +53,15 @@ export default {
      */
     onNewMap(map) {
       console.log('new Map!', map);
-      this.map = map;
+      this.map.instance = map;
       this.$store.dispatch({type: 'updateMarkers'});
+
+      // mhm, this leaves me back with a bad feeling... why do I need to
+      // set the bounds delayed...?
+      delay(() => {
+        this.$refs.map.fitBounds(this.bounds);
+        this.$refs.map.resizeHandler();
+      }, 500);
     },
     /**
      * A Property was selected
@@ -61,9 +71,7 @@ export default {
       this.$refs.map.setFocusOnProperty(p);
     },
   },
-  components: {InfoProperties, FerropolyMap},
-  filters   : {},
-  mixins    : []
+
 }
 </script>
 
