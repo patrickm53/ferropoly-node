@@ -45,6 +45,7 @@ const store = new Vuex.Store({
     /**
      * Get all infos needed
      * @param state
+     * @param dispatch
      * @param commit
      * @param rootState
      * @param options
@@ -53,10 +54,10 @@ const store = new Vuex.Store({
       $.ajax(`/info/data/${options.gameId}`, {dataType: 'json'})
         .done(function (data) {
           console.log(data);
-          state.gameplay   = data.gameplay;
-          state.pricelist  = [];
-          state.teams      = data.teams;
-          state.register = new GameProperties({gameplay: data.gameplay});
+          state.gameplay  = data.gameplay;
+          state.pricelist = [];
+          state.teams     = data.teams;
+          state.register  = new GameProperties({gameplay: data.gameplay});
           data.pricelist.forEach(p => {
             state.pricelist.push(new PricelistProperty(p));
             state.register.pushProperty(new GameProperty(p));
@@ -72,10 +73,8 @@ const store = new Vuex.Store({
     /**
      * Update all markers
      * @param state
-     * @param commit
-     * @param rootState
      */
-    updateMarkers({state, commit, rootState}) {
+    updateMarkers({state}) {
       console.log('Updating markers', state.pricelist.length);
       state.register.showAllPropertiesOnMap(state.map.instance);
     },
