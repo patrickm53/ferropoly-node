@@ -20,20 +20,19 @@ import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
 import {mapFields} from 'vuex-map-fields';
 
 export default {
-  name      : 'basic-pricelist',
+  name      : 'BasicPricelist',
+  components: {FerroCard},
+  model     : {},
   props     : {},
   data      : function () {
     return {};
   },
-  model     : {},
-  created   : function () {
-  },
   computed  : {
-    ...mapFields([
-      'gameplay.internal.finalized',
-      'gameplay.internal.gameId',
-      'pricelist'
-    ]),
+    ...mapFields({
+      finalized: 'gameplay.internal.finalized',
+      gameId   : 'gameplay.internal.gameId',
+      pricelist: 'register.properties'
+    }),
     pricelistLength() {
       return this.pricelist.length;
     },
@@ -41,10 +40,9 @@ export default {
       return `/info/${this.gameId}/download`
     }
   },
-  methods   : {},
-  components: {FerroCard},
-  filters   : {},
-  mixins    : []
+  created   : function () {
+  },
+  methods   : {}
 }
 </script>
 

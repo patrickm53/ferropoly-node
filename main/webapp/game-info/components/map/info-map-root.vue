@@ -16,7 +16,7 @@
             :map-options="mapOptions"
             @map="onNewMap")
         b-col(sm="12" md="4")
-          info-properties(@property-selected="propertySelected")
+          info-properties(ref="pricelist" @property-selected="propertySelected")
 
 </template>
 
@@ -61,6 +61,7 @@ export default {
       delay(() => {
         this.$refs.map.fitBounds(this.bounds);
         this.$refs.map.resizeHandler();
+        this.$refs.pricelist.resizeHandler();
       }, 500);
     },
     /**

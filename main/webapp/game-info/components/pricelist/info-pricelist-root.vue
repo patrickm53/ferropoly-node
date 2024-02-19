@@ -26,11 +26,11 @@ export default {
     return {};
   },
   computed  : {
-    ...mapFields([
-      'gameplay.gamename',
-      'gameplay.internal.finalized',
-      'pricelist'
-    ]),
+    ...mapFields({
+      gamename : 'gameplay.gamename',
+      finalized: 'gameplay.internal.finalized',
+      pricelist: 'register.properties'
+    }),
   },
   created   : function () {
   },

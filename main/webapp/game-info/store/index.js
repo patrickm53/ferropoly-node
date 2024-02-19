@@ -8,7 +8,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {getField, updateField} from 'vuex-map-fields';
 import $ from 'jquery';
-import PricelistProperty from '../components/lib/pricelistProperty';
 import {GameProperties} from '../../lib/gameProperties';
 import GameProperty from '../../lib/gameProperty';
 import map from '../../common/store/map'
@@ -27,7 +26,6 @@ const store = new Vuex.Store({
         text: '<em>not yet</em>'
       }
     },
-    pricelist       : [],
     register        : new GameProperties(),
     teams           : [],
     mapOptions      : {
@@ -55,11 +53,9 @@ const store = new Vuex.Store({
         .done(function (data) {
           console.log(data);
           state.gameplay  = data.gameplay;
-          state.pricelist = [];
           state.teams     = data.teams;
           state.register  = new GameProperties({gameplay: data.gameplay});
           data.pricelist.forEach(p => {
-            state.pricelist.push(new PricelistProperty(p));
             state.register.pushProperty(new GameProperty(p));
           });
           // Properties -> Map settings
@@ -75,7 +71,7 @@ const store = new Vuex.Store({
      * @param state
      */
     updateMarkers({state}) {
-      console.log('Updating markers', state.pricelist.length);
+      console.log('Updating markers');
       state.register.showAllPropertiesOnMap(state.map.instance);
     },
     /**

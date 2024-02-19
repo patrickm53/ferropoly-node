@@ -18,7 +18,7 @@
         a(href='#' @click="onLocationClick(data.item)") {{data.item.location.name}}
       template(#cell(pricelist.propertyGroup)="data") {{data.item.pricelist.propertyGroup}}
       template(#cell(pricelist.price)="data") {{data.item.pricelist.price | formatPrice}}
-  
+
 </template>
 
 <script>
@@ -27,9 +27,12 @@ import {formatPrice} from '../../../common/lib/formatters';
 import $ from 'jquery';
 
 export default {
-  name: "info-properties",
-  props: {},
-  data: function() {
+  name      : 'InfoProperties',
+  components: {},
+  filters   : {formatPrice},
+  model     : {},
+  props     : {},
+  data      : function () {
     return {
       fields: [
         {key: 'pricelist.position', label: 'Pos', sortable: true},
@@ -39,22 +42,22 @@ export default {
       ]
     };
   },
-  model: {},
-  mounted: function () {
+  computed  : {
+    ...mapFields({
+      pricelist: 'register.properties'
+    })
+  },
+  mounted   : function () {
     this.resizeHandler();
   },
-  created: function () {
+  created   : function () {
     window.addEventListener('resize', this.resizeHandler);
     this.resizeHandler();
   },
   destroyed() {
     window.removeEventListener('resize', this.resizeHandler);
   },
-  computed: {
-    ...mapFields([
-      'pricelist'
-    ])
-  },
+
   methods: {
     /**
      * Creates the maximum Size of the list
@@ -63,7 +66,7 @@ export default {
       let element       = $('#property-list');
       let hDoc          = $(window).height();
       let offsetElement = element.offset();
-      console.log('rh', hDoc, offsetElement);
+      console.log('info-properties rh', hDoc, offsetElement);
       if (offsetElement) {
         element.height(hDoc - offsetElement.top);
       }
@@ -79,9 +82,7 @@ export default {
       this.$emit('property-selected', e);
     }
   },
-  components: {},
-  filters: {formatPrice},
-  mixins: []
+
 }
 </script>
 

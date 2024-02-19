@@ -19,8 +19,8 @@ import FerroCard from '../../../common/components/ferro-card/ferro-card.vue';
 import {mapFields} from 'vuex-map-fields';
 
 export default {
-  name      : 'basic-teams',
-  props     : {},
+  name      : 'BasicTeams',
+  components: {FerroCard},
   data      : function () {
     return {
       fields: [
@@ -30,18 +30,12 @@ export default {
       ]
     };
   },
-  model     : {},
-  created   : function () {
-  },
   computed  : {
     ...mapFields([
       'teams'
     ]),
   },
   methods   : {},
-  components: {FerroCard},
-  filters   : {},
-  mixins    : []
 }
 </script>
 

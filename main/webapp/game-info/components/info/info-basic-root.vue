@@ -28,24 +28,19 @@ import BasicTeams from './basic-teams.vue';
 import BasicPricelist from './basic-pricelist.vue';
 
 export default {
-  name: "info-basic-root",
-  props: {},
-  data: function() {
+  name      : 'InfoBasicRoot',
+  components: {BasicGameinfo, BasicTeams, BasicPricelist},
+  props     : {},
+  data      : function () {
     return {};
   },
-  model: {},
-  created: function() {
-  },
-  computed: {
+  computed  : {
     ...mapFields([
       'gameplay.gamename',
       'gameplay.owner.organisatorName'
     ]),
   },
-  methods: {},
-  components: {BasicGameinfo, BasicTeams, BasicPricelist},
-  filters: {},
-  mixins: []
+  methods   : {},
 }
 </script>
 

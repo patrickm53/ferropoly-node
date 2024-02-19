@@ -33,13 +33,12 @@ import {mapFields} from 'vuex-map-fields';
 import {formatGameDate, formatGameTime} from '../../../common/lib/formatters';
 
 export default {
-  name      : 'basic-gameinfo',
+  name      : 'BasicGameinfo',
+  components: {FerroCard},
+  filters   : {formatGameDate, formatGameTime},
   props     : {},
   data      : function () {
     return {};
-  },
-  model     : {},
-  created   : function () {
   },
   computed  : {
     ...mapFields([
@@ -61,10 +60,9 @@ export default {
       return `mailto:${this.organisatorEmail}`;
     }
   },
+  created   : function () {
+  },
   methods   : {},
-  components: {FerroCard},
-  filters   : {formatGameDate, formatGameTime},
-  mixins    : []
 }
 </script>
 
