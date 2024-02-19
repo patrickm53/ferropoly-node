@@ -76,7 +76,7 @@ const store = new Vuex.Store({
       dispatch('initTeamAccounts', state.teams.list);
 
       // Properties
-      state.propertyRegister.properties = new GameProperties({gameplay: options.data.gameplay});
+      state.propertyRegister.register = new GameProperties({gameplay: options.data.gameplay});
       options.data.properties.forEach(p => {
         state.propertyRegister.register.pushProperty(new GameProperty(p));
       })
