@@ -35,6 +35,11 @@ class GameProperties {
       gameParams: {
         rentFactors: {
           allPropertiesOfGroup: 2
+        },
+        properties : {
+          lowestPrice        : 0,
+          highestPrice       : 10000,
+          numberOfPriceLevels: 10
         }
       }
     });
@@ -181,7 +186,7 @@ class GameProperties {
     let i                          = findIndex(this.properties, {uuid: prop2Update.uuid});
     if (i > -1) {
       assign(this.properties[i], prop2Update);
-      console.log(`updated ${prop2Update.location.name}`);
+      //  console.log(`updated ${prop2Update.location.name}`);
     }
     return prop2Update;
   }
@@ -200,7 +205,6 @@ class GameProperties {
    * @param map
    */
   showAllPropertiesOnMap(map) {
-    console.log('SHOW ALL PROPS!!')
     this.properties.forEach(p => {
       p.setMap(map);
     });
