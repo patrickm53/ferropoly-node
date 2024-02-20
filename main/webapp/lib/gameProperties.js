@@ -50,13 +50,32 @@ class GameProperties {
    * @param property
    */
   pushProperty(property) {
+    let self      = this;
     let prop2push = property;
 
     if (!property instanceof GameProperty) {
       prop2push = new GameProperty(property);
     }
+    prop2push.on('info-window-opened', prop => {
+      self.closeInfoWindows();
+    });
     prop2push.pricelist.priceTag = this.getPriceTag(prop2push);
     this.properties.push(prop2push);
+  }
+
+  /**
+   * Closes all open info windows.
+   *
+   * @function closeInfoWindows
+   * @memberOf Object
+   * @instance
+   *
+   * @returns {void}
+   */
+  closeInfoWindows() {
+    this.properties.forEach(p => {
+      p.closeInfoWindow()
+    })
   }
 
   /**
@@ -177,11 +196,15 @@ class GameProperties {
    * @returns {GameProperty} the updated object
    */
   updateProperty(property) {
+    let self        = this;
     let prop2Update = property;
 
     if (!property instanceof GameProperty) {
       prop2Update = new GameProperty(property);
     }
+    prop2Update.on('info-window-opened', prop => {
+      self.closeInfoWindows();
+    });
     prop2Update.pricelist.priceTag = this.getPriceTag(prop2Update);
     let i                          = findIndex(this.properties, {uuid: prop2Update.uuid});
     if (i > -1) {

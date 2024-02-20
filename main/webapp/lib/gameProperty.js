@@ -113,7 +113,7 @@ class GameProperty extends Property {
           content: content
         })
         this.teamMarker.addListener('click', () => {
-          this.infoWindow.open(this.map, this.teamMarker);
+          this.openInfoWindow();
         });
       } else {
         console.warn('Tried to show gamedata to a prop not belonging to team', this);
@@ -141,7 +141,7 @@ class GameProperty extends Property {
       content: content
     })
     this.marker.addListener('click', () => {
-      this.infoWindow.open(this.map, this.marker);
+      this.openInfoWindow();
     });
   }
 

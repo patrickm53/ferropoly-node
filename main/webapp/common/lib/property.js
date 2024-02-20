@@ -11,7 +11,6 @@ import {merge, get} from 'lodash';
 import EventEmitter from '../../common/lib/eventEmitter';
 
 
-
 class Property extends EventEmitter {
 
   /**
@@ -22,6 +21,7 @@ class Property extends EventEmitter {
     super();
     merge(this, p);
     this.marker          = null;
+    this.map             = null;
     this.isVisibleInList = true; // Flag indicating if the property is in the list or not
 
     // The Icons to use
@@ -39,6 +39,37 @@ class Property extends EventEmitter {
     this.ICON_BOAT_LOCATION_USED     = '/images/markers/32-b/s-';
     this.ICON_CABLECAR_LOCATION_USED = '/images/markers/32-b/v-';
     this.ICON_OTHER_LOCATION_USED    = '/images/markers/32-b/v-';
+
+    // Info Windows
+    this.infoWindow = null;
+  }
+
+  /**
+   * Opens the info window for the marker.
+   *
+   * @memberof SomeClass
+   * @function openInfoWindow
+   *
+   * @emits info-window-opened Event emitted when the info window is opened.
+   *
+   * @returns {void} Returns nothing.
+   */
+  openInfoWindow() {
+    this.emit('info-window-opened', this);
+    if (this.infoWindow) {
+      this.infoWindow.open(this.map, this.marker);
+    }
+  }
+
+  /**
+   * Closes the info window if it is currently open.
+   *
+   * @returns {void}
+   */
+  closeInfoWindow() {
+    if (this.infoWindow) {
+      this.infoWindow.close();
+    }
   }
 
   /**
