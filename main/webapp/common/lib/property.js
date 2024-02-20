@@ -47,10 +47,8 @@ class Property extends EventEmitter {
   /**
    * Opens the info window for the marker.
    *
-   * @memberof SomeClass
+   * @memberof Property
    * @function openInfoWindow
-   *
-   * @emits info-window-opened Event emitted when the info window is opened.
    *
    * @returns {void} Returns nothing.
    */
