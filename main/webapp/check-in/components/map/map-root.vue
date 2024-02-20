@@ -41,7 +41,11 @@ export default {
   },
   created   : function () {
   },
-  methods   : {
+  beforeDestroy() {
+    // Close all Info tags on the map
+    this.propertyRegister.closeInfoWindows();
+  },
+  methods: {
     onNewMap(map) {
       console.log('new Map!', map);
       this.map = map;

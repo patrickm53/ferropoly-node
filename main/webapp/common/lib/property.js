@@ -44,18 +44,18 @@ class Property extends EventEmitter {
     this.infoWindow = null;
   }
 
+
   /**
-   * Opens the info window for the marker.
+   * Opens an InfoWindow on a specified marker.
    *
-   * @memberof Property
-   * @function openInfoWindow
+   * @param {Marker} marker - The marker to open the InfoWindow on.
    *
-   * @returns {void} Returns nothing.
+   * @return {void}
    */
-  openInfoWindow() {
+  openInfoWindow(marker) {
     this.emit('info-window-opened', this);
     if (this.infoWindow) {
-      this.infoWindow.open(this.map, this.marker);
+      this.infoWindow.open(this.map, marker);
     }
   }
 

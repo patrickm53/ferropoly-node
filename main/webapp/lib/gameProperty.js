@@ -20,12 +20,14 @@ class GameProperty extends Property {
     })
   }
 
+
   /**
    * Set Map override: when a teamId is supplied, we have different markers
    * @param map
    * @param options : object customizing the icons. See function with details
    */
   setMap(map, options = {}) {
+    this.map = map;
     let teamId             = get(options, 'teamId', '');
     let showAllTeamMarkers = get(options, 'showTeamMarkers', false);
     let owner              = get(this.gamedata, 'owner', undefined);
@@ -113,7 +115,7 @@ class GameProperty extends Property {
           content: content
         })
         this.teamMarker.addListener('click', () => {
-          this.openInfoWindow();
+          this.openInfoWindow(this.teamMarker);
         });
       } else {
         console.warn('Tried to show gamedata to a prop not belonging to team', this);
@@ -141,7 +143,7 @@ class GameProperty extends Property {
       content: content
     })
     this.marker.addListener('click', () => {
-      this.openInfoWindow();
+      this.openInfoWindow(this.marker);
     });
   }
 

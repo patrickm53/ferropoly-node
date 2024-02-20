@@ -54,6 +54,10 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    // Close all Info tags on the map
+    this.propertyRegister.closeInfoWindows();
+  },
   methods   : {
     /**
      * A new map instance was created, we're using this one now
