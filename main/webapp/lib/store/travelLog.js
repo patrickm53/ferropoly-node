@@ -126,7 +126,8 @@ function handleTravelLogData(teamId, getters, state, travelLog, rootGetters) {
 const module = {
   namespaced: true,
   state     : () => ({
-    log: {}
+    log: {},
+    lastPosition: {}
   }),
   getters   : {
     getTravelLogField,
@@ -199,6 +200,7 @@ const module = {
         });
       }
       state.log[teamId].pushLocation(entry);
+      state.lastPosition = entry;
     }
   },
 };

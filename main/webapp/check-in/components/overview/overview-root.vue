@@ -14,6 +14,9 @@
         game-info
     b-row
       b-col
+        gps-info
+    b-row
+      b-col
         game-events
 
 </template>
@@ -23,10 +26,11 @@ import {mapFields} from 'vuex-map-fields';
 import GameEvents from './game-events.vue';
 import BasicInfo from './basic-info.vue';
 import GameInfo from './game-info.vue';
+import GpsInfo from './gps-info.vue';
 
 export default {
   name      : 'OverviewRoot',
-  components: {BasicInfo, GameEvents, GameInfo},
+  components: {GpsInfo, BasicInfo, GameEvents, GameInfo},
   filters   : {},
   mixins    : [],
   model     : {},

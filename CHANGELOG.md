@@ -2,6 +2,7 @@
 
 * Neue Marker: Preisklassen anstelle Verbindung als Basisfarbe
 * Infofenster auf Karte werden geschlossen, wenn ein neues Infofenster geöffnet wird
+* GPS in Checkin: Genauigkeit dargestellt, updatebar
 
 # v3.3.7 21.11.23 Release
 * Bugfix: Nur hochgeladene Bilder anzeigen
