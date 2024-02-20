@@ -6,7 +6,7 @@
 <template lang="pug">
 b-container(fluid)
   div(v-if="pictureInfo === null")
-    picture-list(:pictures="pictures" :team-id="teamId" @zoom="onZoom")
+    picture-list(:pictures="pictures" :team-id="teamId" :reverse-order="reverseOrder" @zoom="onZoom")
   div(v-if="pictureInfo")
     picture-viewer(:picture="pictureInfo"
       :properties="propertyRegister.properties"
@@ -22,6 +22,7 @@ b-container(fluid)
 import PictureList from "../../../../lib/components/PictureList.vue";
 import {mapFields} from "vuex-map-fields";
 import PictureViewer from "../../../../lib/components/PictureViewer.vue";
+import {getItem} from '../../../../common/lib/localStorage';
 
 export default {
   name      : "NavContentPictures",
@@ -33,6 +34,7 @@ export default {
   data      : function () {
     return {
       pictureInfo: null,
+      reverseOrder: false
     };
   },
   computed  : {
@@ -43,6 +45,7 @@ export default {
     }),
   },
   created   : function () {
+    this.reverseOrder = getItem('pictureReverseOrder', false);
   },
   methods   : {
     onZoom(info) {

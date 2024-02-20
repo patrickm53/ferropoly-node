@@ -7,45 +7,48 @@
   Created: 17.03.23
 -->
 <template lang="pug">
-b-container(fluid)
-  div(v-if="pictures.length === 0")
-    b-jumbotron(header="Bilder Gallerie" :lead="noPicLead")
-      p {{noPicText}}
-  div(v-if="pictureInfo === null && pictures.length > 0")
-    b-row.mt-1(v-if="!filterDisabled")
-      b-col
-        b-form(inline)
-          label.mr-2(for="filter") Team-Filter:
-          b-form-select#filter(v-model="selectedFilter" :options="selectOptions")
-          label.mr-2.ml-4(for="text") Text-Filter:
-          b-form-input(v-model="textFilter" type="text")
-    picture-list.mt-2(:pictures="pictures"
-      :team-id="selectedFilter"
-      :extended="extended"
-      :admin="admin"
-      :text-filter="textFilter"
-      :get-property-by-id="getPropertyById"
-      :get-team-name-by-id="getTeamNameById"
-      @zoom="onZoom")
-  div(v-if="pictureInfo")
-    picture-viewer(:picture="pictureInfo"
-      :properties="properties"
-      :extended="extended"
-      :admin="admin"
-      :edit-allowed="editAllowed"
-      :get-property-by-id="getPropertyById"
-      :get-team-name-by-id="getTeamNameById"
-      @property-assigned="onPropertyAssigned"
-      @close="onClose")
+  b-container(fluid)
+    div(v-if="pictures.length === 0")
+      b-jumbotron(header="Bilder Gallerie" :lead="noPicLead")
+        p {{noPicText}}
+    div(v-if="pictureInfo === null && pictures.length > 0")
+      b-row.mt-1(v-if="!filterDisabled")
+        b-col
+          b-form(inline)
+            label.mr-2(for="filter") Team-Filter:
+            b-form-select#filter(v-model="selectedFilter" :options="selectOptions")
+            label.mr-2.ml-4(for="text") Text-Filter:
+            b-form-input#text(v-model="textFilter" type="text")
+            b-form-checkbox.mr-2.ml-4(v-model="reverseOrder" @change="onOrderChanged") Absteigende Reihenfolge
+      picture-list.mt-2(:pictures="pictures"
+        :team-id="selectedFilter"
+        :extended="extended"
+        :admin="admin"
+        :text-filter="textFilter"
+        :get-property-by-id="getPropertyById"
+        :get-team-name-by-id="getTeamNameById"
+        :reverse-order="reverseOrder"
+        @zoom="onZoom")
+    div(v-if="pictureInfo")
+      picture-viewer(:picture="pictureInfo"
+        :properties="properties"
+        :extended="extended"
+        :admin="admin"
+        :edit-allowed="editAllowed"
+        :get-property-by-id="getPropertyById"
+        :get-team-name-by-id="getTeamNameById"
+        @property-assigned="onPropertyAssigned"
+        @close="onClose")
 </template>
 
 <script>
 
-import PictureList from "./PictureList.vue";
-import PictureViewer from "./PictureViewer.vue";
+import PictureList from './PictureList.vue';
+import PictureViewer from './PictureViewer.vue';
+import {setBoolean, getItem} from '../../common/lib/localStorage';
 
 export default {
-  name      : "ReceptionPictures",
+  name      : 'ReceptionPictures',
   components: {PictureList, PictureViewer},
   filters   : {},
   mixins    : [],
@@ -55,8 +58,8 @@ export default {
      * Filter section enabled?
      */
     filterDisabled: {
-      type: Boolean,
-      default:()=>{
+      type   : Boolean,
+      default: () => {
         return false;
       }
     },
@@ -64,18 +67,18 @@ export default {
      * Lead / title of the jumbotron when no pictures are available
      */
     noPicLead: {
-      type: String,
-      default: ()=> {
-        return "Leider hat noch kein Team Bilder hochgeladen!"
+      type   : String,
+      default: () => {
+        return 'Leider hat noch kein Team Bilder hochgeladen!'
       }
     },
     /**
      * Basic text when no pictures are available.
      */
     noPicText: {
-      type: String,
-      default: ()=> {
-        return "Sobald Bilder verfügbar sind, findest Du diese hier."
+      type   : String,
+      default: () => {
+        return 'Sobald Bilder verfügbar sind, findest Du diese hier.'
       }
     },
     /**
@@ -92,8 +95,8 @@ export default {
      * Extended true: shows more details, otherwise very basic
      */
     extended: {
-      type: Boolean,
-      default: ()=> {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     },
@@ -101,8 +104,8 @@ export default {
      * Admin true: shows infos for admins only
      */
     admin: {
-      type: Boolean,
-      default: ()=> {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     },
@@ -110,8 +113,8 @@ export default {
      * editAllowed true: basic edit functionality is available
      */
     editAllowed: {
-      type: Boolean,
-      default: ()=> {
+      type   : Boolean,
+      default: () => {
         return false;
       }
     },
@@ -129,8 +132,8 @@ export default {
      * Pictures to show
      */
     pictures: {
-      type: Array,
-      default: ()=> {
+      type   : Array,
+      default: () => {
         return [];
       }
     },
@@ -138,8 +141,8 @@ export default {
      * Teams
      */
     teams: {
-      type: Array,
-      default: ()=> {
+      type   : Array,
+      default: () => {
         return [];
       }
     },
@@ -147,8 +150,8 @@ export default {
      * Array from Property Register from the store
      */
     properties: {
-      type: Array,
-      default: ()=> {
+      type   : Array,
+      default: () => {
         return [];
       }
     },
@@ -157,6 +160,7 @@ export default {
   data      : function () {
     return {
       pictureInfo   : null,
+      reverseOrder  : false,
       selectOptions : [
         {value: null, text: 'Alle'}
       ],
@@ -164,14 +168,13 @@ export default {
       textFilter    : null
     };
   },
-  computed  : {
-
-  },
+  computed  : {},
   created   : function () {
     let self = this;
     this.teams.forEach(t => {
       self.selectOptions.push({value: t.uuid, text: t.data.name});
     })
+    this.reverseOrder = getItem('pictureReverseOrder', true);
   },
   methods   : {
     onZoom(info) {
@@ -189,6 +192,13 @@ export default {
       // obj has "picture" and "propertyId"
       console.log('property assigned', obj)
       this.$emit('property-assigned', obj);
+    },
+    onOrderChanged(e) {
+      if (typeof e == 'boolean') {
+        setBoolean('pictureReverseOrder', e);
+        return;
+      }
+      setBoolean('pictureReverseOrder', true);
     }
   }
 }

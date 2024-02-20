@@ -4,50 +4,56 @@
   Created: 19.03.23
 -->
 <template lang="pug">
-#image-list
-  b-container(fluid)
-    b-row(align-h="center")
-      b-col(v-for="pic in pictures" :key="pic.thumbnail" v-if="filterMatch(pic)")
-        picture-card(:picture-info="pic"
-          :extended="extended"
-          :admin="admin"
-          :get-team-name-by-id="getTeamNameById"
-          :get-property-by-id="getPropertyById"
-          @zoom="onZoom" )
+  #image-list
+    b-container(fluid)
+      b-row(align-h="center")
+        b-col(v-for="pic in pictureList" :key="pic.thumbnail" v-if="filterMatch(pic)")
+          picture-card(:picture-info="pic"
+            :extended="extended"
+            :admin="admin"
+            :get-team-name-by-id="getTeamNameById"
+            :get-property-by-id="getPropertyById"
+            @zoom="onZoom" )
 
 </template>
 
 <script>
 import PictureCard from './PictureCard.vue';
-import $ from "jquery";
-import {delay} from "lodash";
+import $ from 'jquery';
+import {delay} from 'lodash';
 
 export default {
-  name      : "PictureList",
+  name      : 'PictureList',
   components: {PictureCard},
   filters   : {},
   mixins    : [],
   model     : {},
   props     : {
-    pictures       : {
+    pictures    : {
       type   : Array,
       default: () => {
         return [];
       }
     },
-    teamId         : {
+    teamId      : {
       type   : String,
       default: () => {
         return null;
       }
     },
-    propertyId     : {
+    reverseOrder: {
+      type   : Boolean,
+      default: () => {
+        return false;
+      }
+    },
+    propertyId  : {
       type   : String,
       default: () => {
         return null;
       }
     },
-    textFilter     : {
+    textFilter  : {
       type   : String,
       default: () => {
         return null;
@@ -59,8 +65,8 @@ export default {
     getPropertyById: {
       type   : Function,
       default: (p) => {
-          console.log('dummy only!', p);
-          return null;
+        console.log('dummy only!', p);
+        return null;
       }
     },
     /**
@@ -69,8 +75,8 @@ export default {
     getTeamNameById: {
       type   : Function,
       default: (p) => {
-          console.log('dummy only!', p);
-          return null;
+        console.log('dummy only!', p);
+        return null;
       }
     },
     /**
@@ -95,13 +101,21 @@ export default {
   data      : function () {
     return {};
   },
-  computed  : {},
+  computed  : {
+    pictureList() {
+      if (this.reverseOrder) {
+        return this.pictures.slice().reverse();
+      }
+      return this.pictures;
+    }
+  },
   mounted   : function () {
     let self = this;
-    delay(()=>{
+    delay(() => {
       // Why the fuck is this necessary??? On mobile devices we have a "top" value of the control which is
       // unreasonable!
-      self.resizeHandler();}, 250);
+      self.resizeHandler();
+    }, 250);
   },
   created   : function () {
     window.addEventListener('resize', this.resizeHandler);
