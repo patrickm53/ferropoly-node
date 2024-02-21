@@ -1,41 +1,42 @@
 # Changelog Ferropoly Spiel
 
+## v 3.4.0 21.2.24 Testversion für Release
 * Neue Marker: Preisklassen anstelle Verbindung als Basisfarbe
 * Infofenster auf Karte werden geschlossen, wenn ein neues Infofenster geöffnet wird
 * GPS in Checkin: Genauigkeit dargestellt, updatebar
 * Reihenfolge Bilder ist einstellbar (und wird in Browser gespeichert)
 
-# v3.3.7 21.11.23 Release
+## v3.3.7 21.11.23 Release
 * Bugfix: Nur hochgeladene Bilder anzeigen
 
-# v3.3.6 25.10.23 Release
+## v3.3.6 25.10.23 Release
 * Bugfix: Zugriffsrechte auf Bilder nach Spiel auch ohne Login
 
-# v3.3.5 22.10.23 Release
+## v3.3.5 22.10.23 Release
 * Gambling: Limiten für manuelles Gambling aktuell fix im Bereich 1000-50000, muss im Editor konfigurierbar werden
 * Bugfix: Update Gamecache nach löschen Spiel führte nicht zu einer response im HTTP Request
 * Bugfix: In Checkin können Bilder nur hochgeladen werden, wenn das GPS des Gerätes aktiviert und zugelassen ist
 * Bugfix: Nicht finalisierte Spiele können nicht gespielt werden
 
-# v3.3.4 22.10.23
+## v3.3.4 22.10.23
 * Bugfix "Zusammenfassung" wurde teilweise erst zu spät auf dem Startbildschirm angezeigt
 * Bugfix vue lists: key fehlte in Bilderliste
 * Bugfix Summary: Zeigt Saldo in Chance/Kanzlei an #87
 
-# v3.3.3 19.10.23
+## v3.3.3 19.10.23
 * Bugfix in Mitspieler-Management
 * Bugfix: Upload Bilder in Check-in nur während dem Spiel möglich
 
-# v3.3.2 18.10.23
+## v3.3.2 18.10.23
 * Bugfix: Reception Dialog, #86
 * Bugfix: Versand von Emails bei Anmeldung funktioniert wieder
 * Beim Spielschluss werden die Daten öffentlich
 
-# v3.3.1 16.10.23
+## v3.3.1 16.10.23
 * Bugfixes
 * Dependency Updates
 
-# v3.3.0 1.7.23
+## v3.3.0 1.7.23
 * Pic Bucket neu: Upload von Bilder während dem Spiel durch Teams
 * Dependency Updates
 * Sync mit Editor: Hintergrundbilder mit neuer Route, ebenso Header
@@ -46,17 +47,17 @@
   Exception führte, was dann wiederum zum Neustart der Software führte. Problem präventiv korrigiert, Tests
   über alle Funktionen notwendig.
 
-# v3.2.0 22.1.23
+## v3.2.0 22.1.23
 * Goodbye Facebook: kein Login mit Facebook mehr möglich, der administrative Aufwand wurde zu gross.
 * Neuer Login Bildschirm mit Link auf auth.ferropoly.ch
 
-# v3.1.10 16.1.23
+## v3.1.10 16.1.23
 * Dependency Updates
 
-# v3.1.9 15.1.23
+## v3.1.9 15.1.23
 * Sync mit Editor: Überarbeitung Logins, Link auf auth.ferropoly.ch
 
-# v3.1.7
+## v3.1.7
 * Sync mit Editor: Kein weiteres Login mit Dropbox oder Twitter
 * Dependency Updates (sehr viele!), diese sind bewusst fix (Vue 3):
 ```
@@ -69,11 +70,11 @@ vue-template-compiler 2.6.14  2.6.14  2.7.14 devDependencies https://github.com/
 vuex                  3.6.2   3.6.2   4.1.0  devDependencies https://github.com/vuejs/vuex#readme       
 ```
 
-# v3.1.6 11.7.22
+## v3.1.6 11.7.22
 * Bugfix: Hilfe URL in Reception / Preisliste gefixt
 * Textliche anpassungen
 
-# v3.1.5 26.6.22
+## v3.1.5 26.6.22
 * Bugfix: Problem mit Authentisierung (Auth-Token) behoben bzw. zusätzlich abgesichert #20
 
 ## v3.1.4 24.6.22
