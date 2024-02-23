@@ -1,6 +1,9 @@
 # Changelog Ferropoly Spiel
 
-## v 3.4.0 21.2.24 Testversion für Release
+## v3.4.1 23.2.24
+* Dependency Updates
+* 
+## v3.4.0 21.2.24 
 * Neue Marker: Preisklassen anstelle Verbindung als Basisfarbe
 * Infofenster auf Karte werden geschlossen, wenn ein neues Infofenster geöffnet wird
 * GPS in Checkin: Genauigkeit dargestellt, updatebar
