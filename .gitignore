@@ -52,3 +52,4 @@ checkin.min.js
 /main/views/error/generic.html
 /yarn.lock
 /.nyc_output/
+/package-lock.json
