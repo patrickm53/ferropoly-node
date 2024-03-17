@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## v3.4.2 17.3.24
+* Die Darstellung unter /info verbessert, wenn keine Preisliste vorhanden ist
+
 ## v3.4.1 23.2.24
 * Dependency Updates
 * 
