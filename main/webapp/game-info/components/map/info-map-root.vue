@@ -37,12 +37,13 @@ export default {
   },
   computed  : {
     ...mapFields({
+      gamename  : 'gameplay.gamename',
       finalized : 'gameplay.internal.finalized',
       gameId    : 'gameplay.internal.gameId',
       pricelist : 'register.properties',
       mapOptions: 'mapOptions',
       map       : 'map',
-      bounds   : 'map.bounds',
+      bounds    : 'map.bounds',
     }),
   },
   created   : function () {
