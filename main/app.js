@@ -8,7 +8,7 @@
 // Logging has highest prio
 const settings = require('./settings');
 const logging  = require('../common/lib/logger');
-logging.init({debugLevel: settings.logger.debugLevel});
+logging.init(settings.logger);
 const logger = logging.getLogger('editor-app');
 
 

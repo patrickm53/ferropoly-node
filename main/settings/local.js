@@ -43,14 +43,20 @@ module.exports = function (settings) {
   // Microsoft settings
   settings.oAuth.microsoft.callbackURL  = 'http://localhost:3004/auth/microsoft/callback';
 
-
-  // Logger
-  settings.logger = {
-    debugLevel: 'silly'
-  };
-
   // Picture Bucket in Google Storage
   settings.picBucket.bucket = 'ferropoly-test'
   process.env.GOOGLE_APPLICATION_CREDENTIALS =  path.join(__dirname, '..', '..', '..', 'ferropoly-service.json');
-  return settings;
+
+  // Logger
+  settings.logger = {
+    debugLevel: 'silly',
+    google: {
+      enabled: true,
+      projectId: 'crack-lamp-784',
+      logName: 'main_local',
+      keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS
+    }
+  };
+
+   return settings;
 };

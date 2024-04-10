@@ -46,14 +46,20 @@ module.exports = function (settings) {
   // Microsoft settings
   settings.oAuth.microsoft.callbackURL  = 'https://spiel-preview.ferropoly.ch/auth/microsoft/callback';
 
-  // Logger
-  settings.logger = {
-    debugLevel: 'debug'
-  };
 
   // Picture Bucket in Google Storage
   settings.picBucket.bucket = 'ferropoly-preview'
   process.env.GOOGLE_APPLICATION_CREDENTIALS = '/home/kc/ferropoly/ferropoly-service.json'
 
+  // Logger
+  settings.logger = {
+    debugLevel: 'debug',
+    google: {
+      enabled: true,
+      projectId: 'crack-lamp-784',
+      logName: 'main_preview',
+      keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS
+    }
+  };
   return settings;
 };
