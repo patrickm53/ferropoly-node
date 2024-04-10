@@ -47,7 +47,7 @@ logger.info('Ferropoly Copyright (C) 2015-2023 Christian Kuster, CH-8342 Wernets
 logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
 logger.info('This is free software, and you are welcome to redistribute it');
 logger.info('under certain conditions; see www.ferropoly.ch for details.');
-
+logger.info(`Google Cloud Logging: ${settings.logger.google.enabled}`)
 const app = express();
 
 /**

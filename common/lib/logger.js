@@ -11,7 +11,7 @@ const {combine, timestamp, label, printf}          = format;
 const expressWinston                               = require('express-winston');
 // Imports the Google Cloud client library for Winston
 const {LoggingWinston}                             = require('@google-cloud/logging-winston');
-require('events').EventEmitter.defaultMaxListeners = 50;
+require('events').EventEmitter.defaultMaxListeners = 80;
 // The default settings
 let settings                                       = {
   debugLevel: 'info',
