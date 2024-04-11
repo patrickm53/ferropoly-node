@@ -7,7 +7,6 @@
 
 const express  = require('express');
 const passport = require('passport');
-const url      = require('url');
 const router   = express.Router();
 const _        = require('lodash');
 const logger   = require('../lib/logger').getLogger('login');
@@ -79,7 +78,8 @@ module.exports = {
 
     // Filter for get, redirect to login page if not logged out
     app.get('*', function (req, res, next) {
-      let uri = url.parse(req.url).pathname;
+      let uri = new URL(req.protocol + '://' + req.get('host') + req.originalUrl).pathname;
+
       if (_.startsWith(uri, '/signup')) {
         logger.info('Signup !');
         return next();

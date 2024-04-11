@@ -35,8 +35,6 @@ module.exports = {
     // Connect to the MongoDb
     let options = {
       maxPoolSize       : poolSize,
-      useNewUrlParser   : true,
-      useUnifiedTopology: true
     };
     mongoose.set('strictQuery', false);
     mongooseThis = mongoose.connect(settings.locationDbSettings.mongoDbUrl, options);

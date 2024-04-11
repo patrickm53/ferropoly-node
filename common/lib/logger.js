@@ -11,7 +11,7 @@ const {combine, timestamp, label, printf}          = format;
 const expressWinston                               = require('express-winston');
 // Imports the Google Cloud client library for Winston
 const {LoggingWinston}                             = require('@google-cloud/logging-winston');
-require('events').EventEmitter.defaultMaxListeners = 80;
+
 // The default settings
 let settings                                       = {
   debugLevel: 'info',
@@ -22,7 +22,6 @@ let settings                                       = {
 
 // Google Logging instance (if configured)
 let googleLogger;
-
 
 let testCounter = 0;
 
@@ -65,6 +64,8 @@ module.exports = {
         keyFile  : _.get(settings, 'google.keyFile', 'not_set'),
         format   : format.json()
       });
+      // Allocate enough listeners!
+      googleLogger.setMaxListeners(100);
     }
   },
 
@@ -118,7 +119,11 @@ module.exports = {
     }
 
     const logger = createLogger({
-      transports: supportedTransports
+      transports: supportedTransports,
+      format    : combine(
+        label({label: moduleName}),
+        timestamp(),
+        logFormat)
     });
 
 
