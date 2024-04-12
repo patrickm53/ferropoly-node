@@ -4,16 +4,16 @@
  * Created by kc on 08.06.15.
  */
 
-const util                                         = require('util');
-const _                                            = require('lodash');
-const {createLogger, format, transports}           = require('winston');
-const {combine, timestamp, label, printf}          = format;
-const expressWinston                               = require('express-winston');
+const util                                = require('util');
+const _                                   = require('lodash');
+const {createLogger, format, transports}  = require('winston');
+const {combine, timestamp, label, printf} = format;
+const expressWinston                      = require('express-winston');
 // Imports the Google Cloud client library for Winston
-const {LoggingWinston}                             = require('@google-cloud/logging-winston');
+const {LoggingWinston}                    = require('@google-cloud/logging-winston');
 
 // The default settings
-let settings                                       = {
+let settings = {
   debugLevel: 'info',
   google    : {
     enabled: false
@@ -82,6 +82,7 @@ module.exports = {
     }
 
     app.use(expressWinston.logger({
+      level        : settings.debugLevel,
       transports   : supportedTransports,
       format       : combine(
         label({label: 'HTTP'}),
@@ -119,6 +120,7 @@ module.exports = {
     }
 
     const logger = createLogger({
+      level     : settings.debugLevel,
       transports: supportedTransports,
       format    : combine(
         label({label: moduleName}),

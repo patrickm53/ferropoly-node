@@ -65,7 +65,7 @@ Scheduler.prototype.handleEvent = function (channel, event) {
     ev.callback = self.handleEventCallback;
     self.emit(channel, ev);
   }).catch(err => {
-    logger.info('Error while handling event: ' + event._id + ' message: ' + err.message);
+    logger.error('Error while handling event: ' + event._id + ' message: ' + err.message, err);
   });
 };
 
@@ -77,11 +77,11 @@ Scheduler.prototype.handleEvent = function (channel, event) {
  */
 Scheduler.prototype.handleEventCallback = function (err, event) {
   if (err) {
-    logger.info('Error in event handler callback', err);
+    logger.warn('Error in event handler callback', err);
     return;
   }
   eventRepo.saveAfterHandling(event).then(()=> {
-    logger.info('Event handling finished');
+    logger.debug('Event handling finished');
   }).catch(err => {
     logger.error('Error while saving handled event', err);
   });
@@ -96,7 +96,7 @@ Scheduler.prototype.update = function (callback) {
   let self = this;
   let i;
   eventRepo.getUpcomingEvents().then(events => {
-    logger.info('Events read: ' + events.length);
+    logger.info('Events read: ' + events.length, events);
 
     // Cancel all existing jobs
     for (i = 0; i < self.jobs.length; i++) {
@@ -108,19 +108,19 @@ Scheduler.prototype.update = function (callback) {
       const now = moment();
 
       let handlerFunction = function (ev) {
-        logger.info('Emitting event for ' + ev.gameId + ' type:' + ev.type + ' id:' + ev._id);
+        logger.info(`${ev.gameId}: Emitting event type:${ev.type} id:${ev._id}`);
         self.handleEvent(ev.type, ev);
       };
 
       for (i = 0; i < events.length; i++) {
         let event = events[i];
-        logger.info('upcoming Event', events[i]);
+        logger.debug(`${events[i].gameId}: upcoming Event "${events[i].type}"`, events[i]);
 
         if (moment(event.timestamp) < now) {
-          logger.info('Emit an old event:' + event._id);
+          logger.info(`${event.gameId}: Emit an old event:${event._id}`, event);
           self.handleEvent(event.type, event);
         } else {
-          logger.info('Push event in joblist:' + event._id);
+          logger.info(`${event.gameId}: Push event in joblist:${event._id}`, event);
           let scheduledTs = moment(event.timestamp).add({seconds: self.settings.scheduler.delay});
           self.jobs.push(schedule.scheduleJob(scheduledTs.toDate(), handlerFunction.bind(null, event)));
         }

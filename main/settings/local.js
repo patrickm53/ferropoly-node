@@ -49,7 +49,7 @@ module.exports = function (settings) {
 
   // Logger
   settings.logger = {
-    debugLevel: 'silly',
+    debugLevel: 'debug',
     google: {
       enabled: true,
       projectId: 'crack-lamp-784',

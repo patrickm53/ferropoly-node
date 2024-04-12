@@ -155,7 +155,7 @@ function receiveFromBankOrChancellery(teamId, gameId, amount, info, category, ca
       callback();
     }).catch(callback);
   } catch (e) {
-    logger.error(e);
+    logger.error(`${gameId}: Bug in receiveFromBankOrChancellery`, e);
     callback(e);
   }
 }
@@ -261,8 +261,8 @@ function negativeBalanceHandling(gameId, teamId, rate, callback) {
       return callback(err);
     }
     if (info.asset < 0) {
-      var interest = Math.floor(Math.abs(info.asset * rate / 100));
-      logger.info('Negative balance, pay interest ' + interest + ' from ' + info.asset);
+      let interest = Math.floor(Math.abs(info.asset * rate / 100));
+      logger.info(`${gameId}: Negative balance, pay interest ${interest} from ${info.asset}`, {gameId, teamId});
       // Do not book here! The teamAccount does not have a connection to the chancellery, it's the
       // chancellerys job to book, we just make the calculation here.
       callback(null, {amount: interest});
@@ -351,14 +351,14 @@ module.exports = {
     ferroSocket.on('player-connected', function (data) {
       getBalance(data.gameId, data.teamId, function (err, info) {
         if (err) {
-          logger.error(err);
+          logger.error(`${data.gameId}: error in init`, err);
           return;
         }
         ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', teamAccountActions.setAsset(info.asset, info.count));
 
         getAccountStatement(data.gameId, data.teamId, function (err, transactions) {
           ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', teamAccountActions.setTransactions(transactions));
-          logger.info('Socket connected', info);
+          logger.debug(`${data.gameId}: TeamAccount Socket connected`, {info, gameId: data.gameId, teamId: data.teamId});
         });
       });
     });

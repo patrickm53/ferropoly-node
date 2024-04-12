@@ -33,7 +33,10 @@ function buyProperty(gameplay, property, team, callback) {
 
   if (!(!property.gamedata || !property.gamedata.owner || property.gamedata.owner === '')) {
     // This property already belongs to someone, we do not accept it
-    logger.warn('Can not buy property ' + property.location.name + ', it is not free');
+    logger.info(`${_.get(gameplay, 'internal.gameId')} : Can not buy property ${_.get(property, 'location.name')}, it's not free`, {
+      gameplay: _.get(gameplay, 'internal.gameId'),
+      property
+    });
     return callback(new Error('Property not free'));
   }
 
@@ -137,7 +140,7 @@ function chargeRent(gp, property, teamId, callback) {
 function resetProperty(gameId, property, reason, callback) {
   getBalance(gameId, property.uuid, function (err, info) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: Error from getBalance`, err);
       return callback(err);
     }
     property.gamedata.buildingEnabled = false;
@@ -146,7 +149,7 @@ function resetProperty(gameId, property, reason, callback) {
 
     propWrap.updateProperty(property, function (err) {
       if (err) {
-        logger.error(err);
+        logger.error(`${gameId}: Error from updateProperty`, err);
         return callback(err);
       }
 
@@ -241,13 +244,13 @@ function payInterest(gameplay, register, callback) {
 
   if (register.length === 0) {
     // nothing to pay
-    logger.debug('nothing to pay');
+    logger.debug(`${_.get(gameplay, 'internal.gameId')}: nothing to pay`, {gameId: _.get(gameplay, 'internal.gameId')});
     return callback(null);
   }
 
   async.each(register,
     function (prop, cb) {
-      logger.debug('Book propertyAccount transaction for property', prop);
+      logger.debug(`${_.get(gameplay, 'internal.gameId')}: Book propertyAccount transaction for "${prop.propertyName}"`, {gameId: _.get(gameplay, 'internal.gameId')});
       let pt         = new propertyTransaction.Model();
       pt.gameId      = gameplay.internal.gameId;
       pt.propertyId  = prop.uuid;
@@ -311,7 +314,7 @@ function getRentRegister(gameplay, team, callback) {
  * If only one param (start|end) is supplied, it is handled as start
  *
  * @param gameId
- * @param propertyId, when undefined: all
+ * @param propertyId , when undefined: all
  * @param p1
  * @param p2
  * @param p3
@@ -390,7 +393,7 @@ function getPropertyValue(gameplay, property, callback) {
     let factor = 1;
     if ((properties.length > 1) && (sameGroup === properties.length)) {
       // all properties in a group belong the same team, pay more!
-      logger.info('Properties in same group, paying more!');
+      logger.info(`${_.get(gameplay, 'internal.gameId')}: Properties in same group, paying more!`, {gameplay: _.get(gameplay, 'internal.gameId')});
       factor                      = gameplay.gameParams.rentFactors.allPropertiesOfGroup || 2;
       retVal.allPropertiesOfGroup = true;
     }
@@ -490,14 +493,12 @@ module.exports = {
       ferroSocket.on('player-connected', function (data) {
         propWrap.getTeamProperties(data.gameId, data.teamId, function (err, props) {
           if (err) {
-            logger.error(err);
+            logger.error(`${data.gameId}: Error in propertyAccount.init`, err);
             return;
           }
           ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', propertyActions.setProperties(props));
-
         });
       });
     }
-
   }
 };

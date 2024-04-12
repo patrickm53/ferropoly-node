@@ -55,8 +55,7 @@ const app = express();
  */
 ferropolyDb.init(settings, function (err) {
   if (err) {
-    logger.warning('Failed to init ferropolyDb');
-    logger.error(err);
+    logger.error('Failed to init ferropolyDb', err);
     return;
   }
 
@@ -151,7 +150,7 @@ ferropolyDb.init(settings, function (err) {
 
   gameScheduler.update(err => {
     if (err) {
-      logger.info('Error while updating scheduler');
+      logger.warn('Error while updating scheduler');
     }
   });
 
@@ -190,8 +189,7 @@ ferropolyDb.init(settings, function (err) {
   });
 
   server.listen(settings.server.port, settings.server.host, () => {
-    logger.info('%s: Node server started on %s:%d ...',
-      new Date(Date.now()), app.get('ip'), app.get('port'));
+    logger.debug(`Node server started on ${app.get('ip')} at port ${app.get('port')}`);
 
     teamPosition.init();
     autopilot.init(settings);

@@ -43,7 +43,7 @@ function bookChancelleryEvent(gameplay, team, info, callback) {
     chancelleryTransaction.getBalance(gameplay.internal.gameId).then(info => {
       if (!err) {
         if (info.balance > gameplay.gameParams.chancellery.maxJackpotSize) {
-          logger.info('Jackpot for ' + gameplay.internal.gameId + ' is to large, increased chance for winning!');
+          logger.info(`${_.get(gameplay, 'internal.gameId', 'n/a')}: Jackpot is too large, increased chance for winning!`, {gameId: _.get(gameplay, 'internal.gameId', 'n/a')});
           jackpotFull[gameplay.internal.gameId] = true;
         } else {
           jackpotFull[gameplay.internal.gameId] = false;
@@ -255,12 +255,16 @@ module.exports = {
 
       getBalance(data.gameId, function (err, info) {
         if (err) {
-          logger.error(err);
+          logger.error(`${data.gameId}: Error in chancelleryAccount.init`, err);
           return;
         }
         ferroSocket.emitToTeam(data.gameId, data.teamId, 'checkinStore', chancelleryActions.setAsset(info.balance));
 
-        logger.info(info);
+        logger.debug(`${data.gameId}: ChancelleryAccount Socket connected`, {
+          info,
+          gameId: data.gameId,
+          teamId: data.teamId
+        });
       });
     });
   }

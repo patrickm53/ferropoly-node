@@ -28,7 +28,7 @@ let ferroSocket;
  * @param obj
  */
 function marketLog(gameId, text, obj) {
-  logger.info(gameId + ': ' + text, obj);
+  logger.info(`${gameId}: ${text}`, obj);
 }
 
 /**
@@ -37,7 +37,7 @@ function marketLog(gameId, text, obj) {
  * @constructor
  */
 function Marketplace(scheduler) {
-  var self = this;
+  let self = this;
   EventEmitter.call(this);
 
   this.scheduler = scheduler;
@@ -123,8 +123,8 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
     additionalMinutes = 0;
   }
 
-  var start = moment(gameplay.scheduling.gameStartTs).subtract(additionalMinutes, 'minutes');
-  var end   = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
+  let start = moment(gameplay.scheduling.gameStartTs).subtract(additionalMinutes, 'minutes');
+  let end   = moment(gameplay.scheduling.gameEndTs).add(additionalMinutes, 'minutes');
   if (moment().isAfter(end)) {
     marketLog(gameplay.internal.gameId, 'Game over', {
       start            : start.toDate(),
@@ -151,7 +151,7 @@ Marketplace.prototype.isOpen = function (gameplay, additionalMinutes) {
  * @param callback
  */
 Marketplace.prototype.buyProperty = function (options, callback) {
-  let self = this;
+  const self = this;
   if (!options.gameId || !options.teamId || !options.propertyId) {
     logger.info('Rather stupid options for buyProperty', options);
     return callback(new Error('At least gameId, teamId and property Id must be supplied'));
@@ -166,7 +166,7 @@ Marketplace.prototype.buyProperty = function (options, callback) {
     travelLog.addPropertyEntry(options.gameId, options.teamId, property, function (err, logEntry) {
       // we do not care about this return, it's asynchronous and that's ok
       if (err) {
-        logger.error(err);
+        logger.error(`${options.gameId}: addPropertyEntry returned error`, err);
       } else {
         ferroSocket.emitToAdmins(options.gameId, 'player-position', logEntry);
         ferroSocket.emitToTeam(options.gameId, options.teamId, 'player-position', logEntry);
@@ -177,7 +177,7 @@ Marketplace.prototype.buyProperty = function (options, callback) {
     }
     gameCache.getGameData(options.gameId, function (err, gameData) {
       if (err) {
-        logger.error(err);
+        logger.error(`${options.gameId}: getGameData returned error`, err);
         return callback(err);
       }
       let gp   = gameData.gameplay;
@@ -188,17 +188,17 @@ Marketplace.prototype.buyProperty = function (options, callback) {
       }
 
       if (!self.isOpen(gp)) {
-        return callback(new Error('Marketplace is closed'));
+        return callback(new Error(`Marketplace "${options.gameId}" is closed`));
       }
 
       //------------------------------------------------------------------------------------------------------------------
       // Now check if the property is still available or sold. There are 3 cases to handle
       if (!property.gamedata || !property.gamedata.owner || property.gamedata.owner.length === 0) {
         // CASE 1: property is available, the team is going to buy it
-        marketLog(options.gameId, property.location.name + ' is available');
+        marketLog(options.gameId, `"${property.location.name}" is available`);
         propertyAccount.buyProperty(gp, property, team, function (err, info) {
           if (err) {
-            logger.error(err);
+            logger.error(`${options.gameId}: buyProperty returned error`, err);
             return callback(err);
           }
           options.amount = info.amount;
@@ -223,13 +223,13 @@ Marketplace.prototype.buyProperty = function (options, callback) {
       //------------------------------------------------------------------------------------------------------------------
       else if (property.gamedata.owner === options.teamId) {
         // CASE 2: property belongs to the team which wants to buy it, do nothing
-        marketLog(options.gameId, property.location.name + ' already belongs the team');
+        marketLog(options.gameId, `"${property.location.name}" already belongs the team`);
         return callback(null, {property: property, amount: 0});
       }
       //------------------------------------------------------------------------------------------------------------------
       else {
         // CASE 3: property belongs to another team, pay the rent
-        marketLog(options.gameId, property.location.name + ' is already sold to another team');
+        marketLog(options.gameId, `"${property.location.name}" is already sold to another team`);
         propertyAccount.chargeRent(gp, property, options.teamId, (err, info) => {
           if (err) {
             return callback(err, {message: 'Fehler beim Grundstückkauf'});
@@ -273,7 +273,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
 
     gameCache.getGameData(gameId, function (err, res) {
       if (err) {
-        logger.error(err);
+        logger.error(`${gameId}: getGameData returned error`, err);
         return callback(err);
       }
       let gp   = res.gameplay;
@@ -284,7 +284,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
       }
 
       if (!self.isOpen(gp)) {
-        return callback(new Error('BuildHouses: Marketplace is closed'));
+        return callback(new Error(`Marketplace "${gameId}" is closed, can't build houses.`));
       }
 
       let log     = [];
@@ -314,7 +314,7 @@ Marketplace.prototype.buildHouses = function (gameId, teamId, callback) {
               info  : {info: 'Hausbau', parts: log}
             }, function (err) {
               if (err) {
-                logger.error(err);
+                logger.error(`${gameId}: chargeToBank returned error`, err);
                 return callback(err);
               }
               return callback(null, {amount: totalAmount, log: log});
@@ -359,7 +359,7 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
 
     gameCache.getGameData(gameId, function (err, res) {
       if (err) {
-        logger.error(err);
+        logger.error(`${gameId}: getGameData returned error`, err);
         return callback(err);
       }
       let gp   = res.gameplay;
@@ -370,7 +370,7 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
       }
 
       if (!self.isOpen(gp)) {
-        return callback(new Error('BuildHouses: Marketplace is closed'));
+        return callback(new Error(`Marketplace "${gameId}" is closed, can't build house.`));
       }
 
       propertyAccount.buyBuilding(gp, property, team, function (err, info) {
@@ -386,7 +386,7 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
           info  : {info: 'Hausbau ' + property.location.name}
         }, function (err) {
           if (err) {
-            logger.error(err);
+            logger.error(`${gameId}: chargeToBank returned error`, err);
             return callback(err);
           }
           return callback(null, {amount: info.amount});
@@ -402,18 +402,18 @@ Marketplace.prototype.buildHouse = function (gameId, teamId, propertyId, callbac
  * @param callback
  */
 Marketplace.prototype.payInitialAsset = function (gameId, callback) {
-  var self = this;
+  let self = this;
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: getGameData returned error`, err);
       return callback(err);
     }
-    var gp    = res.gameplay;
-    var teams = _.valuesIn(res.teams);
+    let gp    = res.gameplay;
+    let teams = _.valuesIn(res.teams);
 
     if (!self.isOpen(gp, 15)) {
-      return callback(new Error('Marketplace is closed'));
+      return callback(new Error(`Marketplace "${options.gameId}" is closed`));
     }
 
     async.each(teams, function (team, callback) {
@@ -432,16 +432,16 @@ Marketplace.prototype.payInitialAsset = function (gameId, callback) {
  * @param callback
  */
 Marketplace.prototype.payFinalRents = function (gameId, callback) {
-  var self = this;
+  let self = this;
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: getGameData returned error`, err);
       return callback(err);
     }
-    var gp        = res.gameplay;
-    var tolerance = 10; // in minutes
-    var count     = 0;
+    let gp        = res.gameplay;
+    let tolerance = 10; // in minutes
+    let count     = 0;
 
     if (gp.gameParams.interestCyclesAtEndOfGame < 1) {
       // No cycles, no interests, return
@@ -451,7 +451,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
     // give a tolerance of a few minutes for closing the market place
     if (!self.isOpen(gp, tolerance)) {
       marketLog(gp.internal.gameId, 'Tolerance: ' + tolerance);
-      return callback(new Error('FinalRents: Marketplace is closed'));
+      return callback(new Error(`Marketplace "${gameId}" is closed, can't pay final rent.`));
     }
 
     async.whilst(
@@ -478,7 +478,7 @@ Marketplace.prototype.payFinalRents = function (gameId, callback) {
  * @param callback
  */
 Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
-  var self = this;
+  let self = this;
   if (_.isFunction(tolerance)) {
     callback  = tolerance;
     tolerance = 0;
@@ -486,14 +486,14 @@ Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: getGameData returned error`, err);
       return callback(err);
     }
-    var gp    = res.gameplay;
-    var teams = _.valuesIn(res.teams);
+    let gp    = res.gameplay;
+    let teams = _.valuesIn(res.teams);
 
     if (!self.isOpen(gp, tolerance)) {
-      return callback(new Error('Marketplace is closed'));
+      return callback(new Error(`Marketplace "${gameId}" is closed, can't pay interests.`));
     }
 
     async.each(teams, function (team, callback) {
@@ -513,7 +513,7 @@ Marketplace.prototype.payInterests = function (gameId, tolerance, callback) {
  * @param callback
  */
 Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback) {
-  var self = this;
+  let self = this;
   if (_.isFunction(tolerance)) {
     callback  = tolerance;
     tolerance = 0;
@@ -521,14 +521,14 @@ Marketplace.prototype.checkNegativeAsset = function (gameId, tolerance, callback
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: getGameData returned error`, err);
       return callback(err);
     }
-    var gp    = res.gameplay;
-    var teams = _.valuesIn(res.teams);
+    let gp    = res.gameplay;
+    let teams = _.valuesIn(res.teams);
 
     if (!self.isOpen(gp, tolerance)) {
-      return callback(new Error('CheckNegativeAsset: Marketplace is closed'));
+      return callback(new Error(`Marketplace "${gameId}" is closed so there are no negative assets.`));
     }
 
     async.each(teams, function (team, cb) {
@@ -563,7 +563,7 @@ Marketplace.prototype.payRentsForTeam = function (gp, team, tolerance, callback)
   }
 
   if (!this.isOpen(gp, tolerance)) {
-    return callback(new Error('PayRentsForTeam: Marketplace is closed'));
+    return callback(new Error(`Marketplace "${_.get(gp, 'internal.gameId')}" is closed, no rent for team`));
   }
 
   propertyAccount.getRentRegister(gp, team, function (err, info) {
@@ -610,7 +610,7 @@ Marketplace.prototype.payRents = function (options, callback) {
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: getGameData returned error`, err);
       return callback(err);
     }
     let gp    = res.gameplay;
@@ -621,7 +621,7 @@ Marketplace.prototype.payRents = function (options, callback) {
     }
 
     if (!self.isOpen(gp, tolerance)) {
-      return callback(new Error('PayRents: Marketplace is closed'));
+      return callback(new Error(`Marketplace "${gameId}" is closed, no rents for all.`));
     }
 
     // check negative asset and pay rent
@@ -666,7 +666,7 @@ Marketplace.prototype.payRents = function (options, callback) {
  * Chancellery, every time a team calls (be sure that they are on the line,
  * no false alarms: only call the function when really editing the team).
  *
- * You can loose or win a random amount or you can even win the jackpot
+ * You can lose or win a random amount, or you can even win the jackpot
  *
  * Money: team->chancellery   (negative amount)
  *        bank->team          (positive amount)
@@ -676,18 +676,18 @@ Marketplace.prototype.payRents = function (options, callback) {
  * @param callback
  */
 Marketplace.prototype.chancellery = function (gameId, teamId, callback) {
-  var self = this;
+  let self = this;
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: getGameData returned error`, err);
       return callback(err);
     }
-    var gp   = res.gameplay;
-    var team = res.teams[teamId];
+    let gp   = res.gameplay;
+    let team = res.teams[teamId];
 
     if (!self.isOpen(gp)) {
-      return callback(new Error('Marketplace is closed'));
+      return callback(new Error(`Marketplace "${gameId}" is closed, no more chancellery.`));
     }
 
     chancelleryAccount.playChancellery(gp, team, function (err, res) {
@@ -709,18 +709,18 @@ Marketplace.prototype.chancellery = function (gameId, teamId, callback) {
  * @param callback
  */
 Marketplace.prototype.chancelleryGamble = function (gameId, teamId, amount, callback) {
-  var self = this;
+  let self = this;
 
   gameCache.getGameData(gameId, function (err, res) {
     if (err) {
-      logger.error(err);
+      logger.error(`${gameId}: getGameData returned error`, err);
       return callback(err);
     }
-    var gp   = res.gameplay;
-    var team = res.teams[teamId];
+    let gp   = res.gameplay;
+    let team = res.teams[teamId];
 
     if (!self.isOpen(gp)) {
-      return callback(new Error('Marketplace is closed'));
+      return callback(new Error(`Marketplace "${gameId}" is closed, gambling is over.`));
     }
 
     chancelleryAccount.gamble(gp, team, amount, function (err, res) {
@@ -732,7 +732,7 @@ Marketplace.prototype.chancelleryGamble = function (gameId, teamId, amount, call
 
 /**
  * A very exceptional case, but might be needed: increasing or decreasing
- * the account of a team due to an error, penalty or what so ever
+ * the account of a team due to an error, penalty or whatsoever
  *
  * @param gameId
  * @param teamId
