@@ -109,7 +109,7 @@ async function addEntry(p1, p2, p3, p4, p5) {
  * @param gameId
  */
 async function deleteAllEntries(gameId) {
-  logger.info('Removing all entries in the game log');
+  logger.info(`${gameId}: Removing all entries in the game log`);
   return await GameLog
     .deleteMany({gameId: gameId})
     .exec();

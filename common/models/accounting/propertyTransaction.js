@@ -47,7 +47,7 @@ async function book(transaction,) {
  * @param gameId
  */
 async function dumpAccounts(gameId) {
-  logger.info('Removing all account information for ' + gameId);
+  logger.info(`${gameId}: Removing all account information from DB`);
   return await PropertyAccountTransaction
     .deleteMany({gameId: gameId})
     .exec();

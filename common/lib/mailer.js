@@ -46,9 +46,10 @@ module.exports = {
     }, function (err, info) {
       if (err) {
         logger.error('cant send mail', err);
+        return callback(err);
       }
-      logger.info(info);
-      callback(err, info);
+      logger.info('Sent mail...', info);
+      callback(null, info);
     });
   }
 };

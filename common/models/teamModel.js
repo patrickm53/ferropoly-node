@@ -52,7 +52,7 @@ async function createTeam(newTeam, gameId) {
   team.gameId = gameId;
   team.data   = newTeam.data;
   team._id    = gameId + '-' + team.uuid;
-  logger.info(`Created team ${team.uuid} for ${gameId}`);
+  logger.info(`${gameId}: Created team ${team.uuid}`);
   return await team.save();
 }
 
@@ -63,7 +63,7 @@ async function createTeam(newTeam, gameId) {
  */
 async function updateTeam(team) {
 
-  logger.info(`Updating team ${team.uuid} for ${team.gameId}`);
+  logger.info(`${team.gameId}: Updating team ${team.uuid}`, team);
   let doc = await Team
     .findOne({uuid: team.uuid})
     .exec();
@@ -76,10 +76,10 @@ async function updateTeam(team) {
     return await createTeam(team, team.gameId);
   } else {
     if (!team.data.teamLeader.hasLogin) {
-      logger.info(`Team leader ${team.data.teamLeader.name} has no login for team ${team.uuid} for ${team.gameId}`);
+      logger.info(`${team.gameId}: Team leader ${team.data.teamLeader.name} has no login for team ${team.uuid}`);
       // Check for Login
       let user = await userModel.getUserByMailAddressB(team.data.teamLeader.email);
-        logger.info(`User found`, user);
+        logger.info(`${team.gameId}: User found`, user);
         if (user) {
           // When the team-leader has a login, set to true. This never becomes false as logins can not be deleted
           team.data.teamLeader.hasLogin = true;

@@ -63,7 +63,7 @@ async function dumpEvents(gameId) {
   if (!gameId) {
     throw new Error('No gameId supplied');
   }
-  logger.info('Removing all existing scheduler event information for ' + gameId);
+  logger.info(`${gameId}: Removing all existing scheduler event information`);
 
   return await scheduleEventModel
     .deleteMany({gameId: gameId})
@@ -131,7 +131,7 @@ async function saveAfterHandling(event) {
   event.handler.handled = new Date();
   event.handled         = true;
   let savedEvent        = await event.save();
-  logger.info('Event marked as finished');
+  logger.info(`${event.gameId}: Event marked as finished`, {event});
 
   return savedEvent;
 }

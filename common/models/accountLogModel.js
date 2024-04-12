@@ -24,7 +24,7 @@ const accountLogEntry = mongoose.model('AccountLog', accountLogSchema);
 function addNewUserEntry(email, means) {
   addEntry({user: email, activity: `Neuer Zugang mit ${means} erstellt`}, err => {
     if (err) {
-      logger.error(err);
+      logger.error('MongoDb Error', err);
     }
   })
     .then(() => {
@@ -46,7 +46,7 @@ async function addEntry(info, callback) {
     entry.activity  = _.get(info, 'activity', '');
     result          = await entry.save();
   } catch (ex) {
-    logger.error(ex);
+    logger.error('MongoDb Error', ex);
     err = ex;
   } finally {
     callback(err, result);

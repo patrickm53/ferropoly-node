@@ -148,7 +148,7 @@ async function updateUser(user, password, callback) {
         if (foundUser) {
           return callback(new Error('User with this email-address already exists, remove first!'));
         }
-        logger.info('New user:' + user.personalData.email);
+        logger.info(`New user:${user.personalData.email}`, user);
         if (!password) {
           return callback(new Error('Password missing'));
         }
@@ -164,7 +164,7 @@ async function updateUser(user, password, callback) {
       let editedUser = doc;
       copyUser(user, editedUser);
       // Update User
-      logger.info('Update user:' + user.personalData.email);
+      logger.info(`Update user: ${user.personalData.email}`, user);
       if (password) {
         generatePasswordHash(editedUser, password);
       }
@@ -204,7 +204,7 @@ function getUserByMailAddress(emailAddress, callback) {
                    .findByIdAndRemove(id)
                    .exec()
                    .then(() => {
-                     logger.info('Updated user with email ' + newUser.personalData.email);
+                     logger.info(`Updated user with email ${newUser.personalData.email}`, newUser);
                      callback(null, newUser);
                    })
                    .catch(callback);
@@ -327,8 +327,8 @@ function findOrCreateGoogleUser(profile, callback) {
     }
 
     if (profile.provider !== 'google') {
-      logger.info('This is not a google account: ' + profile.provider);
-      callback(new Error('not a google account: ' + profile.provider));
+      logger.info(`This is not a google account: ${profile.provider}`, profile);
+      callback(new Error(`not a google account: ${profile.provider}`));
     }
 
     // Try to get the user
@@ -372,7 +372,7 @@ function findOrCreateGoogleUser(profile, callback) {
           newUser.personalData.avatar   = avatar;
           accountLog.addNewUserEntry(newUser._id, 'Google');
           let savedUser = await newUser.save();
-          logger.info('Created google user', savedUser);
+          logger.info(`Created google user "${emailAddress}"`, savedUser);
           // Recursive call, now we'll find this user
           return findOrCreateGoogleUser(profile, callback);
         }
@@ -393,7 +393,7 @@ function findOrCreateGoogleUser(profile, callback) {
               user.personalData.avatar   = avatar;
               accountLog.addNewUserEntry(emailAddress, 'Google');
               await user.save();
-              logger.info('Upgraded user ' + emailAddress + ' for google access');
+              logger.info(`Upgraded user ${emailAddress} for google access`, user);
               // Recursive call, now we'll find this user
               return findOrCreateGoogleUser(profile, callback);
             }
@@ -433,8 +433,8 @@ function findOrCreateMicrosoftUser(profile, callback) {
     }
 
     if (profile.provider !== 'microsoft') {
-      logger.info('This is not a microsoft account: ' + profile.provider);
-      callback(new Error('not a microsoft account: ' + profile.provider));
+      logger.info(`This is not a microsoft account: ${profile.provider}`, profile);
+      callback(new Error(`not a microsoft account: ${profile.provider}`));
     }
 
     // Try to get the user
@@ -461,7 +461,7 @@ function findOrCreateMicrosoftUser(profile, callback) {
           avatar = profile.picture;
         } else {
           avatar = undefined;
-          logger.info('unable to set Microsoft avatar');
+          logger.info('unable to set Microsoft avatar', profile);
         }
         logger.info(`Microsoft login with email Address ${emailAddress}`, profile);
 
@@ -478,7 +478,7 @@ function findOrCreateMicrosoftUser(profile, callback) {
           newUser.personalData.avatar      = avatar;
           accountLog.addNewUserEntry(newUser._id, 'Microsoft');
           let savedUser = await newUser.save();
-          logger.info('Created microsoft user', savedUser);
+          logger.info(`Created microsoft user ${emailAddress}`, savedUser);
           // Recursive call, now we'll find this user
           return findOrCreateMicrosoftUser(profile, callback);
         }
@@ -499,7 +499,7 @@ function findOrCreateMicrosoftUser(profile, callback) {
               user.personalData.avatar      = avatar;
               accountLog.addNewUserEntry(emailAddress, 'Microsoft');
               await user.save();
-              logger.info('Upgraded user ' + emailAddress + ' for google access');
+              logger.info(`Upgraded user ${emailAddress} for google access`);
               // Recursive call, now we'll find this user
               return findOrCreateMicrosoftUser(profile, callback);
             }

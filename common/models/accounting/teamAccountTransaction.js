@@ -118,7 +118,7 @@ async function dumpAccounts(gameId) {
   if (!gameId) {
     throw new Error('No gameId supplied');
   }
-  logger.info('Removing all account information for ' + gameId);
+  logger.info(`${gameId}: Removing all team account information from DB`);
   await TeamAccountTransaction
     .deleteMany({gameId: gameId})
 }

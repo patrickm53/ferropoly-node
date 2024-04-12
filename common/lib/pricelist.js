@@ -21,18 +21,18 @@ module.exports = {
       if (err) {
         return callback(err);
       }
-      var pricelist = _.filter(props, function (p) {
+      let pricelist = _.filter(props, function (p) {
         return p.pricelist.position > -1;
       });
 
       // Filter unused data
-      for (var i = 0; i < pricelist.length; i++) {
+      for (let i = 0; i < pricelist.length; i++) {
         pricelist[i].gamedata = undefined;
         pricelist[i]._id      = undefined;
         pricelist[i].__v      = undefined;
         pricelist[i].gameId   = undefined;
       }
-      var sortedPricelist = _.sortBy(pricelist, function (p) {
+      let sortedPricelist = _.sortBy(pricelist, function (p) {
         return p.pricelist.position;
       });
 
@@ -46,7 +46,7 @@ module.exports = {
    * @param callback
    */
   getArray: function (gameId, callback) {
-    logger.info('Downloading pricelist array for ' + gameId);
+    logger.info(`${gameId}: Downloading pricelist array`);
     this.getPricelist(gameId, function (err, list) {
       if (err) {
         return callback(err);
@@ -57,9 +57,9 @@ module.exports = {
           return callback(err);
         }
 
-        var csvList = [['Preisliste ' + gp.gamename], ['Position', 'Ort', 'Gruppe', 'Kaufpreis', 'Hauspreis', 'Miete', 'Miete 1H', 'Miete 2H', 'Miete 3H', 'Miete 4H', 'Miete Hotel']];
-        for (var i = 0; i < list.length; i++) {
-          var e = list[i];
+        let csvList = [['Preisliste ' + gp.gamename], ['Position', 'Ort', 'Gruppe', 'Kaufpreis', 'Hauspreis', 'Miete', 'Miete 1H', 'Miete 2H', 'Miete 3H', 'Miete 4H', 'Miete Hotel']];
+        for (let i = 0; i < list.length; i++) {
+          let e = list[i];
           csvList.push([
             e.pricelist.position + 1,
             e.location.name,

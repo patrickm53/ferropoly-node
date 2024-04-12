@@ -50,7 +50,7 @@ async function dumpChancelleryData(gameId) {
   if (!gameId) {
     throw new Error('No gameId supplied');
   }
-  logger.info('Removing all chancellery information for ' + gameId);
+  logger.info(` ${gameId}: Removing all chancellery information from DB`);
   return await ChancelleryTransaction
     .deleteMany({gameId: gameId})
     .exec();

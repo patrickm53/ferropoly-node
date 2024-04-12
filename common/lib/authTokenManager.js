@@ -26,7 +26,7 @@ async function getToken(user, callback) {
       .where('login').equals(user)
       .exec();
   } catch (ex) {
-    logger.error(ex);
+    logger.error('Failed to get token', ex);
     err = ex;
   } finally {
     callback(err, token);
@@ -41,7 +41,7 @@ module.exports = {
    * @param callback
    */
   getNewToken: function (options, callback) {
-    logger.debug(`New authtokenn requested for ${options.user} suggessting '${options.proposedToken}'`)
+    logger.debug(`New authtokenn requested for ${options.user} suggesting '${options.proposedToken}'`)
     getToken(options.user, async function (err, token) {
       if (err) {
         return callback(err);
@@ -54,7 +54,7 @@ module.exports = {
       let res, errInfo;
       try {
         res = await token.save();
-        logger.debug(`User ${options.user} has now authtoken ${token.id}`);
+        logger.info(`User ${options.user} has now authtoken ${token.id}`);
       } catch (ex) {
         logger.error(ex);
         errInfo = ex;
@@ -83,7 +83,7 @@ module.exports = {
         return callback(err);
       }
       if (!token) {
-        logger.info(`Not able to find an authtoken for '${user}'`);
+        logger.info(`Not able to find any authtoken for '${user}'`);
         return callback(new Error('No token retrieved in verifyToken!'));
       }
       if (userToken === token.id) {

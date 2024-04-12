@@ -43,7 +43,7 @@ async function deletePicBucket(gameId) {
   if (!gameId) {
     throw new Error('No gameId supplied');
   }
-  logger.info('Deleting Pic Bucket for ' + gameId);
+  logger.info(`${gameId}: Deleting Pic Bucket`);
   return await Model
     .deleteMany({gameId: gameId})
     .exec();

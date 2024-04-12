@@ -3,8 +3,8 @@
  * Created by kc on 17.07.15.
  */
 
-var _ = require('lodash');
-var moment = require('moment-timezone');
+const _ = require('lodash');
+const moment = require('moment-timezone');
 
 module.exports = {
   /**

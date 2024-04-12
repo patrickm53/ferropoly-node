@@ -334,7 +334,7 @@ async function removeGameplay(gp) {
   if (!gp || !gp.internal || !gp.internal.gameId) {
     throw new Error('Invalid gameplay');
   }
-  logger.info('Removing gameplay ' + gp.internal.gameId + ' (' + gp.gamename + ')');
+  logger.info(`${gp.internal.gameId}: Removing gameplay "${gp.gamename}"`);
   return await Gameplay
     .deleteOne({'internal.gameId': gp.internal.gameId}).exec();
 
@@ -348,7 +348,7 @@ async function removeGameplay(gp) {
  */
 function removeGameplaysForUser(email, callback) {
 
-  logger.info(`Removing Gameplays for ${email}`);
+  logger.info(`Removing all Gameplays for ${email}`);
   Gameplay
     .deleteMany({'owner.organisatorEmail': email})
     .exec()
@@ -411,7 +411,7 @@ function finalize(gameId, ownerId, callback) {
 
     gp.save()
       .then(gpSaved => {
-        logger.info('Gameplay finalized: ' + gpSaved.internal.gameId);
+        logger.info(`${gpSaved.internal.gameId}: Gameplay finalized`, gpSaved);
         return callback(null, gpSaved);
       })
       .catch(err => {
@@ -428,7 +428,7 @@ function finalize(gameId, ownerId, callback) {
 function isFinalized(gameId, callback) {
   if (finalizedGameplays[gameId]) {
     // return cached value
-    logger.info('return cached value');
+    logger.silly('return cached value');
     return callback(null, true);
   }
   Gameplay.find({'internal.gameId': gameId})
@@ -473,7 +473,7 @@ function updateGameplayPartial(gp, callback) {
 
     loadedGp.save()
       .then(() => {
-        logger.info('Gameplay update: ' + loadedGp.internal.gameId);
+        logger.info(`${loadedGp.internal.gameId}: Gameplay update`);
         return callback(null, loadedGp);
       })
       .catch(err => {
@@ -525,7 +525,7 @@ function updateGameplay(gp, callback) {
 
   gp.save()
     .then(() => {
-      logger.info('Gameplay update: ' + gp.internal.gameId);
+      logger.info(`${gp.internal.gameId}: Gameplay update`);
       return callback(null, gp);
     })
     .catch(err => {

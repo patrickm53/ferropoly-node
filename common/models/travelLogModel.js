@@ -137,7 +137,7 @@ async function addPositionEntry(gameId, teamId, user, position, callback) {
  * @param gameId
  */
 async function deleteAllEntries(gameId) {
-  logger.info('Removing all entries in the log');
+  logger.info(`${gameId}: Removing all entries in the log`);
   return await TravelLog.deleteMany({gameId: gameId}).exec();
 }
 

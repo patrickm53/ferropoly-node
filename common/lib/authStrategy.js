@@ -19,7 +19,7 @@ module.exports = function (settings, users) {
    * @param done
    */
   function serializeUser(user, done) {
-    logger.debug('serializeUser:' + user);
+    logger.silly('serializeUser:' + user);
     done(null, user.personalData.email);
   }
 
@@ -30,10 +30,10 @@ module.exports = function (settings, users) {
    * @returns {*}
    */
   function deserializeUser(userId, done) {
-    logger.debug('deserializeUser:' + userId);
+    logger.silly('deserializeUser:' + userId);
     return users.getUserByMailAddress(userId, function (err, foundUser) {
       if (err || !foundUser) {
-        return done(new Error('not logged in'), null);
+        return done(new Error(`Login error, we do not know "${userId}"`), null);
       }
       return done(null, foundUser);
     });

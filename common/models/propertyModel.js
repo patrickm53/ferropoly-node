@@ -214,13 +214,13 @@ async function updatePositionInPriceList(gameId, propertyId, position, callback)
       .findOne({gameId: gameId, uuid: propertyId})
       .exec();
     if (!docs) {
-      logger.info('Did not find location with uuid ' + propertyId);
+      logger.info(`${gameId}: Did not find location with uuid ${propertyId}`);
       return callback(new Error('location not available'));
     }
     docs.pricelist.positionInPriceRange = position;
 
     savedProperty = await docs.save();
-    logger.info(savedProperty.location.name + ' updated' + ` v: ${savedProperty.pricelist.positionInPriceRange}`);
+    logger.info(`${gameId}: ${savedProperty.location.name} updated v: ${savedProperty.pricelist.positionInPriceRange}`);
   } catch (ex) {
     logger.error(ex);
     err = ex;
@@ -390,7 +390,7 @@ async function removePropertyFromGameplay(gameId, locationId, callback) {
 
   let res, err;
   try {
-    logger.info('Removing one property for ' + gameId);
+    logger.info(`${gameId}: Removing one property`, {locationId, gameId});
     res = await Property
       .deleteOne({gameId: gameId, 'location.uuid': locationId})
       .exec();
@@ -438,7 +438,7 @@ async function removeAllPropertiesFromGameplay(gameId, callback) {
   if (!gameId) {
     return callback(new Error('No gameId supplied'));
   }
-  logger.info('Removing all properties for ' + gameId);
+  logger.info(`${gameId}: Removing all properties`);
 
   let err, res;
   try {

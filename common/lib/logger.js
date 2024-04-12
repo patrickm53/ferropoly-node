@@ -168,6 +168,9 @@ module.exports = {
       debug: function (message, metadata) {
         log('debug', message, metadata); // using info as otherwise on stderr
       },
+      silly: function (message, metadata) {
+        log('silly', message, metadata); // using info as otherwise on stderr
+      },
       /**
        * Outputs data from a test (if any)
        * @param message
