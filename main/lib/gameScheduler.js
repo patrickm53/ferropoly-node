@@ -53,7 +53,7 @@ util.inherits(Scheduler, EventEmitter);
  */
 Scheduler.prototype.handleEvent = function (channel, event) {
   let self = this;
-  logger.info('Handling event ' + event._id + ' for ' + channel);
+  logger.info('Handling event ' + event._id + ' for ' + channel, event);
   eventRepo.requestEventSave(event, self.settings.server.serverId).then(ev => {
     if (!ev) {
       logger.info('Event already handled by other instance: ' + event._id + ' for ' + channel);
@@ -131,7 +131,7 @@ Scheduler.prototype.update = function (callback) {
     if (self.updateJob) {
       self.updateJob.cancel();
     }
-    // Todo: this time is to short, we don't need to update so often.
+    // Todo: this time is too short, we don't need to update so often.
     // The problem is that new games won't be recognized after creation until the scheduler was updated, now
     // we get new games at least once an hour. Should be fixed with a communication between Editor and Main,
     // added as GitHub ticket #2 in EDITOR project (as the trigger has to come from the editor)

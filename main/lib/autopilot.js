@@ -27,7 +27,7 @@ function autoplay(gameplay) {
   try {
     gameCache.getGameData(gameplay.internal.gameId, function (err, data) {
       if (err) {
-        logger.error(err);
+        logger.error(`${gameplay.internal.gameId}: getGameData error`, err);
         startTimer(gameplay);
         return;
       }
@@ -35,43 +35,43 @@ function autoplay(gameplay) {
       let teams = _.values(data.teams);
 
       if (moment().isBefore(moment(gp.scheduling.gameStartTs))) {
-        logger.info(`Game ${gameplay.internal.gameId} not started yet`);
+        logger.info(`${gameplay.internal.gameId}: Game not started yet`);
         // Make sure that we do not poll to often, fall back to a 15-minute cycle
         startTimer(gameplay, (15 * 60 * 1000));
         return;
       }
       if (moment().isAfter(moment(gp.scheduling.gameEndTs))) {
-        logger.info(`Game over for ${gameplay.internal.gameId}, stopping autoplay`);
+        logger.info(`${gameplay.internal.gameId}: Game over, stopping autoplay`);
         return;
       }
 
       // Choose a team (random)
       if (!teams || teams.length === 0) {
         // happens only when the creation of the demo gameplay failed
-        logger.info(`No team in  ${gameplay.internal.gameId} so stopping autoplay`);
+        logger.info(`${gameplay.internal.gameId}: No team found in game, so stopping autoplay`);
         return;
       }
       let team = teams[_.random(0, teams.length - 1)];
       travelLog.getAllLogEntries(gp.internal.gameId, team.uuid, function (err, log) {
         if (err) {
-          logger.error(err);
+          logger.error(`${gp.internal.gameId}: Error in getAllLogEntries`, err);
           startTimer(gameplay);
           return;
         }
 
         properties.getPropertiesForGameplay(gp.internal.gameId, {lean: true}, function (err, props) {
           if (err) {
-            logger.error(err);
+            logger.error(`${gp.internal.gameId}: Error in getPropertiesForGameplay`, err);
             startTimer(gameplay);
             return;
           }
           playRound(gp.internal.gameId, team.uuid, log, props, function (err, info) {
             if (err) {
-              logger.error(err);
+              logger.error(`${gp.internal.gameId}: Error in playRound`, err);
               startTimer(gameplay);
               return;
             }
-            logger.debug(`${gameplay.internal.gameId} bought location`, _.get(info, 'amount', 0));
+            logger.debug(`${gameplay.internal.gameId}: Autoplay bought location`, info);
             startTimer(gameplay);
           });
         });
@@ -130,7 +130,7 @@ function playRound(gameId, teamId, travelLog, props, callback) {
     mp.buildHouses(gameId, teamId, function () {
       let propertyId = selectClosestsProperty(travelLog, props);
       if (!propertyId) {
-        logger.info(`Was not able to find closest property for ${gameId} / ${teamId}`);
+        logger.info(`${gameId}: Was not able to find closest property for team ${teamId}`);
         return callback();
       }
       mp.buyProperty({gameId: gameId, teamId: teamId, propertyId: propertyId}, err => {
@@ -239,7 +239,7 @@ function refreshActiveGames() {
   // Stopp the current autopilots
   autoPilotGames.forEach(apg => {
     if (apg.timer) {
-      logger.debug(`Deleting autopilot for ${apg.internal.gameId}`);
+      logger.info(`${apg.internal.gameId}: Deleting autopilot`);
       clearTimeout(apg.timer);
     }
   });
@@ -254,7 +254,7 @@ function refreshActiveGames() {
              gps.forEach(gp => {
                // Just a shortcut
                gp.autopilotInterval = _.get(gp, 'internal.autopilot.interval', (5 * 60 * 1000));
-               logger.info(`Autopilot for "${gp.internal.gameId}" ACTIVE with ${gp.autopilotInterval / 1000}s interval`);
+               logger.info(`${gp.internal.gameId}: Autopilot ACTIVE with ${gp.autopilotInterval / 1000}s interval`);
                startTimer(gp, _.random(gp.autopilotInterval / 2, gp.autopilotInterval));
                autoPilotGames.push(gp);
              })

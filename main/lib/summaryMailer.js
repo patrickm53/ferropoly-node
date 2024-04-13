@@ -28,8 +28,8 @@ function SummaryMailer(scheduler) {
      * This is the 'summary' event launched by the gameScheduler
      */
     this.scheduler.on('summary', async function (event) {
-      logger.info(`Summary requested for ${event.gameId}`);
-      // could be honestly discussed if it this is the right location here:
+      logger.info(`${event.gameId}, Summary requested`);
+      // could be honestly discussed if this is the right location here:
       // make the game public in order the recipients of the mail can see all data.
       await gpModel.makeGameplayPublic(event.gameId);
       self.sendInfo(event.gameId, err => {
@@ -56,7 +56,7 @@ SummaryMailer.prototype.sendInfo = function (gameId, callback) {
 
       // Do not send any information for Demo games!
       if (gameData.gameplay.internal.isDemo) {
-        logger.info(`NOT sending Summary Email, ${gameId} is a demo game!`);
+        logger.info(`${gameId}: NOT sending Summary Email as this is a demo game!`);
         return callback();
       }
 
@@ -94,7 +94,7 @@ SummaryMailer.prototype.sendInfo = function (gameId, callback) {
         if (err) {
           return callback(err);
         }
-        logger.info(`Summary Email for ${gameId} sent`);
+        logger.info(`${gameId}: Summary Email for sent`, {recipients: bccString, text});
         callback();
       });
     });

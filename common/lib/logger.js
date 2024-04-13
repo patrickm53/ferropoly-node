@@ -30,6 +30,9 @@ let testCounter = 0;
  * @type {never}
  */
 const logFormat = printf(info => {
+  if (info.payload) {
+    return `${info.timestamp} [${info.label}] ${info.level}: ${info.message} \n${JSON.stringify(info.payload, null, 2)}`;
+  }
   return `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`;
 });
 
@@ -82,7 +85,6 @@ module.exports = {
     }
 
     app.use(expressWinston.logger({
-      level        : settings.debugLevel,
       transports   : supportedTransports,
       format       : combine(
         label({label: 'HTTP'}),

@@ -66,7 +66,7 @@ class FerroSocket extends EventEmitter {
       logger.warn('io reconnect_failed event');
     });
     /**
-     * New client connects, verifiy its identity and if suceeded, add to the trusted
+     * New client connects, verifiy its identity and if succeeded, add to the trusted
      * sockets (otherwise disconnect)
      */
     this.io.on('connection', function (socket) {
@@ -95,7 +95,7 @@ class FerroSocket extends EventEmitter {
                   user    : data.user,
                   gameId  : data.gameId
                 };
-                logger.info(`${data.gameId}: Verified PLAYER socket added ${socket.id}`, socket.ferropoly);
+                logger.info(`${data.gameId}: Verified PLAYER socket added ${socket.id} for ${_.get(socket, 'ferropoly.user')}`, socket.ferropoly);
                 self.addSocket(socket, data.user, data.gameId);
                 self.registerChannels(socket);
                 self.emit('player-connected', {gameId: data.gameId, teamId: data.teamId, user: data.user});
@@ -111,7 +111,7 @@ class FerroSocket extends EventEmitter {
               user    : data.user,
               gameId  : data.gameId
             };
-            logger.info(`${data.gameId}: Verified ADMIN socket added ${socket.id}`, socket.ferropoly);
+            logger.info(`${data.gameId}: Verified ADMIN socket added ${socket.id} for ${_.get(socket, 'ferropoly.user')}`, socket.ferropoly);
             self.addSocket(socket, data.user, data.gameId);
             self.emit('admin-connected', {gameId: data.gameId, user: data.user});
             self.registerChannels(socket);
@@ -122,7 +122,7 @@ class FerroSocket extends EventEmitter {
       socket.emit('identify', {});
 
       socket.on('disconnect', function () {
-        logger.info(`${_.get(socket, 'ferropoly.gameId')}: Socket disconnected ${socket.id}`, socket.ferropoly);
+        logger.info(`${_.get(socket, 'ferropoly.gameId')}: Socket disconnected ${socket.id} for ${_.get(socket, 'ferropoly.user')}`, socket.ferropoly);
         self.removeSocket(socket);
       });
     });
@@ -150,7 +150,7 @@ class FerroSocket extends EventEmitter {
       socket.ferropoly.userId = userId;
 
       this.sockets[gameId].push(socket);
-      logger.debug(`${_.get(socket, 'ferropoly.gameId')}: Socketmanager: new socket added ${socket.id}`, socket.ferropoly);
+      logger.debug(`${_.get(socket, 'ferropoly.gameId')}: Socketmanager: new socket added ${socket.id} for ${_.get(socket, 'ferropoly.user')}`, socket.ferropoly);
     }
   };
 
@@ -211,7 +211,7 @@ class FerroSocket extends EventEmitter {
    */
   emitToClients(gameId, channel, data) {
     logger.error(new Error('emitToClients is obsolete, refactor using the specific emitters'));
-    logger.info(`${gameId}: ferroSockets.emitToClients @ ${channel}`);
+    logger.debug(`${gameId}: ferroSockets.emitToClients @ ${channel}`);
     if (this.sockets[gameId]) {
       for (let i = 0; i < this.sockets[gameId].length; i++) {
         if (this.sockets[gameId][i].ferropoly.isAdmin) {
@@ -269,7 +269,7 @@ class FerroSocket extends EventEmitter {
    * @param data
    */
   emitToGame(gameId, channel, data) {
-    logger.info(`${gameId}: ferroSockets.emitToGame @ ${channel}`, {gameId, channel, data});
+    logger.debug(`${gameId}: ferroSockets.emitToGame @ ${channel}`, {gameId, channel, data});
 
     if (this.sockets[gameId]) {
       this.sockets[gameId].forEach(function (socket) {

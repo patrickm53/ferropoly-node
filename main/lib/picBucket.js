@@ -64,7 +64,7 @@ class PicBucket extends EventEmitter {
         .then(imageUrl => {
           thumb.getSignedUrl(uploadOptions)
                .then(thumbUrl => {
-                 logger.info(`${gameId} Data upload announced`);
+                 logger.info(`${gameId}: Picture upload announced`, {teamId, gameId});
 
                  let pic              = new picBucketModel.Model();
                  pic.gameId           = gameId;
@@ -133,11 +133,11 @@ class PicBucket extends EventEmitter {
         const latlng = `${entry.position.lat},${entry.position.lng}`;
         axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&location_type=ROOFTOP|RANGE_INTERPOLATED&key=${apiKey}`)
              .then(resp => {
-               logger.info(`Geolocation API call ok for ${entry.gameId}`);
+               logger.info(`${entry.gameId}: Geolocation API call ok`, resp.data);
                entry.location = resp.data;
              })
              .catch(err => {
-               logger.error('Fehler in Geocoding API', err);
+               logger.error(`${entry.gameId}: Fehler in Geocoding API`, err);
              })
              .finally(() => {
                self.emit('new', entry);
@@ -179,10 +179,10 @@ class PicBucket extends EventEmitter {
     picBucketModel.findPicsByFilter(filter)
                   .then(docs => {
                     if (docs) {
-                      logger.info(`Got ${_.get(docs, 'length', -1)} pics`);
+                      logger.info(`${gameId}: got ${_.get(docs, 'length', -1)} pics in picBucket`, {gameId, filter});
                     }
                     else {
-                      logger.info('docs is empty!');
+                      logger.info('${gameId}: docs is empty!', {gameId, filter});
                     }
                     return callback(null, docs);
                   })
@@ -200,6 +200,7 @@ class PicBucket extends EventEmitter {
     if (!gameId) {
       return callback(new Error('No gameId supplied'));
     }
+    logger.info(`${gameId}: deleting all pics`);
     picBucketModel.deletePicBucket(gameId)
                   .then(() => {
                     callback()

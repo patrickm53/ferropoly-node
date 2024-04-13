@@ -17,7 +17,7 @@ function addLog(data) {
       return logger.error(err);
     }
 
-    logger.debug('Player position', data);
+    logger.debug(`${data.gameId}: Player position`, data);
 
     /**
      * Privacy: we log the position of the teams only during the game, not when they access
@@ -37,7 +37,7 @@ function addLog(data) {
       accuracy: data.position.accuracy
     }, (err, entry) => {
       if (err) {
-        return logger.error(err);
+        return logger.error(`${data.gameId}: addPosititionEntry error`, err);
       }
       // Same style as returned by the team log
       ferroSocket.emitToAdmins(data.gameId, 'player-position', entry);

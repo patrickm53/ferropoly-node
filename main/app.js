@@ -43,7 +43,8 @@ const picBucketRoute = require('./routes/picBucketRoute');
 require('./lib/mainCronjobs').init();
 require('../common/lib/mailer').init(settings);
 
-logger.info('Ferropoly Copyright (C) 2015-2023 Christian Kuster, CH-8342 Wernetshausen');
+logger.warn('**** FERROPOLY MAIN START DETECTED ****');
+logger.info('Ferropoly Copyright (C) 2015-2024 Christian Kuster, CH-8342 Wernetshausen');
 logger.info('This program comes with ABSOLUTELY NO WARRANTY;');
 logger.info('This is free software, and you are welcome to redistribute it');
 logger.info('under certain conditions; see www.ferropoly.ch for details.');

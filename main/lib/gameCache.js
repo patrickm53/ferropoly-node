@@ -91,12 +91,12 @@ module.exports = {
       logger.info('Nb Gameplays found: ' + gameplays.length);
       for (let i = 0; i < gameplays.length; i++) {
         if (moment().isSame(moment(gameplays[i].scheduling.gameDate), 'day')) { // Todo: game is today!!
-          logger.info('adding to cache: ' + gameplays[i].internal.gameId);
+          logger.info(`${gameplays[i].internal.gameId}: added to cache`);
           gameCache[gameplays[i].internal.gameId] = {gameplay: gameplays[i], teams: {}};
           gameplaysInCache++;
         }
         else {
-          logger.info('not added to cache: ' + gameplays[i].internal.gameId);
+          logger.info(`${gameplays[i].internal.gameId}: not added to cache`);
         }
       }
 
