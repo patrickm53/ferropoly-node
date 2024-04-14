@@ -25,10 +25,12 @@ async function getToken(user, callback) {
       .findOne()
       .where('login').equals(user)
       .exec();
-  } catch (ex) {
+  }
+  catch (ex) {
     logger.error('Failed to get token', ex);
     err = ex;
-  } finally {
+  }
+  finally {
     callback(err, token);
   }
 }
@@ -41,7 +43,7 @@ module.exports = {
    * @param callback
    */
   getNewToken: function (options, callback) {
-    logger.debug(`New authtokenn requested for ${options.user} suggesting '${options.proposedToken}'`)
+    logger.info(`New authtokenn requested for ${options.user} suggesting '${options.proposedToken}'`)
     getToken(options.user, async function (err, token) {
       if (err) {
         return callback(err);
@@ -55,10 +57,12 @@ module.exports = {
       try {
         res = await token.save();
         logger.info(`User ${options.user} has now authtoken ${token.id}`);
-      } catch (ex) {
+      }
+      catch (ex) {
         logger.error(ex);
         errInfo = ex;
-      } finally {
+      }
+      finally {
         callback(errInfo, res.id);
       }
     }).then(() => {

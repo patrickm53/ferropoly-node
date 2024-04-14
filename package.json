@@ -29,8 +29,8 @@
   },
   "main": "server.js",
   "dependencies": {
-    "@google-cloud/storage": "7.7.0",
     "@google-cloud/logging-winston": "6.0.0",
+    "@google-cloud/storage": "7.7.0",
     "async": "3.2.5",
     "axios": "1.6.7",
     "body-parser": "1.20.2",
@@ -119,5 +119,6 @@
     "webpack-cli": "5.1.4",
     "webpack-merge": "5.10.0"
   },
-  "bundleDependencies": []
+  "bundleDependencies": [],
+  "packageManager": "yarn@4.1.1"
 }

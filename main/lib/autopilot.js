@@ -141,7 +141,12 @@ function playRound(gameId, teamId, travelLog, props, callback) {
           if (err) {
             return callback(err);
           }
-          createPicBucket({gameId: gameId, teamId: teamId, propertyId: propertyId, property: prop}, callback);
+          createPicBucket({gameId: gameId, teamId: teamId, propertyId: propertyId, property: prop}, (err, bucket) => {
+            if (err) {
+              return callback(err);
+            }
+            callback(null, {gameId: gameId, teamId: teamId, propertyId: propertyId, bucket: bucket});
+          });
         })
       });
     });

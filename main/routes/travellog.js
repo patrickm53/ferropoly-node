@@ -11,7 +11,7 @@ const accessor  = require('../lib/accessor');
 const _         = require('lodash');
 
 /**
- * Get the ranking list
+ * Get the Travel log
  */
 router.get('/:gameId/:teamId', function (req, res) {
   if (!req.params.gameId) {
@@ -31,7 +31,13 @@ router.get('/:gameId/:teamId', function (req, res) {
    * @param tId
    */
   function collectAndSendLog(tId) {
-    logger.info('Request for ' + tId + ' @ ' + req.params.gameId);
+    if (tId) {
+      logger.info(`${req.params.gameId}: TravelLog Request for ${tId}`);
+    }
+    else {
+      logger.info(`${req.params.gameId}: TravelLog Request for all teams`);
+    }
+
     travelLog.getAllLogEntries(req.params.gameId, tId, function (err, log) {
       if (err) {
         return res.status(500).send({message: err.message});
