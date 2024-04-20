@@ -57,5 +57,15 @@ module.exports = function (settings) {
   settings.picBucket.bucket = 'ferropoly-rc'
   process.env.GOOGLE_APPLICATION_CREDENTIALS = '/home/kc/ferropoly/ferropoly-service.json'
 
+  // Logger
+  settings.logger = {
+    debugLevel: 'info',
+    google: {
+      enabled: true,
+      projectId: 'crack-lamp-784',
+      logName: 'main_rc',
+      keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS
+    }
+  };
   return settings;
 };
