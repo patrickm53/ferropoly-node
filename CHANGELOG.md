@@ -1,5 +1,10 @@
 # Changelog Ferropoly Spiel
 
+## v3.5.0 20.4.24
+* Cloud Logs
+* Zurück auf Yarn
+* Dependency Updates
+
 ## v3.4.2 17.3.24
 * Die Darstellung unter /info verbessert, wenn keine Preisliste vorhanden ist
 
