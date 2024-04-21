@@ -48,7 +48,13 @@ module.exports = {
       if (err) {
         return callback(err);
       }
+      if (token && token.id === options.proposedToken) {
+        // when the authtoken is available and the same, we quit now
+        logger.silly(`${options.user} has already authtoken '${options.proposedToken}'`)
+        return callback(null, options.proposedToken);
+      }
       if (!token) {
+        // Create new token if not existing
         token = new Token();
       }
       token.id    = options.proposedToken || uuid();

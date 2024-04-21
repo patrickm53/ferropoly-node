@@ -11,12 +11,17 @@ const _                = require('lodash');
 
 /* GET the authtoken, which you only can get when logged in */
 router.get('/', function (req, res) {
-  authTokenManager.getNewToken({proposedToken: req.session.authToken}, (err, token) => {
+  authTokenManager.getNewToken({proposedToken: req.session.authToken, user: _.get(req, 'session.passport.user', 'unknown')}, (err, token) => {
     if (err) {
       logger.error(err);
       return res.status(500).send({authToken: 'none', message: 'Error while creating AuthToken'});
     }
-    logger.info(`NEW authtoken for ${req.session.passport.user}: was ${req.session.authToken}, becomes ${token}`);
+    if (req.session.authToken !== token) {
+      logger.info(`NEW authtoken for ${req.session.passport.user}: was ${req.session.authToken}, becomes ${token}`);
+    }
+    else {
+      logger.info(`CONFIRMED authtoken for ${req.session.passport.user}: ${token}`);
+    }
     req.session.authToken = token;
     res.send({authToken: req.session.authToken, user: req.session.passport.user});
   })
