@@ -1,5 +1,8 @@
 # Changelog Ferropoly Spiel
 
+## v3.5.1 21.4.24
+* Auth Token Logs aktualisiert
+
 ## v3.5.0 20.4.24
 * Cloud Logs
 * Zurück auf Yarn
