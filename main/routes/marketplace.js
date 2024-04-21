@@ -16,7 +16,7 @@ const _              = require("lodash");
 router.post('/buildHouses/:gameId/:teamId', function (req, res) {
   let marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
-    return res.status(403).send({message: 'No auth token'});
+    return res.status(403).send({message: 'No authtoken'});
   }
   if (req.body.authToken !== req.session.authToken) {
     return res.status(403).send({message: 'No access granted'});
@@ -41,7 +41,7 @@ router.post('/buildHouses/:gameId/:teamId', function (req, res) {
 router.post('/buildHouse/:gameId/:teamId/:propertyId', function (req, res) {
   let marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
-    return res.status(403).send({message: 'No auth token'});
+    return res.status(403).send({message: 'No authtoken'});
   }
   if (req.body.authToken !== req.session.authToken) {
     return res.status(403).send({message: 'No access granted'});
@@ -67,7 +67,7 @@ router.post('/buildHouse/:gameId/:teamId/:propertyId', function (req, res) {
 router.post('/buyProperty/:gameId/:teamId/:propertyId', function (req, res) {
   let marketplace = marketplaceApi.getMarketplace();
   if (!req.body.authToken) {
-    return res.status(403).send({message: 'No auth token'});
+    return res.status(403).send({message: 'No authtoken'});
   }
   if (req.body.authToken !== req.session.authToken) {
     return res.status(403).send({message: 'No access granted'});

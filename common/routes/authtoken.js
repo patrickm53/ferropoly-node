@@ -27,8 +27,8 @@ router.get('/', function (req, res) {
  */
 router.post('/test', function (req, res) {
   if (!req.body.authToken || req.body.authToken !== req.session.authToken) {
-    logger.warn(`AUTH token test failed, ${req.body.authToken} vs ${req.session.authToken} for gameplay ${_.get(req, 'session.passport.user', 'UNKONWN')}`)
-    return res.status(401).send({message: 'auth token mismatch'});
+    logger.warn(`AuthToken test failed, ${req.body.authToken} vs ${req.session.authToken} for gameplay ${_.get(req, 'session.passport.user', 'UNKONWN')}`)
+    return res.status(401).send({message: 'AuthToken mismatch'});
   }
   return res.status(200).send({message: 'ok'});
 });
